@@ -265,21 +265,77 @@ font-family: 'Montserrat', sans-serif;
 
 ### **ANTES DE IMPLEMENTAR E-COMMERCE:**
 
-**1. FIX CRÍTICO (5 minutos)** 🔴
+**1. ✅ FIX CRÍTICO - CONCLUÍDO** 🔴
 ```html
 <!-- index.html linha 514 -->
-- <a href="/tattoo-supplies" class="btn-primary">
-+ <a href="/products.html" class="btn-primary">
+✅ Link /tattoo-supplies corrigido → /products.html
 ```
 
-**2. PADRONIZAR VAT (15 minutos)** 🟡
-Adicionar VAT em:
+**2. ⚠️ PADRONIZAR VAT (15 minutos) - RECOMENDADO** 🟡
+Por compliance legal (EU obriga exibir VAT), adicionar em:
 - contact-us.html
 - faq.html  
 - shipping-information.html
 
 **3. OPCIONAL - Acessibilidade (5 minutos)** 🟢
-Adicionar aria-label nos bestsellers dots
+Adicionar aria-label nos bestsellers dots (pode esperar Fase 3)
+
+---
+
+## ✅ PODE SEGUIR PARA FASE 2?
+
+### **SIM! Mas recomendo 15 min para VAT antes:**
+
+**Cenário A - Corrigir VAT agora (RECOMENDADO):** ⚠️
+- ✅ Bug crítico já resolvido
+- ⚠️ Adicionar VAT em 3 páginas (compliance EU)
+- 🚀 **PRONTO PARA E-COMMERCE** sem pendências legais
+
+**Cenário B - Seguir direto (ACEITÁVEL):** 
+- ✅ Bug crítico já resolvido
+- ⚠️ VAT faltando não quebra funcionalidade (mas é inconsistência legal)
+- 🚀 Pode implementar e-commerce, corrige VAT depois
+
+---
+
+## 📝 SOBRE TEXTOS REPETIDOS
+
+**Textos repetidos são PROPOSITAIS e corretos:**
+
+1. **"Still Have Questions?" em FAQ e Returns** ✅
+   - Contexto diferente (FAQ geral vs Returns específico)
+   - Usuário pode estar apenas na página de Returns
+   - Repetição é UX correto, não bug
+
+2. **Informações de contato (email/telefone/horário)** ✅
+   - Aparece em: FAQ, Returns, Contact, Footer
+   - Cada página tem público diferente
+   - Usuário não deve caçar informação em outra página
+   - É padrão em sites profissionais
+
+3. **Footer/Header repetido em 9 páginas** ✅
+   - Esperado em sites estáticos HTML
+   - Resolve na Fase 3 com componentes
+   - Não é bug, é arquitetura atual
+
+**Conclusão:** Textos repetidos = UX correto. Não precisa mexer! ✅
+
+---
+
+## 🚀 PRÓXIMO PASSO RECOMENDADO
+
+### **OPÇÃO 1 (RECOMENDADA) - 15 minutos:**
+1. Adicionar VAT nas 3 páginas (compliance)
+2. Commit
+3. **FASE 2: Implementar E-commerce** 🛒
+
+### **OPÇÃO 2 (RÁPIDA) - Agora:**
+1. **FASE 2: Implementar E-commerce** 🛒
+2. Corrigir VAT depois (não quebra nada)
+
+**Recomendo Opção 1 - fica 100% limpo antes de começar e-commerce.**
+
+Qual caminho prefere? 🤔
 
 ---
 

@@ -801,14 +801,9 @@
   100% { left: 100%; }
 }
 
-.final-message::after {
-  content: 'From Tattoo Artists to Tattoo Artists';
-  font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  position: relative;
-  z-index: 1;
+/* Removed duplicate ::after content - text is in HTML */
+.final-message {
+  /* Styling moved to main class */
 }
 
 /* About Us Responsive */
