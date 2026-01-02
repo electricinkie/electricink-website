@@ -14,7 +14,7 @@
   font-family: 'Outfit', 'Montserrat', sans-serif;
   font-size: 36px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #000000;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 15px;
@@ -30,15 +30,15 @@
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
 }
 
 .category-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(67, 189, 171, 0.2);
+  background: #FFFFFF;
+  border: 1px solid rgba(67, 189, 171, 0.3);
   border-radius: 16px;
-  padding: 40px 30px;
+  padding: 40px 20px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -59,10 +59,10 @@
 }
 
 .category-card:hover {
-  background: rgba(67, 189, 171, 0.08);
+  background: rgba(67, 189, 171, 0.05);
   border-color: #43BDAB;
   transform: translateY(-8px);
-  box-shadow: 0 10px 30px rgba(67, 189, 171, 0.2);
+  box-shadow: 0 10px 30px rgba(67, 189, 171, 0.25);
 }
 
 .category-card:hover::before {
@@ -101,9 +101,9 @@
 
 .category-name {
   font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #000000;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 10px;
@@ -156,7 +156,7 @@
   }
 
   .categories-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px;
   }
 
@@ -205,8 +205,8 @@
   }
 
   .categories-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
   }
 
   .category-card {
