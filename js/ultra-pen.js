@@ -40,3 +40,26 @@
   });
 
 })();
+
+// Accordion functionality for mobile features
+(function() {
+  'use strict';
+  
+  const accordionHeader = document.querySelector('.features-accordion-header');
+  const accordionContent = document.querySelector('.features-accordion-content');
+  const accordionIcon = document.querySelector('.features-accordion-icon');
+  
+  if (!accordionHeader || !accordionContent || !accordionIcon) return;
+  
+  // Only activate on mobile
+  if (window.innerWidth <= 768) {
+    accordionContent.classList.add('open');
+    accordionIcon.classList.add('open');
+  }
+  
+  accordionHeader.addEventListener('click', () => {
+    accordionContent.classList.toggle('open');
+    accordionIcon.classList.toggle('open');
+  });
+  
+})();
