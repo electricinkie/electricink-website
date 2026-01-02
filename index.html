@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/benefits.css">
   <link rel="stylesheet" href="css/categories.css">
+  <link rel="stylesheet" href="css/new-arrivals.css">
 </head>
 <body>
   
@@ -155,8 +156,127 @@
 
       </div>
     </section>
+  <!-- New Arrivals Section -->
+    <section class="new-arrivals">
+      <div class="new-arrivals-header">
+        <span class="badge">Just Arrived</span>
+        <h2 class="new-arrivals-title">New Stock in Ireland</h2>
+        <p class="new-arrivals-subtitle">Fresh professional supplies</p>
+      </div>
+
+      <div class="new-arrivals-swiper">
+        <!-- Navigation Arrows -->
+        <button class="new-nav-arrow new-nav-prev" aria-label="Previous products">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="new-nav-arrow new-nav-next" aria-label="Next products">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="new-arrivals-track">
+          
+          <!-- Product 1: The Gloo -->
+          <a href="/cosmetics/p/the-gloo" class="new-product">
+            <div class="new-product-image">
+              <img src="images/products/the-gloo.jpg" alt="The Gloo">
+            </div>
+            <div class="new-product-info">
+              <div class="new-product-category">Stenciling</div>
+              <h3 class="new-product-title">The Gloo</h3>
+              <p class="new-product-description">Gel-based formula for flawless stencil application</p>
+              <div class="new-product-footer">
+                <div class="new-product-price">from €10.00</div>
+                <div class="new-product-cta">Shop Now →</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Product 2: Pro Cartridges RL 0.22 -->
+          <a href="/cartridges/p/pro-cartridges-round-liner-022-20un" class="new-product">
+            <div class="new-product-image">
+              <img src="images/products/pro-cartridge-rl-022.webp" alt="Pro Cartridges Round Liner 0.22">
+            </div>
+            <div class="new-product-info">
+              <div class="new-product-category">Cartridges</div>
+              <h3 class="new-product-title">Pro Cartridges RL Ø 0.22</h3>
+              <p class="new-product-description">Round Liner for fine line work</p>
+              <div class="new-product-footer">
+                <div class="new-product-price">from €27.80</div>
+                <div class="new-product-cta">Shop Now →</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Product 3: Pro Cartridges RS 0.25 -->
+          <a href="/cartridges/p/pro-cartridges-round-shader-025-20un" class="new-product">
+            <div class="new-product-image">
+              <img src="images/products/pro-cartridge-rs-025.webp" alt="Pro Cartridges Round Shader 0.25">
+            </div>
+            <div class="new-product-info">
+              <div class="new-product-category">Cartridges</div>
+              <h3 class="new-product-title">Pro Cartridges RS Ø 0.25</h3>
+              <p class="new-product-description">Round Shader for smooth shading</p>
+              <div class="new-product-footer">
+                <div class="new-product-price">from €31.00</div>
+                <div class="new-product-cta">Shop Now →</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Product 4: Pro Cartridges RL 0.25 -->
+          <a href="/cartridges/p/pro-cartridges-round-liner-025-20un" class="new-product">
+            <div class="new-product-image">
+              <img src="images/products/pro-cartridge-rl-025.webp" alt="Pro Cartridges Round Liner 0.25">
+            </div>
+            <div class="new-product-info">
+              <div class="new-product-category">Cartridges</div>
+              <h3 class="new-product-title">Pro Cartridges RL Ø 0.25</h3>
+              <p class="new-product-description">Round Liner for precise lines</p>
+              <div class="new-product-footer">
+                <div class="new-product-price">from €27.80</div>
+                <div class="new-product-cta">Shop Now →</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Product 5: Pro Cartridges RMG 0.25 -->
+          <a href="/cartridges/p/pro-cartridges-round-magnum-025-20un" class="new-product">
+            <div class="new-product-image">
+              <img src="images/products/pro-cartridge-rmg-025.webp" alt="Pro Cartridges Round Magnum 0.25">
+            </div>
+            <div class="new-product-info">
+              <div class="new-product-category">Cartridges</div>
+              <h3 class="new-product-title">Pro Cartridges RMG Ø 0.25</h3>
+              <p class="new-product-description">Round Magnum for color packing</p>
+              <div class="new-product-footer">
+                <div class="new-product-price">from €30.50</div>
+                <div class="new-product-cta">Shop Now →</div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Dots Indicator -->
+      <div class="new-arrivals-dots">
+        <button class="new-dot active" aria-label="Go to product 1" data-index="0"></button>
+        <button class="new-dot" aria-label="Go to product 2" data-index="1"></button>
+        <button class="new-dot" aria-label="Go to product 3" data-index="2"></button>
+        <button class="new-dot" aria-label="Go to product 4" data-index="3"></button>
+        <button class="new-dot" aria-label="Go to product 5" data-index="4"></button>
+      </div>
+    </section>
 
   
+  </main>
+
+  <!-- JavaScript -->
+  <script src="js/new-arrivals.js"></script
   </main>
 
 </body>

@@ -5,7 +5,6 @@
   margin: 0;
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
 }
 
 .benefits-bar::before {
