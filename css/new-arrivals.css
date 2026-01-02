@@ -84,14 +84,14 @@
   position: relative;
   width: 100%;
   height: 280px;
-  background: #F8F8F8;
+  background: #FFFFFF;
   overflow: hidden;
 }
 
 .new-product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.4s ease;
 }
 
