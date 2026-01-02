@@ -34,7 +34,12 @@ Coloque aqui os favicons:
 - `power-icon.png` - Power Supplies
 
 ### `/images/products/`
-Coloque aqui as fotos dos produtos para as próximas seções
+✅ Coloque aqui as fotos dos produtos:
+- `the-gloo.jpg` - The Gloo (Stenciling)
+- `pro-cartridge-rl-022.webp` - Pro Cartridges RL Ø 0.22
+- `pro-cartridge-rs-025.webp` - Pro Cartridges RS Ø 0.25
+- `pro-cartridge-rl-025.webp` - Pro Cartridges RL Ø 0.25
+- `pro-cartridge-rmg-025.webp` - Pro Cartridges RMG Ø 0.25
 
 ### `/videos/`
 - `hero-banner.mp4` - Vídeo da hero section
