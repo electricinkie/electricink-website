@@ -35,11 +35,19 @@ Coloque aqui os favicons:
 
 ### `/images/products/`
 ✅ Coloque aqui as fotos dos produtos:
+
+**New Arrivals:**
 - `the-gloo.jpg` - The Gloo (Stenciling)
 - `pro-cartridge-rl-022.webp` - Pro Cartridges RL Ø 0.22
 - `pro-cartridge-rs-025.webp` - Pro Cartridges RS Ø 0.25
 - `pro-cartridge-rl-025.webp` - Pro Cartridges RL Ø 0.25
 - `pro-cartridge-rmg-025.webp` - Pro Cartridges RMG Ø 0.25
+
+**Ultra Pen Gallery:**
+- `ultra-pen-main.jpeg` - Ultra Pen 2 Machine (main)
+- `ultra-pen-detail.jpeg` - Detail view
+- `ultra-pen-kit.jpeg` - Complete kit
+- `ultra-pen-case.jpeg` - Open case
 
 ### `/videos/`
 - `hero-banner.mp4` - Vídeo da hero section
