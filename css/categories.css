@@ -38,7 +38,7 @@
   background: #FFFFFF;
   border: 1px solid rgba(67, 189, 171, 0.3);
   border-radius: 16px;
-  padding: 40px 20px;
+  padding: 40px 20px 20px 20px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -120,7 +120,7 @@
   font-weight: 400;
   color: #999999;
   line-height: 1.5;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .category-arrow {
