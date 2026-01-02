@@ -163,14 +163,14 @@
 .new-arrivals-dots {
   display: none;
   justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 30px;
 }
 
 .new-dot {
-  width: 8px;
-  height: 8px;
-  background: rgba(0, 0, 0, 0.2);
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 163, 0, 0.3);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -179,14 +179,14 @@
 }
 
 .new-dot:hover {
-  background: rgba(255, 163, 0, 0.5);
+  background: rgba(255, 163, 0, 0.6);
   transform: scale(1.2);
 }
 
 .new-dot.active {
   background: #FFA300;
-  width: 24px;
-  border-radius: 4px;
+  width: 12px;
+  height: 12px;
 }
 
 /* Navigation Arrows (Desktop only) */
