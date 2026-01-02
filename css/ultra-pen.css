@@ -3,6 +3,7 @@
   max-width: 1400px;
   margin: 80px auto;
   padding: 0 40px;
+  background: #FFFFFF;
 }
 
 .showcase-container {
@@ -84,8 +85,8 @@
 .trust-badges {
   display: flex;
   gap: 20px;
-  padding: 20px;
-  background: rgba(67, 189, 171, 0.15);
+  padding: 12px 16px;
+  background: #43BDAB;
   border-radius: 12px;
 }
 
@@ -97,14 +98,14 @@
 }
 
 .trust-check {
-  color: #43BDAB;
-  font-size: 16px;
+  color: #FFFFFF;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .trust-text {
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   color: #000000;
 }
