@@ -1,0 +1,284 @@
+/* ===================================
+   Bestsellers Section
+   =================================== */
+
+.bestsellers {
+  background-color: #FFFFFF;
+  padding: 80px 20px;
+}
+
+.bestsellers-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Header */
+.bestsellers-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.bestsellers-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.bestsellers-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #666666;
+  margin: 0;
+}
+
+/* Swiper Container */
+.bestsellers-swiper {
+  overflow: hidden;
+  margin: 0 auto;
+  padding: 0 60px;
+  position: relative;
+}
+
+.bestsellers-track {
+  display: flex;
+  gap: 24px;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bestsellers-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Product Card */
+.bestseller-card {
+  flex: 0 0 calc(25% - 18px);
+  min-width: 280px;
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.bestseller-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  border-color: #43BDAB;
+}
+
+/* Badge */
+.bestseller-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+.badge-essential {
+  background-color: #43BDAB;
+  color: #FFFFFF;
+}
+
+.badge-pro {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.badge-bestseller {
+  background-color: #FFD700;
+  color: #000000;
+}
+
+.badge-top {
+  background-color: #FF6B6B;
+  color: #FFFFFF;
+}
+
+/* Image */
+.bestseller-image {
+  width: 100%;
+  height: 280px;
+  background-color: #F8F8F8;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bestseller-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.bestseller-card:hover .bestseller-image img {
+  transform: scale(1.05);
+}
+
+/* Info */
+.bestseller-info {
+  padding: 20px;
+}
+
+.bestseller-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.bestseller-category {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #43BDAB;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bestseller-price {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+/* Dots */
+.bestsellers-dots {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.bestsellers-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #D0D0D0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bestsellers-dot.active {
+  background-color: #43BDAB;
+  width: 12px;
+  height: 12px;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .bestsellers {
+    padding: 60px 20px;
+  }
+
+  .bestsellers-title {
+    font-size: 36px;
+  }
+
+  .bestsellers-swiper {
+    padding: 0 40px;
+  }
+
+  .bestseller-card {
+    flex: 0 0 calc(33.333% - 16px);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .bestsellers {
+    padding: 50px 16px;
+  }
+
+  .bestsellers-title {
+    font-size: 28px;
+  }
+
+  .bestsellers-subtitle {
+    font-size: 16px;
+  }
+
+  .bestsellers-swiper {
+    padding: 0;
+  }
+
+  .bestsellers-track {
+    gap: 16px;
+    padding: 0 16px;
+  }
+
+  .bestseller-card {
+    flex: 0 0 85%;
+    min-width: auto;
+  }
+
+  .bestseller-image {
+    height: 240px;
+  }
+
+  .bestsellers-dots {
+    display: flex;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .bestsellers {
+    padding: 40px 12px;
+  }
+
+  .bestsellers-title {
+    font-size: 24px;
+  }
+
+  .bestsellers-subtitle {
+    font-size: 15px;
+  }
+
+  .bestseller-card {
+    flex: 0 0 90%;
+  }
+
+  .bestseller-image {
+    height: 220px;
+  }
+
+  .bestseller-info {
+    padding: 16px;
+  }
+
+  .bestseller-name {
+    font-size: 18px;
+  }
+
+  .bestseller-price {
+    font-size: 20px;
+  }
+}
