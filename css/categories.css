@@ -230,10 +230,10 @@
 
   .category-desc {
     font-size: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 0;
   }
 
   .category-arrow {
-    font-size: 20px;
+    display: none;
   }
 }

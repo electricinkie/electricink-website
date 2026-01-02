@@ -188,7 +188,17 @@
   }
 
   .cta-trust {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 400px;
+  }
+
+  .trust-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .trust-text {
+    font-size: 11px;
   }
 }

@@ -219,7 +219,7 @@
   }
 }
 
-/* Mobile Layout (Stacked) */
+/* Mobile Layout (2 Columns) */
 @media (max-width: 640px) {
   .site-footer {
     padding: 50px 0 0 0;
@@ -230,15 +230,16 @@
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 20px;
     margin-bottom: 40px;
   }
 
   .footer-col-logo {
-    grid-column: 1;
+    grid-column: 1 / -1;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(67, 189, 171, 0.1);
+    margin-bottom: 10px;
   }
 
   .footer-logo img {
@@ -246,17 +247,14 @@
   }
 
   .footer-col {
-    text-align: center;
-    align-items: center;
+    text-align: left;
   }
 
   .footer-heading {
     font-size: 14px;
-    width: 100%;
   }
 
   .footer-links {
-    align-items: center;
     gap: 10px;
   }
 
@@ -265,11 +263,11 @@
   }
 
   .footer-links a:hover {
-    transform: translateX(0) scale(1.05);
+    transform: translateX(3px);
   }
 
   .footer-social {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .footer-bottom {
@@ -288,7 +286,7 @@
   }
 
   .footer-grid {
-    gap: 30px;
+    gap: 25px 15px;
     margin-bottom: 30px;
   }
 
