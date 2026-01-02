@@ -1,0 +1,239 @@
+/* Categories Section Styles */
+.categories {
+  max-width: 1400px;
+  margin: 80px auto;
+  padding: 0 40px;
+}
+
+.categories-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.categories-title {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.categories-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #999999;
+  letter-spacing: 0.5px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.category-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(67, 189, 171, 0.2);
+  border-radius: 16px;
+  padding: 40px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #43BDAB 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.category-card:hover {
+  background: rgba(67, 189, 171, 0.08);
+  border-color: #43BDAB;
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(67, 189, 171, 0.2);
+}
+
+.category-card:hover::before {
+  opacity: 1;
+}
+
+.category-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 25px;
+  background: rgba(67, 189, 171, 0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.category-card:hover .category-icon {
+  background: rgba(67, 189, 171, 0.25);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.category-icon img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  transition: all 0.4s ease;
+}
+
+.category-card:hover .category-icon img {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 15px rgba(67, 189, 171, 0.7));
+}
+
+.category-name {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.category-card:hover .category-name {
+  color: #43BDAB;
+}
+
+.category-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #999999;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.category-arrow {
+  font-size: 24px;
+  color: #43BDAB;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .category-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .categories {
+    margin: 60px auto;
+    padding: 0 30px;
+  }
+
+  .categories-header {
+    margin-bottom: 40px;
+  }
+
+  .categories-title {
+    font-size: 30px;
+  }
+
+  .categories-subtitle {
+    font-size: 15px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .category-card {
+    padding: 35px 25px;
+  }
+
+  .category-icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  .category-icon img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .category-name {
+    font-size: 16px;
+  }
+
+  .category-desc {
+    font-size: 13px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .categories {
+    margin: 50px auto;
+    padding: 0 20px;
+  }
+
+  .categories-header {
+    margin-bottom: 35px;
+  }
+
+  .categories-title {
+    font-size: 24px;
+    letter-spacing: 1.5px;
+  }
+
+  .categories-subtitle {
+    font-size: 14px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .category-card {
+    padding: 30px 20px;
+  }
+
+  .category-icon {
+    width: 65px;
+    height: 65px;
+    margin-bottom: 18px;
+  }
+
+  .category-icon img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .category-name {
+    font-size: 15px;
+  }
+
+  .category-desc {
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+
+  .category-arrow {
+    font-size: 20px;
+  }
+}
