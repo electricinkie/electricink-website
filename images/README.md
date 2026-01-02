@@ -2,15 +2,30 @@
 
 ## 📁 Estrutura de Pastas
 
+### `/images/logos/`
+Coloque aqui os logos do site:
+- `logo.png` - Logo principal (usar no header)
+- `logo-white.png` - Logo branco (se necessário)
+- `logo-dark.png` - Logo escuro (se necessário)
+
+### `/images/favicons/`
+Coloque aqui os favicons:
+- `favicon.ico` - 16x16, 32x32, 48x48
+- `favicon-16x16.png`
+- `favicon-32x32.png`
+- `apple-touch-icon.png` - 180x180
+- `android-chrome-192x192.png`
+- `android-chrome-512x512.png`
+
 ### `/images/benefits/`
-Coloque aqui os ícones da Benefits Bar (4 imagens):
+✅ Coloque aqui os ícones da Benefits Bar (4 imagens):
 - `shipping-icon.png` - Free Shipping
 - `pickup-icon.png` - Studio Pickup
 - `official-icon.png` - Official Product
 - `first-purchase-icon.png` - First Purchase Discount
 
 ### `/images/categories/`
-Coloque aqui os ícones das Categorias (6 imagens):
+✅ Coloque aqui os ícones das Categorias (6 imagens):
 - `cosmetics-icon.png` - Cosmetics
 - `cartridges-icon.png` - Cartridges
 - `ink-icon.png` - Artistic Inks
@@ -21,13 +36,9 @@ Coloque aqui os ícones das Categorias (6 imagens):
 ### `/images/products/`
 Coloque aqui as fotos dos produtos para as próximas seções
 
-### `/images/`
-Pasta raiz para logo, etc:
-- `logo-placeholder.png` - Logo do site
-
 ### `/videos/`
 - `hero-banner.mp4` - Vídeo da hero section
 
 ---
 
-**Instrução:** Após colocar as imagens nas pastas corretas, avise para eu substituir os URLs do Squarespace pelos caminhos locais.
+**Instrução:** Após colocar os logos e favicons nas pastas, avise para eu atualizar o HTML com os links corretos.
