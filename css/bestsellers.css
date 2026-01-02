@@ -5,6 +5,8 @@
 .bestsellers {
   background-color: #FFFFFF;
   padding: 80px 20px;
+  overflow: hidden;
+  width: 100%;
 }
 
 .bestsellers-container {
@@ -229,6 +231,7 @@
 
   .bestsellers-swiper {
     overflow: hidden;
+    width: 100%;
   }
 
   .bestsellers-track {
