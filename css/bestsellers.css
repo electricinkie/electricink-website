@@ -238,7 +238,7 @@
     display: flex;
     grid-template-columns: none;
     gap: 16px;
-    padding: 0 16px;
+    padding: 0 20px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -250,9 +250,9 @@
   }
 
   .bestseller-card {
-    flex: 0 0 85%;
-    min-width: 0;
-    scroll-snap-align: start;
+    flex: 0 0 calc(100% - 40px);
+    min-width: calc(100% - 40px);
+    scroll-snap-align: center;
   }
 
   .bestseller-image {
