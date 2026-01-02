@@ -61,7 +61,7 @@
   display: none;
 }
 
-.new-product {3
+.new-product {
   flex: 0 0 calc(25% - 15px);
   min-width: 280px;
   scroll-snap-align: start;
