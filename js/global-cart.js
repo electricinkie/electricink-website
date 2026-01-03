@@ -61,7 +61,9 @@
     
     // Salva
     if (saveCart(cart)) {
-      showToast(`${item.name} added to cart!`);
+      if (window.toast) {
+        window.toast.success(`${item.name} added to cart!`);
+      }
       return true;
     }
     
@@ -87,39 +89,6 @@
         cartIcon.classList.remove('has-items');
       }
     }
-  }
-
-  // ────────── Toast Notification ──────────
-  function showToast(message) {
-    // Remove toast anterior se existir
-    const oldToast = document.querySelector('.cart-toast');
-    if (oldToast) {
-      oldToast.remove();
-    }
-    
-    // Cria toast
-    const toast = document.createElement('div');
-    toast.className = 'cart-toast';
-    toast.innerHTML = `
-      <div class="cart-toast-content">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/>
-          <path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span>${message}</span>
-      </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Trigger animation
-    setTimeout(() => toast.classList.add('show'), 10);
-    
-    // Remove após 3s
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
   }
 
   // ────────── Get Cart Count ──────────

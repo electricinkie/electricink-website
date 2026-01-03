@@ -58,7 +58,11 @@
     // Check if Stripe.js loaded
     if (typeof Stripe === 'undefined') {
       console.error('Stripe.js failed to load');
-      showError('Payment system unavailable. Please refresh the page.');
+      if (window.toast) {
+        window.toast.error('Payment system unavailable. Please refresh the page.');
+      } else {
+        showError('Payment system unavailable. Please refresh the page.');
+      }
       return;
     }
 
@@ -67,7 +71,11 @@
       stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
     } catch (error) {
       console.error('Stripe initialization error:', error);
-      showError('Payment system error. Please try again later.');
+      if (window.toast) {
+        window.toast.error('Payment system error. Please try again later.');
+      } else {
+        showError('Payment system error. Please try again later.');
+      }
       return;
     }
 
@@ -267,14 +275,22 @@
     const discountInput = document.getElementById('discountCode');
     
     if (!code) {
-      showDiscountError('Please enter a discount code');
+      if (window.toast) {
+        window.toast.warning('Please enter a discount code');
+      } else {
+        showDiscountError('Please enter a discount code');
+      }
       return;
     }
     
     const discount = DISCOUNT_CODES[code];
     
     if (!discount) {
-      showDiscountError('Invalid discount code');
+      if (window.toast) {
+        window.toast.error('Invalid discount code');
+      } else {
+        showDiscountError('Invalid discount code');
+      }
       discountInput.value = '';
       return;
     }
@@ -296,7 +312,11 @@
     renderOrderSummary();
     
     // Show success message
-    showDiscountSuccess(`Discount applied: ${discount.description}`);
+    if (window.toast) {
+      window.toast.success(`Discount code "${code}" applied! 🎉`);
+    } else {
+      showDiscountSuccess(`Discount applied: ${discount.description}`);
+    }
     
     // Disable input and button
     discountInput.disabled = true;
@@ -436,6 +456,9 @@
         if (error) {
           // Payment failed
           console.error('Payment error:', error);
+          if (window.toast) {
+            window.toast.error(error.message, 5000);
+          }
           showError(error.message);
           setLoading(false);
         } else if (paymentIntent.status === 'succeeded') {
@@ -445,6 +468,9 @@
 
       } catch (error) {
         console.error('Checkout error:', error);
+        if (window.toast) {
+          window.toast.error('Payment processing failed. Please try again.', 5000);
+        }
         showError('Payment processing failed. Please try again.');
         setLoading(false);
       }
@@ -467,6 +493,9 @@
     // Additional custom validation
     const email = form.email.value;
     if (!isValidEmail(email)) {
+      if (window.toast) {
+        window.toast.error('Please enter a valid email address');
+      }
       showError('Please enter a valid email address');
       form.email.focus();
       return false;

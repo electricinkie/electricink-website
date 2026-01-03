@@ -1,0 +1,106 @@
+/* ========================================
+   TOAST NOTIFICATION SYSTEM
+   ======================================== */
+
+.toast-notification {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: #FFFFFF;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #43BDAB; /* Default, overridden by JS */
+  z-index: 9999;
+  min-width: 300px;
+  max-width: 450px;
+  transform: translateX(500px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* ────────── Content ────────── */
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ────────── Icon ────────── */
+.toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ────────── Message ────────── */
+.toast-message {
+  flex: 1;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.4;
+}
+
+/* ────────── Close Button ────────── */
+.toast-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.toast-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #000;
+}
+
+.toast-close:active {
+  transform: scale(0.95);
+}
+
+/* ────────── Mobile ────────── */
+@media (max-width: 640px) {
+  .toast-notification {
+    top: auto;
+    bottom: 20px;
+    right: 15px;
+    left: 15px;
+    min-width: auto;
+    max-width: none;
+    transform: translateY(200px);
+  }
+  
+  .toast-notification.show {
+    transform: translateY(0);
+  }
+  
+  .toast-message {
+    font-size: 13px;
+  }
+}
+
+/* ────────── Accessibility ────────── */
+.toast-notification:focus-within {
+  outline: 2px solid #43BDAB;
+  outline-offset: 2px;
+}
+
+/* ────────── Animation Performance ────────── */
+.toast-notification {
+  will-change: transform, opacity;
+}

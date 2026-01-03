@@ -94,7 +94,14 @@
     
     // Remove se quantidade = 0
     if (item.quantity <= 0) {
-      removeItem(itemId);
+      cart = cart.filter(i => i.id !== itemId);
+      saveCart();
+      renderCart();
+      
+      // Toast feedback
+      if (window.toast) {
+        window.toast.success(`${item.name} removed from cart`);
+      }
       return;
     }
     
@@ -104,12 +111,22 @@
 
   // ────────── Remove Item ──────────
   function removeItem(itemId) {
-    const confirmed = confirm('Remove this item from cart?');
-    if (!confirmed) return;
+    const item = cart.find(i => i.id === itemId);
+    if (!item) return;
     
-    cart = cart.filter(item => item.id !== itemId);
+    // Confirmação
+    if (!confirm(`Remove ${item.name} from cart?`)) {
+      return;
+    }
+    
+    cart = cart.filter(i => i.id !== itemId);
     saveCart();
     renderCart();
+    
+    // Toast feedback
+    if (window.toast) {
+      window.toast.success(`${item.name} removed from cart`);
+    }
   }
 
   // ────────── Render Cart Items ──────────
@@ -196,7 +213,11 @@
   // ────────── Proceed to Checkout ──────────
   checkoutBtn.addEventListener('click', function() {
     if (cart.length === 0) {
-      alert('Your cart is empty');
+      if (window.toast) {
+        window.toast.warning('Your cart is empty');
+      } else {
+        alert('Your cart is empty');
+      }
       return;
     }
     

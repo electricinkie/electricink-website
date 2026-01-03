@@ -12,7 +12,16 @@
   // Redirect se não tiver payment_intent
   if (!paymentIntentId) {
     console.error('No payment_intent in URL');
-    window.location.href = '/';
+    
+    // Toast antes de redirecionar
+    if (window.toast) {
+      window.toast.warning('No order found. Redirecting to home...', 2000);
+    }
+    
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 2000);
+    
     return;
   }
 
@@ -89,5 +98,13 @@
   if (window.cart && window.cart.updateCartCount) {
     window.cart.updateCartCount();
   }
+
+  // ────────── Success Toast ──────────
+  // Após renderizar tudo, mostrar toast de sucesso
+  setTimeout(() => {
+    if (window.toast) {
+      window.toast.success('Order confirmed! Check your email for details.', 5000);
+    }
+  }, 500);
 
 })();
