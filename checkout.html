@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Electric Ink IE</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="/index.html">
+          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland">
+        </a>
+      </div>
+      
+      <a href="/cart.html" class="header-cart" aria-label="Shopping Cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/>
+          <circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span class="cart-count">0</span>
+      </a>
+    </div>
+  </header>
+  
+  <!-- Main -->
+  <main class="checkout-main">
+    <div class="checkout-container">
+      
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/cart.html">Cart</a>
+        <span>/</span>
+        <span>Checkout</span>
+      </nav>
+      
+      <!-- Title -->
+      <h1 class="checkout-title">Checkout</h1>
+      
+      <!-- Grid: Form + Summary -->
+      <div class="checkout-grid">
+        
+        <!-- Left: Checkout Form -->
+        <div class="checkout-form-section">
+          
+          <form id="checkoutForm">
+            
+            <!-- Contact Information -->
+            <div class="form-section">
+              <h2>Contact Information</h2>
+              
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  required
+                  placeholder="your@email.com"
+                >
+              </div>
+            </div>
+            
+            <!-- Shipping Address -->
+            <div class="form-section">
+              <h2>Shipping Address</h2>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name *</label>
+                  <input 
+                    type="text" 
+                    id="firstName" 
+                    name="firstName" 
+                    required
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label for="lastName">Last Name *</label>
+                  <input 
+                    type="text" 
+                    id="lastName" 
+                    name="lastName" 
+                    required
+                  >
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="address">Address *</label>
+                <input 
+                  type="text" 
+                  id="address" 
+                  name="address" 
+                  required
+                  placeholder="Street address"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="address2">Apartment, suite, etc. (optional)</label>
+                <input 
+                  type="text" 
+                  id="address2" 
+                  name="address2"
+                >
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="city">City *</label>
+                  <input 
+                    type="text" 
+                    id="city" 
+                    name="city" 
+                    required
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label for="postalCode">Postal Code *</label>
+                  <input 
+                    type="text" 
+                    id="postalCode" 
+                    name="postalCode" 
+                    required
+                  >
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="country">Country *</label>
+                <select id="country" name="country" required>
+                  <option value="IE">Ireland</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="FR">France</option>
+                  <option value="DE">Germany</option>
+                  <option value="ES">Spain</option>
+                  <option value="IT">Italy</option>
+                  <option value="NL">Netherlands</option>
+                  <option value="BE">Belgium</option>
+                  <option value="PT">Portugal</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="phone">Phone *</label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  name="phone" 
+                  required
+                  placeholder="+353 XX XXX XXXX"
+                >
+              </div>
+            </div>
+            
+            <!-- Payment -->
+            <div class="form-section">
+              <h2>Payment</h2>
+              
+              <div class="form-group">
+                <label for="card-element">Card Details *</label>
+                <div id="card-element">
+                  <!-- Stripe Elements vai renderizar aqui -->
+                </div>
+                <div id="card-errors" role="alert"></div>
+              </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              id="submitBtn" 
+              class="btn-complete-order"
+            >
+              <span id="button-text">Complete Order</span>
+              <span id="spinner" class="spinner" style="display:none;"></span>
+            </button>
+            
+            <p class="secure-notice">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1l6 2v4.5c0 3.5-2.5 6.5-6 7.5-3.5-1-6-4-6-7.5V3l6-2z" fill="#43BDAB"/>
+              </svg>
+              Your payment information is encrypted and secure
+            </p>
+            
+          </form>
+          
+        </div>
+        
+        <!-- Right: Order Summary -->
+        <div class="checkout-summary">
+          <h2>Order Summary</h2>
+          
+          <!-- Cart Items -->
+          <div class="summary-items" id="summaryItems">
+            <!-- Rendered by JS -->
+          </div>
+          
+          <!-- Totals -->
+          <div class="summary-totals">
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <span id="summarySubtotal">€0.00</span>
+            </div>
+            
+            <div class="summary-line">
+              <span>Shipping</span>
+              <span id="summaryShipping">€0.00</span>
+            </div>
+            
+            <div class="summary-line summary-total">
+              <span>Total</span>
+              <span id="summaryTotal">€0.00</span>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer id="footer"></footer>
+  
+  <!-- Scripts -->
+  <script src="/js/global-cart.js"></script>
+  <script src="/js/checkout.js"></script>
+  
+</body>
+</html>
