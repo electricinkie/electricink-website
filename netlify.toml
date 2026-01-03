@@ -2,7 +2,10 @@
   functions = "netlify/functions"
   publish = "."
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# No catch-all redirects!
+# This ensures all pages (cart.html, checkout.html, success.html, etc) load correctly
+# Add specific redirects only if needed:
+# [[redirects]]
+#   from = "/old-page"
+#   to = "/new-page"
+#   status = 301
