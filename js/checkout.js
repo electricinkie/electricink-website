@@ -526,6 +526,45 @@
     }
   }
 
+  async function sendOrderEmails(orderInfo, paymentIntentId) {
+    const orderNumber = paymentIntentId.substring(3, 15).toUpperCase();
+    
+    const emailData = {
+      orderNumber: orderNumber,
+      email: orderInfo.email,
+      items: orderInfo.items,
+      totals: orderInfo.totals,
+      shipping: orderInfo.shipping
+    };
+
+    try {
+      // Email 1: Customer confirmation
+      await fetch('/.netlify/functions/send-order-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'order-confirmation',
+          data: emailData
+        })
+      });
+
+      // Email 2: Admin notification
+      await fetch('/.netlify/functions/send-order-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'order-notification-admin',
+          data: emailData
+        })
+      });
+
+      console.log('Order emails sent successfully');
+    } catch (error) {
+      console.error('Email sending failed (non-blocking):', error);
+      // Don't block checkout flow if emails fail
+    }
+  }
+
   function handlePaymentSuccess(paymentIntent) {
     // Save order info to localStorage (completo para success page)
     const orderInfo = {
@@ -560,6 +599,9 @@
     } catch (error) {
       console.error('Error saving order info:', error);
     }
+
+    // Send confirmation emails
+    sendOrderEmails(orderInfo, paymentIntent.id);
 
     // Clear cart
     try {
