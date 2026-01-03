@@ -90,6 +90,4 @@
     window.cart.updateCartCount();
   }
 
-  console.log('✅ Order confirmed:', orderNumber);
-
 })();
