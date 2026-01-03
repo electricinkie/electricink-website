@@ -114,8 +114,6 @@ exports.handler = async (event) => {
     // Parse request
     const { type, data } = JSON.parse(event.body);
 
-    console.log('Email request:', { type, hasData: !!data });
-
     // Validate
     if (!type || !data) {
       return {
@@ -219,8 +217,6 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: 'Invalid email type' })
       };
     }
-
-    console.log('Email sent successfully:', emailResult);
 
     return {
       statusCode: 200,

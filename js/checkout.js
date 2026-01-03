@@ -557,8 +557,6 @@
           data: emailData
         })
       });
-
-      console.log('Order emails sent successfully');
     } catch (error) {
       console.error('Email sending failed (non-blocking):', error);
       // Don't block checkout flow if emails fail
