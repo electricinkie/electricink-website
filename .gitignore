@@ -1,4 +1,23 @@
-node_modules
+# Dependencies
+node_modules/
+package-lock.json
+
+# Netlify
+.netlify/
+
+# Environment
 .env
+.env.local
+
+# Vercel
 .vercel
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
