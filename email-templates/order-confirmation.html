@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+  <style>
+    /* Reset */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f8f8f8;
+    }
+    
+    table {
+      border-collapse: collapse;
+    }
+    
+    img {
+      border: 0;
+      outline: none;
+      text-decoration: none;
+      display: block;
+    }
+    
+    /* Container */
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+    }
+    
+    /* Header */
+    .email-header {
+      background-color: #000000;
+      padding: 30px 40px;
+      text-align: center;
+    }
+    
+    .email-logo-img {
+      max-width: 144px;
+      height: auto;
+      margin: 0 auto 15px;
+      display: block;
+    }
+    
+    .email-logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #FFFFFF;
+      margin: 0;
+    }
+    
+    .email-logo span {
+      color: #43BDAB;
+    }
+    
+    /* Success Icon */
+    .success-section {
+      text-align: center;
+      padding: 40px 40px 20px;
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border: 4px solid #43BDAB;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 72px;
+    }
+    
+    .checkmark {
+      font-size: 48px;
+      color: #43BDAB;
+      font-weight: bold;
+    }
+    
+    .success-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0 0 10px 0;
+    }
+    
+    .success-subtitle {
+      font-size: 16px;
+      color: #666666;
+      margin: 0;
+    }
+    
+    /* Order Number */
+    .order-number {
+      background-color: #f8f8f8;
+      padding: 20px 40px;
+      text-align: center;
+    }
+    
+    .order-number-label {
+      font-size: 14px;
+      color: #666666;
+      margin: 0 0 8px 0;
+    }
+    
+    .order-number-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #43BDAB;
+      margin: 0;
+    }
+    
+    /* Content */
+    .email-content {
+      padding: 30px 40px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0 0 20px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8e8e8;
+    }
+    
+    /* Order Items */
+    .order-item {
+      display: table;
+      width: 100%;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .item-image {
+      display: table-cell;
+      width: 80px;
+      vertical-align: top;
+    }
+    
+    .item-image img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+    }
+    
+    .item-details {
+      display: table-cell;
+      padding-left: 15px;
+      vertical-align: top;
+    }
+    
+    .item-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0 0 5px 0;
+    }
+    
+    .item-variant {
+      font-size: 14px;
+      color: #666666;
+      margin: 0 0 5px 0;
+    }
+    
+    .item-qty {
+      font-size: 14px;
+      color: #999999;
+      margin: 0;
+    }
+    
+    .item-price {
+      display: table-cell;
+      text-align: right;
+      vertical-align: top;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000000;
+      white-space: nowrap;
+    }
+    
+    /* Order Totals */
+    .order-totals {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+    
+    .total-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: #666666;
+    }
+    
+    .total-line:last-child {
+      margin-bottom: 0;
+    }
+    
+    .total-line.grand-total {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 2px solid #e8e8e8;
+      font-size: 18px;
+      font-weight: bold;
+      color: #000000;
+    }
+    
+    .total-line.grand-total .amount {
+      color: #43BDAB;
+      font-size: 22px;
+    }
+    
+    /* Shipping Address */
+    .shipping-address {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      line-height: 1.6;
+      font-size: 14px;
+      color: #666666;
+    }
+    
+    /* CTA Button */
+    .cta-section {
+      text-align: center;
+      padding: 30px 40px;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background-color: #43BDAB;
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Footer */
+    .email-footer {
+      background-color: #f8f8f8;
+      padding: 30px 40px;
+      text-align: center;
+      font-size: 13px;
+      color: #666666;
+      line-height: 1.6;
+    }
+    
+    .email-footer a {
+      color: #43BDAB;
+      text-decoration: none;
+    }
+    
+    .social-links {
+      margin: 20px 0;
+    }
+    
+    .social-links a {
+      display: inline-block;
+      margin: 0 8px;
+      color: #666666;
+      text-decoration: none;
+    }
+    
+    /* Mobile */
+    @media only screen and (max-width: 600px) {
+      .email-header {
+        padding: 20px;
+      }
+      
+      .email-content {
+        padding: 20px;
+      }
+      
+      .success-section {
+        padding: 30px 20px 15px;
+      }
+      
+      .order-number {
+        padding: 15px 20px;
+      }
+      
+      .cta-section {
+        padding: 20px;
+      }
+      
+      .email-footer {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <table role="presentation" class="email-container" width="100%" cellspacing="0" cellpadding="0">
+    
+    <!-- Header -->
+    <tr>
+      <td class="email-header">
+        <img src="https://electricink.ie/images/logos/logo-white.png" alt="Electric Ink IE" class="email-logo-img">
+        <h1 class="email-logo">ELECTRIC INK <span>IE</span></h1>
+      </td>
+    </tr>
+    
+    <!-- Success Section -->
+    <tr>
+      <td class="success-section">
+        <div class="success-icon">
+          <div class="checkmark">✓</div>
+        </div>
+        <h2 class="success-title">Order Confirmed!</h2>
+        <p class="success-subtitle">Thank you for your purchase</p>
+      </td>
+    </tr>
+    
+    <!-- Order Number -->
+    <tr>
+      <td class="order-number">
+        <p class="order-number-label">Order Number</p>
+        <p class="order-number-value">{{ORDER_NUMBER}}</p>
+      </td>
+    </tr>
+    
+    <!-- Order Items -->
+    <tr>
+      <td class="email-content">
+        <h3 class="section-title">Order Details</h3>
+        
+        {{ORDER_ITEMS}}
+        
+        <!-- Order Totals -->
+        <div class="order-totals">
+          <div class="total-line">
+            <span>Subtotal</span>
+            <span>€{{SUBTOTAL}}</span>
+          </div>
+          <div class="total-line">
+            <span>Shipping</span>
+            <span>{{SHIPPING}}</span>
+          </div>
+          <div class="total-line">
+            <span>VAT (23%)</span>
+            <span>€{{VAT}}</span>
+          </div>
+          <div class="total-line grand-total">
+            <span>Total Paid</span>
+            <span class="amount">€{{TOTAL}}</span>
+          </div>
+        </div>
+        
+      </td>
+    </tr>
+    
+    <!-- Shipping Address -->
+    <tr>
+      <td class="email-content">
+        <h3 class="section-title">Shipping Address</h3>
+        <div class="shipping-address">
+          {{SHIPPING_ADDRESS}}
+        </div>
+      </td>
+    </tr>
+    
+    <!-- CTA -->
+    <tr>
+      <td class="cta-section">
+        <a href="https://electricink.ie/howtousecosmetics" class="cta-button">Learn How to Use Your Products</a>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td class="email-footer">
+        <p style="margin: 0 0 10px 0;">
+          Questions about your order?<br>
+          Contact us: <a href="mailto:electricink.ie@gmail.com">electricink.ie@gmail.com</a><br>
+          WhatsApp: <a href="https://wa.link/kzetgg">+353 83 147 3502</a>
+        </p>
+        
+        <div class="social-links">
+          <a href="https://instagram.com/electricinkie">Instagram</a> | 
+          <a href="https://electricink.ie">Website</a>
+        </div>
+        
+        <p style="margin: 0; font-size: 12px; color: #999;">
+          © 2025 Electric Ink IE. All rights reserved.<br>
+          Dublin, Ireland
+        </p>
+      </td>
+    </tr>
+    
+  </table>
+  
+</body>
+</html>
