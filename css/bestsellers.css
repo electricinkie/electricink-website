@@ -64,11 +64,12 @@
   color: inherit;
   transition: all 0.3s ease;
   position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .bestseller-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
   border-color: #43BDAB;
 }
 
@@ -218,7 +219,8 @@
 /* Mobile */
 @media (max-width: 768px) {
   .bestsellers {
-    padding: 50px 16px;
+    padding: 50px 0;
+    overflow: visible;
   }
 
   .bestsellers-title {
@@ -230,15 +232,17 @@
   }
 
   .bestsellers-swiper {
-    overflow: hidden;
+    overflow: visible;
     width: 100%;
+    padding: 20px 0;
   }
 
   .bestsellers-track {
     display: flex;
     grid-template-columns: none;
     gap: 16px;
-    padding: 0 20px;
+    padding: 20px 20px;
+    margin: -20px 0;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -253,6 +257,11 @@
     flex: 0 0 calc(100% - 40px);
     min-width: calc(100% - 40px);
     scroll-snap-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .bestseller-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   }
 
   .bestseller-image {

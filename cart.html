@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | Electric Ink IE</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/cart.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="/index.html">
+          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland">
+        </a>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Main -->
+  <main class="cart-main">
+    <div class="cart-container">
+      
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Shopping Cart</span>
+      </nav>
+      
+      <!-- Page Title -->
+      <h1 class="cart-title">Shopping Cart</h1>
+      
+      <!-- Cart Grid: Items + Summary -->
+      <div class="cart-grid">
+        
+        <!-- Left: Cart Items -->
+        <div class="cart-items-section">
+          
+          <!-- Empty Cart State -->
+          <div class="cart-empty" id="cartEmpty" style="display: none;">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="58" stroke="#e8e8e8" stroke-width="4"/>
+              <path d="M40 50h40M45 60h30M50 70h20" stroke="#43BDAB" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <h2>Your cart is empty</h2>
+            <p>Add some products to get started</p>
+            <a href="/category.html?cat=all" class="btn-primary">Shop Products</a>
+          </div>
+          
+          <!-- Cart Items List -->
+          <div class="cart-items" id="cartItems">
+            <!-- Rendered by JS -->
+          </div>
+          
+        </div>
+        
+        <!-- Right: Order Summary -->
+        <div class="cart-summary">
+          <h2>Order Summary</h2>
+          
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span id="summarySubtotal">€0.00</span>
+          </div>
+          
+          <div class="summary-line">
+            <span>Shipping</span>
+            <span id="summaryShipping">Calculated at checkout</span>
+          </div>
+          
+          <div class="summary-line summary-total">
+            <span>Total</span>
+            <span id="summaryTotal">€0.00</span>
+          </div>
+          
+          <button class="btn-checkout" id="checkoutBtn">
+            Proceed to Checkout
+          </button>
+          
+          <a href="/category.html?cat=all" class="continue-shopping">
+            ← Continue Shopping
+          </a>
+          
+          <!-- Trust Badges -->
+          <div class="trust-badges">
+            <div class="trust-badge">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 2l2.5 5 5.5 1-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1z" fill="#43BDAB"/>
+              </svg>
+              <span>Secure Checkout</span>
+            </div>
+            <div class="trust-badge">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M3 8l7-5 7 5v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" fill="#43BDAB"/>
+              </svg>
+              <span>Fast Delivery</span>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland" class="footer-logo">
+          <p>Professional tattoo supplies in Ireland</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Electric Ink Ireland. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Scripts -->
+  <!-- Global Cart System (MUST be first) -->
+  <script src="/js/global-cart.js"></script>
+  
+  <!-- Page Scripts -->
+  <script src="/js/cart.js"></script>
+  
+</body>
+</html>

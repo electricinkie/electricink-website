@@ -25,11 +25,11 @@
   </header>
 
   <!-- Breadcrumb -->
-  <div class="breadcrumb">
-    <a href="/">Home</a>
-    <span>/</span>
-    <span id="breadcrumb-category">Products</span>
-  </div>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/" class="breadcrumb-link">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <span id="breadcrumb-category" class="breadcrumb-current">Products</span>
+  </nav>
 
   <!-- Category Page -->
   <main class="category-page">
@@ -134,6 +134,10 @@
   </footer>
 
   <!-- JavaScript -->
+  <!-- Global Cart System (MUST be first) -->
+  <script src="/js/global-cart.js"></script>
+  
+  <!-- Page Scripts -->
   <script src="/js/category-page.js"></script>
 </body>
 </html>

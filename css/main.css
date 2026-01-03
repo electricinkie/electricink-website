@@ -25,3 +25,53 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* ========================================
+   CART TOAST NOTIFICATION
+   ======================================== */
+
+.cart-toast {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: #FFFFFF;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 2px solid #43BDAB;
+  z-index: 9999;
+  transform: translateX(400px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.cart-toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.cart-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-toast-content span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+@media (max-width: 640px) {
+  .cart-toast {
+    top: 80px;
+    right: 15px;
+    left: 15px;
+    text-align: center;
+  }
+  
+  .cart-toast-content {
+    justify-content: center;
+  }
+}

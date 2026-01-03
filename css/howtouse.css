@@ -1,0 +1,448 @@
+/* ========================================
+   HOW TO USE COSMETICS PAGE
+   ======================================== */
+
+/* ────────── Global ────────── */
+.howtouse-main {
+  background: #FFFFFF;
+  padding: 0;
+}
+
+/* ────────── Hero Section ────────── */
+.howtouse-hero {
+  background: #000000;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.howtouse-hero-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.howtouse-hero-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #43BDAB;
+  margin-bottom: 20px;
+}
+
+.howtouse-hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #FFFFFF;
+  margin-bottom: 30px;
+}
+
+.howtouse-hero-title span {
+  display: block;
+  font-size: 72px;
+  background: linear-gradient(135deg, #43BDAB 0%, #FFFFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.howtouse-hero-description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.howtouse-hero-description strong {
+  color: #43BDAB;
+  font-weight: 600;
+}
+
+/* ────────── Phase Sections ────────── */
+.howtouse-phase {
+  padding: 80px 20px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.howtouse-phase:last-of-type {
+  border-bottom: none;
+}
+
+/* Phase Header */
+.howtouse-phase-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.howtouse-phase-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #43BDAB 0%, #2a9d8f 100%);
+  color: #FFFFFF;
+  padding: 8px 24px;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.howtouse-phase-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+.howtouse-phase-header p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: #666666;
+  margin: 8px 0 0 0;
+}
+
+/* ────────── Products Grid ────────── */
+.howtouse-products {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.howtouse-products-3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ────────── Product Card ────────── */
+.howtouse-product {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 45px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(67, 189, 171, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.howtouse-product:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(67, 189, 171, 0.2);
+  border-color: #43BDAB;
+}
+
+/* Product Header (Desktop: Column layout) */
+.howtouse-product-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.howtouse-product-header img {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.howtouse-product-header h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+/* Number Badge */
+.howtouse-number {
+  position: absolute;
+  top: -20px;
+  right: 40px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #43BDAB 0%, #2a9d8f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+  box-shadow: 0 4px 15px rgba(67, 189, 171, 0.4);
+}
+
+/* Product Content (Desktop: Always visible) */
+.howtouse-product-content {
+  transition: all 0.3s ease;
+}
+
+.howtouse-product-content p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #666666;
+  margin-bottom: 25px;
+}
+
+.howtouse-product-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+}
+
+.howtouse-product-content li {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #444444;
+  margin-bottom: 12px;
+  padding-left: 30px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.howtouse-product-content li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #43BDAB;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.howtouse-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(67, 189, 171, 0.1);
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #43BDAB;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.howtouse-product:hover .howtouse-cta {
+  background: #43BDAB;
+  color: #FFFFFF;
+  transform: translateX(5px);
+}
+
+/* ────────── Aftercare Tips (Phase 5) ────────── */
+.howtouse-tips {
+  background: #000000;
+  border-radius: 24px;
+  padding: 60px;
+  margin-top: 80px;
+}
+
+.howtouse-tips h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.howtouse-tips > p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  margin: 0 0 50px 0;
+}
+
+.howtouse-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.howtouse-tip {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 30px;
+  border: 1px solid rgba(67, 189, 171, 0.2);
+  transition: all 0.3s ease;
+}
+
+.howtouse-tip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #43BDAB;
+  transform: translateY(-5px);
+}
+
+.howtouse-tip h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 12px 0;
+}
+
+.howtouse-tip p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* ────────── Mobile (Accordion) ────────── */
+@media (max-width: 968px) {
+  .howtouse-hero {
+    padding: 40px 20px;
+  }
+  
+  .howtouse-hero-title {
+    font-size: 30px;
+  }
+  
+  .howtouse-hero-title span {
+    font-size: 48px;
+  }
+  
+  .howtouse-hero-description {
+    font-size: 14px;
+  }
+  
+  .howtouse-phase {
+    padding: 60px 20px;
+  }
+  
+  .howtouse-phase-header h2 {
+    font-size: 32px;
+  }
+  
+  .howtouse-products,
+  .howtouse-products-3col {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .howtouse-product {
+    padding: 20px;
+  }
+  
+  /* Mobile: Horizontal layout (Image - Title - Arrow - Number) */
+  .howtouse-product-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 0;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 12px;
+    transition: background 0.3s ease;
+  }
+  
+  .howtouse-product-header:hover {
+    background: rgba(67, 189, 171, 0.05);
+  }
+  
+  .howtouse-product-header img {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+  
+  .howtouse-product-header h3 {
+    font-size: 20px;
+    flex: 1;
+  }
+  
+  /* Arrow indicator */
+  .howtouse-product-header::after {
+    content: '▼';
+    font-size: 20px;
+    color: #43BDAB;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .howtouse-product-header.active::after {
+    transform: rotate(180deg);
+  }
+  
+  /* Number repositioned */
+  .howtouse-number {
+    position: static;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  
+  /* Content: Collapsible */
+  .howtouse-product-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0;
+  }
+  
+  .howtouse-product-content.active {
+    max-height: 1000px;
+    opacity: 1;
+    padding: 20px 0 0 0;
+  }
+  
+  /* Tips Grid */
+  .howtouse-tips {
+    padding: 40px 25px;
+  }
+  
+  .howtouse-tips h3 {
+    font-size: 32px;
+  }
+  
+  .howtouse-tips-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .howtouse-hero-title {
+    font-size: 28px;
+  }
+  
+  .howtouse-hero-title span {
+    font-size: 40px;
+  }
+  
+  .howtouse-phase-header h2 {
+    font-size: 28px;
+  }
+  
+  .howtouse-product-header img {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .howtouse-product-header h3 {
+    font-size: 18px;
+  }
+  
+  .howtouse-number {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+  
+  .howtouse-tips h3 {
+    font-size: 28px;
+  }
+}

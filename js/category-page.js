@@ -54,12 +54,35 @@
     return;
   }
 
-  // FILTER products by category
-  const productsArray = Object.entries(allProducts).map(([id, data]) => ({
-    id,
-    ...data
-  }));
+  // CONVERT to array and NORMALIZE structure
+  const productsArray = Object.entries(allProducts).map(([id, data]) => {
+    // Extract values with fallbacks for both old and new structure
+    const name = data.basic?.name || data.name || 'Unnamed Product';
+    const productCategory = data.basic?.category || data.category || 'uncategorized';
+    const image = data.media?.main_image || data.image || data.media?.gallery?.[0] || '/images/placeholder.jpg';
+    
+    // Handle price (single price OR price range for variants)
+    let priceDisplay;
+    if (data.variants && data.variants.length > 0) {
+      // Has variants - use price range
+      priceDisplay = data.price_range?.display || `from €${data.variants[0].price.toFixed(2)}`;
+    } else {
+      // Single product - use basic price
+      const price = data.basic?.price || data.price;
+      priceDisplay = price ? `€${price.toFixed(2)}` : 'Price unavailable';
+    }
 
+    return {
+      id,
+      name,
+      category: productCategory,
+      image,
+      priceDisplay,
+      hasVariants: !!(data.variants && data.variants.length > 0)
+    };
+  });
+
+  // FILTER products by category
   const filteredProducts = category === 'all' 
     ? productsArray 
     : productsArray.filter(p => p.category === category);
@@ -87,47 +110,36 @@
 
       // Image
       const img = document.createElement('img');
-      img.src = product.image || product.images?.[0] || '/images/placeholder.jpg';
+      img.src = product.image;
       img.alt = product.name;
       img.loading = 'lazy';
       img.onerror = () => { img.src = '/images/placeholder.jpg'; };
 
-      // Info
+      // Info container
       const info = document.createElement('div');
       info.className = 'product-info';
 
+      // Category badge
+      const categoryBadge = document.createElement('p');
+      categoryBadge.className = 'product-category';
+      categoryBadge.textContent = product.category.toUpperCase();
+
+      // Product name
       const name = document.createElement('h3');
       name.className = 'product-name';
       name.textContent = product.name;
 
-      const categoryBadge = document.createElement('p');
-      categoryBadge.className = 'product-category';
-      categoryBadge.textContent = product.category?.toUpperCase() || 'PRODUCT';
-
+      // Price
       const price = document.createElement('div');
       price.className = 'product-price';
-      
-      if (product.variants && product.variants.length > 0) {
-        // Has variants - show price range
-        const prices = product.variants.map(v => v.price);
-        const minPrice = Math.min(...prices);
-        const maxPrice = Math.max(...prices);
-        
-        if (minPrice === maxPrice) {
-          price.textContent = `€${minPrice.toFixed(2)}`;
-        } else {
-          price.textContent = `€${minPrice.toFixed(2)} - €${maxPrice.toFixed(2)}`;
-        }
-      } else {
-        // Simple product
-        price.textContent = `€${product.price.toFixed(2)}`;
-      }
+      price.textContent = product.priceDisplay;
 
+      // View button
       const viewBtn = document.createElement('div');
       viewBtn.className = 'product-view-btn';
       viewBtn.textContent = 'View Product →';
 
-      // Assemble
+      // Assemble card
       info.appendChild(categoryBadge);
       info.appendChild(name);
       info.appendChild(price);
