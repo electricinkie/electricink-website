@@ -110,14 +110,19 @@
   }
 
   // ────────── Remove Item ──────────
-  function removeItem(itemId) {
+  async function removeItem(itemId) {
     const item = cart.find(i => i.id === itemId);
     if (!item) return;
     
-    // Confirmação
-    if (!confirm(`Remove ${item.name} from cart?`)) {
-      return;
-    }
+    // Modal customizado
+    const confirmed = await window.modal.delete({
+      title: 'Remove Item',
+      message: `Remove ${item.name} from cart?`,
+      primaryBtn: 'Remove',
+      secondaryBtn: 'Cancel'
+    });
+    
+    if (!confirmed) return;
     
     cart = cart.filter(i => i.id !== itemId);
     saveCart();
