@@ -24,8 +24,13 @@
   let totals = {
     subtotal: 0,
     shipping: 0,
+    discount: 0,
+    vat: 0,
     total: 0
   };
+  
+  let deliveryMethod = 'delivery'; // 'delivery' or 'pickup'
+  const VAT_RATE = 0.23; // 23% VAT for Ireland
 
   // ============================================
   // DOM ELEMENTS
@@ -41,6 +46,7 @@
     summaryItems: document.getElementById('summaryItems'),
     summarySubtotal: document.getElementById('summarySubtotal'),
     summaryShipping: document.getElementById('summaryShipping'),
+    summaryVAT: document.getElementById('summaryVAT'),
     summaryTotal: document.getElementById('summaryTotal')
   };
 
@@ -83,6 +89,12 @@
     // Initialize Stripe Elements
     initializeStripeElements();
     
+    // Setup delivery tabs
+    setupDeliveryTabs();
+    
+    // Setup discount code
+    setupDiscountCode();
+    
     // Setup form handler
     setupFormHandler();
   }
@@ -107,11 +119,25 @@
       return sum + (item.price * item.quantity);
     }, 0);
 
-    // Calculate shipping (FREE above €120, else €8.50)
-    totals.shipping = totals.subtotal >= 120 ? 0 : 8.50;
+    // Calculate shipping (FREE above €120 or if pickup, else €8.50)
+    if (deliveryMethod === 'pickup') {
+      totals.shipping = 0;
+    } else {
+      totals.shipping = totals.subtotal >= 120 ? 0 : 8.50;
+    }
 
-    // Calculate total
-    totals.total = totals.subtotal + totals.shipping;
+    // Apply discount (if any)
+    // totals.discount is set by applyDiscount function
+
+    // Calculate subtotal after discount
+    const subtotalAfterDiscount = totals.subtotal - totals.discount;
+
+    // Calculate VAT (23% on subtotal)
+    totals.vat = subtotalAfterDiscount * VAT_RATE;
+
+    // Calculate total (subtotal - discount + shipping + VAT)
+    // ✅ TOTAL INCLUI VAT - CRÍTICO PARA PAYMENT INTENT
+    totals.total = subtotalAfterDiscount + totals.shipping + totals.vat;
   }
 
   // ============================================
@@ -147,9 +173,173 @@
         : `€${totals.shipping.toFixed(2)}`;
     }
     
+    if (elements.summaryVAT) {
+      elements.summaryVAT.textContent = `€${totals.vat.toFixed(2)}`;
+    }
+    
     if (elements.summaryTotal) {
       elements.summaryTotal.textContent = `€${totals.total.toFixed(2)}`;
     }
+    
+    // Update discount if element exists
+    const discountElement = document.getElementById('summaryDiscount');
+    if (discountElement) {
+      discountElement.textContent = totals.discount > 0 
+        ? `-€${totals.discount.toFixed(2)}` 
+        : '€0.00';
+    }
+  }
+
+  // ============================================
+  // DELIVERY TABS
+  // ============================================
+  
+  function setupDeliveryTabs() {
+    const tabs = document.querySelectorAll('.delivery-tab');
+    const deliveryAddress = document.getElementById('deliveryAddress');
+    const pickupAddress = document.getElementById('pickupAddress');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active from all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        
+        // Add active to clicked tab
+        this.classList.add('active');
+        
+        // Get method
+        deliveryMethod = this.dataset.method;
+        
+        // Toggle address sections
+        if (deliveryMethod === 'delivery') {
+          if (deliveryAddress) deliveryAddress.style.display = 'flex';
+          if (pickupAddress) pickupAddress.style.display = 'none';
+          
+          // Make delivery fields required
+          const deliveryInputs = deliveryAddress.querySelectorAll('input[required], select[required]');
+          deliveryInputs.forEach(input => input.required = true);
+        } else {
+          if (deliveryAddress) deliveryAddress.style.display = 'none';
+          if (pickupAddress) pickupAddress.style.display = 'block';
+          
+          // Make delivery fields not required
+          const deliveryInputs = deliveryAddress.querySelectorAll('input, select');
+          deliveryInputs.forEach(input => input.required = false);
+        }
+        
+        // Recalculate totals (shipping changes with pickup)
+        calculateTotals();
+        renderOrderSummary();
+      });
+    });
+  }
+
+  // ============================================
+  // DISCOUNT CODE
+  // ============================================
+  
+  // Valid discount codes (you can expand this)
+  const DISCOUNT_CODES = {
+    'FIRSTORDER': { type: 'fixed', value: 15, description: '€15 off' },
+    'FREECAT': { type: 'shipping', value: 0, description: 'Free shipping' }
+  };
+  
+  function setupDiscountCode() {
+    const discountInput = document.getElementById('discountCode');
+    const applyButton = document.getElementById('applyDiscount');
+    
+    if (!discountInput || !applyButton) return;
+    
+    applyButton.addEventListener('click', function() {
+      applyDiscountCode(discountInput.value.trim().toUpperCase());
+    });
+    
+    // Also apply on Enter key
+    discountInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyDiscountCode(discountInput.value.trim().toUpperCase());
+      }
+    });
+  }
+  
+  function applyDiscountCode(code) {
+    const discountInput = document.getElementById('discountCode');
+    
+    if (!code) {
+      showDiscountError('Please enter a discount code');
+      return;
+    }
+    
+    const discount = DISCOUNT_CODES[code];
+    
+    if (!discount) {
+      showDiscountError('Invalid discount code');
+      discountInput.value = '';
+      return;
+    }
+    
+    // Calculate discount amount
+    if (discount.type === 'percentage') {
+      totals.discount = totals.subtotal * (discount.value / 100);
+    } else if (discount.type === 'fixed') {
+      totals.discount = Math.min(discount.value, totals.subtotal);
+    } else if (discount.type === 'shipping') {
+      // For shipping discount, we'll handle it differently
+      if (deliveryMethod === 'delivery') {
+        totals.shipping = 0;
+      }
+    }
+    
+    // Recalculate totals
+    calculateTotals();
+    renderOrderSummary();
+    
+    // Show success message
+    showDiscountSuccess(`Discount applied: ${discount.description}`);
+    
+    // Disable input and button
+    discountInput.disabled = true;
+    document.getElementById('applyDiscount').disabled = true;
+    document.getElementById('applyDiscount').textContent = 'Applied';
+  }
+  
+  function showDiscountError(message) {
+    const discountInput = document.getElementById('discountCode');
+    discountInput.style.borderColor = '#EF4444';
+    
+    // Create or update error message
+    let errorEl = document.getElementById('discount-error');
+    if (!errorEl) {
+      errorEl = document.createElement('div');
+      errorEl.id = 'discount-error';
+      errorEl.style.cssText = 'color: #EF4444; font-size: 13px; margin-top: 8px; font-family: Montserrat, sans-serif;';
+      discountInput.parentElement.parentElement.appendChild(errorEl);
+    }
+    
+    errorEl.textContent = message;
+    
+    // Remove error after 3 seconds
+    setTimeout(() => {
+      if (errorEl) errorEl.remove();
+      discountInput.style.borderColor = '';
+    }, 3000);
+  }
+  
+  function showDiscountSuccess(message) {
+    const discountInput = document.getElementById('discountCode');
+    discountInput.style.borderColor = '#43BDAB';
+    
+    // Create or update success message
+    let successEl = document.getElementById('discount-success');
+    if (!successEl) {
+      successEl = document.createElement('div');
+      successEl.id = 'discount-success';
+      successEl.style.cssText = 'color: #43BDAB; font-size: 13px; margin-top: 8px; font-family: Montserrat, sans-serif; font-weight: 600;';
+      discountInput.parentElement.parentElement.appendChild(successEl);
+    }
+    
+    successEl.textContent = message;
   }
 
   // ============================================
@@ -337,7 +527,7 @@
   }
 
   function handlePaymentSuccess(paymentIntent) {
-    // Save order info to localStorage
+    // Save order info to localStorage (completo para success page)
     const orderInfo = {
       paymentIntentId: paymentIntent.id,
       amount: totals.total,
@@ -345,7 +535,24 @@
       email: elements.form.email.value,
       name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
       date: new Date().toISOString(),
-      items: cart
+      items: cart,
+      totals: {
+        subtotal: totals.subtotal,
+        shipping: totals.shipping,
+        shippingText: totals.shipping === 0 ? 'FREE' : `€${totals.shipping.toFixed(2)}`,
+        vat: totals.vat,
+        total: totals.total
+      },
+      shipping: {
+        firstName: elements.form.firstName.value,
+        lastName: elements.form.lastName.value,
+        address: elements.form.address.value,
+        address2: elements.form.address2?.value || '',
+        city: elements.form.city.value,
+        postalCode: elements.form.postalCode.value,
+        country: elements.form.country.value,
+        phone: elements.form.phone.value
+      }
     };
 
     try {

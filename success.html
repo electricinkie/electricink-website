@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed | Electric Ink IE</title>
+  <meta name="description" content="Your order has been confirmed. Thank you for shopping at Electric Ink IE.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/success.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="/index.html">
+          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland">
+        </a>
+      </div>
+      
+      <a href="/cart.html" class="header-cart" aria-label="Shopping Cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/>
+          <circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span class="cart-count">0</span>
+      </a>
+    </div>
+  </header>
+  
+  <!-- Main -->
+  <main class="success-main">
+    <div class="success-container">
+      
+      <!-- Success Icon -->
+      <div class="success-icon">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="38" stroke="#43BDAB" stroke-width="4"/>
+          <path d="M25 40l12 12 18-24" stroke="#43BDAB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      
+      <!-- Title -->
+      <h1 class="success-title">Order Confirmed!</h1>
+      <p class="success-subtitle">Thank you for your purchase</p>
+      
+      <!-- Order Number -->
+      <div class="order-number">
+        <span class="order-number-label">Order Number:</span>
+        <span class="order-number-value" id="orderNumber">Loading...</span>
+      </div>
+      
+      <!-- Order Details Grid -->
+      <div class="order-grid">
+        
+        <!-- Left: Order Items -->
+        <div class="order-items-section">
+          <h2>Order Details</h2>
+          
+          <div class="order-items" id="orderItems">
+            <!-- Rendered by JS -->
+          </div>
+          
+          <!-- Order Totals -->
+          <div class="order-totals">
+            <div class="order-total-line">
+              <span>Subtotal</span>
+              <span id="orderSubtotal">€0.00</span>
+            </div>
+            <div class="order-total-line">
+              <span>Shipping</span>
+              <span id="orderShipping">€0.00</span>
+            </div>
+            <div class="order-total-line">
+              <span>VAT (23%)</span>
+              <span id="orderVAT">€0.00</span>
+            </div>
+            <div class="order-total-line order-total">
+              <span>Total Paid</span>
+              <span id="orderTotal">€0.00</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right: Shipping & Payment Info -->
+        <div class="order-info-section">
+          
+          <!-- Shipping Address -->
+          <div class="info-card">
+            <h3>Shipping Address</h3>
+            <div id="shippingAddress">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+          
+          <!-- Payment Method -->
+          <div class="info-card">
+            <h3>Payment Method</h3>
+            <div class="payment-info">
+              <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
+                <rect x="1" y="1" width="30" height="22" rx="2" stroke="#43BDAB" stroke-width="2"/>
+                <line x1="1" y1="7" x2="31" y2="7" stroke="#43BDAB" stroke-width="2"/>
+              </svg>
+              <span>Card ending in <span id="cardLast4">••••</span></span>
+            </div>
+          </div>
+          
+          <!-- Confirmation Email -->
+          <div class="info-card">
+            <h3>Confirmation Email</h3>
+            <p class="confirmation-email">
+              A confirmation email has been sent to:<br>
+              <strong id="customerEmail">your@email.com</strong>
+            </p>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="success-actions">
+        <a href="/" class="btn-primary">Continue Shopping</a>
+        <a href="/howtousecosmetics.html" class="btn-secondary">Learn How to Use</a>
+      </div>
+      
+      <!-- Support Notice -->
+      <p class="support-notice">
+        Questions about your order? 
+        <a href="/contact-us.html">Contact us</a> or WhatsApp 
+        <a href="https://wa.link/kzetgg" target="_blank">+353 83 147 3502</a>
+      </p>
+      
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="site-footer">
+    <!-- Footer content -->
+  </footer>
+  
+  <!-- Scripts -->
+  <script src="/js/global-cart.js"></script>
+  <script src="/js/success.js"></script>
+  
+</body>
+</html>

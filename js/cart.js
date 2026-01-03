@@ -15,6 +15,7 @@
   const cartItemsContainer = document.getElementById('cartItems');
   const summarySubtotal = document.getElementById('summarySubtotal');
   const summaryShipping = document.getElementById('summaryShipping');
+  const summaryVAT = document.getElementById('summaryVAT');
   const summaryTotal = document.getElementById('summaryTotal');
   const checkoutBtn = document.getElementById('checkoutBtn');
 
@@ -59,12 +60,17 @@
       shippingText = `€${shipping.toFixed(2)}`;
     }
     
-    const total = subtotal + shipping;
+    // Calcula VAT (23% do subtotal)
+    const vat = subtotal * 0.23;
+    
+    // Total = subtotal + shipping + VAT
+    const total = subtotal + shipping + vat;
     
     return {
       subtotal,
       shipping,
       shippingText,
+      vat,
       total
     };
   }
@@ -75,6 +81,7 @@
     
     summarySubtotal.textContent = `€${totals.subtotal.toFixed(2)}`;
     summaryShipping.textContent = totals.shippingText;
+    summaryVAT.textContent = `€${totals.vat.toFixed(2)}`;
     summaryTotal.textContent = `€${totals.total.toFixed(2)}`;
   }
 
