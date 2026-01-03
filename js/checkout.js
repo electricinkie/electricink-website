@@ -178,7 +178,10 @@
     };
 
     // Create card element
-    cardElement = stripeElements.create('card', { style });
+    cardElement = stripeElements.create('card', { 
+      style,
+      hidePostalCode: true // Usamos o postal code do formulário
+    });
 
     // Mount card element
     if (elements.cardElement) {
