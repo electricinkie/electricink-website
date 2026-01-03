@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Order Received</title>
+  <style>
+    /* Reset */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f8f8f8;
+    }
+    
+    table {
+      border-collapse: collapse;
+    }
+    
+    img {
+      border: 0;
+      outline: none;
+      text-decoration: none;
+      display: block;
+    }
+    
+    /* Container */
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+    }
+    
+    /* Header */
+    .email-header {
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      padding: 30px 40px;
+      text-align: center;
+    }
+    
+    .email-logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #FFFFFF;
+      margin: 0 0 10px 0;
+    }
+    
+    .email-logo span {
+      color: #43BDAB;
+    }
+    
+    .admin-badge {
+      display: inline-block;
+      background-color: #43BDAB;
+      color: #000000;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Alert Section */
+    .alert-section {
+      background-color: #43BDAB;
+      padding: 25px 40px;
+      text-align: center;
+    }
+    
+    .alert-icon {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .alert-icon svg {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .alert-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0 0 8px 0;
+    }
+    
+    .alert-subtitle {
+      font-size: 15px;
+      color: #000000;
+      margin: 0;
+      opacity: 0.8;
+    }
+    
+    /* Order Info Cards */
+    .email-content {
+      padding: 30px 40px;
+    }
+    
+    .info-card {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #43BDAB;
+    }
+    
+    .info-card-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #43BDAB;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0 0 12px 0;
+    }
+    
+    .info-card-content {
+      font-size: 15px;
+      color: #000000;
+      line-height: 1.6;
+    }
+    
+    .info-card-content strong {
+      font-weight: bold;
+    }
+    
+    .order-number-large {
+      font-size: 28px;
+      font-weight: bold;
+      color: #43BDAB;
+      margin: 0;
+    }
+    
+    /* Customer Info Grid */
+    .customer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .customer-field {
+      background-color: #FFFFFF;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+    }
+    
+    .customer-field-label {
+      font-size: 12px;
+      color: #666666;
+      margin: 0 0 5px 0;
+    }
+    
+    .customer-field-value {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000000;
+      margin: 0;
+    }
+    
+    /* Order Items Table */
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000000;
+      margin: 30px 0 15px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8e8e8;
+    }
+    
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    .items-table thead {
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    
+    .items-table th {
+      padding: 12px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .items-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 14px;
+      color: #000000;
+    }
+    
+    .items-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .item-name {
+      font-weight: bold;
+    }
+    
+    .item-variant {
+      font-size: 12px;
+      color: #666666;
+      display: block;
+      margin-top: 3px;
+    }
+    
+    /* Order Totals */
+    .order-totals {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    
+    .total-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: #666666;
+    }
+    
+    .total-line:last-child {
+      margin-bottom: 0;
+    }
+    
+    .total-line.grand-total {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 2px solid #e8e8e8;
+      font-size: 20px;
+      font-weight: bold;
+      color: #000000;
+    }
+    
+    .total-line.grand-total .amount {
+      color: #43BDAB;
+      font-size: 24px;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      flex: 1;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .btn-primary {
+      background-color: #43BDAB;
+      color: #000000;
+    }
+    
+    .btn-secondary {
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    
+    /* Footer */
+    .email-footer {
+      background-color: #f8f8f8;
+      padding: 20px 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    /* Mobile */
+    @media only screen and (max-width: 600px) {
+      .email-header,
+      .alert-section,
+      .email-content,
+      .email-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      
+      .customer-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .items-table {
+        font-size: 12px;
+      }
+      
+      .items-table th,
+      .items-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <table role="presentation" class="email-container" width="100%" cellspacing="0" cellpadding="0">
+    
+    <!-- Header -->
+    <tr>
+      <td class="email-header">
+        <h1 class="email-logo">ELECTRIC INK <span>IE</span></h1>
+        <span class="admin-badge">Admin Notification</span>
+      </td>
+    </tr>
+    
+    <!-- Alert Section -->
+    <tr>
+      <td class="alert-section">
+        <div class="alert-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+        </div>
+        <h2 class="alert-title">New Order Received!</h2>
+        <p class="alert-subtitle">Action required - Process this order</p>
+      </td>
+    </tr>
+    
+    <!-- Order Number -->
+    <tr>
+      <td class="email-content">
+        <div class="info-card">
+          <p class="info-card-title">Order Number</p>
+          <p class="order-number-large">{{ORDER_NUMBER}}</p>
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Customer Information -->
+    <tr>
+      <td class="email-content" style="padding-top: 0;">
+        <div class="info-card">
+          <p class="info-card-title">Customer Details</p>
+          <div class="info-card-content">
+            <strong>{{CUSTOMER_NAME}}</strong>
+          </div>
+          
+          <div class="customer-grid">
+            <div class="customer-field">
+              <p class="customer-field-label">Email</p>
+              <p class="customer-field-value">{{CUSTOMER_EMAIL}}</p>
+            </div>
+            <div class="customer-field">
+              <p class="customer-field-label">Phone</p>
+              <p class="customer-field-value">{{CUSTOMER_PHONE}}</p>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Shipping Address -->
+    <tr>
+      <td class="email-content" style="padding-top: 0;">
+        <div class="info-card">
+          <p class="info-card-title">Shipping Address</p>
+          <div class="info-card-content">
+            {{SHIPPING_ADDRESS}}
+          </div>
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Order Items -->
+    <tr>
+      <td class="email-content">
+        <h3 class="section-title">Order Items</h3>
+        
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th style="text-align: center;">Qty</th>
+              <th style="text-align: right;">Price</th>
+              <th style="text-align: right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ORDER_ITEMS_TABLE}}
+          </tbody>
+        </table>
+        
+        <!-- Order Totals -->
+        <div class="order-totals">
+          <div class="total-line">
+            <span>Subtotal</span>
+            <span>€{{SUBTOTAL}}</span>
+          </div>
+          <div class="total-line">
+            <span>Shipping</span>
+            <span>{{SHIPPING}}</span>
+          </div>
+          <div class="total-line">
+            <span>VAT (23%)</span>
+            <span>€{{VAT}}</span>
+          </div>
+          <div class="total-line grand-total">
+            <span>Total</span>
+            <span class="amount">€{{TOTAL}}</span>
+          </div>
+        </div>
+        
+      </td>
+    </tr>
+    
+    <!-- Action Buttons -->
+    <tr>
+      <td class="email-content">
+        <div class="action-buttons">
+          <a href="mailto:{{CUSTOMER_EMAIL}}" class="btn btn-primary">Email Customer</a>
+          <a href="https://wa.me/{{CUSTOMER_PHONE_WHATSAPP}}" class="btn btn-secondary">WhatsApp</a>
+        </div>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td class="email-footer">
+        <p style="margin: 0;">
+          This is an automated notification from Electric Ink IE<br>
+          Order received on {{ORDER_DATE}}
+        </p>
+      </td>
+    </tr>
+    
+  </table>
+  
+</body>
+</html>
