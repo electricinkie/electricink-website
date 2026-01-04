@@ -59,9 +59,28 @@
           
           <form id="checkoutForm">
             
+            <!-- Express Checkout (Apple Pay / Google Pay) -->
+            <div class="express-checkout-container" id="expressCheckoutContainer" style="display: none;">
+              <div class="express-checkout-header">
+                <span class="express-label">Express checkout</span>
+              </div>
+              <div id="payment-request-button">
+                <!-- Apple Pay / Google Pay button renders here -->
+              </div>
+              <div class="checkout-divider">
+                <span>or</span>
+              </div>
+            </div>
+            
             <!-- Contact Information -->
             <div class="form-section">
-              <h2>Contact Information</h2>
+              <h2>
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M3 4h14c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M19 6l-9 6-9-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Contact Information
+              </h2>
               
               <div class="form-group">
                 <label for="email">Email *</label>
@@ -72,12 +91,19 @@
                   required
                   placeholder="your@email.com"
                 >
+                <span class="input-hint">Order confirmation will be sent here</span>
               </div>
             </div>
             
             <!-- Shipping Address -->
             <div class="form-section">
-              <h2>Shipping Address</h2>
+              <h2>
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 2C6.69 2 4 4.69 4 8c0 5.25 6 11 6 11s6-5.75 6-11c0-3.31-2.69-6-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="10" cy="8" r="2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Shipping Address
+              </h2>
               
               <div class="form-row">
                 <div class="form-group">
@@ -140,6 +166,7 @@
                     name="postalCode" 
                     required
                   >
+                  <span class="input-hint">Required for same-day delivery (Dublin D01-D08)</span>
                 </div>
                 
                 <div class="form-group">
@@ -167,12 +194,21 @@
                   required
                   placeholder="+353 XX XXX XXXX"
                 >
+                <span class="input-hint">For delivery updates and support</span>
               </div>
             </div>
             
             <!-- Shipping Method -->
             <div class="form-section">
-              <h2>Shipping Method</h2>
+              <h2>
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M1 3h11v9H1V3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 8h3l2 3v4h-5V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="4.5" cy="15.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="14.5" cy="15.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                Shipping Method
+              </h2>
               
               <div class="shipping-options">
                 
@@ -234,7 +270,25 @@
             
             <!-- Payment -->
             <div class="form-section">
-              <h2>Payment</h2>
+              <h2>
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M2 8h16" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M6 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                Payment
+              </h2>
+              
+              <div class="payment-methods-accepted">
+                <span class="payment-label">We accept:</span>
+                <div class="payment-icons">
+                  <img src="/images/payment-method-icons/Light Color/1.png" alt="Visa" class="payment-icon">
+                  <img src="/images/payment-method-icons/Light Color/2.png" alt="Mastercard" class="payment-icon">
+                  <img src="/images/payment-method-icons/Light Color/3.png" alt="American Express" class="payment-icon">
+                  <img src="/images/payment-method-icons/Light Color/8.png" alt="Apple Pay" class="payment-icon">
+                  <img src="/images/payment-method-icons/Light Color/9.png" alt="Google Pay" class="payment-icon">
+                </div>
+              </div>
               
               <div class="form-group">
                 <label for="card-element">Card Details *</label>
@@ -242,6 +296,43 @@
                   <!-- Stripe Elements vai renderizar aqui -->
                 </div>
                 <div id="card-errors" role="alert"></div>
+                <span class="input-hint">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display: inline; margin-right: 4px;">
+                    <path d="M6 1l4 2v3c0 2.5-2 4-4 5-2-1-4-2.5-4-5V3l4-2z" fill="#10B981"/>
+                  </svg>
+                  Secured by 256-bit SSL encryption
+                </span>
+              </div>
+            </div>
+            
+            <!-- Trust Badges -->
+            <div class="checkout-trust-badges">
+              <div class="trust-badge">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 2l6 2v5c0 4-3 7-6 8-3-1-6-4-6-8V4l6-2z" fill="#43BDAB"/>
+                  <path d="M7 10l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Secure SSL Encryption</span>
+              </div>
+              <div class="trust-badge">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 2C6 2 3 5 3 9c0 5 7 9 7 9s7-4 7-9c0-4-3-7-7-7z" stroke="#43BDAB" stroke-width="1.5" fill="none"/>
+                  <path d="M7 9l2 2 4-4" stroke="#43BDAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Safe Payment</span>
+              </div>
+              <div class="trust-badge">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M16 7l-6 6-3-3" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="10" cy="10" r="8" stroke="#43BDAB" stroke-width="1.5" fill="none"/>
+                </svg>
+                <span>30-Day Returns</span>
+              </div>
+              <div class="trust-badge">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M2 5h16M2 10h16M2 15h10" stroke="#43BDAB" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>Free Shipping Over €130</span>
               </div>
             </div>
             
@@ -267,16 +358,9 @@
               id="submitBtn" 
               class="btn-complete-order"
             >
-              <span id="button-text">Complete Order</span>
+              <span id="button-text">Place Order Securely</span>
               <span id="spinner" class="spinner" style="display:none;"></span>
             </button>
-            
-            <p class="secure-notice">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 1l6 2v4.5c0 3.5-2.5 6.5-6 7.5-3.5-1-6-4-6-7.5V3l6-2z" fill="#43BDAB"/>
-              </svg>
-              Your payment information is encrypted and secure
-            </p>
             
           </form>
           
@@ -284,7 +368,16 @@
         
         <!-- Right: Order Summary -->
         <div class="checkout-summary">
-          <h2>Order Summary</h2>
+          <div class="summary-header">
+            <h2>Order Summary</h2>
+            <a href="/cart.html" class="edit-cart-link">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M11.3 1.5L14.5 4.7 5 14.2 1.5 14.5l.3-3.5L11.3 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.5 3.5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </a>
+          </div>
           
           <!-- Free Shipping Notice (conditionally shown) -->
           <div class="free-shipping-notice" id="freeShippingNotice" style="display: none;">
@@ -302,11 +395,18 @@
           
           <!-- Discount Code -->
           <div class="discount-code-section">
-            <div class="discount-input-wrapper">
+            <button type="button" class="discount-toggle" id="discountToggle">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M14 6L8 2 2 6v5.5c0 3 2 5 6 6 4-1 6-3 6-6V6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 6v4M6 8h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Have a discount code?
+            </button>
+            <div class="discount-input-wrapper" id="discountInputWrapper" style="display: none;">
               <input 
                 type="text" 
                 id="discountCode" 
-                placeholder="Discount code"
+                placeholder="Enter code"
                 class="discount-input"
               >
               <button 
@@ -354,6 +454,53 @@
       
     </div>
   </main>
+  
+  <!-- Payment Methods Footer (Big Player Style) -->
+  <section class="payment-methods-footer">
+    <div class="payment-footer-container">
+      
+      <div class="payment-footer-content">
+        <h3 class="payment-footer-title">Secure Payment Methods</h3>
+        <p class="payment-footer-subtitle">We accept all major payment methods</p>
+        
+        <div class="payment-methods-grid">
+          <img src="/images/payment-method-icons/Light Color/1.png" alt="Visa" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/2.png" alt="Mastercard" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/3.png" alt="American Express" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/4.png" alt="Discover" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/5.png" alt="PayPal" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/6.png" alt="Diners Club" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/7.png" alt="JCB" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/8.png" alt="Apple Pay" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/9.png" alt="Google Pay" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/10.png" alt="Shop Pay" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/11.png" alt="Union Pay" class="payment-method-logo">
+          <img src="/images/payment-method-icons/Light Color/12.png" alt="Klarna" class="payment-method-logo">
+        </div>
+        
+        <div class="payment-footer-badges">
+          <div class="payment-badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l8 3v6c0 5-4 9-8 11-4-2-8-6-8-11V5l8-3z" fill="#43BDAB"/>
+              <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>SSL Encrypted</span>
+          </div>
+          <div class="payment-badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="6" width="18" height="14" rx="2" stroke="#43BDAB" stroke-width="2"/>
+              <path d="M3 10h18" stroke="#43BDAB" stroke-width="2"/>
+            </svg>
+            <span>PCI Compliant</span>
+          </div>
+          <div class="payment-badge">
+            <span class="powered-by">Powered by <strong>Stripe</strong></span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
   
   <!-- Footer -->
   <footer id="footer"></footer>

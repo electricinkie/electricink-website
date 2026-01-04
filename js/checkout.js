@@ -105,11 +105,17 @@
     // Initialize Stripe Elements
     initializeStripeElements();
     
+    // Initialize Express Checkout (Apple Pay / Google Pay)
+    initExpressCheckout();
+    
     // Setup shipping methods
     setupShippingMethods();
     
     // Setup discount code
     setupDiscountCode();
+    
+    // Setup discount toggle
+    setupDiscountToggle();
     
     // Setup form handler
     setupFormHandler();
@@ -227,6 +233,120 @@
       } else {
         discountLine.style.display = 'none';
       }
+    }
+  }
+
+  // ============================================
+  // EXPRESS CHECKOUT (APPLE PAY / GOOGLE PAY)
+  // ============================================
+  
+  async function initExpressCheckout() {
+    try {
+      // Create Payment Request
+      const paymentRequest = stripe.paymentRequest({
+        country: 'IE',
+        currency: 'eur',
+        total: {
+          label: 'Electric Ink',
+          amount: Math.round(totals.total * 100), // Convert to cents
+        },
+        requestPayerName: true,
+        requestPayerEmail: true,
+        requestPayerPhone: true,
+      });
+
+      // Create Payment Request Button Element
+      const elements = stripe.elements();
+      const prButton = elements.create('paymentRequestButton', {
+        paymentRequest: paymentRequest,
+        style: {
+          paymentRequestButton: {
+            type: 'default', // 'default', 'book', 'buy', or 'donate'
+            theme: 'dark', // 'dark', 'light', or 'light-outline'
+            height: '48px',
+          },
+        },
+      });
+
+      // Check if Payment Request is available (Apple Pay / Google Pay)
+      const canMakePayment = await paymentRequest.canMakePayment();
+      
+      if (canMakePayment) {
+        // Show Express Checkout container
+        const container = document.getElementById('expressCheckoutContainer');
+        if (container) {
+          container.style.display = 'block';
+        }
+        
+        // Mount Payment Request Button
+        prButton.mount('#payment-request-button');
+        
+        // Handle payment method event
+        paymentRequest.on('paymentmethod', async (ev) => {
+          try {
+            // Create payment intent
+            const clientSecret = await createPaymentIntent();
+            
+            // Confirm payment
+            const {error: confirmError} = await stripe.confirmCardPayment(
+              clientSecret,
+              {payment_method: ev.paymentMethod.id},
+              {handleActions: false}
+            );
+
+            if (confirmError) {
+              // Report error
+              ev.complete('fail');
+              if (window.toast) {
+                window.toast.error(confirmError.message);
+              }
+            } else {
+              // Success
+              ev.complete('success');
+              
+              // Get payment intent ID from clientSecret
+              const paymentIntentId = clientSecret.split('_secret')[0];
+              
+              // Prepare order info
+              const orderInfo = {
+                email: ev.payerEmail,
+                name: ev.payerName,
+                phone: ev.payerPhone || 'N/A',
+                items: cart,
+                totals: totals,
+                shipping: {
+                  method: shippingMethod,
+                  address: 'Express Checkout'
+                }
+              };
+              
+              // Save to localStorage
+              localStorage.setItem('lastOrder', JSON.stringify(orderInfo));
+              
+              // Send emails (non-blocking)
+              sendOrderEmails(orderInfo, paymentIntentId).catch(console.error);
+              
+              // Redirect to success
+              window.location.href = `/success.html?payment_intent=${paymentIntentId}`;
+            }
+          } catch (error) {
+            console.error('Express checkout error:', error);
+            ev.complete('fail');
+            if (window.toast) {
+              window.toast.error('Payment failed. Please try again.');
+            }
+          }
+        });
+      } else {
+        // Express checkout not available, hide container
+        const container = document.getElementById('expressCheckoutContainer');
+        if (container) {
+          container.style.display = 'none';
+        }
+      }
+    } catch (error) {
+      console.error('Express checkout initialization error:', error);
+      // Silently fail - regular checkout still works
     }
   }
 
@@ -349,6 +469,24 @@
       if (e.key === 'Enter') {
         e.preventDefault();
         applyDiscountCode(discountInput.value.trim().toUpperCase());
+      }
+    });
+  }
+  
+  /**
+   * Setup discount toggle button
+   */
+  function setupDiscountToggle() {
+    const discountToggle = document.getElementById('discountToggle');
+    const discountInputWrapper = document.getElementById('discountInputWrapper');
+    
+    if (!discountToggle || !discountInputWrapper) return;
+    
+    discountToggle.addEventListener('click', function() {
+      // Toggle visibility
+      if (discountInputWrapper.style.display === 'none') {
+        discountInputWrapper.style.display = 'flex';
+        this.style.display = 'none'; // Hide toggle button
       }
     });
   }
