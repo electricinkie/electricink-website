@@ -641,7 +641,7 @@
     }
 
     // Redirect to success page
-    window.location.href = '/success.html';
+    window.location.href = `/success.html?payment_intent=${paymentIntent.id}`;
   }
 
   // ============================================
