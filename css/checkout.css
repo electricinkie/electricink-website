@@ -1096,3 +1096,377 @@ body {
     font-size: 24px;
   }
 }
+
+/* ==========================================
+   CHECKOUT REDESIGN - BIG PLAYER STYLE
+   ========================================== */
+
+/* 3-Column Grid for City/Postal/Country */
+.form-row-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+/* Shipping Options Section */
+.shipping-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shipping-option {
+  position: relative;
+  display: block;
+  padding: 20px;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #FFFFFF;
+}
+
+.shipping-option:hover {
+  border-color: #43BDAB;
+  background: rgba(67, 189, 171, 0.02);
+}
+
+.shipping-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shipping-option input[type="radio"]:checked + .shipping-option-content {
+  opacity: 1;
+}
+
+.shipping-option input[type="radio"]:checked ~ * {
+  opacity: 1;
+}
+
+.shipping-option:has(input[type="radio"]:checked) {
+  border-color: #43BDAB;
+  background: rgba(67, 189, 171, 0.05);
+  box-shadow: 0 0 0 1px #43BDAB;
+}
+
+.shipping-option:has(input[type="radio"]:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F5F5F5;
+}
+
+.shipping-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shipping-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shipping-option-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #1A1A1A;
+}
+
+.shipping-option-price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #43BDAB;
+}
+
+.shipping-option-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #666666;
+  margin: 0;
+}
+
+/* Free Shipping Notice */
+.free-shipping-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(67, 189, 171, 0.1) 0%, rgba(67, 189, 171, 0.05) 100%);
+  border: 1px solid #43BDAB;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.free-shipping-notice svg {
+  flex-shrink: 0;
+}
+
+.free-shipping-notice span {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1A1A1A;
+}
+
+/* Discount Code Section */
+.discount-code-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #E5E5E5;
+}
+
+.discount-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.discount-input {
+  flex: 1;
+  height: 48px;
+  padding: 0 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.discount-input:focus {
+  border-color: #43BDAB;
+}
+
+.discount-input::placeholder {
+  color: #999999;
+}
+
+.btn-apply-discount {
+  height: 48px;
+  padding: 0 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #43BDAB;
+  background: #FFFFFF;
+  border: 2px solid #43BDAB;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-apply-discount:hover {
+  background: #43BDAB;
+  color: #FFFFFF;
+}
+
+.btn-apply-discount:active {
+  transform: scale(0.98);
+}
+
+.discount-message {
+  margin-top: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.discount-message.success {
+  color: #43BDAB;
+}
+
+.discount-message.error {
+  color: #E74C3C;
+}
+
+/* Discount Amount in Totals */
+.discount-amount {
+  color: #43BDAB !important;
+  font-weight: 600;
+}
+
+/* Terms & Conditions Section */
+.form-section-terms {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-top: 2px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #43BDAB;
+}
+
+.checkbox-text {
+  flex: 1;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.5;
+}
+
+.checkbox-text a {
+  color: #43BDAB;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.checkbox-text a:hover {
+  border-bottom-color: #43BDAB;
+}
+
+/* Enhanced Input Heights */
+.form-group input,
+.form-group select {
+  height: 48px;
+}
+
+/* Enhanced Button Height */
+.btn-complete-order {
+  height: 56px;
+}
+
+/* Summary Items with Product Images */
+.summary-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.summary-item:first-child {
+  padding-top: 0;
+}
+
+.summary-item-image {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #E5E5E5;
+}
+
+.summary-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.summary-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-item-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1A1A1A;
+}
+
+.summary-item-variant {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #666666;
+}
+
+.summary-item-quantity {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #666666;
+}
+
+.summary-item-price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1A1A1A;
+  text-align: right;
+}
+
+/* Sticky Sidebar (Desktop Only) */
+@media (min-width: 769px) {
+  .checkout-summary {
+    position: sticky;
+    top: 120px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  /* 3-Column Grid becomes 1-Column on Mobile */
+  .form-row-3col {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Shipping Options Stack */
+  .shipping-option {
+    padding: 16px;
+  }
+  
+  .shipping-option-name {
+    font-size: 15px;
+  }
+  
+  .shipping-option-price {
+    font-size: 15px;
+  }
+  
+  .shipping-option-desc {
+    font-size: 13px;
+  }
+  
+  /* Discount Code Stacks on Mobile */
+  .discount-input-wrapper {
+    flex-direction: column;
+  }
+  
+  .btn-apply-discount {
+    width: 100%;
+  }
+  
+  /* Free Shipping Notice */
+  .free-shipping-notice {
+    padding: 12px;
+    font-size: 13px;
+  }
+  
+  /* Summary Items Smaller on Mobile */
+  .summary-item-image {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .summary-item-name {
+    font-size: 14px;
+  }
+  
+  .summary-item-variant,
+  .summary-item-quantity {
+    font-size: 12px;
+  }
+  
+  .summary-item-price {
+    font-size: 14px;
+  }
+}

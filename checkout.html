@@ -117,7 +117,7 @@
                 >
               </div>
               
-              <div class="form-row">
+              <div class="form-row form-row-3col">
                 <div class="form-group">
                   <label for="city">City *</label>
                   <input 
@@ -137,21 +137,21 @@
                     required
                   >
                 </div>
-              </div>
-              
-              <div class="form-group">
-                <label for="country">Country *</label>
-                <select id="country" name="country" required>
-                  <option value="IE">Ireland</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="FR">France</option>
-                  <option value="DE">Germany</option>
-                  <option value="ES">Spain</option>
-                  <option value="IT">Italy</option>
-                  <option value="NL">Netherlands</option>
-                  <option value="BE">Belgium</option>
-                  <option value="PT">Portugal</option>
-                </select>
+                
+                <div class="form-group">
+                  <label for="country">Country *</label>
+                  <select id="country" name="country" required>
+                    <option value="IE">Ireland</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="FR">France</option>
+                    <option value="DE">Germany</option>
+                    <option value="ES">Spain</option>
+                    <option value="IT">Italy</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="BE">Belgium</option>
+                    <option value="PT">Portugal</option>
+                  </select>
+                </div>
               </div>
               
               <div class="form-group">
@@ -166,6 +166,68 @@
               </div>
             </div>
             
+            <!-- Shipping Method -->
+            <div class="form-section">
+              <h2>Shipping Method</h2>
+              
+              <div class="shipping-options">
+                
+                <!-- Standard Shipping -->
+                <label class="shipping-option" for="shipping-standard">
+                  <input 
+                    type="radio" 
+                    id="shipping-standard" 
+                    name="shippingMethod" 
+                    value="standard" 
+                    checked
+                  >
+                  <div class="shipping-option-content">
+                    <div class="shipping-option-header">
+                      <span class="shipping-option-name">Standard Shipping</span>
+                      <span class="shipping-option-price">€11.50</span>
+                    </div>
+                    <p class="shipping-option-desc">Delivery in 3-5 business days</p>
+                  </div>
+                </label>
+                
+                <!-- Same-Day Dublin (conditionally shown) -->
+                <label class="shipping-option" for="shipping-sameday" id="sameDayOption" style="display: none;">
+                  <input 
+                    type="radio" 
+                    id="shipping-sameday" 
+                    name="shippingMethod" 
+                    value="sameday" 
+                    disabled
+                  >
+                  <div class="shipping-option-content">
+                    <div class="shipping-option-header">
+                      <span class="shipping-option-name">Same-Day Delivery (Dublin Central)</span>
+                      <span class="shipping-option-price">€7.50</span>
+                    </div>
+                    <p class="shipping-option-desc">Order before 2 PM for same-day delivery (D01-D08)</p>
+                  </div>
+                </label>
+                
+                <!-- Store Pickup -->
+                <label class="shipping-option" for="shipping-pickup">
+                  <input 
+                    type="radio" 
+                    id="shipping-pickup" 
+                    name="shippingMethod" 
+                    value="pickup"
+                  >
+                  <div class="shipping-option-content">
+                    <div class="shipping-option-header">
+                      <span class="shipping-option-name">Store Pickup</span>
+                      <span class="shipping-option-price">FREE</span>
+                    </div>
+                    <p class="shipping-option-desc">Pick up at our Dublin store</p>
+                  </div>
+                </label>
+                
+              </div>
+            </div>
+            
             <!-- Payment -->
             <div class="form-section">
               <h2>Payment</h2>
@@ -177,6 +239,22 @@
                 </div>
                 <div id="card-errors" role="alert"></div>
               </div>
+            </div>
+            
+            <!-- Terms & Conditions -->
+            <div class="form-section form-section-terms">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  id="terms" 
+                  name="terms" 
+                  required
+                >
+                <span class="checkbox-text">
+                  I agree to the <a href="/terms-conditions.html" target="_blank">Terms & Conditions</a> 
+                  and <a href="/privacy-policy.html" target="_blank">Privacy Policy</a>
+                </span>
+              </label>
             </div>
             
             <!-- Submit Button -->
@@ -204,9 +282,38 @@
         <div class="checkout-summary">
           <h2>Order Summary</h2>
           
+          <!-- Free Shipping Notice (conditionally shown) -->
+          <div class="free-shipping-notice" id="freeShippingNotice" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L3 7v6c0 4.5 3 8 7 9 4-1 7-4.5 7-9V7l-7-5z" fill="#43BDAB"/>
+              <path d="M8 10l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>🎉 You qualify for FREE shipping!</span>
+          </div>
+          
           <!-- Cart Items -->
           <div class="summary-items" id="summaryItems">
             <!-- Rendered by JS -->
+          </div>
+          
+          <!-- Discount Code -->
+          <div class="discount-code-section">
+            <div class="discount-input-wrapper">
+              <input 
+                type="text" 
+                id="discountCode" 
+                placeholder="Discount code"
+                class="discount-input"
+              >
+              <button 
+                type="button" 
+                id="applyDiscountBtn" 
+                class="btn-apply-discount"
+              >
+                Apply
+              </button>
+            </div>
+            <div id="discountMessage" class="discount-message"></div>
           </div>
           
           <!-- Totals -->
@@ -219,6 +326,11 @@
             <div class="summary-line">
               <span>Shipping</span>
               <span id="summaryShipping">€0.00</span>
+            </div>
+            
+            <div class="summary-line" id="discountLine" style="display: none;">
+              <span>Discount</span>
+              <span id="summaryDiscount" class="discount-amount">-€0.00</span>
             </div>
             
             <div class="summary-line">

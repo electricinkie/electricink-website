@@ -29,8 +29,16 @@
     total: 0
   };
   
-  let deliveryMethod = 'delivery'; // 'delivery' or 'pickup'
+  let shippingMethod = 'standard'; // 'standard', 'sameday', 'pickup'
   const VAT_RATE = 0.23; // 23% VAT for Ireland
+  const FREE_SHIPPING_THRESHOLD = 130; // Free shipping above €130
+  const STANDARD_RATE = 11.50; // Standard shipping rate
+  const SAMEDAY_RATE = 7.50; // Same-day Dublin rate
+  const PICKUP_RATE = 0; // Store pickup is free
+  const SAMEDAY_CUTOFF_HOUR = 14; // 2 PM cutoff for same-day
+  
+  // Dublin Central postcodes (D01-D08)
+  const DUBLIN_CENTRAL_POSTCODES = ['D01', 'D02', 'D03', 'D04', 'D05', 'D06', 'D07', 'D08'];
 
   // ============================================
   // DOM ELEMENTS
@@ -97,8 +105,8 @@
     // Initialize Stripe Elements
     initializeStripeElements();
     
-    // Setup delivery tabs
-    setupDeliveryTabs();
+    // Setup shipping methods
+    setupShippingMethods();
     
     // Setup discount code
     setupDiscountCode();
@@ -127,24 +135,34 @@
       return sum + (item.price * item.quantity);
     }, 0);
 
-    // Calculate shipping (FREE above €120 or if pickup, else €8.50)
-    if (deliveryMethod === 'pickup') {
-      totals.shipping = 0;
-    } else {
-      totals.shipping = totals.subtotal >= 120 ? 0 : 8.50;
+    // Get current shipping method
+    const selectedMethod = document.querySelector('input[name="shippingMethod"]:checked');
+    if (selectedMethod) {
+      shippingMethod = selectedMethod.value;
     }
 
-    // Apply discount (if any)
-    // totals.discount is set by applyDiscount function
+    // Calculate shipping based on method and subtotal
+    if (shippingMethod === 'pickup') {
+      totals.shipping = PICKUP_RATE;
+    } else if (totals.subtotal >= FREE_SHIPPING_THRESHOLD) {
+      // Free shipping above threshold (applies to all methods)
+      totals.shipping = 0;
+    } else {
+      // Apply standard or same-day rate
+      if (shippingMethod === 'sameday') {
+        totals.shipping = SAMEDAY_RATE;
+      } else {
+        totals.shipping = STANDARD_RATE;
+      }
+    }
 
     // Calculate subtotal after discount
     const subtotalAfterDiscount = totals.subtotal - totals.discount;
 
-    // Calculate VAT (23% on subtotal)
-    totals.vat = subtotalAfterDiscount * VAT_RATE;
+    // Calculate VAT (23% on subtotal + shipping)
+    totals.vat = (subtotalAfterDiscount + totals.shipping) * VAT_RATE;
 
     // Calculate total (subtotal - discount + shipping + VAT)
-    // ✅ TOTAL INCLUI VAT - CRÍTICO PARA PAYMENT INTENT
     totals.total = subtotalAfterDiscount + totals.shipping + totals.vat;
   }
 
@@ -153,21 +171,31 @@
   // ============================================
   
   function renderOrderSummary() {
-    // Render items
+    // Render items with images
     if (elements.summaryItems) {
       elements.summaryItems.innerHTML = cart.map(item => `
         <div class="summary-item">
           <div class="summary-item-image">
             <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
           </div>
-          <div class="summary-item-info">
+          <div class="summary-item-details">
             <div class="summary-item-name">${item.name}</div>
             ${item.variant ? `<div class="summary-item-variant">${item.variant}</div>` : ''}
-            <div class="summary-item-qty">Qty: ${item.quantity}</div>
+            <div class="summary-item-quantity">Qty: ${item.quantity}</div>
           </div>
           <div class="summary-item-price">€${(item.price * item.quantity).toFixed(2)}</div>
         </div>
       `).join('');
+    }
+
+    // Show/hide free shipping notice
+    const freeShippingNotice = document.getElementById('freeShippingNotice');
+    if (freeShippingNotice) {
+      if (totals.subtotal >= FREE_SHIPPING_THRESHOLD) {
+        freeShippingNotice.style.display = 'flex';
+      } else {
+        freeShippingNotice.style.display = 'none';
+      }
     }
 
     // Update totals
@@ -191,55 +219,109 @@
     
     // Update discount if element exists
     const discountElement = document.getElementById('summaryDiscount');
-    if (discountElement) {
-      discountElement.textContent = totals.discount > 0 
-        ? `-€${totals.discount.toFixed(2)}` 
-        : '€0.00';
+    const discountLine = document.getElementById('discountLine');
+    if (discountElement && discountLine) {
+      if (totals.discount > 0) {
+        discountElement.textContent = `-€${totals.discount.toFixed(2)}`;
+        discountLine.style.display = 'flex';
+      } else {
+        discountLine.style.display = 'none';
+      }
     }
   }
 
   // ============================================
-  // DELIVERY TABS
+  // SHIPPING METHODS & DUBLIN DETECTION
   // ============================================
   
-  function setupDeliveryTabs() {
-    const tabs = document.querySelectorAll('.delivery-tab');
-    const deliveryAddress = document.getElementById('deliveryAddress');
-    const pickupAddress = document.getElementById('pickupAddress');
+  /**
+   * Check if postal code is Dublin Central (D01-D08)
+   */
+  function isDublinCentral(postalCode) {
+    if (!postalCode) return false;
+    const normalizedPostal = postalCode.trim().toUpperCase().replace(/\s/g, '');
+    return DUBLIN_CENTRAL_POSTCODES.some(code => normalizedPostal.startsWith(code));
+  }
+  
+  /**
+   * Check if current time is before 2 PM cutoff
+   */
+  function isBeforeCutoff() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    return currentHour < SAMEDAY_CUTOFF_HOUR;
+  }
+  
+  /**
+   * Update shipping options based on address
+   */
+  function updateShippingOptions() {
+    const cityInput = document.getElementById('city');
+    const postalInput = document.getElementById('postalCode');
+    const sameDayOption = document.getElementById('sameDayOption');
+    const sameDayRadio = document.getElementById('shipping-sameday');
     
-    tabs.forEach(tab => {
-      tab.addEventListener('click', function() {
-        // Remove active from all tabs
-        tabs.forEach(t => t.classList.remove('active'));
-        
-        // Add active to clicked tab
-        this.classList.add('active');
-        
-        // Get method
-        deliveryMethod = this.dataset.method;
-        
-        // Toggle address sections
-        if (deliveryMethod === 'delivery') {
-          if (deliveryAddress) deliveryAddress.style.display = 'flex';
-          if (pickupAddress) pickupAddress.style.display = 'none';
-          
-          // Make delivery fields required
-          const deliveryInputs = deliveryAddress.querySelectorAll('input[required], select[required]');
-          deliveryInputs.forEach(input => input.required = true);
-        } else {
-          if (deliveryAddress) deliveryAddress.style.display = 'none';
-          if (pickupAddress) pickupAddress.style.display = 'block';
-          
-          // Make delivery fields not required
-          const deliveryInputs = deliveryAddress.querySelectorAll('input, select');
-          deliveryInputs.forEach(input => input.required = false);
+    if (!sameDayOption || !sameDayRadio) return;
+    
+    const city = cityInput ? cityInput.value : '';
+    const postal = postalInput ? postalInput.value : '';
+    
+    // Check if Dublin Central and before cutoff
+    const isDublin = isDublinCentral(postal);
+    const beforeCutoff = isBeforeCutoff();
+    
+    if (isDublin && beforeCutoff) {
+      // Show and enable same-day option
+      sameDayOption.style.display = 'block';
+      sameDayRadio.disabled = false;
+    } else {
+      // Hide or disable same-day option
+      sameDayOption.style.display = 'none';
+      sameDayRadio.disabled = true;
+      
+      // If same-day was selected, switch to standard
+      if (sameDayRadio.checked) {
+        const standardRadio = document.getElementById('shipping-standard');
+        if (standardRadio) {
+          standardRadio.checked = true;
+          shippingMethod = 'standard';
+          calculateTotals();
+          renderOrderSummary();
         }
-        
-        // Recalculate totals (shipping changes with pickup)
+      }
+    }
+  }
+  
+  /**
+   * Setup shipping method listeners
+   */
+  function setupShippingMethods() {
+    // Listen for shipping method changes
+    const shippingRadios = document.querySelectorAll('input[name="shippingMethod"]');
+    shippingRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        shippingMethod = this.value;
         calculateTotals();
         renderOrderSummary();
       });
     });
+    
+    // Listen for address changes to check Dublin eligibility
+    const cityInput = document.getElementById('city');
+    const postalInput = document.getElementById('postalCode');
+    
+    if (cityInput) {
+      cityInput.addEventListener('input', updateShippingOptions);
+      cityInput.addEventListener('blur', updateShippingOptions);
+    }
+    
+    if (postalInput) {
+      postalInput.addEventListener('input', updateShippingOptions);
+      postalInput.addEventListener('blur', updateShippingOptions);
+    }
+    
+    // Initial check
+    updateShippingOptions();
   }
 
   // ============================================
@@ -254,7 +336,7 @@
   
   function setupDiscountCode() {
     const discountInput = document.getElementById('discountCode');
-    const applyButton = document.getElementById('applyDiscount');
+    const applyButton = document.getElementById('applyDiscountBtn');
     
     if (!discountInput || !applyButton) return;
     
@@ -273,24 +355,17 @@
   
   function applyDiscountCode(code) {
     const discountInput = document.getElementById('discountCode');
+    const discountMessage = document.getElementById('discountMessage');
     
     if (!code) {
-      if (window.toast) {
-        window.toast.warning('Please enter a discount code');
-      } else {
-        showDiscountError('Please enter a discount code');
-      }
+      showDiscountMessage('Please enter a discount code', 'error');
       return;
     }
     
     const discount = DISCOUNT_CODES[code];
     
     if (!discount) {
-      if (window.toast) {
-        window.toast.error('Invalid discount code');
-      } else {
-        showDiscountError('Invalid discount code');
-      }
+      showDiscountMessage('Invalid discount code', 'error');
       discountInput.value = '';
       return;
     }
@@ -301,13 +376,40 @@
     } else if (discount.type === 'fixed') {
       totals.discount = Math.min(discount.value, totals.subtotal);
     } else if (discount.type === 'shipping') {
-      // For shipping discount, we'll handle it differently
-      if (deliveryMethod === 'delivery') {
-        totals.shipping = 0;
-      }
+      // For shipping discount, we'll make shipping free
+      // This will be handled in calculateTotals
+      totals.discount = 0;
+      showDiscountMessage(`Discount applied: ${discount.description}`, 'success');
+      calculateTotals();
+      // Override shipping to 0
+      totals.shipping = 0;
+      renderOrderSummary();
+      return;
     }
     
     // Recalculate totals
+    calculateTotals();
+    renderOrderSummary();
+    
+    // Show success message
+    showDiscountMessage(`Discount applied: ${discount.description}`, 'success');
+    
+    // Disable input and button
+    discountInput.disabled = true;
+    const applyButton = document.getElementById('applyDiscountBtn');
+    if (applyButton) {
+      applyButton.disabled = true;
+      applyButton.textContent = 'Applied';
+    }
+  }
+  
+  function showDiscountMessage(message, type) {
+    const discountMessage = document.getElementById('discountMessage');
+    if (!discountMessage) return;
+    
+    discountMessage.textContent = message;
+    discountMessage.className = `discount-message ${type}`;
+  }
     calculateTotals();
     renderOrderSummary();
     
