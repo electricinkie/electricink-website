@@ -1,5 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const stripeProducts = require('../data/stripe-products.json');
+const { Sentry } = require('./lib/sentry');
 
 /**
  * Calculate shipping cost based on subtotal and address
@@ -143,6 +144,21 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('❌ Error creating payment intent:', error.message);
+    
+    // Send to Sentry if configured
+    if (process.env.SENTRY_DSN) {
+      Sentry.captureException(error, {
+        tags: {
+          api: 'create-payment-intent',
+          type: error.message.includes('Invalid') ? 'validation' : 'stripe_error'
+        },
+        contexts: {
+          cart: {
+            items_count: req.body.cartItems?.length || 0
+          }
+        }
+      });
+    }
     
     // Distinguish validation errors from Stripe errors
     if (error.message.includes('Invalid')) {
