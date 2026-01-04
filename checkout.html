@@ -57,20 +57,20 @@
         <!-- Left: Checkout Form -->
         <div class="checkout-form-section">
           
-          <form id="checkoutForm">
-            
-            <!-- Express Checkout (Apple Pay / Google Pay) -->
-            <div class="express-checkout-container" id="expressCheckoutContainer" style="display: none;">
-              <div class="express-checkout-header">
-                <span class="express-label">Express checkout</span>
-              </div>
-              <div id="payment-request-button">
-                <!-- Apple Pay / Google Pay button renders here -->
-              </div>
-              <div class="checkout-divider">
-                <span>or</span>
-              </div>
+          <!-- Express Checkout (Apple Pay / Google Pay) - OUTSIDE FORM -->
+          <div class="express-checkout-container" id="expressCheckoutContainer" style="display: none;">
+            <div class="express-checkout-header">
+              <span class="express-label">Express checkout</span>
             </div>
+            <div id="payment-request-button">
+              <!-- Apple Pay / Google Pay button renders here -->
+            </div>
+            <div class="checkout-divider">
+              <span>or</span>
+            </div>
+          </div>
+          
+          <form id="checkoutForm">
             
             <!-- Contact Information -->
             <div class="form-section">

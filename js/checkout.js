@@ -242,17 +242,154 @@
   
   async function initExpressCheckout() {
     try {
-      // Create Payment Request
+      console.log('🚀 Initializing Express Checkout...');
+      console.log('   Cart total:', totals.total);
+      console.log('   Cart subtotal:', totals.subtotal);
+      
+      // Determine initial shipping options (show all by default)
+      const initialShippingOptions = [
+        {
+          id: 'standard',
+          label: 'Standard Delivery (3-5 business days)',
+          detail: 'Ireland-wide delivery',
+          amount: 1150, // €11.50 in cents
+        },
+        {
+          id: 'pickup',
+          label: 'Store Pickup',
+          detail: 'FREE - Collect from our Dublin location',
+          amount: 0,
+        },
+      ];
+      
+      // Check if free shipping threshold met
+      const freeShippingThreshold = 130;
+      const qualifiesForFreeShipping = totals.subtotal >= freeShippingThreshold;
+      
+      // Calculate initial shipping (default to standard unless free shipping)
+      let initialShipping = qualifiesForFreeShipping ? 0 : 1150;
+      let initialTotal = Math.round((totals.subtotal + (initialShipping / 100)) * 100);
+      
+      console.log('   Free shipping?', qualifiesForFreeShipping);
+      console.log('   Initial shipping:', initialShipping / 100);
+      console.log('   Initial total:', initialTotal / 100);
+      
+      // Create Payment Request with shipping support
       const paymentRequest = stripe.paymentRequest({
         country: 'IE',
         currency: 'eur',
         total: {
           label: 'Electric Ink',
-          amount: Math.round(totals.total * 100), // Convert to cents
+          amount: initialTotal,
         },
         requestPayerName: true,
         requestPayerEmail: true,
         requestPayerPhone: true,
+        requestShipping: true, // ✅ REQUEST SHIPPING ADDRESS
+        shippingOptions: initialShippingOptions,
+      });
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // EVENT: Shipping Address Change (detect Dublin for Same-Day)
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      paymentRequest.on('shippingaddresschange', async (ev) => {
+        console.log('📍 Shipping address changed:', ev.shippingAddress);
+        
+        const postalCode = ev.shippingAddress.postalCode;
+        const isDublinCentral = postalCode && /^D0[1-8]/.test(postalCode.toUpperCase());
+        
+        console.log('   Postal code:', postalCode);
+        console.log('   Dublin Central?', isDublinCentral);
+        
+        // Build shipping options based on address
+        let shippingOptions = [
+          {
+            id: 'standard',
+            label: 'Standard Delivery (3-5 business days)',
+            detail: 'Ireland-wide delivery',
+            amount: 1150,
+          },
+        ];
+        
+        // Add Same-Day if Dublin Central and before 2PM
+        if (isDublinCentral) {
+          const now = new Date();
+          const cutoffTime = new Date();
+          cutoffTime.setHours(14, 0, 0, 0); // 2PM
+          
+          if (now < cutoffTime) {
+            shippingOptions.unshift({
+              id: 'same-day',
+              label: 'Same-Day Delivery (Order by 2PM)',
+              detail: 'Dublin Central (D01-D08) - Today!',
+              amount: 750, // €7.50
+            });
+          }
+        }
+        
+        // Add Pickup option
+        shippingOptions.push({
+          id: 'pickup',
+          label: 'Store Pickup',
+          detail: 'FREE - Collect from our Dublin location',
+          amount: 0,
+        });
+        
+        // Calculate shipping amount (check free shipping threshold)
+        let shippingAmount = shippingOptions[0].amount; // Default to first option
+        if (qualifiesForFreeShipping) {
+          shippingAmount = 0;
+          // Update labels to show FREE
+          shippingOptions = shippingOptions.map(opt => ({
+            ...opt,
+            amount: 0,
+            detail: opt.id === 'pickup' ? opt.detail : 'FREE - Subtotal over €130',
+          }));
+        }
+        
+        const newTotal = Math.round((totals.subtotal + (shippingAmount / 100)) * 100);
+        
+        console.log('   Updated shipping options:', shippingOptions.length);
+        console.log('   Shipping amount:', shippingAmount / 100);
+        console.log('   New total:', newTotal / 100);
+        
+        ev.updateWith({
+          status: 'success',
+          shippingOptions: shippingOptions,
+          total: {
+            label: 'Electric Ink',
+            amount: newTotal,
+          },
+        });
+      });
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // EVENT: Shipping Option Change (recalculate total)
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      paymentRequest.on('shippingoptionchange', async (ev) => {
+        console.log('🚚 Shipping option changed:', ev.shippingOption);
+        
+        const selectedOption = ev.shippingOption;
+        let shippingAmount = selectedOption.amount;
+        
+        // Apply free shipping threshold
+        if (qualifiesForFreeShipping) {
+          shippingAmount = 0;
+        }
+        
+        const newTotal = Math.round((totals.subtotal + (shippingAmount / 100)) * 100);
+        
+        console.log('   Selected option:', selectedOption.id);
+        console.log('   Shipping amount:', shippingAmount / 100);
+        console.log('   New total:', newTotal / 100);
+        
+        ev.updateWith({
+          status: 'success',
+          total: {
+            label: 'Electric Ink',
+            amount: newTotal,
+          },
+        });
       });
 
       // Create Payment Request Button Element
@@ -261,28 +398,43 @@
         paymentRequest: paymentRequest,
         style: {
           paymentRequestButton: {
-            type: 'default', // 'default', 'book', 'buy', or 'donate'
-            theme: 'dark', // 'dark', 'light', or 'light-outline'
+            type: 'default',
+            theme: 'dark',
             height: '48px',
           },
         },
       });
 
+      console.log('✅ Payment Request created, checking availability...');
+
       // Check if Payment Request is available (Apple Pay / Google Pay)
       const canMakePayment = await paymentRequest.canMakePayment();
       
+      console.log('   Can make payment:', canMakePayment);
+      
       if (canMakePayment) {
+        console.log('✅ Express Checkout available! Showing buttons...');
+        
         // Show Express Checkout container
         const container = document.getElementById('expressCheckoutContainer');
         if (container) {
           container.style.display = 'block';
+          console.log('   Container displayed');
         }
         
         // Mount Payment Request Button
         prButton.mount('#payment-request-button');
+        console.log('   Payment button mounted');
         
-        // Handle payment method event
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // EVENT: Payment Method (complete payment)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         paymentRequest.on('paymentmethod', async (ev) => {
+          console.log('💳 Express payment initiated...');
+          console.log('   Payer:', ev.payerName, ev.payerEmail);
+          console.log('   Shipping:', ev.shippingAddress);
+          console.log('   Shipping option:', ev.shippingOption);
+          
           try {
             // Create payment intent
             const clientSecret = await createPaymentIntent();
@@ -296,32 +448,65 @@
 
             if (confirmError) {
               // Report error
+              console.error('❌ Express payment failed:', confirmError);
               ev.complete('fail');
               if (window.toast) {
                 window.toast.error(confirmError.message);
               }
             } else {
               // Success
+              console.log('✅ Express payment succeeded!');
               ev.complete('success');
               
               // Get payment intent ID from clientSecret
               const paymentIntentId = clientSecret.split('_secret')[0];
               
+              // Format shipping address
+              const shippingAddress = ev.shippingAddress;
+              const fullAddress = [
+                shippingAddress.addressLine[0],
+                shippingAddress.addressLine[1],
+                shippingAddress.city,
+                shippingAddress.postalCode,
+                shippingAddress.country
+              ].filter(Boolean).join(', ');
+              
               // Prepare order info
               const orderInfo = {
+                paymentIntentId: paymentIntentId,
+                amount: totals.total,
+                currency: 'eur',
                 email: ev.payerEmail,
                 name: ev.payerName,
                 phone: ev.payerPhone || 'N/A',
+                date: new Date().toISOString(),
                 items: cart,
-                totals: totals,
+                totals: {
+                  subtotal: totals.subtotal,
+                  shipping: ev.shippingOption.amount / 100,
+                  shippingText: ev.shippingOption.label,
+                  vat: totals.vat,
+                  total: totals.total
+                },
                 shipping: {
-                  method: shippingMethod,
-                  address: 'Express Checkout'
+                  firstName: ev.payerName.split(' ')[0] || '',
+                  lastName: ev.payerName.split(' ').slice(1).join(' ') || '',
+                  address: shippingAddress.addressLine[0] || '',
+                  address2: shippingAddress.addressLine[1] || '',
+                  city: shippingAddress.city || '',
+                  postalCode: shippingAddress.postalCode || '',
+                  country: shippingAddress.country || 'IE',
+                  phone: ev.payerPhone || 'N/A',
+                  method: ev.shippingOption.id,
+                  fullAddress: fullAddress
                 }
               };
               
               // Save to localStorage
-              localStorage.setItem('lastOrder', JSON.stringify(orderInfo));
+              localStorage.setItem('electricink_last_order', JSON.stringify(orderInfo));
+              
+              // Clear cart
+              localStorage.removeItem('electricink_cart');
               
               // Send emails (non-blocking)
               sendOrderEmails(orderInfo, paymentIntentId).catch(console.error);
@@ -330,7 +515,7 @@
               window.location.href = `/success.html?payment_intent=${paymentIntentId}`;
             }
           } catch (error) {
-            console.error('Express checkout error:', error);
+            console.error('❌ Express checkout error:', error);
             ev.complete('fail');
             if (window.toast) {
               window.toast.error('Payment failed. Please try again.');
@@ -338,6 +523,7 @@
           }
         });
       } else {
+        console.log('⚠️ Express Checkout NOT available (no Apple/Google Pay on this device/browser)');
         // Express checkout not available, hide container
         const container = document.getElementById('expressCheckoutContainer');
         if (container) {
@@ -345,7 +531,7 @@
         }
       }
     } catch (error) {
-      console.error('Express checkout initialization error:', error);
+      console.error('❌ Express checkout initialization error:', error);
       // Silently fail - regular checkout still works
     }
   }
