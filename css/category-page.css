@@ -256,19 +256,27 @@
 
 @media (max-width: 640px) {
   .category-page {
-    padding: 20px;
+    padding: 20px 16px;
+  }
+  
+  .breadcrumb {
+    padding: 16px 16px;
   }
   
   .category-header {
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
   
   .category-header h1 {
-    font-size: 28px;
+    font-size: 26px;
+  }
+  
+  .category-header p {
+    font-size: 14px;
   }
   
   .products-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }

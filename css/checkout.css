@@ -7,6 +7,22 @@
   box-sizing: border-box;
 }
 
+/* ────────── Header Fix (Full Width) ────────── */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.site-header {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
 .checkout-main {
   background: #FAFAFA;
   padding: 48px 24px 100px;

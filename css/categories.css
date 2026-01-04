@@ -96,7 +96,7 @@
 
 .category-card:hover .category-icon img {
   transform: scale(1.15);
-  filter: drop-shadow(0 0 15px rgba(67, 189, 171, 0.7));
+  filter: grayscale(1) brightness(0) invert(1) drop-shadow(0 0 15px rgba(67, 189, 171, 0.7));
 }
 
 .category-name {

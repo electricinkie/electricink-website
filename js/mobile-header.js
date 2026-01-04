@@ -44,7 +44,7 @@
     <nav class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
       
       <div class="mobile-menu-header">
-        <span class="mobile-menu-title">Menu</span>
+        <span class="mobile-menu-title">MENU</span>
         <button class="mobile-menu-close" aria-label="Close menu">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 6L6 18M6 6l12 12"/>
@@ -53,20 +53,25 @@
       </div>
       
       <ul class="mobile-menu-list">
+        
+        <!-- Home -->
         <li>
           <a href="/" class="mobile-menu-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             Home
           </a>
         </li>
         
+        <!-- Shop by Category -->
         <li class="has-submenu">
           <button class="mobile-menu-link submenu-trigger">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
               <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
             Shop by Category
             <svg class="submenu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -74,21 +79,27 @@
             </svg>
           </button>
           <ul class="mobile-submenu">
-            <li><a href="/cosmetics">Cosmetics</a></li>
-            <li><a href="/cartridges">Cartridges</a></li>
+            <li><a href="/category.html?category=cosmetics">Cosmetics</a></li>
+            <li><a href="/category.html?category=cartridges">Cartridges</a></li>
+            <li><a href="/category.html?category=machines">Machines</a></li>
+            <li><a href="/category.html?category=needles">Needles</a></li>
+            <li><a href="/category.html?category=accessories">Accessories</a></li>
           </ul>
         </li>
         
+        <!-- How to Use -->
         <li>
           <a href="/howtousecosmetics.html" class="mobile-menu-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4M12 8h.01"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
             How to Use
           </a>
         </li>
         
+        <!-- About Us -->
         <li>
           <a href="/about-us.html" class="mobile-menu-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -99,17 +110,20 @@
           </a>
         </li>
         
+        <!-- Contact -->
         <li>
           <a href="/contact-us.html" class="mobile-menu-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 2 0 0 1 2 2z"/>
             </svg>
             Contact
           </a>
         </li>
         
+        <!-- Divider -->
         <li class="menu-divider"></li>
         
+        <!-- Shopping Cart -->
         <li>
           <a href="/cart.html" class="mobile-menu-link mobile-menu-link-highlight">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -121,6 +135,7 @@
             <span class="menu-cart-count" data-cart-count>0</span>
           </a>
         </li>
+        
       </ul>
       
     </nav>

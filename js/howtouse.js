@@ -12,10 +12,21 @@
   function toggleProduct(product) {
     const header = product.querySelector('.howtouse-product-header');
     const content = product.querySelector('.howtouse-product-content');
+    const isCurrentlyOpen = header.classList.contains('active');
     
-    // Toggle classes
-    header.classList.toggle('active');
-    content.classList.toggle('active');
+    // Fecha todos os outros produtos (accordion behavior)
+    products.forEach(p => {
+      const pHeader = p.querySelector('.howtouse-product-header');
+      const pContent = p.querySelector('.howtouse-product-content');
+      pHeader.classList.remove('active');
+      pContent.classList.remove('active');
+    });
+    
+    // Se não estava aberto, abre o clicado
+    if (!isCurrentlyOpen) {
+      header.classList.add('active');
+      content.classList.add('active');
+    }
   }
 
   // Função para setup accordion

@@ -23,6 +23,10 @@
     try {
       localStorage.setItem(CART_KEY, JSON.stringify(cart));
       updateCartCount();
+      
+      // Dispara evento para atualizar header mobile
+      window.dispatchEvent(new Event('cart-updated'));
+      
       return true;
     } catch (error) {
       console.error('Error saving cart:', error);
