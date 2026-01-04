@@ -572,6 +572,15 @@
     const city = cityInput ? cityInput.value : '';
     const postal = postalInput ? postalInput.value : '';
     
+    // 🔍 DEBUG: Log valores para troubleshooting
+    console.log('🔍 DEBUG Same-Day check:', {
+      city: city,
+      postal: postal,
+      isDublin: isDublinCentral(postal),
+      beforeCutoff: isBeforeCutoff(),
+      sameDayElementExists: !!sameDayOption
+    });
+    
     // Check if Dublin Central and before cutoff
     const isDublin = isDublinCentral(postal);
     const beforeCutoff = isBeforeCutoff();
@@ -616,14 +625,19 @@
     const cityInput = document.getElementById('city');
     const postalInput = document.getElementById('postalCode');
     
+    // 🔧 FIX: Adicionar múltiplos event listeners (mobile compatibility)
+    const events = ['input', 'blur', 'change'];
+    
     if (cityInput) {
-      cityInput.addEventListener('input', updateShippingOptions);
-      cityInput.addEventListener('blur', updateShippingOptions);
+      events.forEach(event => {
+        cityInput.addEventListener(event, updateShippingOptions);
+      });
     }
     
     if (postalInput) {
-      postalInput.addEventListener('input', updateShippingOptions);
-      postalInput.addEventListener('blur', updateShippingOptions);
+      events.forEach(event => {
+        postalInput.addEventListener(event, updateShippingOptions);
+      });
     }
     
     // Initial check
@@ -800,6 +814,10 @@
       setLoading(true);
 
       try {
+        // 🔧 FIX: Force update shipping options before payment (safety check)
+        console.log('🔒 Final check before payment...');
+        updateShippingOptions();
+        
         // Create payment intent
         const clientSecret = await createPaymentIntent();
 
@@ -1004,10 +1022,13 @@
   async function createPaymentIntent() {
     try {
       // Prepare cart items for backend validation
+      // 🔧 FIX: Normalize product IDs (underscore → hífen)
       const cartItems = cart.map(item => ({
-        id: item.id,
+        id: item.id.replace(/_/g, '-'),  // transfer_it → transfer-it
         quantity: item.quantity
       }));
+      
+      console.log('🔍 Normalized cart items:', cartItems);
 
       // Prepare shipping address
       const shippingAddress = {
