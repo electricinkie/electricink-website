@@ -53,7 +53,10 @@ function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
     // Find product in stripe-products.json
     const product = stripeProducts[item.id];
     
+    console.log(`🔍 Looking for product "${item.id}":`, product ? '✅ Found' : '❌ Not found');
+    
     if (!product) {
+      console.error(`❌ Available products:`, Object.keys(stripeProducts));
       throw new Error(`Invalid product ID: ${item.id}`);
     }
 
@@ -107,6 +110,13 @@ export default async function handler(req, res) {
   try {
     // Parse request body
     const { cartItems, shippingAddress, metadata = {} } = req.body;
+
+    // Debug logging
+    console.log('🔍 Backend received:', {
+      cartItems,
+      shippingAddress,
+      availableProducts: Object.keys(stripeProducts)
+    });
 
     // Validate and calculate totals on BACKEND (security critical!)
     const totals = validateAndCalculateTotal(cartItems, shippingAddress);
