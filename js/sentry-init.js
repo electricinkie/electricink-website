@@ -7,7 +7,7 @@
   'use strict';
 
   // Sentry DSN (Data Source Name) - Add via environment variable or config
-  const SENTRY_DSN = 'https://YOUR_SENTRY_DSN@sentry.io/YOUR_PROJECT_ID';
+  const SENTRY_DSN = 'https://e37a9a8d6ef2ed1dc2d480dff0ec396b@o4510652553166848.ingest.de.sentry.io/4510652588228688';
   const SENTRY_ENVIRONMENT = window.location.hostname === 'localhost' ? 'development' : 'production';
 
   // Only initialize if DSN is configured
