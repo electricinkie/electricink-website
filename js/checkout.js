@@ -410,59 +410,6 @@
     discountMessage.textContent = message;
     discountMessage.className = `discount-message ${type}`;
   }
-    calculateTotals();
-    renderOrderSummary();
-    
-    // Show success message
-    if (window.toast) {
-      window.toast.success(`Discount code "${code}" applied! 🎉`);
-    } else {
-      showDiscountSuccess(`Discount applied: ${discount.description}`);
-    }
-    
-    // Disable input and button
-    discountInput.disabled = true;
-    document.getElementById('applyDiscount').disabled = true;
-    document.getElementById('applyDiscount').textContent = 'Applied';
-  }
-  
-  function showDiscountError(message) {
-    const discountInput = document.getElementById('discountCode');
-    discountInput.style.borderColor = '#EF4444';
-    
-    // Create or update error message
-    let errorEl = document.getElementById('discount-error');
-    if (!errorEl) {
-      errorEl = document.createElement('div');
-      errorEl.id = 'discount-error';
-      errorEl.style.cssText = 'color: #EF4444; font-size: 13px; margin-top: 8px; font-family: Montserrat, sans-serif;';
-      discountInput.parentElement.parentElement.appendChild(errorEl);
-    }
-    
-    errorEl.textContent = message;
-    
-    // Remove error after 3 seconds
-    setTimeout(() => {
-      if (errorEl) errorEl.remove();
-      discountInput.style.borderColor = '';
-    }, 3000);
-  }
-  
-  function showDiscountSuccess(message) {
-    const discountInput = document.getElementById('discountCode');
-    discountInput.style.borderColor = '#43BDAB';
-    
-    // Create or update success message
-    let successEl = document.getElementById('discount-success');
-    if (!successEl) {
-      successEl = document.createElement('div');
-      successEl.id = 'discount-success';
-      successEl.style.cssText = 'color: #43BDAB; font-size: 13px; margin-top: 8px; font-family: Montserrat, sans-serif; font-weight: 600;';
-      discountInput.parentElement.parentElement.appendChild(successEl);
-    }
-    
-    successEl.textContent = message;
-  }
 
   // ============================================
   // STRIPE ELEMENTS
