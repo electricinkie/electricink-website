@@ -197,6 +197,13 @@
   color: #43BDAB;
 }
 
+.mobile-menu-link.active {
+  background: rgba(67, 189, 171, 0.15);
+  color: #43BDAB;
+  border-left: 3px solid #43BDAB;
+  font-weight: 600;
+}
+
 .mobile-menu-link svg {
   width: 20px;
   height: 20px;

@@ -114,7 +114,7 @@
         <li>
           <a href="/contact-us.html" class="mobile-menu-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 2 0 0 1 2 2z"/>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             Contact
           </a>
@@ -166,6 +166,7 @@
     setupMenuToggle();
     setupSubmenu();
     updateCartCount();
+    setActiveMenuItem();
   }
 
   // ────────── Menu Toggle ──────────
@@ -223,6 +224,28 @@
     cartBadges.forEach(badge => {
       badge.textContent = totalItems;
       badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    });
+  }
+
+  // ────────── Set Active Menu Item ──────────
+  function setActiveMenuItem() {
+    const currentPath = window.location.pathname;
+    const menuLinks = document.querySelectorAll('.mobile-menu-link');
+    
+    menuLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      
+      // Remove active class from all
+      link.classList.remove('active');
+      
+      // Check if current page matches link
+      if (href === currentPath || 
+          (href === '/' && (currentPath === '/' || currentPath === '/index.html')) ||
+          (href === '/howtousecosmetics.html' && currentPath.includes('howtouse')) ||
+          (href === '/about-us.html' && currentPath.includes('about')) ||
+          (href === '/contact-us.html' && currentPath.includes('contact'))) {
+        link.classList.add('active');
+      }
     });
   }
 
