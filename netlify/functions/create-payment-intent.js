@@ -1,10 +1,27 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
-  // Apenas POST requests
+  // CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+
+  // Handle OPTIONS (preflight)
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
+  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
@@ -17,6 +34,7 @@ exports.handler = async (event) => {
     if (!amount || amount <= 0) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ error: 'Invalid amount' })
       };
     }
@@ -34,11 +52,7 @@ exports.handler = async (event) => {
     // Retorna client_secret
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
+      headers,
       body: JSON.stringify({
         clientSecret: paymentIntent.client_secret,
         paymentIntentId: paymentIntent.id
@@ -50,6 +64,7 @@ exports.handler = async (event) => {
     
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ 
         error: error.message || 'Failed to create payment intent' 
       })
