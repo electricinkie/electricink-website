@@ -621,37 +621,40 @@
           throw new Error('Failed to create payment intent');
         }
 
-        // Confirm payment with Stripe
+        // Confirm payment with Stripe (with 3D Secure / SCA support)
+        const billingDetails = {
+          name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
+          email: elements.form.email.value,
+          phone: elements.form.phone.value,
+          address: {
+            line1: elements.form.address.value,
+            line2: elements.form.address2.value || null,
+            city: elements.form.city.value,
+            postal_code: elements.form.postalCode.value,
+            country: elements.form.country.value
+          }
+        };
+
         const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
             card: cardElement,
-            billing_details: {
-              name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
-              email: elements.form.email.value,
-              phone: elements.form.phone.value,
-              address: {
-                line1: elements.form.address.value,
-                line2: elements.form.address2.value || null,
-                city: elements.form.city.value,
-                postal_code: elements.form.postalCode.value,
-                country: elements.form.country.value
-              }
-            }
+            billing_details: billingDetails
           }
         });
 
         if (error) {
-          // Payment failed
+          // Payment failed (card declined, network error, etc.)
           console.error('Payment error:', error);
           if (window.toast) {
             window.toast.error(error.message, 5000);
           }
           showError(error.message);
           setLoading(false);
-        } else if (paymentIntent.status === 'succeeded') {
-          // Payment succeeded
-          handlePaymentSuccess(paymentIntent);
+          return;
         }
+
+        // Handle payment intent status (including 3D Secure)
+        await handlePaymentIntentStatus(paymentIntent, clientSecret, billingDetails);
 
       } catch (error) {
         console.error('Checkout error:', error);
@@ -699,6 +702,118 @@
   // ============================================
   // PAYMENT PROCESSING
   // ============================================
+  
+  /**
+   * Handle Payment Intent Status with 3D Secure / SCA Support
+   * Following Stripe best practices for PSD2 compliance
+   * @param {Object} paymentIntent - Stripe Payment Intent object
+   * @param {String} clientSecret - Payment Intent client secret
+   * @param {Object} billingDetails - Customer billing details
+   */
+  async function handlePaymentIntentStatus(paymentIntent, clientSecret, billingDetails) {
+    try {
+      switch (paymentIntent.status) {
+        case 'succeeded':
+          // Payment succeeded immediately (no 3DS required)
+          console.log('Payment succeeded without additional authentication');
+          handlePaymentSuccess(paymentIntent);
+          break;
+
+        case 'requires_action':
+        case 'requires_source_action':
+          // 3D Secure authentication required
+          console.log('3D Secure authentication required');
+          
+          // Show user-friendly message
+          if (window.toast) {
+            window.toast.info('Please complete authentication with your bank', 3000);
+          }
+          
+          // Stripe will automatically show 3DS modal
+          const { error: actionError, paymentIntent: confirmedIntent } = await stripe.handleCardAction(clientSecret);
+          
+          if (actionError) {
+            // 3DS authentication failed
+            console.error('3D Secure authentication failed:', actionError);
+            if (window.toast) {
+              window.toast.error(actionError.message, 5000);
+            }
+            showError(actionError.message);
+            setLoading(false);
+            return;
+          }
+          
+          // After 3DS, check final status
+          if (confirmedIntent.status === 'succeeded') {
+            console.log('Payment succeeded after 3D Secure authentication');
+            handlePaymentSuccess(confirmedIntent);
+          } else if (confirmedIntent.status === 'requires_payment_method') {
+            // 3DS completed but payment still failed (card declined after auth)
+            console.error('Payment failed after 3D Secure authentication');
+            if (window.toast) {
+              window.toast.error('Payment declined. Please try a different card.', 5000);
+            }
+            showError('Payment declined. Please try a different card.');
+            setLoading(false);
+          } else {
+            // Unexpected status after 3DS
+            console.error('Unexpected payment status after 3DS:', confirmedIntent.status);
+            if (window.toast) {
+              window.toast.error('Payment processing error. Please try again.', 5000);
+            }
+            showError('Payment processing error. Please try again.');
+            setLoading(false);
+          }
+          break;
+
+        case 'requires_payment_method':
+          // Payment failed, customer needs to try different payment method
+          console.error('Payment requires different payment method');
+          if (window.toast) {
+            window.toast.error('Payment declined. Please try a different card.', 5000);
+          }
+          showError('Payment declined. Please try a different card.');
+          setLoading(false);
+          break;
+
+        case 'processing':
+          // Payment is processing (async payment methods like SEPA, bank transfers)
+          console.log('Payment is processing asynchronously');
+          if (window.toast) {
+            window.toast.info('Payment is processing. You will receive confirmation via email.', 5000);
+          }
+          // For async payments, still consider it success and redirect
+          handlePaymentSuccess(paymentIntent);
+          break;
+
+        case 'canceled':
+          // Payment was canceled
+          console.error('Payment was canceled');
+          if (window.toast) {
+            window.toast.error('Payment was canceled. Please try again.', 5000);
+          }
+          showError('Payment was canceled. Please try again.');
+          setLoading(false);
+          break;
+
+        default:
+          // Unknown status
+          console.error('Unknown payment intent status:', paymentIntent.status);
+          if (window.toast) {
+            window.toast.error('Payment status unclear. Please contact support.', 5000);
+          }
+          showError('Payment status unclear. Please contact support.');
+          setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error handling payment intent status:', error);
+      if (window.toast) {
+        window.toast.error('Payment processing error. Please try again.', 5000);
+      }
+      showError('Payment processing error. Please try again.');
+      setLoading(false);
+    }
+  }
   
   async function createPaymentIntent() {
     try {
