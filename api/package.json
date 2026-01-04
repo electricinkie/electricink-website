@@ -1,0 +1,9 @@
+{
+  "name": "electricink-ie-api",
+  "version": "1.0.0",
+  "description": "Vercel API Routes for Electric Ink Ireland",
+  "dependencies": {
+    "stripe": "^14.0.0",
+    "resend": "^3.0.0"
+  }
+}

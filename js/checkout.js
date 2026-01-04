@@ -12,7 +12,7 @@
   // ============================================
   
   const STRIPE_PUBLISHABLE_KEY = 'pk_test_51SlF0iALQaxEXnEz9kXoD66kw8pbOPffk7TSKmQ1ejhBryHpANG3s5dyLC5jI5nT3atIKZZYKXTA1zKIxG9OIgbq008BlzJwex';
-  const PAYMENT_INTENT_URL = '/.netlify/functions/create-payment-intent';
+  const PAYMENT_INTENT_URL = '/api/create-payment-intent';
   
   // ============================================
   // STATE
@@ -568,7 +568,7 @@
 
     try {
       // Email 1: Customer confirmation
-      await fetch('/.netlify/functions/send-order-email', {
+      await fetch('/api/send-order-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -578,7 +578,7 @@
       });
 
       // Email 2: Admin notification
-      await fetch('/.netlify/functions/send-order-email', {
+      await fetch('/api/send-order-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
