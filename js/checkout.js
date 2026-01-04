@@ -1003,20 +1003,34 @@
   
   async function createPaymentIntent() {
     try {
-      // Prepare order data
+      // Prepare cart items for backend validation
+      const cartItems = cart.map(item => ({
+        id: item.id,
+        quantity: item.quantity
+      }));
+
+      // Prepare shipping address
+      const shippingAddress = {
+        method: shippingMethod,
+        postalCode: elements.form.postalCode.value,
+        city: elements.form.city.value,
+        country: elements.form.country.value
+      };
+
+      // Send to backend for SECURE price calculation
       const orderData = {
-        amount: totals.total,
-        currency: 'eur',
+        cartItems: cartItems,
+        shippingAddress: shippingAddress,
         metadata: {
           customer_email: elements.form.email.value,
           customer_name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
-          items_count: cart.length,
-          subtotal: totals.subtotal.toFixed(2),
-          shipping: totals.shipping.toFixed(2)
+          items_count: cart.length
         }
       };
 
-      // Call Netlify function
+      console.log('🔒 Sending cart to backend for price validation...');
+
+      // Call API function
       const response = await fetch(PAYMENT_INTENT_URL, {
         method: 'POST',
         headers: {
@@ -1026,7 +1040,8 @@
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -1035,10 +1050,31 @@
         throw new Error('Invalid response from payment server');
       }
 
+      // Verify backend calculations match frontend
+      if (data.calculatedTotals) {
+        console.log('✅ Backend price validation:', data.calculatedTotals);
+        
+        // Check if totals differ significantly (allow 0.01 rounding)
+        const diff = Math.abs(data.calculatedTotals.total - totals.total);
+        if (diff > 0.02) {
+          console.warn('⚠️ Price mismatch detected:', {
+            frontend: totals.total,
+            backend: data.calculatedTotals.total
+          });
+          
+          // Update frontend totals with backend values (backend is source of truth)
+          totals.subtotal = data.calculatedTotals.subtotal;
+          totals.shipping = data.calculatedTotals.shipping;
+          totals.vat = data.calculatedTotals.vat;
+          totals.total = data.calculatedTotals.total;
+          renderOrderSummary();
+        }
+      }
+
       return data.clientSecret;
 
     } catch (error) {
-      console.error('Payment intent creation error:', error);
+      console.error('❌ Payment intent creation error:', error);
       throw error;
     }
   }
