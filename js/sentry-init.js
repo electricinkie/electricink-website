@@ -7,10 +7,11 @@
   'use strict';
 
   // Sentry configuration
-  const SENTRY_DSN = 'https://e37a9a8d6ef2ed1dc2d480dff0ec396b@o4510652553166848.ingest.de.sentry.io/4510652588228688';
+  // IMPORTANT: Do not hardcode your DSN here. Provide at build/runtime via hosting env or replace during deploy.
+  const SENTRY_DSN = '';
   
-  if (!SENTRY_DSN || SENTRY_DSN.includes('SEU_DSN_AQUI')) {
-    console.warn('⚠️ Sentry DSN not configured');
+  if (!SENTRY_DSN) {
+    console.warn('⚠️ Sentry DSN not configured. To enable Sentry, set SENTRY_DSN in your environment and inject at build time.');
     return;
   }
 

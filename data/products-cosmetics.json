@@ -1,0 +1,653 @@
+{
+  "tattoo-balm-25g": {
+    "id": "tattoo-balm-25g",
+    "name": "Tattoo Balm",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.",
+    "features": [
+      "15 natural active ingredients",
+      "Fast absorption",
+      "Vegan & paraben-free",
+      "Dermatologically tested"
+    ],
+    "stripe": {
+      "productId": "prod_TjU7b8nxU1sNzc",
+      "priceId": "price_1Sm19RAiq7NBxfpwp4mtau1V"
+    },
+    "price": 8.15,
+    "size": "25g",
+    "image": "/images/products/cosmetics/tattoo-balm-25g.webp",
+    "images": [
+      "/images/products/cosmetics/tattoo-balm-25g.webp",
+      "/images/products/cosmetics/tattoo-balm-2.webp",
+      "/images/products/cosmetics/tattoo-balm-3.webp",
+      "/images/products/cosmetics/tattoo-balm-4.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply 2-3 times daily for 14 days."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "tattoo-cream-derma-30g": {
+    "id": "tattoo-cream-derma-30g",
+    "name": "Tattoo Cream Derma",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Lightweight moisturizer for healed tattoos. Plant-based oils and butters provide deep hydration with anti-aging antioxidants. Keep your ink bold and vibrant.",
+    "features": [
+      "For healed skin (10+ days)",
+      "Antioxidant-rich formula",
+      "pH-balanced",
+      "Fast absorption"
+    ],
+    "stripe": {
+      "productId": "prod_TjUAdCColMjp0O",
+      "priceId": "price_1Sm1CHAiq7NBxfpwWPOFVz98"
+    },
+    "price": 6.50,
+    "size": "30g",
+    "image": "/images/products/cosmetics/tattoo-cream-30g.webp",
+    "images": [
+      "/images/products/cosmetics/tattoo-cream-30g.webp",
+      "/images/products/cosmetics/tattoo-cream-2.webp"
+    ],
+    "content": {
+      "usage_instructions": "Use daily to moisturize healed tattoos and maintain vibrancy."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "slimer-gel": {
+    "id": "slimer-gel",
+    "name": "Slimer Tattoo Gel",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.",
+    "features": [
+      "Reduces redness in 5-10 min",
+      "Refreshing mint essence",
+      "Protective film barrier",
+      "Prevents dryness"
+    ],
+    "stripe": {
+      "productId": "prod_TjUCnikkW8V98S",
+      "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd"
+    },
+    "price": 11.25,
+    "size": "90g",
+    "variants": [
+      { 
+        "id": "slimer-gel-90g",
+        "size": "90g", 
+        "label": "90g",
+        "price": 11.25, 
+        "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd",
+        "stripe_price_id": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd",
+        "image": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp"
+      },
+      { 
+        "id": "slimer-gel-400g",
+        "size": "400g", 
+        "label": "400g",
+        "price": 18.50, 
+        "priceId": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l",
+        "stripe_price_id": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l",
+        "image": "/images/products/cosmetics/slimer-tattoo-gel-400ml.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp",
+    "images": [
+      "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp",
+      "/images/products/cosmetics/slimer-tattoo-gel-400ml.webp",
+      "/images/products/cosmetics/slimer-tattoo-gel-2.webp",
+      "/images/products/cosmetics/slimer-tattoo-gel-info.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply during tattooing as needed.\nReduces inflammation immediately.\nMaintains stencil clarity and improves ink visibility."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "skin-scrub-out-250g": {
+    "id": "skin-scrub-out-250g",
+    "name": "Tattoo Skin Scrub Out",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo",
+    "description": "Exfoliating gel removes dead cells and impurities. Softens skin, facilitates ink application, and makes the process safer. Essential for preparation.",
+    "features": [
+      "Removes dead cells",
+      "Moisturizes & softens",
+      "Safer needle puncture",
+      "Optimal prep essential"
+    ],
+    "stripe": {
+      "productId": "prod_TjUGg2WGdrsUbl",
+      "priceId": "price_1Sm1ICAiq7NBxfpw7gNrJWEi"
+    },
+    "price": 13.50,
+    "size": "250g",
+    "image": "/images/products/cosmetics/scrub-out-250g.webp",
+    "images": [
+      "/images/products/cosmetics/scrub-out-250g.webp",
+      "/images/products/cosmetics/scrub-out-2.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply sufficient amount onto the area to be tattooed.\nGently massage in circular motion to exfoliate skin.\nRinse thoroughly with Clean Up/Prep to remove debris."
+    },
+    "inStock": true
+  },
+  "tattoo-prep-200ml": {
+    "id": "tattoo-prep-200ml",
+    "name": "Tattoo Prep",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo",
+    "description": "Shaving foam with Aloe Vera and Chamomile. Enhances razor glide during hair removal and cleanses skin. Calms and moisturizes. No rinsing needed.",
+    "features": [
+      "Aloe Vera & Chamomile",
+      "Smooth razor glide",
+      "Calms & moisturizes",
+      "No rinse required"
+    ],
+    "stripe": {
+      "productId": "prod_TjUJfEY74SgGR0",
+      "priceId": "price_1Sm1KoAiq7NBxfpwSEEBe3N4"
+    },
+    "price": 12.25,
+    "size": "200mL",
+    "image": "/images/products/cosmetics/prep-200ml.webp",
+    "images": [
+      "/images/products/cosmetics/prep-200ml.webp",
+      "/images/products/cosmetics/prep-info.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply directly on skin or on disposable absorbent paper.\nSpread foam evenly across area for easy hair removal.\nRemove excess foam with absorbent paper—no rinsing needed."
+    },
+    "inStock": true
+  },
+  "gloo-stencil": {
+    "id": "gloo-stencil",
+    "name": "The Gloo Stencil Transfer",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing.",
+    "features": [
+      "Precise transfer accuracy",
+      "Enhanced skin adhesion",
+      "Dermatologically tested",
+      "Professional results"
+    ],
+    "stripe": { 
+      "productId": "prod_TjULsjQFxQ5b8F",
+      "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
+    },
+    "price": 10.00,
+    "size": "30mL",
+    "variants": [
+      { 
+        "id": "gloo-stencil-30ml",
+        "size": "30mL", 
+        "label": "30mL",
+        "price": 10.00, 
+        "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
+        "stripe_price_id": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
+        "image": "/images/products/cosmetics/gloo-30g.webp"
+      },
+      { 
+        "id": "gloo-stencil-120ml",
+        "size": "120mL", 
+        "label": "120mL",
+        "price": 26.00, 
+        "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
+        "stripe_price_id": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
+        "image": "/images/products/cosmetics/gloo-240g.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/gloo-30g.webp",
+    "images": [
+      "/images/products/cosmetics/gloo-30g.webp",
+      "/images/products/cosmetics/gloo-240g.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply gel, spread evenly in a thin layer.\nPosition stencil, press 10-15 seconds.\nRemove slowly for a clean, sharp stencil."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "transfer-it": {
+    "id": "transfer-it",
+    "name": "Transfer It",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage.",
+    "features": [
+      "Extra-long fixation",
+      "Enhanced precision",
+      "Won't dry out area",
+      "Extended coverage"
+    ],
+    "stripe": { 
+      "productId": "prod_TjUS3eS4PCSUr1",
+      "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
+    },
+    "price": 9.00,
+    "size": "30mL",
+    "variants": [
+      { 
+        "id": "transfer-it-30ml",
+        "size": "30mL", 
+        "label": "30mL",
+        "price": 9.00, 
+        "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ",
+        "stripe_price_id": "price_1Sm1TMAiq7NBxfpw2WoWPudJ",
+        "image": "/images/products/cosmetics/it-30ml.webp"
+      },
+      { 
+        "id": "transfer-it-120ml",
+        "size": "120mL", 
+        "label": "120mL",
+        "price": 16.35, 
+        "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO",
+        "stripe_price_id": "price_1Sm1TMAiq7NBxfpwa2GqTGeO",
+        "image": "/images/products/cosmetics/it-120ml.webp"
+      },
+      { 
+        "id": "transfer-it-240ml",
+        "size": "240mL", 
+        "label": "240mL",
+        "price": 24.50, 
+        "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m",
+        "stripe_price_id": "price_1Sm1TMAiq7NBxfpwOb98757m",
+        "image": "/images/products/cosmetics/it-240ml.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/it-30ml.webp",
+    "images": [
+      "/images/products/cosmetics/it-30ml.webp",
+      "/images/products/cosmetics/it-120ml.webp",
+      "/images/products/cosmetics/it-240ml.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply a thin layer on prepared skin.\nPosition stencil, press firmly 10-15 seconds.\nRemove carefully—stays clear throughout the session."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "stencil-fix-120ml": {
+    "id": "stencil-fix-120ml",
+    "name": "Stencil Fix Spray",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Professional spray for extra stencil fixation. Removes excess carbon, prevents smudging, and keeps skin hydrated. Perfect for stencils and freehand work.",
+    "features": [
+      "Prevents smudging",
+      "Removes excess carbon",
+      "Keeps skin hydrated",
+      "Works on freehand"
+    ],
+    "stripe": {
+      "productId": "prod_TjUVpNsfZVRD3l",
+      "priceId": "price_1Sm1W8Aiq7NBxfpwmkBIpvUp"
+    },
+    "price": 7.10,
+    "size": "120mL",
+    "image": "/images/products/cosmetics/fix-120ml.webp",
+    "images": [
+      "/images/products/cosmetics/fix-120ml.webp",
+      "/images/products/cosmetics/fix-2.webp"
+    ],
+    "content": {
+      "usage_instructions": "Spray onto absorbent paper and press onto stencil for 5 seconds.\nFor freehand: spray directly onto skin to fix the drawing."
+    },
+    "inStock": true
+  },
+  "clean-up": {
+    "id": "clean-up",
+    "name": "Tattoo Clean Up",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results.",
+    "features": [
+      "Optimizes pigment retention",
+      "Reduces irritation",
+      "Maintains pH balance",
+      "Promotes faster healing"
+    ],
+    "stripe": { 
+      "productId": "prod_TjUXvUXA83i0pO",
+      "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
+    },
+    "price": 9.00,
+    "size": "90mL",
+    "variants": [
+      { 
+        "id": "clean-up-90ml",
+        "size": "90mL", 
+        "label": "90mL",
+        "price": 9.00, 
+        "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW",
+        "stripe_price_id": "price_1Sm1YkAiq7NBxfpw3AgyJySW",
+        "image": "/images/products/cosmetics/clean-up-90ml.webp"
+      },
+      { 
+        "id": "clean-up-200ml",
+        "size": "200mL", 
+        "label": "200mL",
+        "price": 10.65, 
+        "priceId": "price_1Sm1YlAiq7NBxfpwavldit9Z",
+        "stripe_price_id": "price_1Sm1YlAiq7NBxfpwavldit9Z",
+        "image": "/images/products/cosmetics/clean-up-200ml.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/clean-up-90ml.webp",
+    "images": [
+      "/images/products/cosmetics/clean-up-90ml.webp",
+      "/images/products/cosmetics/clean-up-90ml-2.webp",
+      "/images/products/cosmetics/clean-up-info.webp",
+      "/images/products/cosmetics/clean-up-200ml.webp",
+      "/images/products/cosmetics/clean-up-1l.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply foam directly to tattooed area.\nGently spread evenly over skin.\nThoroughly clean with disposable paper."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "clean-up-refill-1l": {
+    "id": "clean-up-refill-1l",
+    "name": "Tattoo Clean Up Refill",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "1L refill for foam bottle. Same pH-balanced formula that optimizes pigment retention and reduces irritation. Eco-friendly bulk option for busy studios.",
+    "features": [
+      "Eco-friendly refill",
+      "1L bulk size",
+      "Use with foam bottle",
+      "Same trusted formula"
+    ],
+    "stripe": {
+      "productId": "prod_TjUZzKGZrguF2C",
+      "priceId": "price_1Sm1akAiq7NBxfpwoTcDpGHw"
+    },
+    "price": 14.70,
+    "size": "1L",
+    "image": "/images/products/cosmetics/clean-up-1l.webp",
+    "images": [
+      "/images/products/cosmetics/clean-up-1l.webp",
+      "/images/products/cosmetics/clean-up-info.webp"
+    ],
+    "inStock": true
+  },
+  "cat-slobber": {
+    "id": "cat-slobber",
+    "name": "Cat Slobber Butter",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.",
+    "features": [
+      "Shea, Mango & Aloe",
+      "Smooth needle glide",
+      "Vegan formula",
+      "Multiple fragrance options"
+    ],
+    "stripe": { 
+      "productId": "prod_TjUgesU7XvVSmA",
+      "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ"
+    },
+    "price": 9.00,
+    "size": "90g",
+    "fragrance": "Traditional",
+    "variants": [
+      { 
+        "id": "cat-slobber-90g-traditional",
+        "size": "90g", 
+        "fragrance": "Traditional", 
+        "label": "90g - Traditional",
+        "price": 9.00, 
+        "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "image": "/images/products/cosmetics/cat-slobber-90g-tradicional.webp"
+      },
+      { 
+        "id": "cat-slobber-90g-clove-cinnamon",
+        "size": "90g", 
+        "fragrance": "Clove & Cinnamon", 
+        "label": "90g - Clove & Cinnamon",
+        "price": 9.00, 
+        "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "image": "/images/products/cosmetics/cat-slobber-90g-clove&cinnamon.webp"
+      },
+      { 
+        "id": "cat-slobber-90g-mint",
+        "size": "90g", 
+        "fragrance": "Mint", 
+        "label": "90g - Mint",
+        "price": 9.00, 
+        "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "image": "/images/products/cosmetics/cat-slobber-90g-mint.webp"
+      },
+      { 
+        "id": "cat-slobber-250g-traditional",
+        "size": "250g", 
+        "fragrance": "Traditional", 
+        "label": "250g - Traditional",
+        "price": 25.70, 
+        "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "image": "/images/products/cosmetics/cat-slobber-250g-tradicional.webp"
+      },
+      { 
+        "id": "cat-slobber-250g-clove-cinnamon",
+        "size": "250g", 
+        "fragrance": "Clove & Cinnamon", 
+        "label": "250g - Clove & Cinnamon",
+        "price": 25.70, 
+        "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "image": "/images/products/cosmetics/cat-slobber-250g-clove&cinnamon.webp"
+      },
+      { 
+        "id": "cat-slobber-250g-mint",
+        "size": "250g", 
+        "fragrance": "Mint", 
+        "label": "250g - Mint",
+        "price": 25.70, 
+        "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "image": "/images/products/cosmetics/cat-slobber-250g-mint.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/cat-slobber-90g-tradicional.webp",
+    "images": [
+      "/images/products/cosmetics/cat-slobber-90g-tradicional.webp",
+      "/images/products/cosmetics/cat-slobber-opened.webp",
+      "/images/products/cosmetics/cat-slobber-info.webp",
+      "/images/products/cosmetics/cat-slobber-90g-clove&cinnamon.webp",
+      "/images/products/cosmetics/cat-slobber-90g-mint.webp",
+      "/images/products/cosmetics/cat-slobber-250g-tradicional.webp",
+      "/images/products/cosmetics/cat-slobber-250g-clove&cinnamon.webp",
+      "/images/products/cosmetics/cat-slobber-250g-mint.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply a thin, even layer over the area.\nGently massage into skin.\nReapply as needed for hydration and glide."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "vaseline-slip": {
+    "id": "vaseline-slip",
+    "name": "Vaseline Slip Premium",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.",
+    "features": [
+      "Omega & antioxidants",
+      "Revitalizing Clove Oil",
+      "Smooth needle glide",
+      "Prevents irritation"
+    ],
+    "stripe": { 
+      "productId": "prod_TjUk5X0HS4DDOR",
+      "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
+    },
+    "price": 8.20,
+    "size": "90g",
+    "variants": [
+      { 
+        "id": "vaseline-slip-90g",
+        "size": "90g", 
+        "label": "90g",
+        "price": 8.20, 
+        "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
+        "stripe_price_id": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
+        "image": "/images/products/cosmetics/slip-premium-90g.webp"
+      },
+      { 
+        "id": "vaseline-slip-150g",
+        "size": "150g", 
+        "label": "150g",
+        "price": 9.80, 
+        "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
+        "stripe_price_id": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
+        "image": "/images/products/cosmetics/slip-premium-150g.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/slip-premium-90g.webp",
+    "images": [
+      "/images/products/cosmetics/slip-premium-90g.webp",
+      "/images/products/cosmetics/slip-premium-150g.webp",
+      "/images/products/cosmetics/slip-premium-250g.webp",
+      "/images/products/cosmetics/slip-premium-2.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply a thin layer during tattooing to ensure smooth needle glide and skin protection.\nReapply as necessary."
+    },
+    "inStock": true
+  },
+  "after-all": {
+    "id": "after-all",
+    "name": "Tattoo After All",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.",
+    "features": [
+      "Antiseptic protection",
+      "Reduces redness",
+      "No rinse needed",
+      "Rapid recovery"
+    ],
+    "stripe": { 
+      "productId": "prod_TjUoGWkFxCNru7",
+      "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr"
+    },
+    "price": 9.80,
+    "size": "90mL",
+    "variants": [
+      { 
+        "id": "after-all-90ml",
+        "size": "90mL", 
+        "label": "90mL",
+        "price": 9.80, 
+        "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr",
+        "stripe_price_id": "price_1Sm1oPAiq7NBxfpwOvWFWJBr",
+        "image": "/images/products/cosmetics/after-all-90ml.webp"
+      },
+      { 
+        "id": "after-all-250ml",
+        "size": "250mL", 
+        "label": "250mL",
+        "price": 15.50, 
+        "priceId": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN",
+        "stripe_price_id": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN",
+        "image": "/images/products/cosmetics/after-all-250ml.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/after-all-90ml.webp",
+    "images": [
+      "/images/products/cosmetics/after-all-90ml.webp",
+      "/images/products/cosmetics/after-all-90ml-2.webp",
+      "/images/products/cosmetics/after-all-250ml.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply After All to cleaned, tattooed area.\nGently pat skin dry with soft paper.\nNo rinsing necessary."
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "barrier-film": {
+    "id": "barrier-film",
+    "name": "Tattoo Barrier Film",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.",
+    "features": [
+      "Transparent barrier",
+      "Breathable & flexible",
+      "Protects healing skin",
+      "Easy application"
+    ],
+    "stripe": { 
+      "productId": "prod_TjUtBF8BzltzEq",
+      "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
+    },
+    "price": 14.70,
+    "size": "25mL",
+    "variants": [
+      { 
+        "id": "barrier-film-25ml",
+        "size": "25mL", 
+        "label": "25mL",
+        "price": 14.70, 
+        "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
+        "stripe_price_id": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
+        "image": "/images/products/cosmetics/barrier-film-25ml.webp"
+      },
+      { 
+        "id": "barrier-film-100ml",
+        "size": "100mL", 
+        "label": "100mL",
+        "price": 32.70, 
+        "priceId": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy",
+        "stripe_price_id": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy",
+        "image": "/images/products/cosmetics/barrier-film-100ml.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/barrier-film-25ml.webp",
+    "images": [
+      "/images/products/cosmetics/barrier-film-25ml.webp",
+      "/images/products/cosmetics/barrier-film-100ml.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply a layer of Barrier Film over the tattoo and allow it to dry completely.\nTo remove: rinse with warm water or use Clean Up."
+    },
+    "inStock": true
+  },
+  "tattoo-dry-10units": {
+    "id": "tattoo-dry-10units",
+    "name": "Tattoo Dry Solidifier",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Solidifies liquid tattoo waste (blood, fluids, inks). Prevents leaks, reduces contamination risk, and ensures safe disposal. 10 individual units per box.",
+    "features": [
+      "Prevents leaks",
+      "Safe disposal",
+      "10 units included",
+      "Health compliant"
+    ],
+    "stripe": {
+      "productId": "prod_TjUxSHvTIln5AK",
+      "priceId": "price_1Sm1xXAiq7NBxfpwgTnMwun3"
+    },
+    "price": 12.20,
+    "size": "10 units",
+    "image": "/images/products/cosmetics/dry-10g.webp",
+    "images": [
+      "/images/products/cosmetics/dry-10g.webp",
+      "/images/products/cosmetics/dry-10g-2.webp"
+    ],
+    "inStock": true
+  }
+}

@@ -47,6 +47,58 @@
 }
 
 /* ========================================
+   SUBCATEGORY FILTERS (COSMETICS)
+   ======================================== */
+
+.subcategory-filters {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: -20px auto 40px;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+.subcategory-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subcategory-btn:hover {
+  border-color: #43BDAB;
+  color: #43BDAB;
+  transform: translateY(-2px);
+}
+
+.subcategory-btn.active {
+  background: #43BDAB;
+  border-color: #43BDAB;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .subcategory-filters {
+    gap: 8px;
+    padding: 0 20px;
+  }
+  
+  .subcategory-btn {
+    font-size: 12px;
+    padding: 10px 18px;
+  }
+}
+
+/* ========================================
    CATEGORY PAGE
    ======================================== */
 

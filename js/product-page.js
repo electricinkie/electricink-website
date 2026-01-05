@@ -14,7 +14,7 @@
   // LOAD products.json
   let productData;
   try {
-    const response = await fetch('/data/stripe-products.json');
+    const response = await fetch('/data/products-cosmetics.json');
     if (!response.ok) throw new Error('Failed to load products');
     
     const allProducts = await response.json();
@@ -201,8 +201,10 @@
     // Toggle functionality
     howToToggle.onclick = function() {
       const isExpanded = this.getAttribute('aria-expanded') === 'true';
-      this.setAttribute('aria-expanded', !isExpanded);
+      this.setAttribute('aria-expanded', (!isExpanded).toString());
       howToContent.classList.toggle('active');
+      // also toggle active class on the button for styling
+      this.classList.toggle('active');
     };
   }
 

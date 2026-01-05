@@ -379,6 +379,107 @@
   margin-bottom: 16px;
 }
 
+/* ========================================
+   HOW TO USE (accordion) - match howtouse aesthetics
+   ======================================== */
+.product-how-to-use {
+  margin-top: 20px;
+}
+
+.product-how-to-use .how-to-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(67, 189, 171, 0.05);
+  border: 2px solid rgba(67, 189, 171, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #043838;
+}
+
+.product-how-to-use .how-to-toggle .how-to-title {
+  color: #000;
+}
+
+.product-how-to-use .how-to-toggle[aria-expanded="true"] {
+  background: linear-gradient(135deg, #43BDAB 0%, #2a9d8f 100%);
+  color: #fff;
+  border-color: #43BDAB;
+}
+
+.product-how-to-use .how-to-toggle .how-to-arrow {
+  transition: transform 0.25s ease;
+  color: #43BDAB;
+  font-weight: 800;
+}
+
+.product-how-to-use .how-to-toggle[aria-expanded="true"] .how-to-arrow {
+  transform: rotate(180deg);
+  color: #fff;
+}
+
+.product-how-to-use .how-to-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.25s ease;
+  opacity: 0;
+  padding: 0;
+}
+
+.product-how-to-use .how-to-content.active {
+  max-height: 600px;
+  opacity: 1;
+  padding: 12px 0 0 0;
+}
+
+.product-how-to-use #howToSteps {
+  margin: 0;
+  padding: 0 0 0 18px;
+}
+
+.product-how-to-use #howToSteps li {
+  margin-bottom: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 26px;
+}
+
+.product-how-to-use #howToSteps li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #43BDAB;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+@media (max-width: 968px) {
+  .product-how-to-use .how-to-toggle {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+  }
+}
+
+/* Thumbnail inside toggle */
+.how-to-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
 .spec-item {
   display: flex;
   justify-content: space-between;
