@@ -1,338 +1,882 @@
 {
-  "transfer-it": {
-    "_label": "Transfer IT - 30ml",
+  "comment_section_1": "═════════════════════════════════════════════════════════════════════",
+  "comment_section_2": "                 COSMETICS - AFTERCARE                                ",
+  "comment_section_3": "              Cuidados pós-tatuagem e cicatrização                    ",
+  "comment_section_4": "═════════════════════════════════════════════════════════════════════",
+  "tattoo-balm-25g": {
+    "id": "tattoo-balm-25g",
+    "name": "Tattoo Balm",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.",
+    "features": [
+      "15 natural active ingredients",
+      "Fast absorption",
+      "Vegan & paraben-free",
+      "Dermatologically tested"
+    ],
     "stripe": {
-      "product_id": "prod_TigUjmv2Aplc56",
-      "price_id": "price_1SlF7qALQaxEXnEzYJnE5WAV"
+      "productId": "prod_TjU7b8nxU1sNzc",
+      "priceId": "price_1Sm19RAiq7NBxfpwp4mtau1V"
     },
-    "basic": {
-      "name": "Transfer IT - 30ml",
-      "short_description": "Professional stencil application gel for perfect transfers",
-      "price": 9.00,
-      "sku": "COSM-TRANSFERIT-30",
-      "category": "cosmetics",
-      "subcategory": "stencil-transfer"
-    },
-    "media": {
-      "main_image": "/images/products/cosmetics/transfer-it-30ml.webp",
+    "price": 8.15,
+    "size": "25g",
+    "images": {
+      "cover": "/images/products/cosmetics/tattoo-balm-25g.webp",
       "gallery": [
-        "/images/products/cosmetics/transfer-it-30ml.webp"
+        "/images/products/cosmetics/tattoo-balm-2.webp",
+        "/images/products/cosmetics/tattoo-balm-3.webp",
+        "/images/products/cosmetics/tattoo-balm-4.webp"
       ]
     },
-    "content": {
-      "full_description": "Transfer IT is a premium stencil application gel designed specifically for professional tattoo artists who demand precision and reliability. This advanced formula creates the perfect adhesive layer between skin and stencil, ensuring sharp, clear transfers that stay put throughout your session.\n\nDeveloped through years of collaboration with working tattoo artists, Transfer IT delivers consistent results across all skin types and stencil methods. Its unique formulation prevents smudging during application while maintaining optimal stencil clarity for hours, even during extended sessions.\n\nThe 30ml bottle provides enough product for approximately 40-50 applications, making it both economical and practical for busy studios. The hypoallergenic, vegan formula contains no harsh chemicals, ensuring client comfort while delivering professional results every time.\n\nWhether you're working with thermal stencils, carbon paper transfers, or hand-drawn designs, Transfer IT provides the reliable foundation your artwork deserves. Join thousands of professional artists who trust Transfer IT for their stencil application needs.",
-      "usage_instructions": "1. Clean and prepare the skin area thoroughly, ensuring it's dry and free from oils.\n2. Shake the Transfer IT bottle well before use.\n3. Apply a thin, even layer of Transfer IT to the prepared skin area using clean fingers or a disposable applicator.\n4. Wait 10-15 seconds for the gel to become slightly tacky.\n5. Place your stencil firmly on the prepared area, pressing evenly across the entire design.\n6. Hold in place for 5-10 seconds, then carefully peel away the stencil backing.\n7. Allow the transfer to dry completely (1-2 minutes) before beginning your tattoo work.",
-      "ingredients": "Aqua (Water), Glycerin, PVP (Polyvinylpyrrolidone), Propylene Glycol, Chamomilla Recutita (Chamomile) Extract, Aloe Barbadensis Leaf Extract, Phenoxyethanol, Ethylhexylglycerin, Citric Acid",
-      "warnings": "For external use only. Avoid contact with eyes. If irritation occurs, discontinue use. Keep out of reach of children. Store in a cool, dry place away from direct sunlight. Do not use on broken, irritated, or infected skin."
-    },
-    "features": [
-      "Creates perfect stencil adhesion on all skin types",
-      "Prevents smudging during application and tattooing",
-      "Hypoallergenic and vegan formula",
-      "Contains soothing chamomile and aloe extracts",
-      "Long-lasting hold for extended tattoo sessions",
-      "Works with thermal, carbon, and hand-drawn stencils",
-      "30ml bottle provides 40-50 applications",
-      "Quick-drying, non-greasy finish"
-    ],
-    "specifications": {
-      "volume": "30ml",
-      "applications_per_bottle": "40-50",
-      "pH_level": "5.5-6.5 (skin-neutral)",
-      "drying_time": "1-2 minutes",
-      "hold_duration": "4-6 hours",
-      "formula": "Hypoallergenic, vegan",
-      "scent": "Unscented",
-      "shelf_life": "24 months unopened, 12 months after opening",
-      "origin": "Made in EU",
-      "certifications": "Dermatologically tested"
-    },
-    "seo": {
-      "meta_title": "Transfer IT 30ml - Professional Tattoo Stencil Gel | Electric Ink IE",
-      "meta_description": "Premium stencil application gel for perfect tattoo transfers. Hypoallergenic, vegan formula. Long-lasting hold. Fast shipping across Ireland. Shop now!",
-      "keywords": ["tattoo stencil gel", "transfer gel ireland", "stencil application", "tattoo supplies ireland", "professional tattoo gel", "vegan tattoo products"]
-    },
-    "stock": {
-      "quantity": 50,
-      "low_stock_threshold": 10,
-      "status": "in_stock"
-    },
-    "shipping": {
-      "weight_grams": 45,
-      "dimensions_cm": {
-        "length": 10,
-        "width": 3,
-        "height": 3
-      },
-      "shipping_class": "standard"
-    }
+    "inStock": true,
+    "featured": true
   },
-  "slimer-gel": {
-    "_label": "Slimer Gel - 90ml",
+  "tattoo-cream-derma-30g": {
+    "id": "tattoo-cream-derma-30g",
+    "name": "Tattoo Cream Derma",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Lightweight moisturizer for healed tattoos. Plant-based oils and butters provide deep hydration with anti-aging antioxidants. Keep your ink bold and vibrant.",
+    "features": [
+      "For healed skin (10+ days)",
+      "Antioxidant-rich formula",
+      "pH-balanced",
+      "Fast absorption"
+    ],
     "stripe": {
-      "product_id": "prod_TigsUe8rVRpdkc",
-      "price_id": "price_1SlFUjALQaxEXnEzn4RzeRVS"
+      "productId": "prod_TjUAdCColMjp0O",
+      "priceId": "price_1Sm1CHAiq7NBxfpwWPOFVz98"
     },
-    "basic": {
-      "name": "Slimer Gel - 90ml",
-      "short_description": "Professional tattoo gel that reduces redness and irritation during sessions",
-      "price": 11.25,
-      "sku": "COSM-SLIMER-90",
-      "category": "cosmetics",
-      "subcategory": "tattoo-gel"
-    },
-    "media": {
-      "main_image": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp",
+    "price": 6.5,
+    "size": "30g",
+    "images": {
+      "cover": "/images/products/cosmetics/tattoo-cream-30g.webp",
       "gallery": [
-        "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp"
+        "/images/products/cosmetics/tattoo-cream-2.webp"
       ]
     },
-    "content": {
-      "full_description": "Slimer Gel is a revolutionary professional tattoo gel formulated to enhance both artist performance and client comfort during tattoo sessions. This advanced water-based gel creates an optimal glide surface while actively reducing skin irritation and inflammation, allowing you to work longer with better results.\n\nThe unique formula combines lubricating properties with skin-soothing botanical extracts, creating a protective barrier that minimizes trauma to the skin during the tattooing process. Unlike traditional petroleum-based products, Slimer Gel won't clog pores or interfere with ink absorption, ensuring vibrant, true color results.\n\nDesigned for professional use, the 90ml bottle provides excellent value with enough product for multiple large-scale tattoos. The gel's optimal viscosity ensures it stays where you apply it without running or drying out, maintaining consistent performance throughout even the longest sessions.\n\nTrusted by professional tattoo artists across Ireland and Europe, Slimer Gel has become an essential tool for artists who prioritize both quality results and client comfort. Its hypoallergenic, vegan formula makes it suitable for all skin types, including sensitive skin.",
-      "usage_instructions": "1. Ensure the tattoo area is clean, dry, and properly prepared with your stencil.\n2. Apply a thin layer of Slimer Gel to the working area using a clean applicator or gloved hand.\n3. Begin tattooing immediately - the gel provides instant lubrication.\n4. Reapply as needed throughout the session, typically every 15-20 minutes or when the surface feels less smooth.\n5. Wipe away excess gel and ink regularly with a clean paper towel to maintain visibility.\n6. After completing the tattoo, wipe away all remaining gel with a damp cloth.\n7. Follow with your standard aftercare protocol.",
-      "ingredients": "Aqua (Water), Glycerin, Carbomer, Propylene Glycol, Witch Hazel (Hamamelis Virginiana) Extract, Calendula Officinalis Flower Extract, Chamomilla Recutita (Chamomile) Extract, Aloe Barbadensis Leaf Juice, Triethanolamine, Phenoxyethanol, Ethylhexylglycerin, Menthol",
-      "warnings": "For professional use only. For external use only. Avoid contact with eyes and mucous membranes. Do not use on broken, infected, or inflamed skin prior to tattooing. Discontinue use if irritation occurs. Keep out of reach of children. Store in a cool, dry place."
-    },
-    "features": [
-      "Reduces redness and skin irritation during tattooing",
-      "Creates optimal glide surface for smoother needle work",
-      "Water-based formula won't interfere with ink absorption",
-      "Contains soothing witch hazel, calendula, and chamomile",
-      "Non-greasy, won't clog pores or create buildup",
-      "Maintains consistent viscosity throughout session",
-      "90ml bottle provides excellent value for busy studios",
-      "Hypoallergenic and vegan-friendly formula"
-    ],
-    "specifications": {
-      "volume": "90ml",
-      "base": "Water-based",
-      "pH_level": "5.0-6.0 (skin-compatible)",
-      "viscosity": "Medium (optimal for tattooing)",
-      "color": "Clear/slightly amber",
-      "scent": "Light menthol",
-      "formula": "Hypoallergenic, vegan",
-      "absorption": "Non-comedogenic",
-      "shelf_life": "24 months unopened, 12 months after opening",
-      "origin": "Made in EU",
-      "certifications": "Dermatologically tested, Cruelty-free"
-    },
-    "seo": {
-      "meta_title": "Slimer Gel 90ml - Professional Tattoo Gel for Smooth Work | Electric Ink IE",
-      "meta_description": "Premium tattoo gel reduces irritation and redness. Water-based, vegan formula with botanical extracts. Perfect glide for professional artists. Shop Ireland!",
-      "keywords": ["tattoo gel ireland", "professional tattoo lubricant", "slimer gel", "tattoo supplies ireland", "vegan tattoo gel", "anti-irritation tattoo gel"]
-    },
-    "stock": {
-      "quantity": 60,
-      "low_stock_threshold": 15,
-      "status": "in_stock"
-    },
-    "shipping": {
-      "weight_grams": 110,
-      "dimensions_cm": {
-        "length": 12,
-        "width": 4,
-        "height": 4
-      },
-      "shipping_class": "standard"
-    }
+    "inStock": true,
+    "featured": true
   },
-  "pro-cartridge-rl-022": {
-    "_label": "Pro Cartridge RL Ø 0.22 (5 variantes)",
-    "stripe": {
-      "product_id": "prod_TihY93KodfNuPd"
-    },
-    "basic": {
-      "name": "Pro Cartridges – Round Liner Ø 0.22",
-      "tagline": "More detail, more control, finer than ever.",
-      "short_description": "Professional Round Liner cartridge. 0.22mm needle diameter. Pack of 20 units.",
-      "category": "cartridges",
-      "subcategory": "round-liner",
-      "base_sku": "CART-RL-022"
-    },
-    "media": {
-      "main_image": "/images/products/cartridges/rl-0.22/0.22-cover.webp",
-      "gallery": [
-        "/images/products/cartridges/rl-0.22/0.22-cover.webp",
-        "/images/products/cartridges/rl-0.22/coifa-rl.webp",
-        "/images/products/cartridges/rl-0.22/0.22-rl01.webp",
-        "/images/products/cartridges/rl-0.22/0.22-rl03.webp",
-        "/images/products/cartridges/rl-0.22/0.22-rl05.webp",
-        "/images/products/cartridges/rl-0.22/0.22-rl07.webp",
-        "/images/products/cartridges/rl-0.22/0.22-rl09.webp",
-        "/images/products/cartridges/rl-0.22/0.22-rl11.webp"
-      ]
-    },
-    "content": {
-      "full_description": "Electric Ink Pro Cartridges – Round Liner 0.22 are designed for artists who demand maximum precision and delicate line work. Featuring Super Long Taper needles with an ultra-fine diameter, they are ideal for highly detailed techniques and small-scale tattoos.\n\nDeveloped with Electric Ink's advanced safety system, these cartridges feature a silicone membrane that prevents ink, blood, or fluid backflow, protecting both your machine and your client. A secure locking system ensures cartridge stability for smoother and more controlled punctures.",
-      "usage_instructions": "1. Remove cartridge from sterile packaging immediately before use\n2. Insert cartridge firmly into your compatible cartridge machine\n3. Ensure secure connection and proper alignment\n4. Test needle protrusion at safe distance before skin contact\n5. Adjust machine settings according to technique and skin type\n6. After use, dispose of cartridge immediately in sharps container\n\nNever reuse cartridges. Always use fresh, sterile cartridges for each client.",
-      "materials": "Surgical-grade stainless steel needles, medical-grade plastic housing, silicone safety membrane",
-      "warnings": "For professional use only. Single use only - do not reuse or resterilize. Dispose of properly in approved sharps container. Keep out of reach of children. Use only with compatible cartridge machines. Ensure proper sterilization protocols are followed.",
-      "disclaimer": "Our suggestions are not rules. Each artist should test different models to find what best suits their setup and style."
-    },
+  "after-all-90ml": {
+    "id": "after-all-90ml",
+    "name": "Tattoo After All",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.",
     "features": [
-      "Super Long Taper needles for maximum precision",
-      "0.22mm ultra-fine needle diameter (#08)",
-      "Silicone membrane safety system prevents backflow",
-      "Secure locking system for cartridge stability",
-      "Surgical-grade stainless steel needles",
-      "Medical-grade plastic housing",
-      "EO Gas sterilized - individually packaged",
-      "Universal fit - compatible with all cartridge machines",
-      "Pack of 20 units",
-      "Designed and tested by Electric Ink R&D team"
+      "Antiseptic protection",
+      "Reduces redness",
+      "No rinse needed",
+      "Rapid recovery"
     ],
-    "specifications": {
-      "needle_type": "Round Liner (RL)",
-      "needle_diameter": "0.22mm (#08)",
-      "taper": "Super Long Taper",
-      "pack_size": "20 units",
-      "sterilization": "EO Gas - individually sterilised and inspected",
-      "needle_material": "Surgical-grade stainless steel",
-      "housing_material": "Medical-grade plastic",
-      "safety_system": "Silicone membrane backflow prevention",
-      "locking_system": "Secure cartridge lock",
-      "compatibility": "Universal cartridge machines",
-      "certifications": "CE certified, ISO 13485",
-      "shelf_life": "5 years from manufacture date",
-      "storage": "Store in cool, dry place away from direct sunlight"
+    "stripe": {
+      "productId": "prod_TjUoGWkFxCNru7",
+      "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr"
     },
-    "applications": {
-      "primary_uses": [
-        "Fine Line",
-        "Mini Realism",
-        "Black & Grey Realism",
-        "White Realism",
-        "Colour Realism"
-      ],
-      "techniques": [
-        "Detailed line work",
-        "Small-scale tattoos",
-        "Micro-realism details",
-        "Script lettering",
-        "Portrait fine details"
-      ]
-    },
-    "price_range": {
-      "min": 27.80,
-      "max": 31.50,
-      "display": "from €27.80"
-    },
-    "variant_config": {
-      "type": "configuration",
-      "label": "Needle Configuration",
-      "description": "Select the number of needles (configuration) for your technique. Higher configurations create bolder lines."
-    },
+    "price": 9.8,
+    "size": "90mL",
     "variants": [
       {
-        "id": "RL01",
-        "stripe_price_id": "price_1SlG9WALQaxEXnEzkqrPYuJC",
-        "label": "RL01 - 1 needle",
-        "sku": "CART-RL-022-01",
-        "price": 27.80,
-        "stock": 50,
-        "description": "Single needle configuration for ultra-fine lines and maximum precision. Perfect for micro-realism and extremely detailed work.",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl01.webp",
-        "specifications": {
-          "needle_count": 1,
-          "configuration": "Single round",
-          "line_thickness": "Ultra-fine",
-          "best_for": "Micro-realism, ultra-fine lines, tiny script, minute details"
-        }
+        "size": "90mL",
+        "price": 9.8,
+        "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr"
       },
       {
-        "id": "RL03",
-        "stripe_price_id": "price_1SlGDOALQaxEXnEzTFy5k09V",
-        "label": "RL03 - 3 needles",
-        "sku": "CART-RL-022-03",
-        "price": 28.50,
-        "stock": 45,
-        "description": "3 needle configuration for fine lines and small details. Ideal for small lettering and detailed line work.",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl03.webp",
-        "specifications": {
-          "needle_count": 3,
-          "configuration": "3 round",
-          "line_thickness": "Fine",
-          "best_for": "Fine lines, small script, portrait details, delicate outlines"
-        }
-      },
-      {
-        "id": "RL05",
-        "stripe_price_id": "price_1SlGWSALQaxEXnEz0zDFHmNg",
-        "label": "RL05 - 5 needles",
-        "sku": "CART-RL-022-05",
-        "price": 29.20,
-        "stock": 40,
-        "description": "5 needle configuration for medium lines. Versatile choice for general line work and outlines.",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl05.webp",
-        "specifications": {
-          "needle_count": 5,
-          "configuration": "5 round",
-          "line_thickness": "Medium",
-          "best_for": "Standard outlines, medium script, general line work, portrait outlines"
-        }
-      },
-      {
-        "id": "RL07",
-        "stripe_price_id": "price_1SlGWSALQaxEXnEz4lg5apQb",
-        "label": "RL07 - 7 needles",
-        "sku": "CART-RL-022-07",
-        "price": 30.00,
-        "stock": 35,
-        "description": "7 needle configuration for bold lines. Great for strong outlines and visible line work.",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl07.webp",
-        "specifications": {
-          "needle_count": 7,
-          "configuration": "7 round",
-          "line_thickness": "Bold",
-          "best_for": "Bold outlines, large script, strong line work, prominent details"
-        }
-      },
-      {
-        "id": "RL09",
-        "stripe_price_id": "price_1SlGWSALQaxEXnEz0hSdaHuG",
-        "label": "RL09 - 9 needles",
-        "sku": "CART-RL-022-09",
-        "price": 31.50,
-        "stock": 30,
-        "description": "9 needle configuration for thick lines. Maximum visibility and impact for bold designs.",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl09.webp",
-        "specifications": {
-          "needle_count": 9,
-          "configuration": "9 round",
-          "line_thickness": "Thick",
-          "best_for": "Thick outlines, large-scale designs, bold script, high-impact lines"
-        }
+        "size": "250mL",
+        "price": 15.5,
+        "priceId": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN"
       }
     ],
-    "seo": {
-      "meta_title": "Pro Cartridge Round Liner 0.22mm - Professional Tattoo Needles | Electric Ink IE",
-      "meta_description": "Electric Ink Pro Round Liner cartridges 0.22mm. Super Long Taper. 20 units. Safety membrane system. Perfect for fine line work and realism. Fast delivery Ireland.",
-      "keywords": [
-        "round liner cartridge",
-        "0.22mm tattoo needles",
-        "fine line cartridges",
-        "professional tattoo supplies",
-        "tattoo needles ireland",
-        "rl cartridges",
-        "electric ink cartridges",
-        "super long taper needles"
+    "images": {
+      "cover": "/images/products/cosmetics/after-all-90ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/after-all-90ml-2.webp"
       ]
     },
-    "stock": {
-      "quantity": 200,
-      "low_stock_threshold": 50,
-      "status": "in_stock",
-      "note": "Stock varies by configuration - check individual variant availability"
+    "inStock": true,
+    "featured": true
+  },
+  "after-all-250ml": {
+    "id": "after-all-250ml",
+    "name": "Tattoo After All",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.",
+    "features": [
+      "Antiseptic protection",
+      "Reduces redness",
+      "No rinse needed",
+      "Rapid recovery"
+    ],
+    "stripe": {
+      "productId": "prod_TjUoGWkFxCNru7",
+      "priceId": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN"
     },
-    "shipping": {
-      "weight_grams": 120,
-      "dimensions_cm": {
-        "length": 15,
-        "width": 10,
-        "height": 2
+    "price": 15.5,
+    "size": "250mL",
+    "variants": [
+      {
+        "size": "90mL",
+        "price": 9.8,
+        "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr"
       },
-      "shipping_class": "standard",
-      "restrictions": "Professional use only - age verification may be required"
-    }
+      {
+        "size": "250mL",
+        "price": 15.5,
+        "priceId": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/after-all-250ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/after-all-90ml-2.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "barrier-film-25ml": {
+    "id": "barrier-film-25ml",
+    "name": "Tattoo Barrier Film",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.",
+    "features": [
+      "Transparent barrier",
+      "Breathable & flexible",
+      "Protects healing skin",
+      "Easy application"
+    ],
+    "stripe": {
+      "productId": "prod_TjUtBF8BzltzEq",
+      "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
+    },
+    "price": 14.7,
+    "size": "25mL",
+    "variants": [
+      {
+        "size": "25mL",
+        "price": 14.7,
+        "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
+      },
+      {
+        "size": "100mL",
+        "price": 32.7,
+        "priceId": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/barrier-film-25ml.webp"
+    },
+    "inStock": true
+  },
+  "barrier-film-100ml": {
+    "id": "barrier-film-100ml",
+    "name": "Tattoo Barrier Film",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.",
+    "features": [
+      "Transparent barrier",
+      "Breathable & flexible",
+      "Protects healing skin",
+      "Easy application"
+    ],
+    "stripe": {
+      "productId": "prod_TjUtBF8BzltzEq",
+      "priceId": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy"
+    },
+    "price": 32.7,
+    "size": "100mL",
+    "variants": [
+      {
+        "size": "25mL",
+        "price": 14.7,
+        "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
+      },
+      {
+        "size": "100mL",
+        "price": 32.7,
+        "priceId": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/barrier-film-100ml.webp"
+    },
+    "inStock": true
+  },
+  "comment_section_5": "═════════════════════════════════════════════════════════════════════",
+  "comment_section_6": "              COSMETICS - DURING TATTOO                               ",
+  "comment_section_7": "         Produtos usados durante o processo de tatuagem               ",
+  "comment_section_8": "═════════════════════════════════════════════════════════════════════",
+  "slimer-gel-90g": {
+    "id": "slimer-gel-90g",
+    "name": "Slimer Tattoo Gel",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.",
+    "features": [
+      "Reduces redness in 5-10 min",
+      "Refreshing mint essence",
+      "Protective film barrier",
+      "Prevents dryness"
+    ],
+    "stripe": {
+      "productId": "prod_TjUCnikkW8V98S",
+      "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd"
+    },
+    "price": 11.25,
+    "size": "90g",
+    "variants": [
+      {
+        "size": "90g",
+        "price": 11.25,
+        "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd"
+      },
+      {
+        "size": "400g",
+        "price": 18.5,
+        "priceId": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/slimer-tattoo-gel-2.webp",
+        "/images/products/cosmetics/slimer-tattoo-gel-info.webp"
+      ]
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "slimer-gel-400g": {
+    "id": "slimer-gel-400g",
+    "name": "Slimer Tattoo Gel",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.",
+    "features": [
+      "Reduces redness in 5-10 min",
+      "Refreshing mint essence",
+      "Protective film barrier",
+      "Prevents dryness"
+    ],
+    "stripe": {
+      "productId": "prod_TjUCnikkW8V98S",
+      "priceId": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l"
+    },
+    "price": 18.5,
+    "size": "400g",
+    "variants": [
+      {
+        "size": "90g",
+        "price": 11.25,
+        "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd"
+      },
+      {
+        "size": "400g",
+        "price": 18.5,
+        "priceId": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/slimer-tattoo-gel-400ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/slimer-tattoo-gel-2.webp",
+        "/images/products/cosmetics/slimer-tattoo-gel-info.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "clean-up-90ml": {
+    "id": "clean-up-90ml",
+    "name": "Tattoo Clean Up",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results.",
+    "features": [
+      "Optimizes pigment retention",
+      "Reduces irritation",
+      "Maintains pH balance",
+      "Promotes faster healing"
+    ],
+    "stripe": {
+      "productId": "prod_TjUXvUXA83i0pO",
+      "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
+    },
+    "price": 9.0,
+    "size": "90mL",
+    "variants": [
+      {
+        "size": "90mL",
+        "price": 9.0,
+        "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
+      },
+      {
+        "size": "200mL",
+        "price": 10.65,
+        "priceId": "price_1Sm1YlAiq7NBxfpwavldit9Z"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/clean-up-90ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/clean-up-90ml-2.webp",
+        "/images/products/cosmetics/clean-up-info.webp"
+      ]
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "clean-up-200ml": {
+    "id": "clean-up-200ml",
+    "name": "Tattoo Clean Up",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results.",
+    "features": [
+      "Optimizes pigment retention",
+      "Reduces irritation",
+      "Maintains pH balance",
+      "Promotes faster healing"
+    ],
+    "stripe": {
+      "productId": "prod_TjUXvUXA83i0pO",
+      "priceId": "price_1Sm1YlAiq7NBxfpwavldit9Z"
+    },
+    "price": 10.65,
+    "size": "200mL",
+    "variants": [
+      {
+        "size": "90mL",
+        "price": 9.0,
+        "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
+      },
+      {
+        "size": "200mL",
+        "price": 10.65,
+        "priceId": "price_1Sm1YlAiq7NBxfpwavldit9Z"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/clean-up-200ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/clean-up-90ml-2.webp",
+        "/images/products/cosmetics/clean-up-info.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "clean-up-refill-1l": {
+    "id": "clean-up-refill-1l",
+    "name": "Tattoo Clean Up Refill",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "1L refill for foam bottle. Same pH-balanced formula that optimizes pigment retention and reduces irritation. Eco-friendly bulk option for busy studios.",
+    "features": [
+      "Eco-friendly refill",
+      "1L bulk size",
+      "Use with foam bottle",
+      "Same trusted formula"
+    ],
+    "stripe": {
+      "productId": "prod_TjUZzKGZrguF2C",
+      "priceId": "price_1Sm1akAiq7NBxfpwoTcDpGHw"
+    },
+    "price": 14.7,
+    "size": "1L",
+    "images": {
+      "cover": "/images/products/cosmetics/clean-up-1l.webp",
+      "gallery": [
+        "/images/products/cosmetics/clean-up-info.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "cat-slobber-90g": {
+    "id": "cat-slobber-90g",
+    "name": "Cat Slobber Butter",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.",
+    "features": [
+      "Shea, Mango & Aloe",
+      "Smooth needle glide",
+      "Vegan formula",
+      "3 fragrance options"
+    ],
+    "stripe": {
+      "productId": "prod_TjUgesU7XvVSmA",
+      "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ"
+    },
+    "price": 9.0,
+    "size": "90g",
+    "variants": [
+      {
+        "size": "90g",
+        "price": 9.0,
+        "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "fragrances": [
+          "Traditional",
+          "Clove & Cinnamon",
+          "Mint"
+        ]
+      },
+      {
+        "size": "250g",
+        "price": 25.7,
+        "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "fragrances": [
+          "Traditional",
+          "Clove & Cinnamon",
+          "Mint"
+        ]
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/cat-slobber-90g-tradicional.webp",
+      "gallery": [
+        "/images/products/cosmetics/cat-slobber-90g-clove&cinnamon.webp",
+        "/images/products/cosmetics/cat-slobber-90g-mint.webp",
+        "/images/products/cosmetics/cat-slobber-info.webp",
+        "/images/products/cosmetics/cat-slobber-opened.webp"
+      ]
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "cat-slobber-250g": {
+    "id": "cat-slobber-250g",
+    "name": "Cat Slobber Butter",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.",
+    "features": [
+      "Shea, Mango & Aloe",
+      "Smooth needle glide",
+      "Vegan formula",
+      "3 fragrance options"
+    ],
+    "stripe": {
+      "productId": "prod_TjUgesU7XvVSmA",
+      "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c"
+    },
+    "price": 25.7,
+    "size": "250g",
+    "variants": [
+      {
+        "size": "90g",
+        "price": 9.0,
+        "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "fragrances": [
+          "Traditional",
+          "Clove & Cinnamon",
+          "Mint"
+        ]
+      },
+      {
+        "size": "250g",
+        "price": 25.7,
+        "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "fragrances": [
+          "Traditional",
+          "Clove & Cinnamon",
+          "Mint"
+        ]
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/cat-slobber-250g-tradicional.webp",
+      "gallery": [
+        "/images/products/cosmetics/cat-slobber-250g-clove&cinnamon.webp",
+        "/images/products/cosmetics/cat-slobber-250g-mint.webp",
+        "/images/products/cosmetics/cat-slobber-info.webp",
+        "/images/products/cosmetics/cat-slobber-opened.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "vaseline-slip-90g": {
+    "id": "vaseline-slip-90g",
+    "name": "Vaseline Slip Premium",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.",
+    "features": [
+      "Omega & antioxidants",
+      "Revitalizing Clove Oil",
+      "Smooth needle glide",
+      "Prevents irritation"
+    ],
+    "stripe": {
+      "productId": "prod_TjUk5X0HS4DDOR",
+      "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
+    },
+    "price": 8.2,
+    "size": "90g",
+    "variants": [
+      {
+        "size": "90g",
+        "price": 8.2,
+        "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
+      },
+      {
+        "size": "150g",
+        "price": 9.8,
+        "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/slip-premium-90g.webp",
+      "gallery": [
+        "/images/products/cosmetics/slip-premium-2.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "vaseline-slip-150g": {
+    "id": "vaseline-slip-150g",
+    "name": "Vaseline Slip Premium",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.",
+    "features": [
+      "Omega & antioxidants",
+      "Revitalizing Clove Oil",
+      "Smooth needle glide",
+      "Prevents irritation"
+    ],
+    "stripe": {
+      "productId": "prod_TjUk5X0HS4DDOR",
+      "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv"
+    },
+    "price": 9.8,
+    "size": "150g",
+    "variants": [
+      {
+        "size": "90g",
+        "price": 8.2,
+        "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
+      },
+      {
+        "size": "150g",
+        "price": 9.8,
+        "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/slip-premium-150g.webp",
+      "gallery": [
+        "/images/products/cosmetics/slip-premium-2.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "tattoo-dry-10units": {
+    "id": "tattoo-dry-10units",
+    "name": "Tattoo Dry Solidifier",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Solidifies liquid tattoo waste (blood, fluids, inks). Prevents leaks, reduces contamination risk, and ensures safe disposal. 10 individual units per box.",
+    "features": [
+      "Prevents leaks",
+      "Safe disposal",
+      "10 units included",
+      "Health compliant"
+    ],
+    "stripe": {
+      "productId": "prod_TjUxSHvTIln5AK",
+      "priceId": "price_1Sm1xXAiq7NBxfpwgTnMwun3"
+    },
+    "price": 12.2,
+    "size": "10 units",
+    "images": {
+      "cover": "/images/products/cosmetics/dry-10g.webp",
+      "gallery": [
+        "/images/products/cosmetics/dry-10g-2.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "comment_section_9": "═════════════════════════════════════════════════════════════════════",
+  "comment_section_10": "           COSMETICS - PRE-TATTOO PREPARATION                        ",
+  "comment_section_11": "      Preparação da pele, limpeza e aplicação de estêncil            ",
+  "comment_section_12": "═════════════════════════════════════════════════════════════════════",
+  "skin-scrub-out-250g": {
+    "id": "skin-scrub-out-250g",
+    "name": "Tattoo Skin Scrub Out",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Exfoliating gel removes dead cells and impurities. Softens skin, facilitates ink application, and makes the process safer. Essential for preparation.",
+    "features": [
+      "Removes dead cells",
+      "Moisturizes & softens",
+      "Safer needle puncture",
+      "Optimal prep essential"
+    ],
+    "stripe": {
+      "productId": "prod_TjUGg2WGdrsUbl",
+      "priceId": "price_1Sm1ICAiq7NBxfpw7gNrJWEi"
+    },
+    "price": 13.5,
+    "size": "250g",
+    "images": {
+      "cover": "/images/products/cosmetics/scrub-out-250g.webp",
+      "gallery": [
+        "/images/products/cosmetics/scrub-out-2.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "tattoo-prep-200ml": {
+    "id": "tattoo-prep-200ml",
+    "name": "Tattoo Prep",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Shaving foam with Aloe Vera and Chamomile. Enhances razor glide during hair removal and cleanses skin. Calms and moisturizes. No rinsing needed.",
+    "features": [
+      "Aloe Vera & Chamomile",
+      "Smooth razor glide",
+      "Calms & moisturizes",
+      "No rinse required"
+    ],
+    "stripe": {
+      "productId": "prod_TjUJfEY74SgGR0",
+      "priceId": "price_1Sm1KoAiq7NBxfpwSEEBe3N4"
+    },
+    "price": 12.25,
+    "size": "200mL",
+    "images": {
+      "cover": "/images/products/cosmetics/prep-200ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/prep-info.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "gloo-stencil-30ml": {
+    "id": "gloo-stencil-30ml",
+    "name": "The Gloo Stencil Transfer",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing.",
+    "features": [
+      "Precise transfer accuracy",
+      "Enhanced skin adhesion",
+      "Dermatologically tested",
+      "Professional results"
+    ],
+    "stripe": {
+      "productId": "prod_TjULsjQFxQ5b8F",
+      "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
+    },
+    "price": 10.0,
+    "size": "30mL",
+    "variants": [
+      {
+        "size": "30mL",
+        "price": 10.0,
+        "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
+      },
+      {
+        "size": "240mL",
+        "price": 26.0,
+        "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/gloo-30g.webp",
+      "gallery": [
+        "/images/products/cosmetics/gloo-240g.webp"
+      ]
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "gloo-stencil-240ml": {
+    "id": "gloo-stencil-240ml",
+    "name": "The Gloo Stencil Transfer",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing.",
+    "features": [
+      "Precise transfer accuracy",
+      "Enhanced skin adhesion",
+      "Dermatologically tested",
+      "Professional results"
+    ],
+    "stripe": {
+      "productId": "prod_TjULsjQFxQ5b8F",
+      "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf"
+    },
+    "price": 26.0,
+    "size": "240mL",
+    "variants": [
+      {
+        "size": "30mL",
+        "price": 10.0,
+        "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
+      },
+      {
+        "size": "240mL",
+        "price": 26.0,
+        "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/gloo-240g.webp",
+      "gallery": [
+        "/images/products/cosmetics/gloo-30g.webp"
+      ]
+    },
+    "inStock": true
+  },
+  "transfer-it-30ml": {
+    "id": "transfer-it-30ml",
+    "name": "Transfer It",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage.",
+    "features": [
+      "Extra-long fixation",
+      "Enhanced precision",
+      "Won't dry out area",
+      "Extended coverage"
+    ],
+    "stripe": {
+      "productId": "prod_TjUS3eS4PCSUr1",
+      "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
+    },
+    "price": 9.0,
+    "size": "30mL",
+    "variants": [
+      {
+        "size": "30mL",
+        "price": 9.0,
+        "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
+      },
+      {
+        "size": "120mL",
+        "price": 16.35,
+        "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO"
+      },
+      {
+        "size": "240mL",
+        "price": 24.5,
+        "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/it-30ml.webp"
+    },
+    "inStock": true,
+    "featured": true
+  },
+  "transfer-it-120ml": {
+    "id": "transfer-it-120ml",
+    "name": "Transfer It",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage.",
+    "features": [
+      "Extra-long fixation",
+      "Enhanced precision",
+      "Won't dry out area",
+      "Extended coverage"
+    ],
+    "stripe": {
+      "productId": "prod_TjUS3eS4PCSUr1",
+      "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO"
+    },
+    "price": 16.35,
+    "size": "120mL",
+    "variants": [
+      {
+        "size": "30mL",
+        "price": 9.0,
+        "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
+      },
+      {
+        "size": "120mL",
+        "price": 16.35,
+        "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO"
+      },
+      {
+        "size": "240mL",
+        "price": 24.5,
+        "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/it-120ml.webp"
+    },
+    "inStock": true
+  },
+  "transfer-it-240ml": {
+    "id": "transfer-it-240ml",
+    "name": "Transfer It",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage.",
+    "features": [
+      "Extra-long fixation",
+      "Enhanced precision",
+      "Won't dry out area",
+      "Extended coverage"
+    ],
+    "stripe": {
+      "productId": "prod_TjUS3eS4PCSUr1",
+      "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m"
+    },
+    "price": 24.5,
+    "size": "240mL",
+    "variants": [
+      {
+        "size": "30mL",
+        "price": 9.0,
+        "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
+      },
+      {
+        "size": "120mL",
+        "price": 16.35,
+        "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO"
+      },
+      {
+        "size": "240mL",
+        "price": 24.5,
+        "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m"
+      }
+    ],
+    "images": {
+      "cover": "/images/products/cosmetics/it-240ml.webp"
+    },
+    "inStock": true
+  },
+  "stencil-fix-120ml": {
+    "id": "stencil-fix-120ml",
+    "name": "Stencil Fix Spray",
+    "category": "Cosmetics",
+    "subcategory": "Pre-Tattoo Preparation",
+    "description": "Professional spray for extra stencil fixation. Removes excess carbon, prevents smudging, and keeps skin hydrated. Perfect for stencils and freehand work.",
+    "features": [
+      "Prevents smudging",
+      "Removes excess carbon",
+      "Keeps skin hydrated",
+      "Works on freehand"
+    ],
+    "stripe": {
+      "productId": "prod_TjUVpNsfZVRD3l",
+      "priceId": "price_1Sm1W8Aiq7NBxfpwmkBIpvUp"
+    },
+    "price": 7.1,
+    "size": "120mL",
+    "images": {
+      "cover": "/images/products/cosmetics/fix-120ml.webp",
+      "gallery": [
+        "/images/products/cosmetics/fix-2.webp"
+      ]
+    },
+    "inStock": true
   }
 }
