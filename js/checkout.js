@@ -12,7 +12,7 @@
   // ============================================
   
   // Stripe publishable key should be injected at build/runtime. Do NOT hardcode secrets here.
-  const STRIPE_PUBLISHABLE_KEY = '';
+  const STRIPE_PUBLISHABLE_KEY = window.STRIPE_PUBLISHABLE_KEY || '';
   const PAYMENT_INTENT_URL = '/api/create-payment-intent';
   
   // ============================================
