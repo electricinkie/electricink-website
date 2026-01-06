@@ -7,6 +7,8 @@
     "dev": "node dev-server.js",
     "start": "node dev-server.js",
     "inject-sentry": "node scripts/inject-sentry-dsn.js",
+    "build": "echo 'Dependencies installed'",
+    "vercel-build": "npm install --production=false",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
