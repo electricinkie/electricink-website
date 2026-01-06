@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const { captureException } = require('./lib/sentry');
 
 // ────────── Helper: Load Template ──────────
 function loadTemplate(templateName) {
@@ -90,7 +91,16 @@ function formatShippingAddress(shipping) {
 // ────────── Main Handler ──────────
 module.exports = async function handler(req, res) {
   // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const ALLOWED_ORIGINS = [
+    'https://electricink-website.vercel.app',
+    'https://electricink.ie',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ];
+  const origin = req.headers.origin;
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
@@ -210,8 +220,11 @@ module.exports = async function handler(req, res) {
     });
 
   } catch (error) {
+    captureException(error, {
+      endpoint: 'send-order-email',
+      context: { type: req.body?.type, email: req.body?.data?.email }
+    });
     console.error('Email sending error:', error);
-    
     return res.status(500).json({ 
       error: 'Failed to send email',
       message: error.message 

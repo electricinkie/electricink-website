@@ -1,9 +1,12 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { captureException } = require('./lib/sentry');
+const { z } = require('zod');
+const logger = require('./lib/logger');
 const fs = require('fs');
 const path = require('path');
 
 // Runtime environment diagnostic (do NOT log full secrets)
-console.log('Environment check:', {
+logger.info('Environment check', {
   hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
   hasFirebaseAccount: !!process.env.FIREBASE_SERVICE_ACCOUNT,
   hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET
@@ -24,19 +27,23 @@ function loadProducts() {
         console.warn('Failed to load data file', file, e && e.message);
       }
     }
+
     // Normalize product shape to support legacy files that use top-level `price`
     // and ensure `product.basic.price` exists as the backend expects.
-    for (const [id, prod] of Object.entries(merged)) {
-      try {
-        if (!prod || typeof prod !== 'object') continue;
+    for (const [id, product] of Object.entries(merged)) {
+      if (!product || typeof product !== 'object') continue;
 
-        // If backend expects prod.basic.price but file uses prod.price, copy it across
-        if ((!prod.basic || typeof prod.basic.price !== 'number') && typeof prod.price === 'number') {
-          merged[id] = { ...prod, basic: { price: prod.price } };
-          console.log(`Normalized product shape for "${id}" (price -> basic.price)`);
+      // If product has `price` but no `basic`, create `basic` structure
+      if (!product.basic && typeof product.price === 'number') {
+        merged[id].basic = { price: product.price };
+      }
+
+      // If product has variants but no `price`, use the first variant
+      if (!product.price && product.variants && product.variants[0]) {
+        merged[id].price = product.variants[0].price;
+        if (!merged[id].basic) {
+          merged[id].basic = { price: product.variants[0].price };
         }
-      } catch (e) {
-        // ignore normalization errors per-file
       }
     }
   } catch (err) {
@@ -68,7 +75,7 @@ function initFirestore() {
 
     admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   } catch (err) {
-    console.error('Failed to initialize Firebase Admin:', err);
+    logger.error('Failed to initialize Firebase Admin', err);
   }
 }
 
@@ -116,7 +123,7 @@ async function checkRateLimit(key) {
 
     return result;
   } catch (err) {
-    console.error('Rate limit transaction failed:', err);
+    logger.error('Rate limit transaction failed', err);
     // Fail open: if rate limiter fails, allow the request
     return { allowed: true };
   }
@@ -160,6 +167,65 @@ function calculateShipping(subtotal, address = {}) {
  * @param {array} cartItems - Array of cart items from frontend
  * @returns {object} Calculated totals { subtotal, shipping, vat, total }
  */
+// Resolve incoming item id to a product and optional variant id using heuristics.
+function resolveProductById(itemId) {
+  if (!itemId || typeof itemId !== 'string') return null;
+
+  // Exact match first
+  if (stripeProducts[itemId]) return { product: stripeProducts[itemId], variantId: null, matchedId: itemId };
+
+  const tokens = itemId.split('-');
+
+  // Detect duplicated prefix (e.g. "gloo-stencil-gloo-stencil-30ml" -> "gloo-stencil-30ml")
+  for (let k = 1; k <= Math.floor(tokens.length / 2); k++) {
+    let repeated = true;
+    for (let i = 0; i < k; i++) {
+      if (tokens[i] !== tokens[i + k]) {
+        repeated = false;
+        break;
+      }
+    }
+    if (repeated) {
+      const candidate = tokens.slice(k).join('-');
+      // If candidate matches a top-level product key
+      if (stripeProducts[candidate]) return { product: stripeProducts[candidate], variantId: null, matchedId: candidate, note: 'removed duplicated prefix' };
+      // Otherwise check if candidate matches any variant id or variant.priceId
+      for (const p of Object.values(stripeProducts)) {
+        if (p.variants && Array.isArray(p.variants)) {
+          for (const v of p.variants) {
+            if (v.id === candidate || v.priceId === candidate || v.stripe_price_id === candidate) {
+              return { product: p, variantId: v.id || v.priceId, matchedId: p.id, note: 'removed duplicated prefix -> matched variant' };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Search for variant id or price id across products
+  for (const p of Object.values(stripeProducts)) {
+    if (p.variants && Array.isArray(p.variants)) {
+      for (const v of p.variants) {
+        if (v.id === itemId || v.priceId === itemId || v.stripe_price_id === itemId) {
+          return { product: p, variantId: v.id || v.priceId, matchedId: p.id };
+        }
+      }
+    }
+  }
+
+  // Try suffix matching (last 1..3 tokens) against variant ids
+  for (let i = 1; i <= Math.min(3, tokens.length - 1); i++) {
+    const suffix = tokens.slice(tokens.length - i).join('-');
+    for (const p of Object.values(stripeProducts)) {
+      if (p.variants && p.variants.find(v => v.id === suffix)) {
+        return { product: p, variantId: suffix, matchedId: p.id, note: 'matched by suffix' };
+      }
+    }
+  }
+
+  return null;
+}
+
 function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
@@ -169,16 +235,22 @@ function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
 
   // Calculate subtotal from backend prices (source of truth)
   for (const item of cartItems) {
-    // Find product in stripe-products.json
-    const product = stripeProducts[item.id];
-    
-    if (!product) {
-      console.error(`❌ Available products:`, Object.keys(stripeProducts));
+    // Resolve product (accept a few malformed/variant id formats)
+    const resolved = resolveProductById(item.id);
+
+    if (!resolved || !resolved.product) {
+      logger.error('Available products', Object.keys(stripeProducts));
       throw new Error(`Invalid product ID: ${item.id}`);
     }
 
-    if (!product.basic || typeof product.basic.price !== 'number') {
-      throw new Error(`Invalid product data for: ${item.id}`);
+    const product = resolved.product;
+
+    if (resolved.matchedId && resolved.matchedId !== item.id) {
+      logger.info('Mapped incoming item id', {
+        from: item.id,
+        to: resolved.matchedId,
+        note: resolved.note || ''
+      });
     }
 
     const quantity = parseInt(item.quantity, 10);
@@ -186,8 +258,21 @@ function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
       throw new Error(`Invalid quantity for ${item.id}: ${item.quantity}`);
     }
 
+    // Determine price: prefer variant price when resolved, otherwise product.basic.price
+    let price;
+    if (resolved.variantId) {
+      const variant = (product.variants || []).find(v => v.id === resolved.variantId || v.priceId === resolved.variantId || v.stripe_price_id === resolved.variantId);
+      price = (variant && typeof variant.price === 'number') ? variant.price : (product.basic && typeof product.basic.price === 'number' ? product.basic.price : product.price);
+    } else {
+      price = (product.basic && typeof product.basic.price === 'number') ? product.basic.price : product.price;
+    }
+
+    if (typeof price !== 'number') {
+      throw new Error(`Invalid product data for: ${item.id}`);
+    }
+
     // Use BACKEND price (not frontend!)
-    subtotal += product.basic.price * quantity;
+    subtotal += price * quantity;
   }
 
   // Calculate shipping from backend
@@ -210,7 +295,16 @@ function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
 
 module.exports = async function handler(req, res) {
   // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const ALLOWED_ORIGINS = [
+    'https://electricink-website.vercel.app',
+    'https://electricink.ie',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ];
+  const origin = req.headers.origin;
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
@@ -224,14 +318,50 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    // Parse request body
-    const { cartItems, shippingAddress, metadata = {} } = req.body;
+  // Zod schema de validação
+  const checkoutSchema = z.object({
+    items: z.array(
+      z.object({
+        id: z.string().min(1, 'Product ID required'),
+        quantity: z.number().int().positive().max(100, 'Max 100 units per product'),
+        variant: z.string().optional()
+      })
+    ).min(1, 'Cart cannot be empty').max(50, 'Max 50 different products'),
+    shippingMethod: z.enum(['standard', 'express', 'pickup', 'same-day'], {
+      errorMap: () => ({ message: 'Invalid shipping method' })
+    }),
+    email: z.string().email('Invalid email').optional(),
+    name: z.string().min(2).max(100).optional()
+  });
 
+  let items, shippingMethod, metadata, shippingAddress;
+  try {
+    // Validação robusta do input
+    const validatedData = checkoutSchema.parse(req.body);
+    items = validatedData.items;
+    shippingMethod = validatedData.shippingMethod;
+    metadata = req.body.metadata || {};
+    shippingAddress = req.body.shippingAddress || {};
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      logger.warn('Invalid request data', { errors: error.errors });
+      return res.status(400).json({
+        error: 'Invalid request data',
+        details: error.errors.map(e => ({
+          field: e.path.join('.'),
+          message: e.message
+        }))
+      });
+    }
+    logger.error('Unexpected error during validation', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+
+  try {
     // Debug logging (sanitized)
-    console.log('🔍 Backend received:', {
-      cartItems: cartItems.map(item => ({ id: item.id, quantity: item.quantity })),
-      shippingAddress: shippingAddress ? { method: shippingAddress.method, postalCode: shippingAddress.postalCode } : null,
+    logger.info('Backend received', {
+      items: items.map(item => ({ id: item.id, quantity: item.quantity })),
+      shippingMethod,
       availableProducts: Object.keys(stripeProducts).length
     });
 
@@ -250,13 +380,25 @@ module.exports = async function handler(req, res) {
 
     // Improved error handling
     try {
+      const crypto = require('crypto');
       const totals = validateAndCalculateTotal(cartItems, shippingAddress);
-      console.log('✅ Backend price validation passed:', {
+      logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
         shipping: totals.shipping,
         vat: totals.vat,
         total: totals.total
       });
+
+      // Gera hash único baseado nos itens + shipping + timestamp arredondado (5 min)
+      const cartHash = crypto
+        .createHash('sha256')
+        .update(JSON.stringify({
+          items: cartItems.map(i => ({ id: i.id, qty: i.quantity })),
+          shipping: shippingAddress?.method,
+          timestamp: Math.floor(Date.now() / 300000) // 5 minutos
+        }))
+        .digest('hex');
+      const idempotencyKey = `pi_${cartHash}`;
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
@@ -272,6 +414,8 @@ module.exports = async function handler(req, res) {
         automatic_payment_methods: {
           enabled: true,
         },
+      }, {
+        idempotencyKey: idempotencyKey
       });
 
       return res.status(200).json({
@@ -280,14 +424,22 @@ module.exports = async function handler(req, res) {
         calculatedTotals: totals // Send back for frontend verification
       });
     } catch (error) {
-      console.error('❌ Error creating payment intent:', error.message);
+      captureException(error, {
+        endpoint: 'create-payment-intent',
+        context: { cartItems, shippingAddress }
+      });
+      logger.error('Error creating payment intent', error.message);
       if (error.message.includes('Invalid')) {
         return res.status(400).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Failed to create payment intent' });
     }
   } catch (error) {
-    console.error('❌ Error processing request:', error.message);
+    captureException(error, {
+      endpoint: 'create-payment-intent',
+      context: { cartItems: req.body?.cartItems, shippingAddress: req.body?.shippingAddress }
+    });
+    logger.error('Error processing request', error.message);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
