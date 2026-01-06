@@ -2,6 +2,9 @@
 node_modules/
 package-lock.json
 
+# Yarn
+yarn.lock
+
 # Netlify
 .netlify/
 
@@ -9,8 +12,18 @@ package-lock.json
 .env
 .env.local
 
+# Environment
+.env.*.local
+
 # Vercel
 .vercel
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
 
 # OS
 .DS_Store
@@ -21,4 +34,30 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-.env*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
