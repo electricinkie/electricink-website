@@ -60,6 +60,24 @@
     // Valida type
     if (!TOAST_TYPES[type]) {
       console.warn(`Invalid toast type: ${type}. Using 'success'.`);
+        // ────────── Consent Banner ──────────
+        window.showCookieConsentToast = function() {
+          if (localStorage.getItem('cookieConsent')) return;
+          window.showToast({
+            type: 'info',
+            message: 'Este site utiliza cookies para melhorar sua experiência. Ao continuar navegando, você concorda com nossa <a href="/cookie-policy.html" target="_blank">Política de Cookies</a>.',
+            duration: 0,
+            actions: [
+              {
+                label: 'Aceitar',
+                onClick: function() {
+                  localStorage.setItem('cookieConsent', 'true');
+                  window.hideToast();
+                }
+              }
+            ]
+          });
+        };
       type = 'success';
     }
 

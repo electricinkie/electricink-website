@@ -45,6 +45,13 @@
 <body>
   
   <!-- Header será injetado pelo mobile-header.js -->
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        if (window.showCookieConsentToast) {
+          window.showCookieConsentToast();
+        }
+      });
+    </script>
 
   <!-- Hero Section -->
   <section class="hero-section">

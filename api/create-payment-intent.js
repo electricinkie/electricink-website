@@ -16,8 +16,25 @@ function calculateShipping(subtotal, address = {}) {
   // Free shipping above threshold
   if (subtotal >= FREE_SHIPPING_THRESHOLD) {
     return 0;
+  const RATE_LIMIT = 10; // requisições por hora
+  const WINDOW_MS = 60 * 60 * 1000; // 1 hora
+  const ipHits = new Map();
   }
 
+    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+    const now = Date.now();
+    let entry = ipHits.get(ip);
+
+    if (!entry || now - entry.start > WINDOW_MS) {
+      entry = { count: 1, start: now };
+    } else {
+      entry.count += 1;
+    }
+    ipHits.set(ip, entry);
+
+    if (entry.count > RATE_LIMIT) {
+      return res.status(429).json({ error: 'Rate limit exceeded. Try again later.' });
+    }
   // Store pickup is always free
   if (address.method === 'pickup') {
     return PICKUP_RATE;

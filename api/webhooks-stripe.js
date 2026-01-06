@@ -20,6 +20,7 @@
  */
 
 import Stripe from 'stripe';
+import { kv } from '@vercel/kv';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -32,8 +33,8 @@ const ADMIN_EMAIL = 'contact@electricink.ie';
 
 // In-memory cache for idempotency (prevent duplicate processing)
 // In production with high volume, use Redis or Vercel KV
-const processedEvents = new Map();
-const EVENT_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+// Idempotency persistence via Vercel KV
+const EVENT_CACHE_TTL_SEC = 24 * 60 * 60; // 24 hours
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // VERCEL SERVERLESS CONFIGURATION
@@ -105,10 +106,11 @@ export default async function handler(req, res) {
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // IDEMPOTENCY CHECK (Prevent duplicate processing)
+  // IDEMPOTENCY CHECK (Persisted via Vercel KV)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   const eventId = stripeEvent.id;
-  if (processedEvents.has(eventId)) {
+  const alreadyProcessed = await kv.get(eventId);
+  if (alreadyProcessed) {
     console.log(`⚠️ Event ${eventId} already processed (idempotency check)`);
     return res.status(200).json({ 
       received: true, 
@@ -116,11 +118,8 @@ export default async function handler(req, res) {
     });
   }
 
-  // Mark as processed
-  processedEvents.set(eventId, Date.now());
-  
-  // Clean up old entries (prevent memory leak)
-  cleanupOldEvents();
+  // Mark as processed (set TTL 24h)
+  await kv.set(eventId, Date.now(), { ex: EVENT_CACHE_TTL_SEC });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ROUTE EVENT TO HANDLER
@@ -329,14 +328,4 @@ function formatCurrency(amountInCents, currency) {
   return `${currency.toUpperCase()} ${amount.toFixed(2)}`;
 }
 
-/**
- * Clean up old processed events from memory (prevent memory leak)
- */
-function cleanupOldEvents() {
-  const now = Date.now();
-  for (const [eventId, timestamp] of processedEvents.entries()) {
-    if (now - timestamp > EVENT_CACHE_TTL) {
-      processedEvents.delete(eventId);
-    }
-  }
-}
+// ...existing code...
