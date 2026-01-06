@@ -1,5 +1,95 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const stripeProducts = require('../data/stripe-products.json');
+const fs = require('fs');
+const path = require('path');
+
+// Load and merge all JSON product files from `data/` so the backend
+// has a single `stripeProducts` object even if `stripe-products.json` is missing.
+function loadProducts() {
+  const dataDir = path.join(__dirname, '..', 'data');
+  let merged = {};
+  try {
+    const files = fs.readdirSync(dataDir).filter((f) => f.endsWith('.json'));
+    for (const file of files) {
+      try {
+        const obj = require(path.join('..', 'data', file));
+        if (obj && typeof obj === 'object') merged = { ...merged, ...obj };
+      } catch (e) {
+        console.warn('Failed to load data file', file, e && e.message);
+      }
+    }
+  } catch (err) {
+    console.warn('Data directory not found or unreadable:', err && err.message);
+  }
+  return merged;
+}
+
+const stripeProducts = loadProducts();
+const admin = require('firebase-admin');
+
+// Initialize Firebase Admin SDK using base64-encoded service account JSON
+function initFirestore() {
+  if (admin.apps && admin.apps.length) return;
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+    console.warn('FIREBASE_SERVICE_ACCOUNT not set; Firestore rate limiting disabled');
+    return;
+  }
+  try {
+    const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf8'));
+    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+  } catch (err) {
+    console.error('Failed to initialize Firebase Admin:', err);
+  }
+}
+
+/**
+ * Simple Firestore-backed rate limiter per key (e.g., IP).
+ * Limits to LIMIT requests per WINDOW_SECONDS window.
+ */
+async function checkRateLimit(key) {
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) return { allowed: true };
+  initFirestore();
+  if (!admin.apps || !admin.apps.length) return { allowed: true };
+
+  const db = admin.firestore();
+  const LIMIT = 30; // requests
+  const WINDOW_SECONDS = 60; // seconds
+  const docRef = db.collection('rate_limits').doc(key);
+
+  try {
+    const result = await db.runTransaction(async (tx) => {
+      const doc = await tx.get(docRef);
+      const now = Date.now();
+
+      if (!doc.exists) {
+        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
+        tx.set(docRef, { count: 1, resetAt });
+        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
+      }
+
+      const data = doc.data() || {};
+      const resetAtMillis = (data.resetAt && typeof data.resetAt.toMillis === 'function') ? data.resetAt.toMillis() : (data.resetAt || 0);
+
+      if (now > resetAtMillis) {
+        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
+        tx.set(docRef, { count: 1, resetAt });
+        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
+      }
+
+      if ((data.count || 0) >= LIMIT) {
+        return { allowed: false, remaining: 0, resetAt: new Date(resetAtMillis) };
+      }
+
+      tx.update(docRef, { count: admin.firestore.FieldValue.increment(1) });
+      return { allowed: true, remaining: LIMIT - ((data.count || 0) + 1), resetAt: new Date(resetAtMillis) };
+    });
+
+    return result;
+  } catch (err) {
+    console.error('Rate limit transaction failed:', err);
+    // Fail open: if rate limiter fails, allow the request
+    return { allowed: true };
+  }
+}
 
 /**
  * Calculate shipping cost based on subtotal and address
@@ -16,25 +106,7 @@ function calculateShipping(subtotal, address = {}) {
   // Free shipping above threshold
   if (subtotal >= FREE_SHIPPING_THRESHOLD) {
     return 0;
-  const RATE_LIMIT = 10; // requisições por hora
-  const WINDOW_MS = 60 * 60 * 1000; // 1 hora
-  const ipHits = new Map();
   }
-
-    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
-    const now = Date.now();
-    let entry = ipHits.get(ip);
-
-    if (!entry || now - entry.start > WINDOW_MS) {
-      entry = { count: 1, start: now };
-    } else {
-      entry.count += 1;
-    }
-    ipHits.set(ip, entry);
-
-    if (entry.count > RATE_LIMIT) {
-      return res.status(429).json({ error: 'Rate limit exceeded. Try again later.' });
-    }
   // Store pickup is always free
   if (address.method === 'pickup') {
     return PICKUP_RATE;
@@ -133,6 +205,19 @@ module.exports = async function handler(req, res) {
       shippingAddress,
       availableProducts: Object.keys(stripeProducts)
     });
+
+    // Rate limiting (per IP) using Firestore
+    try {
+      const ip = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : (req.socket && req.socket.remoteAddress) || 'unknown';
+      const rateKey = `ip_${ip}`;
+      const rl = await checkRateLimit(rateKey);
+      if (!rl.allowed) {
+        const retryAfter = rl.resetAt ? Math.ceil((new Date(rl.resetAt).getTime() - Date.now()) / 1000) : 60;
+        return res.status(429).json({ error: 'Too many requests', retryAfter });
+      }
+    } catch (e) {
+      console.error('Rate limit check failed, allowing request:', e);
+    }
 
     // Validate and calculate totals on BACKEND (security critical!)
     const totals = validateAndCalculateTotal(cartItems, shippingAddress);
