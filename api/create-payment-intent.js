@@ -2,6 +2,13 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const fs = require('fs');
 const path = require('path');
 
+// Runtime environment diagnostic (do NOT log full secrets)
+console.log('Environment check:', {
+  hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
+  hasFirebaseAccount: !!process.env.FIREBASE_SERVICE_ACCOUNT,
+  hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET
+});
+
 // Load and merge all JSON product files from `data/` so the backend
 // has a single `stripeProducts` object even if `stripe-products.json` is missing.
 function loadProducts() {
@@ -15,6 +22,21 @@ function loadProducts() {
         if (obj && typeof obj === 'object') merged = { ...merged, ...obj };
       } catch (e) {
         console.warn('Failed to load data file', file, e && e.message);
+      }
+    }
+    // Normalize product shape to support legacy files that use top-level `price`
+    // and ensure `product.basic.price` exists as the backend expects.
+    for (const [id, prod] of Object.entries(merged)) {
+      try {
+        if (!prod || typeof prod !== 'object') continue;
+
+        // If backend expects prod.basic.price but file uses prod.price, copy it across
+        if ((!prod.basic || typeof prod.basic.price !== 'number') && typeof prod.price === 'number') {
+          merged[id] = { ...prod, basic: { price: prod.price } };
+          console.log(`Normalized product shape for "${id}" (price -> basic.price)`);
+        }
+      } catch (e) {
+        // ignore normalization errors per-file
       }
     }
   } catch (err) {
@@ -34,7 +56,16 @@ function initFirestore() {
     return;
   }
   try {
-    const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf8'));
+    const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+    let serviceAccount;
+
+    // Support either base64-encoded JSON (existing convention) or raw JSON
+    if (raw.trim().startsWith('{')) {
+      serviceAccount = JSON.parse(raw);
+    } else {
+      serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
+    }
+
     admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   } catch (err) {
     console.error('Failed to initialize Firebase Admin:', err);
@@ -141,8 +172,6 @@ function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
     // Find product in stripe-products.json
     const product = stripeProducts[item.id];
     
-    console.log(`🔍 Looking for product "${item.id}":`, product ? '✅ Found' : '❌ Not found');
-    
     if (!product) {
       console.error(`❌ Available products:`, Object.keys(stripeProducts));
       throw new Error(`Invalid product ID: ${item.id}`);
@@ -199,11 +228,11 @@ module.exports = async function handler(req, res) {
     // Parse request body
     const { cartItems, shippingAddress, metadata = {} } = req.body;
 
-    // Debug logging
+    // Debug logging (sanitized)
     console.log('🔍 Backend received:', {
-      cartItems,
-      shippingAddress,
-      availableProducts: Object.keys(stripeProducts)
+      cartItems: cartItems.map(item => ({ id: item.id, quantity: item.quantity })),
+      shippingAddress: shippingAddress ? { method: shippingAddress.method, postalCode: shippingAddress.postalCode } : null,
+      availableProducts: Object.keys(stripeProducts).length
     });
 
     // Rate limiting (per IP) using Firestore
@@ -219,54 +248,46 @@ module.exports = async function handler(req, res) {
       console.error('Rate limit check failed, allowing request:', e);
     }
 
-    // Validate and calculate totals on BACKEND (security critical!)
-    const totals = validateAndCalculateTotal(cartItems, shippingAddress);
-
-    console.log('✅ Backend price validation passed:', {
-      subtotal: totals.subtotal,
-      shipping: totals.shipping,
-      vat: totals.vat,
-      total: totals.total
-    });
-
-    // Create Payment Intent with BACKEND-calculated amount
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(totals.total * 100), // Convert to cents
-      currency: 'eur',
-      metadata: {
-        ...metadata,
-        subtotal: totals.subtotal.toFixed(2),
-        shipping: totals.shipping.toFixed(2),
-        vat: totals.vat.toFixed(2),
-        items_count: cartItems.length,
-        backend_validated: 'true' // Security flag
-      },
-      automatic_payment_methods: {
-        enabled: true,
-      },
-    });
-
-    // Return client_secret
-    return res.status(200).json({
-      clientSecret: paymentIntent.client_secret,
-      paymentIntentId: paymentIntent.id,
-      calculatedTotals: totals // Send back for frontend verification
-    });
-
-  } catch (error) {
-    console.error('❌ Error creating payment intent:', error.message);
-    console.error('Stack:', error.stack);
-    
-    // Distinguish validation errors from Stripe errors
-    if (error.message.includes('Invalid')) {
-      return res.status(400).json({ 
-        error: error.message 
+    // Improved error handling
+    try {
+      const totals = validateAndCalculateTotal(cartItems, shippingAddress);
+      console.log('✅ Backend price validation passed:', {
+        subtotal: totals.subtotal,
+        shipping: totals.shipping,
+        vat: totals.vat,
+        total: totals.total
       });
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(totals.total * 100), // Convert to cents
+        currency: 'eur',
+        metadata: {
+          ...metadata,
+          subtotal: totals.subtotal.toFixed(2),
+          shipping: totals.shipping.toFixed(2),
+          vat: totals.vat.toFixed(2),
+          items_count: cartItems.length,
+          backend_validated: 'true' // Security flag
+        },
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+
+      return res.status(200).json({
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+        calculatedTotals: totals // Send back for frontend verification
+      });
+    } catch (error) {
+      console.error('❌ Error creating payment intent:', error.message);
+      if (error.message.includes('Invalid')) {
+        return res.status(400).json({ error: error.message });
+      }
+      return res.status(500).json({ error: 'Failed to create payment intent' });
     }
-    
-    return res.status(500).json({ 
-      error: 'Failed to create payment intent',
-      details: error.message
-    });
+  } catch (error) {
+    console.error('❌ Error processing request:', error.message);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }

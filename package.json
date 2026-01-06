@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "Electric Ink Ireland E-commerce",
   "main": "index.html",
-  "scripts": {
-    "dev": "vercel dev"
-  },
   "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "firebase-admin": "^13.6.0",
     "resend": "^3.5.0",
     "stripe": "^14.0.0"

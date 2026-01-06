@@ -1,1 +1,232 @@
-{}
+{
+  "rl-025": {
+    "id": "rl-025",
+    "name": "Pro Cartridge Round Liner Ø0.25",
+    "category": "Needles",
+    "subcategory": "Round Liner",
+    "description": "Precision 0.25mm Round Liner for detailed line work. Super Long Taper ideal for fine lines, mini realism, and colour techniques.",
+    "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
+    "specs": {"needleType":"Round Liner (RL)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
+    "applications": ["Fine line","Mini realism","Black & grey realism","Colour realism"],
+    "stripe": {"productId":"prod_TjWsCYXNx1w7Em"},
+    "price": 27.8,
+    "variants": [
+      {
+        "id": "rl-025-01",
+        "configuration": "RL01",
+        "label": "RL01 - 1 Needle",
+        "price": 27.8,
+        "priceId": "price_1Sm3oiAiq7NBxfpwUKq5DWPn",
+        "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUKq5DWPn",
+        "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
+      },
+      {
+        "id": "rl-025-03",
+        "configuration": "RL03",
+        "label": "RL03 - 3 Needles",
+        "price": 28.8,
+        "priceId": "price_1Sm3oiAiq7NBxfpwc8Voesg1",
+        "stripe_price_id": "price_1Sm3oiAiq7NBxfpwc8Voesg1",
+        "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
+      },
+      {
+        "id": "rl-025-05",
+        "configuration": "RL05",
+        "label": "RL05 - 5 Needles",
+        "price": 30.5,
+        "priceId": "price_1Sm3oiAiq7NBxfpw6PHdlnaA",
+        "stripe_price_id": "price_1Sm3oiAiq7NBxfpw6PHdlnaA",
+        "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
+      },
+      {
+        "id": "rl-025-07",
+        "configuration": "RL07",
+        "label": "RL07 - 7 Needles",
+        "price": 30.5,
+        "priceId": "price_1Sm3oiAiq7NBxfpw9ztjCuSk",
+        "stripe_price_id": "price_1Sm3oiAiq7NBxfpw9ztjCuSk",
+        "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
+      },
+      {
+        "id": "rl-025-09",
+        "configuration": "RL09",
+        "label": "RL09 - 9 Needles",
+        "price": 33.3,
+        "priceId": "price_1Sm3oiAiq7NBxfpwIzlB50yY",
+        "stripe_price_id": "price_1Sm3oiAiq7NBxfpwIzlB50yY",
+        "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
+      },
+      {
+        "id": "rl-025-11",
+        "configuration": "RL11",
+        "label": "RL11 - 11 Needles",
+        "price": 33.3,
+        "priceId": "price_1Sm3oiAiq7NBxfpwUwHBRoBf",
+        "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUwHBRoBf",
+        "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
+      }
+    ],
+    "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp",
+    "images": [
+      "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp",
+      "/images/products/cartridges/rl-0.25/0.25-rl-cover-2.webp",
+      "/images/products/cartridges/rl-0.25/coifa-rl.webp"
+    ],
+    "inStock": true,
+    "featured": true
+  },
+
+  "rs-025": {
+    "id": "rs-025",
+    "name": "Pro Cartridge Round Shader Ø0.25",
+    "category": "Needles",
+    "subcategory": "Round Shader",
+    "description": "Versatile 0.25mm Round Shader for smooth shading and solid fills.",
+    "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
+    "specs": {"needleType":"Round Shader (RS)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
+    "applications": ["Solid fills","Bold lines","Light shading","Shadows & blending"],
+    "stripe": {"productId":"prod_TjWyA4HOfAs2HC"},
+    "price": 31.0,
+    "variants": [
+      {
+        "id": "rs-025-07",
+        "configuration": "RS07",
+        "label": "RS07 - 7 Needles",
+        "price": 31.0,
+        "priceId": "price_1Sm3uQAiq7NBxfpw8cQnk3cg",
+        "stripe_price_id": "price_1Sm3uQAiq7NBxfpw8cQnk3cg",
+        "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp"
+      },
+      {
+        "id": "rs-025-09",
+        "configuration": "RS09",
+        "label": "RS09 - 9 Needles",
+        "price": 32.35,
+        "priceId": "price_1Sm3uQAiq7NBxfpwNShMgh86",
+        "stripe_price_id": "price_1Sm3uQAiq7NBxfpwNShMgh86",
+        "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp"
+      },
+      {
+        "id": "rs-025-11",
+        "configuration": "RS11",
+        "label": "RS11 - 11 Needles",
+        "price": 32.35,
+        "priceId": "price_1Sm3uQAiq7NBxfpwlVq37DdP",
+        "stripe_price_id": "price_1Sm3uQAiq7NBxfpwlVq37DdP",
+        "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp"
+      },
+      {
+        "id": "rs-025-14",
+        "configuration": "RS14",
+        "label": "RS14 - 14 Needles",
+        "price": 36.15,
+        "priceId": "price_1Sm3uQAiq7NBxfpwgohr4MGg",
+        "stripe_price_id": "price_1Sm3uQAiq7NBxfpwgohr4MGg",
+        "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp"
+      }
+    ],
+    "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp",
+    "images": [
+      "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp",
+      "/images/products/cartridges/rs-0.25/0.25-rs-cover-2.webp",
+      "/images/products/cartridges/rs-0.25/coifa-rs.webp"
+    ],
+    "inStock": true,
+    "featured": false
+  },
+
+  "rmg-025": {
+    "id": "rmg-025",
+    "name": "Pro Cartridge Round Magnum Ø0.25",
+    "category": "Needles",
+    "subcategory": "Round Magnum",
+    "description": "Efficient 0.25mm Round Magnum for smooth gradients and colour packing.",
+    "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
+    "specs": {"needleType":"Round Magnum (RMG)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
+    "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends"],
+    "stripe": {"productId":"prod_TjX5fvpr73vMfQ"},
+    "price": 30.5,
+    "variants": [
+      {
+        "id": "rmg-025-07",
+        "configuration": "RMG07",
+        "label": "RMG07 - 7 Needles",
+        "price": 30.5,
+        "priceId": "price_1Sm41UAiq7NBxfpw10Z2VYoy",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpw10Z2VYoy",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-09",
+        "configuration": "RMG09",
+        "label": "RMG09 - 9 Needles",
+        "price": 32.35,
+        "priceId": "price_1Sm41UAiq7NBxfpwHXuviPzU",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpwHXuviPzU",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-11",
+        "configuration": "RMG11",
+        "label": "RMG11 - 11 Needles",
+        "price": 34.35,
+        "priceId": "price_1Sm41UAiq7NBxfpwFiNMLeoA",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpwFiNMLeoA",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-13",
+        "configuration": "RMG13",
+        "label": "RMG13 - 13 Needles",
+        "price": 36.5,
+        "priceId": "price_1Sm41UAiq7NBxfpwKU4Jc41J",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpwKU4Jc41J",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-15",
+        "configuration": "RMG15",
+        "label": "RMG15 - 15 Needles",
+        "price": 36.5,
+        "priceId": "price_1Sm41UAiq7NBxfpwLbsRG2mt",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpwLbsRG2mt",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-17",
+        "configuration": "RMG17",
+        "label": "RMG17 - 17 Needles",
+        "price": 40.65,
+        "priceId": "price_1Sm41UAiq7NBxfpwlG9xaR9v",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpwlG9xaR9v",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-23",
+        "configuration": "RMG23",
+        "label": "RMG23 - 23 Needles",
+        "price": 44.4,
+        "priceId": "price_1Sm41UAiq7NBxfpw0iex5Tvj",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpw0iex5Tvj",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      },
+      {
+        "id": "rmg-025-27",
+        "configuration": "RMG27",
+        "label": "RMG27 - 27 Needles",
+        "price": 47.4,
+        "priceId": "price_1Sm41UAiq7NBxfpw8R2Lj7qO",
+        "stripe_price_id": "price_1Sm41UAiq7NBxfpw8R2Lj7qO",
+        "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
+      }
+    ],
+    "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp",
+    "images": [
+      "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp",
+      "/images/products/cartridges/rmg-0.25/0.25-rmg-cover-2.webp",
+      "/images/products/cartridges/rmg-0.25/coifa-rmg.webp"
+    ],
+    "inStock": true,
+    "featured": true
+  }
+}

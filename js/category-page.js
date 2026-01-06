@@ -60,17 +60,34 @@
     });
   }
 
-  // LOAD products
-  let allProducts;
+  // LOAD products from multiple JSON files (cosmetics + needles)
+  let allProducts = {};
+  const productFiles = [
+    '/data/products-cosmetics.json',
+    '/data/products-needles-022.json',
+    '/data/products-needles-025.json',
+    '/data/products-needles-030.json'
+  ];
+
   try {
-    const response = await fetch('/data/products-cosmetics.json');
-    if (!response.ok) throw new Error('Failed to load products');
-    allProducts = await response.json();
+    const responses = await Promise.all(productFiles.map(p => fetch(p).catch(e => ({ ok: false, error: e }))));
+    for (let i = 0; i < responses.length; i++) {
+      const res = responses[i];
+      const path = productFiles[i];
+      if (!res || !res.ok) {
+        console.warn('Could not load', path, res.error || 'Unknown error');
+        continue;
+      }
+      const json = await res.json();
+      Object.assign(allProducts, json);
+    }
   } catch (error) {
     console.error('Error loading products:', error);
     document.querySelector('.loading').textContent = 'Error loading products. Please refresh.';
     return;
   }
+
+  console.log('Loaded products:', allProducts);
 
   // CONVERT to array and NORMALIZE structure
   const productsArray = Object.entries(allProducts)
@@ -79,7 +96,7 @@
       // Extract values with fallbacks for both old and new structure
       const name = data.basic?.name || data.name || 'Unnamed Product';
       const productCategory = data.basic?.category || data.category || 'uncategorized';
-      
+
       // Handle images - support both old (single image) and new (images object) structure
       let image;
       if (data.images?.cover) {
@@ -91,9 +108,25 @@
       } else if (data.media?.gallery?.[0]) {
         image = data.media.gallery[0];
       } else {
-        image = '/images/placeholder.jpg';
+        // Attempt to construct a sensible cartridges image path for Needles products
+        const dia = data.specs?.diameter || data.basic?.specs?.diameter;
+        const config = (data.specs?.configuration || data.basic?.specs?.configuration || '').toString().padStart(2, '0');
+        if (dia && config && (data.basic?.category || data.category || '').toLowerCase().includes('needle')) {
+          // try common filename patterns used in /images/products/cartridges
+          const cleanDia = dia.replace('.', ''); // e.g. 0.30 -> 030 or we'll keep dot for folder names
+          const tryPaths = [];
+          // pattern used in rl-0.30: 0.30-rl-03.webp
+          tryPaths.push(`/images/products/cartridges/rl-${dia.replace('.', '-')}/0.${dia.split('.')[1]}-rl-${config}.webp`);
+          tryPaths.push(`/images/products/cartridges/rl-${dia}/0.${dia.split('.')[1]}-rl-${config}.webp`);
+          tryPaths.push(`/images/products/cartridges/rl-${dia.replace('.', '-')}/0.${dia.split('.')[1]}-rl${config}.webp`);
+          tryPaths.push(`/images/products/cartridges/rl-${dia}/0.${dia.split('.')[1]}-rl${config}.webp`);
+          tryPaths.push(`/images/products/cartridges/rl-${dia}/0.${dia.split('.')[1]}-rl-${config}.webp`);
+          image = tryPaths[0];
+        } else {
+          image = '/images/placeholder.jpg';
+        }
       }
-      
+
       // Handle price (single price OR price range for variants)
       let priceDisplay;
       if (data.variants && data.variants.length > 0) {
@@ -105,21 +138,46 @@
         priceDisplay = price ? `€${price.toFixed(2)}` : 'Price unavailable';
       }
 
+      // Map 'Needles' category to 'Cartridges' and expose variant
+      let variant = data.variant || null;
+      let mappedCategory = productCategory;
+      if ((productCategory || '').toString().toLowerCase() === 'needles') {
+        variant = 'Needles';
+        mappedCategory = 'Cartridges';
+      }
+
       return {
         id,
         name,
-        category: productCategory,
-        subcategory: data.subcategory, // Add subcategory for filtering
+        category: mappedCategory,
+        variant,
+        subcategory: data.subcategory,
         image,
         priceDisplay,
         hasVariants: !!(data.variants && data.variants.length > 0)
       };
     });
 
+  console.log('Normalized products array:', productsArray);
+
   // FILTER products by category (case-insensitive)
-  let filteredProducts = category === 'all' 
-    ? productsArray 
-    : productsArray.filter(p => p.category.toLowerCase() === category.toLowerCase());
+  let filteredProducts;
+  if (category === 'all') {
+    filteredProducts = productsArray;
+  } else {
+    const catLower = category.toLowerCase();
+    if (catLower === 'cartridges') {
+      // Treat 'cartridges' category as including 'Needles' products
+      filteredProducts = productsArray.filter(p => {
+        const c = (p.category || '').toLowerCase();
+        return c === 'cartridges' || c === 'needles';
+      });
+    } else {
+      filteredProducts = productsArray.filter(p => (p.category || '').toLowerCase() === catLower);
+    }
+  }
+
+  console.log('Filtered products:', filteredProducts);
 
   // RENDER function
   function renderProducts(products) {

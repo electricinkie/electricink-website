@@ -1,1 +1,95 @@
-{}
+{
+  "rl-022": {
+    "id": "rl-022",
+    "name": "Pro Cartridge Round Liner Ø0.22",
+    "category": "Needles",
+    "subcategory": "Round Liner",
+    "description": "Ultra-fine 0.22mm Round Liner for maximum precision. Super Long Taper delivers exceptional detail in fine line work, mini realism, and delicate techniques.",
+    "features": [
+      "Ultra-fine 0.22mm diameter",
+      "Super Long Taper",
+      "Silicone safety membrane",
+      "20 units per box"
+    ],
+    "specs": {
+      "needleType": "Round Liner (RL)",
+      "diameter": "0.22mm",
+      "taper": "Super Long Taper",
+      "unitsPerBox": 20
+    },
+    "applications": [
+      "Fine line",
+      "Mini realism",
+      "Black & grey realism",
+      "Colour realism"
+    ],
+    "stripe": {
+      "productId": "prod_TjWlEPhxpYZOlC"
+    },
+    "price": 27.8,
+    "variants": [
+      {
+        "id": "rl-022-01",
+        "configuration": "RL01",
+        "label": "RL01 - 1 Needle",
+        "price": 27.8,
+        "priceId": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
+        "stripe_price_id": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+      },
+      {
+        "id": "rl-022-03",
+        "configuration": "RL03",
+        "label": "RL03 - 3 Needles",
+        "price": 28.8,
+        "priceId": "price_1Sm3heAiq7NBxfpwaJYhlcu5",
+        "stripe_price_id": "price_1Sm3heAiq7NBxfpwaJYhlcu5",
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+      },
+      {
+        "id": "rl-022-05",
+        "configuration": "RL05",
+        "label": "RL05 - 5 Needles",
+        "price": 30.5,
+        "priceId": "price_1Sm3heAiq7NBxfpwwFhwDmzs",
+        "stripe_price_id": "price_1Sm3heAiq7NBxfpwwFhwDmzs",
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+      },
+      {
+        "id": "rl-022-07",
+        "configuration": "RL07",
+        "label": "RL07 - 7 Needles",
+        "price": 30.5,
+        "priceId": "price_1Sm3itAiq7NBxfpwUhOPHgKY",
+        "stripe_price_id": "price_1Sm3itAiq7NBxfpwUhOPHgKY",
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+      },
+      {
+        "id": "rl-022-09",
+        "configuration": "RL09",
+        "label": "RL09 - 9 Needles",
+        "price": 33.3,
+        "priceId": "price_1Sm3itAiq7NBxfpwhhh1zHHU",
+        "stripe_price_id": "price_1Sm3itAiq7NBxfpwhhh1zHHU",
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+      },
+      {
+        "id": "rl-022-11",
+        "configuration": "RL11",
+        "label": "RL11 - 11 Needles",
+        "price": 33.3,
+        "priceId": "price_1Sm3itAiq7NBxfpwNxeGIlsM",
+        "stripe_price_id": "price_1Sm3itAiq7NBxfpwNxeGIlsM",
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+      }
+    ],
+    "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp",
+    "images": [
+      "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp",
+      "/images/products/cartridges/rl-0.22/0.22-rl-cover-2.webp",
+      "/images/products/cartridges/rl-0.22/coifa-rl.webp"
+    ],
+    "inStock": true,
+    "featured": true
+  }
+}

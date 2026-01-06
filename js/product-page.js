@@ -11,15 +11,31 @@
     return;
   }
 
-  // LOAD products.json
+  // LOAD products from multiple JSON files (cosmetics + needles)
   let productData;
+  const productFiles = [
+    '/data/products-cosmetics.json',
+    '/data/products-needles-022.json',
+    '/data/products-needles-025.json',
+    '/data/products-needles-030.json'
+  ];
+
   try {
-    const response = await fetch('/data/products-cosmetics.json');
-    if (!response.ok) throw new Error('Failed to load products');
-    
-    const allProducts = await response.json();
+    const responses = await Promise.all(productFiles.map(p => fetch(p).catch(e => ({ ok: false }))));
+    let allProducts = {};
+    for (let i = 0; i < responses.length; i++) {
+      const res = responses[i];
+      const path = productFiles[i];
+      if (!res || !res.ok) {
+        console.warn('Could not load', path);
+        continue;
+      }
+      const json = await res.json();
+      Object.assign(allProducts, json);
+    }
+
     productData = allProducts[productId];
-    
+
     if (!productData) {
       alert('Product not found');
       window.location.href = '/';
@@ -127,21 +143,21 @@
     const variantsContainer = document.getElementById('variantsContainer');
     const variantSelect = document.getElementById('variantSelect');
     const variantLabel = document.getElementById('variantLabel');
-    
+
     variantsContainer.style.display = 'block';
-    
+
     // Variant label and description
     if (productData.variant_config?.label) {
       variantLabel.textContent = productData.variant_config.label + ':';
     }
-    
+
     if (productData.variant_config?.description) {
       const variantDesc = document.createElement('p');
       variantDesc.className = 'variant-description';
       variantDesc.textContent = productData.variant_config.description;
       variantsContainer.insertBefore(variantDesc, variantSelect);
     }
-    
+
     // Populate options
     productData.variants.forEach((variant, index) => {
       const option = document.createElement('option');
@@ -153,17 +169,18 @@
       option.dataset.description = variant.description || '';
       variantSelect.appendChild(option);
     });
-    
+
     // Update price and image on change
     variantSelect.onchange = function() {
       const selected = this.options[this.selectedIndex];
       priceEl.textContent = `€${selected.dataset.price}`;
-      
+
       // Update image if variant has one
       if (selected.dataset.image) {
         mainImg.src = selected.dataset.image;
+        mainImg.alt = `${name} - ${selected.textContent}`;
       }
-      
+
       // Update description if exists
       if (selected.dataset.description) {
         const variantDescEl = document.querySelector('.variant-selected-description');
@@ -177,6 +194,9 @@
         }
       }
     };
+
+    // Trigger change event for the first variant to initialize the image
+    variantSelect.dispatchEvent(new Event('change'));
   }
 
   // RENDER How to Use accordion (if exists and NOT cartridges)
