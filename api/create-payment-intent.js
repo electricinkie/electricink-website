@@ -60,27 +60,11 @@ function loadProducts() {
 }
 
 const stripeProducts = loadProducts();
-const admin = require('firebase-admin');
+const { getFirestore, admin } = require('./lib/firebase-admin');
 
-// Initialize Firebase Admin SDK using base64-encoded service account JSON
+// Delegate Firestore initialization to the shared module
 function initFirestore() {
-  if (admin.apps && admin.apps.length) return;
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT is required for Firestore');
-  }
-  try {
-    const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-    let serviceAccount;
-    if (raw.trim().startsWith('{')) {
-      serviceAccount = JSON.parse(raw);
-    } else {
-      serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
-    }
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-  } catch (err) {
-    logger.error('Failed to initialize Firebase Admin', err);
-    throw err;
-  }
+  return getFirestore();
 }
 
 /**

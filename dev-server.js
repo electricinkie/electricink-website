@@ -44,6 +44,8 @@ app.all('/api/send-order-email', async (req, res) => {
 });
 
 // 3. Stripe Webhooks
+console.log('🔧 Registrando rota do webhook...');
+console.log('🔧 Webhook handler type:', typeof webhookStripeHandler);
 app.all('/api/webhooks-stripe', async (req, res) => {
   try {
     await webhookStripeHandler(req, res);
@@ -52,10 +54,19 @@ app.all('/api/webhooks-stripe', async (req, res) => {
     res.status(500).json({ error: 'Handler error', details: err.message });
   }
 });
+console.log('✅ Rota do webhook registrada');
 
-// ══════════════════════════════════════════════════════
-// INICIAR SERVIDOR
-// ══════════════════════════════════════════════════════
+
+
+// Initialize Firebase Admin
+const { getFirestore } = require('./api/lib/firebase-admin');
+try {
+  getFirestore();
+  console.log('✅ Firebase Admin initialized');
+} catch (error) {
+  console.error('❌ Firebase Admin initialization failed:', error.message);
+  process.exit(1);
+}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
