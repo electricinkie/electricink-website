@@ -23,11 +23,12 @@ let resend = null;
 try {
   if (process.env.RESEND_API_KEY) {
     resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('[RESEND-INIT] ✓ Resend initialized successfully');
   } else {
-    console.warn('⚠️ RESEND_API_KEY not configured - email sending will be skipped');
+    console.error('[RESEND-INIT] ❌ RESEND_API_KEY not found');
   }
 } catch (error) {
-  console.error('Failed to initialize Resend:', error);
+  console.error('[RESEND-INIT] ❌ Failed to initialize:', error);
 }
 
 // Initialize Firebase Admin (fail-closed)
@@ -57,6 +58,42 @@ module.exports.config = {
     bodyParser: false,
   },
 };
+
+// Helper: validate Resend configuration (domains, verification)
+async function validateResendConfig() {
+  if (!resend) {
+    return { valid: false, error: 'Resend not initialized' };
+  }
+
+  try {
+    const domains = await resend.domains.list();
+    console.log('[RESEND-CONFIG] Domains configured:', 
+      domains?.data?.map(d => `${d.name} (${d.status})`).join(', ')
+    );
+
+    const electricinkDomain = domains?.data?.find(d => 
+      d.name === 'electricink.ie'
+    );
+
+    if (!electricinkDomain) {
+      return { 
+        valid: false, 
+        error: 'Domain electricink.ie not found in Resend' 
+      };
+    }
+
+    if (electricinkDomain.status !== 'verified') {
+      return { 
+        valid: false, 
+        error: `Domain status: ${electricinkDomain.status}` 
+      };
+    }
+
+    return { valid: true, domain: electricinkDomain };
+  } catch (error) {
+    return { valid: false, error: error.message };
+  }
+}
 
 /**
  * Main webhook handler
@@ -96,6 +133,13 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
+  // Validate Resend configuration early (non-blocking for webhook validity)
+  try {
+    const configCheck = await validateResendConfig();
+    console.log('[RESEND-CONFIG] Validation:', configCheck);
+  } catch (e) {
+    console.error('[RESEND-CONFIG] Validation failed:', e && e.message);
+  }
   let event;
 
   try {
@@ -291,52 +335,101 @@ async function handlePaymentIntentSucceeded(paymentIntent, event, requestId) {
 
     setImmediate(() => {
       (async () => {
-        let adminStatus = 'unknown';
-        let adminError = null;
-        const emailLog = {
-          orderId,
-          requestId,
-          timestamp: new Date().toISOString(),
-        };
+        const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
+
+        // cliente email (não-bloqueante)
         try {
-          // Email cliente
           await resend.emails.send({
             from: 'Electric Ink <noreply@electricink.ie>',
             to: order.customerEmail,
             subject: `Order Confirmation #${orderId}`,
             html: `Order #${orderId} placed.`,
           });
-          // Email admin
-          await resend.emails.send({
+          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent', timestamp: new Date().toISOString() }));
+        } catch (clientErr) {
+          logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: clientErr && clientErr.message, timestamp: new Date().toISOString() }));
+        }
+
+        // ========== DEBUG EMAIL ADMIN - START ==========
+        const adminEmailHtml = `Order #${orderId} placed.`;
+        console.log('[EMAIL-DEBUG] Starting admin email send');
+        console.log('[EMAIL-DEBUG] Environment check:', {
+          resendConfigured: !!resend,
+          hasApiKey: !!process.env.RESEND_API_KEY,
+          apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 8) + '...',
+          nodeEnv: process.env.NODE_ENV
+        });
+
+        console.log('[EMAIL-DEBUG] Email payload:', {
+          from: 'orders@electricink.ie',
+          to: 'electricink.ie@gmail.com',
+          subject: `New Order ${orderId}`,
+          hasHtml: !!adminEmailHtml,
+          htmlLength: adminEmailHtml?.length
+        });
+
+        try {
+          console.log('[EMAIL-DEBUG] Calling Resend API...');
+          const startTime = Date.now();
+
+          const adminEmailResult = await resend.emails.send({
             from: 'Electric Ink Orders <orders@electricink.ie>',
-            to: 'electricink.ie@gmail.com',
+            to: ['electricink.ie@gmail.com'],
             subject: `New Order #${orderId}`,
-            html: `Order #${orderId} placed.`,
+            html: adminEmailHtml,
+            tags: [
+              { name: 'type', value: 'admin-notification' },
+              { name: 'orderId', value: orderId }
+            ]
           });
-          adminStatus = 'sent';
-          logger.info(JSON.stringify({
-            ...emailLog,
-            status: 'admin_email_sent',
+
+          const duration = Date.now() - startTime;
+
+          console.log('[EMAIL-DEBUG] ✓ Admin email sent successfully', {
+            emailId: adminEmailResult.id,
+            duration: `${duration}ms`,
             timestamp: new Date().toISOString()
-          }));
+          });
+
+          if (db) {
+            await db.collection('orders').doc(orderId).update({
+              adminEmailStatus: 'sent',
+              adminEmailId: adminEmailResult.id,
+              adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+          }
+
         } catch (emailError) {
-          adminStatus = 'failed';
-          adminError = emailError && emailError.message;
-          logger.error(JSON.stringify({
-            ...emailLog,
-            status: 'admin_email_failed',
-            error: adminError,
-            timestamp: new Date().toISOString()
-          }));
-        }
-        // Salvar status do email admin no Firestore
-        if (db) {
-          await db.collection('orders').doc(orderId).update({
-            emailAdminStatus: adminStatus,
-            emailAdminError: adminError,
-            emailAdminTimestamp: new Date().toISOString(),
+          console.error('[EMAIL-DEBUG] ❌ Admin email FAILED', {
+            errorName: emailError.name,
+            errorMessage: emailError.message,
+            errorCode: emailError.statusCode,
+            errorDetails: JSON.stringify(emailError, null, 2)
           });
+
+          if (db) {
+            await db.collection('orders').doc(orderId).update({
+              adminEmailStatus: 'failed',
+              adminEmailError: emailError.message,
+              adminEmailErrorCode: emailError.statusCode,
+              adminEmailFailedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+
+            await db.collection('failed_emails').add({
+              type: 'admin',
+              orderId: orderId,
+              orderData: { orderId },
+              error: emailError.message,
+              errorCode: emailError.statusCode,
+              attemptedAt: admin.firestore.FieldValue.serverTimestamp(),
+              retryCount: 0
+            });
+          }
+
+          console.warn('[EMAIL-DEBUG] Webhook continuing despite email failure');
         }
+        console.log('[EMAIL-DEBUG] Admin email send complete');
+        // ========== DEBUG EMAIL ADMIN - END ==========
       })();
     });
     logger.info(JSON.stringify({

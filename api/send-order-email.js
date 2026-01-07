@@ -5,11 +5,12 @@ let resend = null;
 try {
   if (process.env.RESEND_API_KEY) {
     resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('[RESEND-INIT] ✓ Resend initialized successfully');
   } else {
-    console.warn('⚠️ RESEND_API_KEY not configured - email sending disabled');
+    console.error('[RESEND-INIT] ❌ RESEND_API_KEY not found');
   }
 } catch (error) {
-  console.error('Failed to initialize Resend:', error);
+  console.error('[RESEND-INIT] ❌ Failed to initialize:', error);
 }
 const fs = require('fs');
 const path = require('path');
