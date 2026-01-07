@@ -1,9 +1,22 @@
 const { Resend } = require('resend');
+
+// Instanciação guardada - não falha se API key ausente
+let resend = null;
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  } else {
+    console.warn('⚠️ RESEND_API_KEY not configured - email sending disabled');
+  }
+} catch (error) {
+  console.error('Failed to initialize Resend:', error);
+}
 const fs = require('fs');
 const path = require('path');
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 const { captureException } = require('./lib/sentry');
+
+// ❌ REMOVIDO DAQUI: const resend = new Resend(process.env.RESEND_API_KEY);
+// ✅ Agora será instanciado DENTRO do handler
 
 // ────────── Helper: Load Template ──────────
 function loadTemplate(templateName) {
@@ -19,14 +32,11 @@ function loadTemplate(templateName) {
 // ────────── Helper: Replace Placeholders ──────────
 function replacePlaceholders(template, data) {
   let result = template;
-  
-  // Simple placeholders
   Object.keys(data).forEach(key => {
     const placeholder = `{{${key}}}`;
     const value = data[key] || '';
     result = result.replace(new RegExp(placeholder, 'g'), value);
   });
-  
   return result;
 }
 
@@ -88,8 +98,55 @@ function formatShippingAddress(shipping) {
   `;
 }
 
+// ────────── Helper: Enrich Items ──────────
+function enrichItems(items) {
+  let products = {};
+  try {
+    const dataDir = path.join(process.cwd(), 'data');
+    const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
+    for (const file of files) {
+      try {
+        const obj = require(path.join(dataDir, file));
+        if (obj && typeof obj === 'object') products = { ...products, ...obj };
+      } catch (e) {}
+    }
+  } catch (e) {}
+  
+  const publicBaseUrl = 'https://electricink.ie';
+  return (items || []).map(item => {
+    const product = products[item.id] || {};
+    let variant = null;
+    if (item.variant && Array.isArray(product.variants)) {
+      variant = product.variants.find(v => 
+        v.id === item.variant || 
+        v.priceId === item.variant || 
+        v.stripe_price_id === item.variant
+      );
+    }
+    return {
+      id: item.id,
+      name: product.name || item.name || item.id,
+      variant: variant ? (variant.label || variant.size || variant.id) : (item.variant || null),
+      image: variant && variant.image
+        ? (variant.image.startsWith('http') ? variant.image : publicBaseUrl + variant.image)
+        : (product.image ? (product.image.startsWith('http') ? product.image : publicBaseUrl + product.image) : publicBaseUrl + '/images/placeholder.jpg'),
+      price: variant && typeof variant.price === 'number' ? variant.price : (typeof product.price === 'number' ? product.price : item.price),
+      quantity: item.quantity || 1
+    };
+  });
+}
+
 // ────────── Main Handler ──────────
 module.exports = async function handler(req, res) {
+  // Adicionar ESTA verificação no INÍCIO
+  if (!resend) {
+    console.error('Resend not initialized - cannot send email');
+    return res.status(503).json({ 
+      error: 'Email service unavailable',
+      reason: 'RESEND_API_KEY not configured' 
+    });
+  }
+  
   // CORS headers
   const ALLOWED_ORIGINS = [
     'https://electricink-website.vercel.app',
@@ -104,33 +161,34 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
-  // Handle OPTIONS (preflight)
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Only POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    // Parse request (Vercel auto-parses JSON)
     const { type, data } = req.body;
 
-    // Validate
     if (!type || !data) {
       return res.status(400).json({ error: 'Missing type or data' });
     }
 
+    // Resend já está instanciado no topo do arquivo e verificado acima
+    // console.log('✅ Resend client initialized');
+
     let emailResult;
 
-    // ────────── ORDER CONFIRMATION (Cliente) ──────────
+    // ═══════════════════════════════════════════════════════
+    // CLIENTE
+    // ═══════════════════════════════════════════════════════
     if (type === 'order-confirmation') {
       const template = loadTemplate('order-confirmation');
-      
       const orderNumber = data.orderNumber || 'N/A';
-      const orderItems = formatOrderItems(data.items || []);
+      const enrichedItems = enrichItems(data.items || []);
+      const orderItems = formatOrderItems(enrichedItems);
       const shippingAddress = formatShippingAddress(data.shipping || {});
       
       const html = replacePlaceholders(template, {
@@ -149,17 +207,19 @@ module.exports = async function handler(req, res) {
         subject: `Order Confirmation #${orderNumber}`,
         html: html
       });
-    }
 
-    // ────────── ORDER NOTIFICATION (Admin) ──────────
+      console.log('✅ [CLIENTE] E-mail enviado:', emailResult.id);
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // ADMIN
+    // ═══════════════════════════════════════════════════════
     else if (type === 'order-notification-admin') {
       const template = loadTemplate('order-notification-admin');
-      
       const orderNumber = data.orderNumber || 'N/A';
-      const orderItemsTable = formatOrderItemsTable(data.items || []);
+      const enrichedItems = enrichItems(data.items || []);
+      const orderItemsTable = formatOrderItemsTable(enrichedItems);
       const shippingAddress = formatShippingAddress(data.shipping || {});
-      
-      // Format phone for WhatsApp (remove formatting)
       const phoneWhatsApp = (data.shipping?.phone || '').replace(/[^0-9+]/g, '');
       
       const html = replacePlaceholders(template, {
@@ -183,17 +243,21 @@ module.exports = async function handler(req, res) {
 
       emailResult = await resend.emails.send({
         from: 'Electric Ink Orders <orders@electricink.ie>',
-        to: 'electricink.ie@gmail.com', // Email da loja
+        to: 'electricink.ie@gmail.com',
         subject: `🔔 New Order #${orderNumber}`,
         html: html
       });
-    }
 
-    // ────────── PAYMENT FAILED ──────────
+      console.log('✅ [ADMIN] E-mail enviado:', emailResult.id);
+    }
+    
+    // ═══════════════════════════════════════════════════════
+    // PAYMENT FAILED
+    // ═══════════════════════════════════════════════════════
     else if (type === 'payment-failed') {
       const template = loadTemplate('payment-failed');
-      
-      const cartItemsSimple = formatCartItemsSimple(data.items || []);
+      const enrichedItems = enrichItems(data.items || []);
+      const cartItemsSimple = formatCartItemsSimple(enrichedItems);
       
       const html = replacePlaceholders(template, {
         CUSTOMER_NAME: data.customerName || 'Customer',
@@ -208,8 +272,9 @@ module.exports = async function handler(req, res) {
         subject: 'Payment Issue - Electric Ink IE',
         html: html
       });
-    }
 
+      console.log('✅ [PAYMENT-FAILED] E-mail enviado:', emailResult.id);
+    }
     else {
       return res.status(400).json({ error: 'Invalid email type' });
     }
@@ -224,7 +289,10 @@ module.exports = async function handler(req, res) {
       endpoint: 'send-order-email',
       context: { type: req.body?.type, email: req.body?.data?.email }
     });
-    console.error('Email sending error:', error);
+    
+    console.error('❌ [ERRO] Tipo:', req.body?.type);
+    console.error('❌ [ERRO] Mensagem:', error.message);
+    
     return res.status(500).json({ 
       error: 'Failed to send email',
       message: error.message 

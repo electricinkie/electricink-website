@@ -1,3 +1,10 @@
+// Validar Firestore em produção
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT is required in production');
+  }
+}
+
 /**
  * STRIPE WEBHOOKS HANDLER (Vercel Serverless)
  * Converted to CommonJS for compatibility
@@ -8,25 +15,39 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
 const admin = require('firebase-admin');
 const logger = require('./lib/logger');
+const { v4: uuidv4 } = require('uuid');
 
-// Initialize Firebase Admin if credentials are provided
+// Initialize Resend for direct email sending (guarded: do not throw if API key missing)
+const { Resend } = require('resend');
+let resend = null;
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  } else {
+    console.warn('⚠️ RESEND_API_KEY not configured - email sending will be skipped');
+  }
+} catch (error) {
+  console.error('Failed to initialize Resend:', error);
+}
+
+// Initialize Firebase Admin (fail-closed)
 if (!admin.apps || !admin.apps.length) {
   try {
     if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-      console.log('FIREBASE_SERVICE_ACCOUNT not configured; Firestore operations disabled');
-    } else {
-      const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-      let serviceAccount;
-      if (raw.trim().startsWith('{')) {
-        serviceAccount = JSON.parse(raw);
-      } else {
-        serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
-      }
-      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-      console.log('✅ Firebase Admin initialized');
+      throw new Error('FIREBASE_SERVICE_ACCOUNT is required for Firestore');
     }
+    const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+    let serviceAccount;
+    if (raw.trim().startsWith('{')) {
+      serviceAccount = JSON.parse(raw);
+    } else {
+      serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
+    }
+    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+    console.log('\u2705 Firebase Admin initialized');
   } catch (e) {
-    console.warn('Failed to initialize Firebase Admin', e && e.message);
+    console.error('Failed to initialize Firebase Admin:', e);
+    throw e;
   }
 }
 
@@ -41,10 +62,15 @@ module.exports.config = {
  * Main webhook handler
  */
 module.exports = async function handler(req, res) {
+
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, stripe-signature');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, stripe-signature, x-request-id');
+
+  // Gera requestId único para cada requisição
+  const requestId = req.headers['x-request-id'] || uuidv4();
+  res.setHeader('x-request-id', requestId);
 
   // Handle preflight
   if (req.method === 'OPTIONS') {
@@ -52,15 +78,22 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed', requestId });
   }
+
 
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    console.error('STRIPE_WEBHOOK_SECRET not configured');
-    return res.status(500).json({ error: 'Webhook secret not configured' });
+    logger.error(JSON.stringify({
+      msg: 'STRIPE_WEBHOOK_SECRET not configured',
+      orderId: null,
+      requestId,
+      timestamp: new Date().toISOString(),
+      status: 'error'
+    }));
+    return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
   let event;
@@ -68,170 +101,262 @@ module.exports = async function handler(req, res) {
   try {
     // Get raw body for signature verification
     const rawBody = await getRawBody(req);
-    
+
     // Verify webhook signature
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-    
-    console.log('✅ Webhook verified:', event.type);
+
+    logger.info(JSON.stringify({
+      msg: 'Webhook verified',
+      eventType: event.type,
+      orderId: null,
+      requestId,
+      timestamp: new Date().toISOString(),
+      status: 'verified'
+    }));
   } catch (err) {
     captureException(err, {
       endpoint: 'webhooks-stripe',
-      context: { eventType: 'signature-verification', sig: req.headers['stripe-signature'] }
+      context: { eventType: 'signature-verification', sig: req.headers['stripe-signature'], requestId }
     });
-    console.error('⚠️ Webhook signature verification failed:', err.message);
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+    logger.error(JSON.stringify({
+      msg: 'Webhook signature verification failed',
+      error: err && err.message,
+      orderId: null,
+      requestId,
+      timestamp: new Date().toISOString(),
+      status: 'error'
+    }));
+    return res.status(400).json({ error: `Webhook Error: ${err.message}`, requestId });
   }
 
   // Handle the event
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await handlePaymentIntentSucceeded(event.data.object, event);
+        await handlePaymentIntentSucceeded(event, requestId);
         break;
-
       case 'payment_intent.payment_failed':
-        await handlePaymentIntentFailed(event.data.object);
+        await handlePaymentIntentFailed(event.data.object, requestId);
         break;
-
       case 'charge.refunded':
-        await handleChargeRefunded(event.data.object);
+        await handleChargeRefunded(event.data.object, requestId);
         break;
-
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.warn(JSON.stringify({
+          msg: `Unhandled event type: ${event.type}`,
+          orderId: null,
+          requestId,
+          timestamp: new Date().toISOString(),
+          status: 'warn'
+        }));
     }
-
-    res.status(200).json({ received: true });
+    res.status(200).json({ received: true, requestId });
   } catch (error) {
-    captureException(error, {
-      endpoint: 'webhooks-stripe',
-      context: { eventType: event?.type, paymentIntentId: event?.data?.object?.id }
+    logger.error(JSON.stringify({
+      msg: 'Webhook processing error',
+      error: error && error.message,
+      orderId: null,
+      requestId,
+      timestamp: new Date().toISOString(),
+      status: 'error'
+    }));
+    captureException(error);
+    // Retornar 200 mesmo com erro para evitar re-tentativas infinitas
+    // (Stripe já salvou o evento, podemos reprocessar manualmente se necessário)
+    return res.status(200).json({ 
+      received: true,
+      error: 'Processing failed but acknowledged',
+      reason: error.message 
     });
-    console.error('Error handling webhook:', error);
-    res.status(500).json({ error: 'Webhook handler failed' });
   }
 };
 
 /**
  * Handle successful payment
  */
-async function handlePaymentIntentSucceeded(paymentIntent, event) {
+async function handlePaymentIntentSucceeded(paymentIntent, event, requestId) {
   try {
-    logger.info('Processing payment_intent.succeeded', { paymentIntentId: paymentIntent.id });
+    // ============ IDEMPOTÊNCIA: usar paymentIntent.id como orderId ============
+    const db = admin.apps && admin.apps.length ? admin.firestore() : null;
+    const paymentIntent = event.data.object;
+    const orderId = paymentIntent.id; // ID único do Stripe
 
-    // 1. Gera orderId único
-    const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-    // 2. Parse items do metadata
-    let items = [];
-    try {
-      items = JSON.parse(paymentIntent.metadata.items || '[]');
-    } catch (e) {
-      logger.error('Failed to parse items from metadata', e);
-      items = [];
-    }
-
-    // 3. Monta documento do pedido
-    const orderData = {
-      orderId,
-      paymentIntentId: paymentIntent.id,
-      stripeCustomerId: paymentIntent.customer || null,
-      
-      amount: paymentIntent.amount,
-      currency: paymentIntent.currency,
-      
-      status: 'paid',
-      paymentStatus: paymentIntent.status,
-      
-      customerEmail: paymentIntent.metadata.email,
-      customerName: paymentIntent.metadata.name,
-      customerPhone: paymentIntent.metadata.phone || null,
-      
-      shippingAddress: {
-        street: paymentIntent.metadata.street,
-        number: paymentIntent.metadata.number,
-        complement: paymentIntent.metadata.complement || null,
-        neighborhood: paymentIntent.metadata.neighborhood,
-        city: paymentIntent.metadata.city,
-        state: paymentIntent.metadata.state,
-        postalCode: paymentIntent.metadata.postalCode,
-        country: paymentIntent.metadata.country || 'IE'
-      },
-      
-      items,
-      
-      shippingMethod: paymentIntent.metadata.shippingMethod,
-      shippingCost: parseInt(paymentIntent.metadata.shippingCost || 0),
-      
-      subtotal: parseInt(paymentIntent.metadata.subtotal || 0),
-      total: paymentIntent.amount,
-      
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      paidAt: admin.firestore.FieldValue.serverTimestamp(),
-      
-      source: 'webhook',
-      webhookEventId: event.id
-    };
-
-    // 4. Salva no Firestore
-    if (!admin.apps || !admin.apps.length) {
-      logger.warn('Firestore not initialized; skipping order save', { orderId });
+    if (!db) {
+      logger.warn(JSON.stringify({
+        msg: 'Firestore not initialized; skipping order save', orderId, requestId, timestamp: new Date().toISOString(), status: 'warn' }));
     } else {
-      const db = admin.firestore();
-      await db.collection('orders').doc(orderId).set(orderData);
-      logger.info('✅ Order saved to Firestore', { orderId });
-    }
-
-    // 5. Envia email de confirmação (fallback)
-    try {
-      const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://electricink-website.vercel.app';
-
-      const emailData = {
-        orderNumber: orderId,
-        email: orderData.customerEmail,
-        items: orderData.items,
-        totals: {
-          subtotal: orderData.subtotal,
-          shipping: orderData.shippingCost,
-          total: orderData.total
+      // Usar items direto do metadata (sem enrichment)
+      let items = [];
+      try {
+        items = JSON.parse(paymentIntent.metadata.items || '[]');
+      } catch (e) {
+        logger.error(JSON.stringify({
+          msg: 'Failed to parse items from metadata',
+          error: e && e.message,
+          orderId,
+          requestId,
+          timestamp: new Date().toISOString(),
+          status: 'error'
+        }));
+        items = [];
+      }
+      const order = {
+        orderId,
+        paymentIntentId: paymentIntent.id,
+        stripeCustomerId: paymentIntent.customer || null,
+        amount: paymentIntent.amount,
+        currency: paymentIntent.currency,
+        status: 'paid',
+        paymentStatus: paymentIntent.status,
+        customerEmail: paymentIntent.metadata.email,
+        customerName: paymentIntent.metadata.name,
+        customerPhone: paymentIntent.metadata.phone || null,
+        shippingAddress: {
+          street: paymentIntent.metadata.street,
+          number: paymentIntent.metadata.number,
+          complement: paymentIntent.metadata.complement || null,
+          neighborhood: paymentIntent.metadata.neighborhood,
+          city: paymentIntent.metadata.city,
+          state: paymentIntent.metadata.state,
+          postalCode: paymentIntent.metadata.postalCode,
+          country: paymentIntent.metadata.country || 'IE'
         },
-        shipping: orderData.shippingAddress
+        items,
+        shippingMethod: paymentIntent.metadata.shippingMethod,
+        shippingCost: parseInt(paymentIntent.metadata.shippingCost || 0),
+        subtotal: parseInt(paymentIntent.metadata.subtotal || 0),
+        total: paymentIntent.amount,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        paidAt: admin.firestore.FieldValue.serverTimestamp(),
+        source: 'webhook',
+        webhookEventId: event.id
       };
-
-      // Customer confirmation
-      const custResp = await fetch(`${baseUrl}/api/send-order-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'order-confirmation', data: emailData })
-      });
-
-      if (custResp.ok) {
-        logger.info('✅ Confirmation email sent', { orderId });
-      } else {
-        logger.warn('⚠️ Email sending failed (non-critical)', { orderId, status: custResp.status });
+      // Tentar criar document com ID específico (atomicidade)
+      const orderRef = db.collection('orders').doc(orderId);
+      try {
+        await db.runTransaction(async (transaction) => {
+          const orderDoc = await transaction.get(orderRef);
+          if (orderDoc.exists) {
+            logger.info(JSON.stringify({
+              msg: 'Order already processed (idempotent)',
+              orderId,
+              requestId,
+              timestamp: new Date().toISOString(),
+              status: 'idempotent'
+            }));
+            return;
+          }
+          transaction.set(orderRef, order);
+        });
+        logger.info(JSON.stringify({
+          msg: 'Order created successfully',
+          orderId,
+          requestId,
+          timestamp: new Date().toISOString(),
+          status: 'created'
+        }));
+      } catch (error) {
+        logger.error(JSON.stringify({
+          msg: 'Transaction error',
+          error: error && error.message,
+          orderId,
+          requestId,
+          timestamp: new Date().toISOString(),
+          status: 'error'
+        }));
+        throw error;
       }
-
-      // Admin notification
-      const adminResp = await fetch(`${baseUrl}/api/send-order-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'order-notification-admin', data: emailData })
-      });
-
-      if (adminResp.ok) {
-        logger.info('✅ Admin notification email sent', { orderId });
-      } else {
-        logger.warn('⚠️ Admin email failed (non-critical)', { orderId, status: adminResp.status });
-      }
-
-    } catch (emailError) {
-      logger.warn('⚠️ Email error (non-critical)', emailError);
     }
 
-    return { success: true, orderId };
+    // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
+    if (!resend) {
+      logger.warn(JSON.stringify({
+        msg: 'Resend not initialized - skipping email notifications',
+        orderId,
+        requestId,
+        timestamp: new Date().toISOString(),
+        status: 'warn'
+      }));
+      // Atualizar order status para indicar falha
+      if (db) {
+        await db.collection('orders').doc(orderId).update({
+          emailStatus: 'failed',
+          emailError: 'Resend not configured',
+          emailAdminStatus: 'skipped',
+          emailAdminTimestamp: new Date().toISOString()
+        });
+      }
+      return;
+    }
+
+    setImmediate(() => {
+      (async () => {
+        let adminStatus = 'unknown';
+        let adminError = null;
+        const emailLog = {
+          orderId,
+          requestId,
+          timestamp: new Date().toISOString(),
+        };
+        try {
+          // Email cliente
+          await resend.emails.send({
+            from: 'Electric Ink <noreply@electricink.ie>',
+            to: order.customerEmail,
+            subject: `Order Confirmation #${orderId}`,
+            html: `Order #${orderId} placed.`,
+          });
+          // Email admin
+          await resend.emails.send({
+            from: 'Electric Ink Orders <orders@electricink.ie>',
+            to: 'electricink.ie@gmail.com',
+            subject: `New Order #${orderId}`,
+            html: `Order #${orderId} placed.`,
+          });
+          adminStatus = 'sent';
+          logger.info(JSON.stringify({
+            ...emailLog,
+            status: 'admin_email_sent',
+            timestamp: new Date().toISOString()
+          }));
+        } catch (emailError) {
+          adminStatus = 'failed';
+          adminError = emailError && emailError.message;
+          logger.error(JSON.stringify({
+            ...emailLog,
+            status: 'admin_email_failed',
+            error: adminError,
+            timestamp: new Date().toISOString()
+          }));
+        }
+        // Salvar status do email admin no Firestore
+        if (db) {
+          await db.collection('orders').doc(orderId).update({
+            emailAdminStatus: adminStatus,
+            emailAdminError: adminError,
+            emailAdminTimestamp: new Date().toISOString(),
+          });
+        }
+      })();
+    });
+    logger.info(JSON.stringify({
+      msg: 'Order saved, emails queued',
+      orderId,
+      requestId,
+      timestamp: new Date().toISOString(),
+      status: 'queued'
+    }));
+    return { success: true, orderId, emailStatus: 'queued', requestId };
 
   } catch (error) {
-    logger.error('❌ Error in handlePaymentIntentSucceeded', error);
+    logger.error(JSON.stringify({
+      msg: 'Error in handlePaymentIntentSucceeded',
+      error: error && error.message,
+      orderId: paymentIntent.id,
+      requestId,
+      timestamp: new Date().toISOString(),
+      status: 'error'
+    }));
     captureException(error, { 
       context: 'webhook-payment-intent-succeeded',
       paymentIntentId: paymentIntent.id 
@@ -243,30 +368,49 @@ async function handlePaymentIntentSucceeded(paymentIntent, event) {
 /**
  * Handle failed payment
  */
-async function handlePaymentIntentFailed(paymentIntent) {
-  console.log('❌ Payment failed:', paymentIntent.id);
-  
+async function handlePaymentIntentFailed(paymentIntent, requestId) {
+  logger.warn(JSON.stringify({
+    msg: 'Payment failed',
+    orderId: paymentIntent.id,
+    requestId,
+    timestamp: new Date().toISOString(),
+    status: 'failed'
+  }));
   const { orderId, customerEmail } = paymentIntent.metadata;
-
   // TODO: Update order status to 'failed'
   // TODO: Send failure notification email
-
-  console.log('Payment failed for order:', orderId);
+  logger.warn(JSON.stringify({
+    msg: 'Payment failed for order',
+    orderId,
+    requestId,
+    timestamp: new Date().toISOString(),
+    status: 'failed'
+  }));
 }
 
 /**
  * Handle refund
  */
-async function handleChargeRefunded(charge) {
-  console.log('💰 Charge refunded:', charge.id);
-  
+async function handleChargeRefunded(charge, requestId) {
+  logger.info(JSON.stringify({
+    msg: 'Charge refunded',
+    orderId: null,
+    chargeId: charge.id,
+    requestId,
+    timestamp: new Date().toISOString(),
+    status: 'refunded'
+  }));
   // TODO: Update order status
   // TODO: Send refund confirmation email
-
-  console.log('Refund processed:', {
+  logger.info(JSON.stringify({
+    msg: 'Refund processed',
+    orderId: null,
     chargeId: charge.id,
     amount: charge.amount_refunded / 100,
-  });
+    requestId,
+    timestamp: new Date().toISOString(),
+    status: 'refunded'
+  }));
 }
 
 /**

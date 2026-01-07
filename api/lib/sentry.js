@@ -32,9 +32,20 @@ try {
 /**
  * Capture exception (safe to call even if Sentry is not initialized)
  */
-function captureException(error, context = {}) {
+  function captureException(error, context = {}) {
   if (Sentry) {
-    Sentry.captureException(error, { extra: context });
+      Sentry.withScope(scope => {
+        if (context) {
+          Object.entries(context).forEach(([key, value]) => {
+            if (key === 'requestId') {
+              scope.setTag('requestId', value);
+            } else {
+              scope.setExtra(key, value);
+            }
+          });
+        }
+        Sentry.captureException(error);
+      });
   } else {
     console.error('Error:', error, context);
   }
@@ -43,9 +54,20 @@ function captureException(error, context = {}) {
 /**
  * Capture message (safe to call even if Sentry is not initialized)
  */
-function captureMessage(message, level = 'info', context = {}) {
+  function captureMessage(message, level = 'info', context = {}) {
   if (Sentry) {
-    Sentry.captureMessage(message, { level, extra: context });
+      Sentry.withScope(scope => {
+        if (context) {
+          Object.entries(context).forEach(([key, value]) => {
+            if (key === 'requestId') {
+              scope.setTag('requestId', value);
+            } else {
+              scope.setExtra(key, value);
+            }
+          });
+        }
+        Sentry.captureMessage(message);
+      });
   } else {
     console.log(`[${level.toUpperCase()}]`, message, context);
   }

@@ -3,429 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Issue</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Payment Unsuccessful</title>
   <style>
-    /* Reset */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f8f8f8;
-    }
-    
-    table {
-      border-collapse: collapse;
-    }
-    
-    img {
-      border: 0;
-      outline: none;
-      text-decoration: none;
-      display: block;
-    }
-    
-    /* Container */
-    .email-container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #FFFFFF;
-    }
-    
-    /* Header */
-    .email-header {
-      background-color: #000000;
-      padding: 30px 40px;
-      text-align: center;
-    }
-    
-    .email-logo-img {
-      max-width: 144px;
-      height: auto;
-      margin: 0 auto 15px;
-      display: block;
-    }
-    
-    .email-logo {
-      font-size: 32px;
-      font-weight: bold;
-      color: #FFFFFF;
-      margin: 0;
-    }
-    
-    .email-logo span {
-      color: #43BDAB;
-    }
-    
-    /* Alert Section */
-    .alert-section {
-      background-color: #fff5f5;
-      border-top: 4px solid #ff4444;
-      border-bottom: 4px solid #ff4444;
-      padding: 30px 40px;
-      text-align: center;
-    }
-    
-    .alert-icon {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 20px;
-      background-color: #ff4444;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .alert-icon svg {
-      width: 32px;
-      height: 32px;
-    }
-    
-    .alert-title {
-      font-size: 26px;
-      font-weight: bold;
-      color: #000000;
-      margin: 0 0 12px 0;
-    }
-    
-    .alert-subtitle {
-      font-size: 16px;
-      color: #666666;
-      margin: 0;
-      line-height: 1.5;
-    }
-    
-    /* Content */
-    .email-content {
-      padding: 40px 40px 30px;
-    }
-    
-    .content-text {
-      font-size: 15px;
-      color: #333333;
-      line-height: 1.7;
-      margin: 0 0 20px 0;
-    }
-    
-    /* Error Info Box */
-    .error-box {
-      background-color: #fff5f5;
-      border-left: 4px solid #ff4444;
-      padding: 20px;
-      border-radius: 6px;
-      margin: 25px 0;
-    }
-    
-    .error-label {
-      font-size: 13px;
-      font-weight: bold;
-      color: #ff4444;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 0 0 8px 0;
-    }
-    
-    .error-message {
-      font-size: 15px;
-      color: #000000;
-      margin: 0;
-    }
-    
-    /* Cart Items Preview */
-    .cart-preview {
-      background-color: #f8f8f8;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 25px 0;
-    }
-    
-    .cart-preview-title {
-      font-size: 14px;
-      font-weight: bold;
-      color: #666666;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 0 0 15px 0;
-    }
-    
-    .cart-item-simple {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #e8e8e8;
-      font-size: 14px;
-    }
-    
-    .cart-item-simple:last-child {
-      border-bottom: none;
-    }
-    
-    .cart-item-name {
-      color: #000000;
-    }
-    
-    .cart-item-qty {
-      color: #666666;
-      font-size: 13px;
-    }
-    
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      padding-top: 15px;
-      margin-top: 15px;
-      border-top: 2px solid #e8e8e8;
-      font-size: 18px;
-      font-weight: bold;
-      color: #000000;
-    }
-    
-    /* Common Issues */
-    .help-section {
-      background-color: #f8f8f8;
-      padding: 25px;
-      border-radius: 8px;
-      margin: 25px 0;
-    }
-    
-    .help-title {
-      font-size: 16px;
-      font-weight: bold;
-      color: #000000;
-      margin: 0 0 15px 0;
-    }
-    
-    .help-list {
-      margin: 0;
-      padding-left: 20px;
-    }
-    
-    .help-list li {
-      font-size: 14px;
-      color: #666666;
-      line-height: 1.8;
-      margin-bottom: 8px;
-    }
-    
-    /* CTA Button */
-    .cta-section {
-      text-align: center;
-      padding: 30px 40px;
-    }
-    
-    .cta-button {
-      display: inline-block;
-      background-color: #43BDAB;
-      color: #FFFFFF;
-      text-decoration: none;
-      padding: 16px 40px;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 12px rgba(67, 189, 171, 0.3);
-    }
-    
-    .cta-secondary {
-      display: block;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #43BDAB;
-      text-decoration: none;
-    }
-    
-    /* Support Section */
-    .support-section {
-      background-color: #000000;
-      color: #FFFFFF;
-      padding: 30px 40px;
-      text-align: center;
-    }
-    
-    .support-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #43BDAB;
-      margin: 0 0 15px 0;
-    }
-    
-    .support-text {
-      font-size: 14px;
-      color: #FFFFFF;
-      line-height: 1.6;
-      margin: 0 0 20px 0;
-    }
-    
-    .support-links {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-    }
-    
-    .support-link {
-      display: inline-block;
-      background-color: #43BDAB;
-      color: #000000;
-      text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-    
-    /* Footer */
-    .email-footer {
-      background-color: #f8f8f8;
-      padding: 25px 40px;
-      text-align: center;
-      font-size: 13px;
-      color: #666666;
-      line-height: 1.6;
-    }
-    
-    .email-footer a {
-      color: #43BDAB;
-      text-decoration: none;
-    }
-    
-    /* Mobile */
-    @media only screen and (max-width: 600px) {
-      .email-header,
-      .alert-section,
-      .email-content,
-      .cta-section,
-      .support-section,
-      .email-footer {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-      
-      .support-links {
-        flex-direction: column;
-      }
-      
-      .support-link {
-        display: block;
-      }
-    }
+    body { margin: 0; padding: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+    table { border-collapse: collapse; }
+    img { border: 0; display: block; outline: none; }
+    a { text-decoration: none; }
   </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; background-color: #f8f8f8;">
   
-  <table role="presentation" class="email-container" width="100%" cellspacing="0" cellpadding="0">
-    
-    <!-- Header -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f8f8f8;">
     <tr>
-      <td class="email-header">
-        <img src="https://electricink.ie/images/logos/logo-white.png" alt="Electric Ink IE" class="email-logo-img">
-        <h1 class="email-logo">ELECTRIC INK <span>IE</span></h1>
-      </td>
-    </tr>
-    
-    <!-- Alert Section -->
-    <tr>
-      <td class="alert-section">
-        <div class="alert-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-          </svg>
-        </div>
-        <h2 class="alert-title">Payment Could Not Be Processed</h2>
-        <p class="alert-subtitle">
-          Don't worry - this happens sometimes.<br>
-          Your items are still saved and waiting for you.
-        </p>
-      </td>
-    </tr>
-    
-    <!-- Content -->
-    <tr>
-      <td class="email-content">
-        <p class="content-text">
-          Hi <strong>{{CUSTOMER_NAME}}</strong>,
-        </p>
+      <td align="center" style="padding: 40px 20px;">
         
-        <p class="content-text">
-          We tried to process your payment but encountered an issue. 
-          This is usually an easy fix!
-        </p>
-        
-        <!-- Error Details -->
-        <div class="error-box">
-          <p class="error-label">What Happened</p>
-          <p class="error-message">{{ERROR_MESSAGE}}</p>
-        </div>
-        
-        <!-- Cart Preview -->
-        <div class="cart-preview">
-          <p class="cart-preview-title">Your Items (Still Reserved)</p>
-          {{CART_ITEMS_SIMPLE}}
-          <div class="cart-total">
-            <span>Total</span>
-            <span>€{{TOTAL}}</span>
-          </div>
-        </div>
-        
-        <!-- Common Issues -->
-        <div class="help-section">
-          <p class="help-title">Common Reasons & Solutions:</p>
-          <ul class="help-list">
-            <li><strong>Insufficient funds</strong> - Check your account balance</li>
-            <li><strong>Card expired</strong> - Use a different card</li>
-            <li><strong>Incorrect details</strong> - Double-check card number, CVV, expiry</li>
-            <li><strong>Bank declined</strong> - Contact your bank to authorize the payment</li>
-            <li><strong>3D Secure failed</strong> - Complete the authentication when prompted</li>
-          </ul>
-        </div>
+        <!-- Main Container -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; background-color: #FFFFFF;">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #43BDAB !important; background: #43BDAB !important; padding: 40px; text-align: center;">
+              <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie -->
+              <img src="https://electricink-website.vercel.app/images/logos/logo-white.png" alt="Black Cat" width="144" style="max-width: 144px; height: auto; margin: 0 auto;">
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              
+              <!-- Title -->
+              <h1 style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; color: #000000;">Payment Unsuccessful</h1>
+              <p style="margin: 0 0 30px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; line-height: 1.6;">We could not process your payment. Your items are still reserved in your cart.</p>
+              
+              <!-- Error Card -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="background-color: #fff5f5; padding: 24px; border-radius: 8px; border-left: 4px solid #ff4444;">
+                    <p style="margin: 0 0 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; color: #ff4444; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Payment Error</p>
+                    <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">{{ERROR_MESSAGE}}</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Cart Preview -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px;">
+                    <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #666666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Your Items</p>
+                    
+                    {{CART_ITEMS_SIMPLE}}
+                    
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #e8e8e8;">
+                      <tr>
+                        <td style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #000000;">Total</td>
+                        <td align="right" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; color: #000000;">€{{TOTAL}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Help Section -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px;">
+                    <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">How to Resolve</p>
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Check your card details are correct</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Ensure you have sufficient funds</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Try a different payment method</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Contact your bank if the issue persists</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+            </td>
+          </tr>
+          
+          <!-- CTA -->
+          <tr>
+            <td style="padding: 0 40px 40px 40px; text-align: center;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                <tr>
+                  <td style="background-color: #43BDAB; border-radius: 6px;">
+                    <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie/checkout.html -->
+                    <a href="https://electricink-website.vercel.app/checkout.html" style="display: inline-block; padding: 16px 40px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 700; color: #FFFFFF; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Try Again</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin: 16px 0 0 0;">
+                <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie/cart.html -->
+                <a href="https://electricink-website.vercel.app/cart.html" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #43BDAB; text-decoration: underline;">Update Payment Method</a>
+              </p>
+            </td>
+          </tr>
+          
+          <!-- Support Section -->
+          <tr>
+            <td style="background-color: #000000; padding: 30px 40px; text-align: center;">
+              <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #43BDAB;">Need Help?</p>
+              <p style="margin: 0 0 20px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #FFFFFF; line-height: 1.6;">Our team is available to assist you with your order.</p>
+              
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                <tr>
+                  <td style="background-color: #43BDAB; border-radius: 6px; padding: 0 12px;">
+                    <a href="mailto:orders@electricink.ie" style="display: inline-block; padding: 12px 16px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #000000; text-decoration: none; text-transform: uppercase;">Email</a>
+                  </td>
+                  <td width="12"></td>
+                  <td style="background-color: #43BDAB; border-radius: 6px; padding: 0 12px;">
+                    <a href="https://wa.link/kzetgg" style="display: inline-block; padding: 12px 16px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #000000; text-decoration: none; text-transform: uppercase;">WhatsApp</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f8f8f8; padding: 30px 40px; text-align: center;">
+              <p style="margin: 0 0 4px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">Black Cat</p>
+              <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #43BDAB;">FROM TATTOO ARTISTS TO TATTOO ARTISTS</p>
+              <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #666666;">Dublin, Ireland</p>
+            </td>
+          </tr>
+          
+        </table>
         
       </td>
     </tr>
-    
-    <!-- CTA -->
-    <tr>
-      <td class="cta-section">
-        <a href="https://electricink.ie/checkout.html" class="cta-button">
-          Try Again Now
-        </a>
-        <a href="https://electricink.ie/cart.html" class="cta-secondary">
-          View Your Cart →
-        </a>
-      </td>
-    </tr>
-    
-    <!-- Support Section -->
-    <tr>
-      <td class="support-section">
-        <p class="support-title">Need Help?</p>
-        <p class="support-text">
-          Our team is here to help you complete your order.<br>
-          Reach out and we'll sort it quickly!
-        </p>
-        <div class="support-links">
-          <a href="mailto:electricink.ie@gmail.com" class="support-link">Email Us</a>
-          <a href="https://wa.link/kzetgg" class="support-link">WhatsApp</a>
-        </div>
-      </td>
-    </tr>
-    
-    <!-- Footer -->
-    <tr>
-      <td class="email-footer">
-        <p style="margin: 0 0 10px 0;">
-          Questions? Contact us anytime:<br>
-          <a href="mailto:electricink.ie@gmail.com">electricink.ie@gmail.com</a> | 
-          <a href="https://wa.link/kzetgg">+353 83 147 3502</a>
-        </p>
-        <p style="margin: 0; font-size: 12px; color: #999;">
-          © 2025 Electric Ink IE. All rights reserved.<br>
-          Dublin, Ireland
-        </p>
-      </td>
-    </tr>
-    
   </table>
   
 </body>

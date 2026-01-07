@@ -1,3 +1,10 @@
+// Validar Firestore em produção
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT is required in production');
+  }
+}
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
 const { z } = require('zod');
@@ -59,23 +66,20 @@ const admin = require('firebase-admin');
 function initFirestore() {
   if (admin.apps && admin.apps.length) return;
   if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-    console.warn('FIREBASE_SERVICE_ACCOUNT not set; Firestore rate limiting disabled');
-    return;
+    throw new Error('FIREBASE_SERVICE_ACCOUNT is required for Firestore');
   }
   try {
     const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
     let serviceAccount;
-
-    // Support either base64-encoded JSON (existing convention) or raw JSON
     if (raw.trim().startsWith('{')) {
       serviceAccount = JSON.parse(raw);
     } else {
       serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
     }
-
     admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   } catch (err) {
     logger.error('Failed to initialize Firebase Admin', err);
+    throw err;
   }
 }
 
@@ -407,6 +411,18 @@ module.exports = async function handler(req, res) {
         }))
         .digest('hex');
       const idempotencyKey = `pi_${cartHash}`;
+
+      // Include immutable snapshot of items in metadata so webhook can reconstruct the order
+      const itemsSnapshot = JSON.stringify(items.map(i => ({
+        id: i.id,
+        name: i.name || '',
+        quantity: i.quantity,
+        price: i.price
+      })));
+      if (itemsSnapshot.length > 500) {
+        throw new Error('Snapshot of items for metadata exceeds 500 characters. Reduce cart size or item details.');
+      }
+      metadata.items = itemsSnapshot;
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents

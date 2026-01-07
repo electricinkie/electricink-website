@@ -3,412 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Order Confirmation</title>
   <style>
-    /* Reset */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f8f8f8;
-    }
-    
-    table {
-      border-collapse: collapse;
-    }
-    
-    img {
-      border: 0;
-      outline: none;
-      text-decoration: none;
-      display: block;
-    }
-    
-    /* Container */
-    .email-container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #FFFFFF;
-    }
-    
-    /* Header */
-    .email-header {
-      background-color: #000000;
-      padding: 30px 40px;
-      text-align: center;
-    }
-    
-    .email-logo-img {
-      max-width: 144px;
-      height: auto;
-      margin: 0 auto 15px;
-      display: block;
-    }
-    
-    .email-logo {
-      font-size: 32px;
-      font-weight: bold;
-      color: #FFFFFF;
-      margin: 0;
-    }
-    
-    .email-logo span {
-      color: #43BDAB;
-    }
-    
-    /* Success Icon */
-    .success-section {
-      text-align: center;
-      padding: 40px 40px 20px;
-    }
-    
-    .success-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 20px;
-      border: 4px solid #43BDAB;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .checkmark svg {
-      width: 48px;
-      height: 48px;
-    }
-    
-    .success-title {
-      font-size: 28px;
-      font-weight: bold;
-      color: #000000;
-      margin: 0 0 10px 0;
-    }
-    
-    .success-subtitle {
-      font-size: 16px;
-      color: #666666;
-      margin: 0;
-    }
-    
-    /* Order Number */
-    .order-number {
-      background-color: #f8f8f8;
-      padding: 20px 40px;
-      text-align: center;
-    }
-    
-    .order-number-label {
-      font-size: 14px;
-      color: #666666;
-      margin: 0 0 8px 0;
-    }
-    
-    .order-number-value {
-      font-size: 20px;
-      font-weight: bold;
-      color: #43BDAB;
-      margin: 0;
-    }
-    
-    /* Content */
-    .email-content {
-      padding: 30px 40px;
-    }
-    
-    .section-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #000000;
-      margin: 0 0 20px 0;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #e8e8e8;
-    }
-    
-    /* Order Items */
-    .order-item {
-      display: table;
-      width: 100%;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #e8e8e8;
-    }
-    
-    .order-item:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    
-    .item-image {
-      display: table-cell;
-      width: 80px;
-      vertical-align: top;
-    }
-    
-    .item-image img {
-      width: 80px;
-      height: 80px;
-      border-radius: 8px;
-      background-color: #f8f8f8;
-    }
-    
-    .item-details {
-      display: table-cell;
-      padding-left: 15px;
-      vertical-align: top;
-    }
-    
-    .item-name {
-      font-size: 16px;
-      font-weight: bold;
-      color: #000000;
-      margin: 0 0 5px 0;
-    }
-    
-    .item-variant {
-      font-size: 14px;
-      color: #666666;
-      margin: 0 0 5px 0;
-    }
-    
-    .item-qty {
-      font-size: 14px;
-      color: #999999;
-      margin: 0;
-    }
-    
-    .item-price {
-      display: table-cell;
-      text-align: right;
-      vertical-align: top;
-      font-size: 16px;
-      font-weight: bold;
-      color: #000000;
-      white-space: nowrap;
-    }
-    
-    /* Order Totals */
-    .order-totals {
-      background-color: #f8f8f8;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 30px;
-    }
-    
-    .total-line {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 15px;
-      color: #666666;
-    }
-    
-    .total-line:last-child {
-      margin-bottom: 0;
-    }
-    
-    .total-line.grand-total {
-      padding-top: 12px;
-      margin-top: 12px;
-      border-top: 2px solid #e8e8e8;
-      font-size: 18px;
-      font-weight: bold;
-      color: #000000;
-    }
-    
-    .total-line.grand-total .amount {
-      color: #43BDAB;
-      font-size: 22px;
-    }
-    
-    /* Shipping Address */
-    .shipping-address {
-      background-color: #f8f8f8;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 30px;
-      line-height: 1.6;
-      font-size: 14px;
-      color: #666666;
-    }
-    
-    /* CTA Button */
-    .cta-section {
-      text-align: center;
-      padding: 30px 40px;
-    }
-    
-    .cta-button {
-      display: inline-block;
-      background-color: #43BDAB;
-      color: #FFFFFF;
-      text-decoration: none;
-      padding: 14px 32px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    /* Footer */
-    .email-footer {
-      background-color: #f8f8f8;
-      padding: 30px 40px;
-      text-align: center;
-      font-size: 13px;
-      color: #666666;
-      line-height: 1.6;
-    }
-    
-    .email-footer a {
-      color: #43BDAB;
-      text-decoration: none;
-    }
-    
-    .social-links {
-      margin: 20px 0;
-    }
-    
-    .social-links a {
-      display: inline-block;
-      margin: 0 8px;
-      color: #666666;
-      text-decoration: none;
-    }
-    
-    /* Mobile */
-    @media only screen and (max-width: 600px) {
-      .email-header {
-        padding: 20px;
-      }
-      
-      .email-content {
-        padding: 20px;
-      }
-      
-      .success-section {
-        padding: 30px 20px 15px;
-      }
-      
-      .order-number {
-        padding: 15px 20px;
-      }
-      
-      .cta-section {
-        padding: 20px;
-      }
-      
-      .email-footer {
-        padding: 20px;
-      }
-    }
+    body { margin: 0; padding: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    table { border-collapse: collapse; }
+    img { border: 0; display: block; outline: none; }
+    a { text-decoration: none; }
   </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; background-color: #f8f8f8;">
   
-  <table role="presentation" class="email-container" width="100%" cellspacing="0" cellpadding="0">
-    
-    <!-- Header -->
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f8f8f8;">
     <tr>
-      <td class="email-header">
-        <img src="https://electricink.ie/images/logos/logo-white.png" alt="Electric Ink IE" class="email-logo-img">
-        <h1 class="email-logo">ELECTRIC INK <span>IE</span></h1>
-      </td>
-    </tr>
-    
-    <!-- Success Section -->
-    <tr>
-      <td class="success-section">
-        <div class="success-icon">
-          <div class="checkmark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        </div>
-        <h2 class="success-title">Order Confirmed!</h2>
-        <p class="success-subtitle">Thank you for your purchase</p>
-      </td>
-    </tr>
-    
-    <!-- Order Number -->
-    <tr>
-      <td class="order-number">
-        <p class="order-number-label">Order Number</p>
-        <p class="order-number-value">{{ORDER_NUMBER}}</p>
-      </td>
-    </tr>
-    
-    <!-- Order Items -->
-    <tr>
-      <td class="email-content">
-        <h3 class="section-title">Order Details</h3>
+      <td align="center" style="padding: 40px 20px;">
         
-        {{ORDER_ITEMS}}
-        
-        <!-- Order Totals -->
-        <div class="order-totals">
-          <div class="total-line">
-            <span>Subtotal</span>
-            <span>€{{SUBTOTAL}}</span>
-          </div>
-          <div class="total-line">
-            <span>Shipping</span>
-            <span>{{SHIPPING}}</span>
-          </div>
-          <div class="total-line">
-            <span>VAT (23%)</span>
-            <span>€{{VAT}}</span>
-          </div>
-          <div class="total-line grand-total">
-            <span>Total Paid</span>
-            <span class="amount">€{{TOTAL}}</span>
-          </div>
-        </div>
+        <!-- Main Container -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; background-color: #FFFFFF;">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #43BDAB !important; background: #43BDAB !important; padding: 40px; text-align: center;">
+              <img src="https://electricink.ie/images/logos/logo-white.png" alt="Black Cat" width="144" style="max-width: 144px; height: auto; margin: 0 auto;">
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              
+              <!-- Title -->
+              <h1 style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; color: #000000; line-height: 1.3;">Order Confirmed</h1>
+              <p style="margin: 0 0 30px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; line-height: 1.6;">Thank you for your purchase. Your order has been received and is being processed.</p>
+              
+              <!-- Order Number Card -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px;">
+                    <p style="margin: 0 0 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #666666; text-transform: uppercase; letter-spacing: 1px;">Order Number</p>
+                    <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 24px; font-weight: 700; color: #43BDAB;">{{ORDER_NUMBER}}</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Section Title -->
+              <h2 style="margin: 30px 0 20px 0; padding-bottom: 12px; border-bottom: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #000000;">Order Details</h2>
+              
+              <!-- Order Items -->
+              {{ORDER_ITEMS}}
+              
+              <!-- Totals -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 30px;">
+                <tr>
+                  <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">Subtotal</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">€{{SUBTOTAL}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">Shipping</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #43BDAB; font-weight: 600;">{{SHIPPING}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">VAT (23%)</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">€{{VAT}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 16px 0 0 0; border-top: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #000000;">Total Paid</td>
+                        <td align="right" style="padding: 16px 0 0 0; border-top: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; color: #43BDAB;">€{{TOTAL}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Shipping Address -->
+              <h2 style="margin: 30px 0 20px 0; padding-bottom: 12px; border-bottom: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #000000;">Shipping Address</h2>
+              
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="background-color: #f8f8f8; padding: 20px; border-radius: 8px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666; line-height: 1.6;">
+                    {{SHIPPING_ADDRESS}}
+                  </td>
+                </tr>
+              </table>
+              
+            </td>
+          </tr>
+          
+          <!-- CTA -->
+          <tr>
+            <td style="padding: 0 40px 40px 40px; text-align: center;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                <tr>
+                  <td style="background-color: #43BDAB; border-radius: 6px;">
+                    <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie -->
+                    <a href="https://electricink-website.vercel.app" style="display: inline-block; padding: 16px 40px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 700; color: #FFFFFF; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Visit Our Store</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f8f8f8; padding: 30px 40px; text-align: center;">
+              <p style="margin: 0 0 4px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">Black Cat</p>
+              <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #43BDAB;">FROM TATTOO ARTISTS TO TATTOO ARTISTS</p>
+              <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #666666;">Dublin, Ireland</p>
+              <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">
+                <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie -->
+                <a href="https://electricink-website.vercel.app" style="color: #43BDAB; text-decoration: none;">Website</a> •
+                <a href="mailto:orders@electricink.ie" style="color: #43BDAB; text-decoration: none;">Contact</a>
+              </p>
+            </td>
+          </tr>
+          
+        </table>
         
       </td>
     </tr>
-    
-    <!-- Shipping Address -->
-    <tr>
-      <td class="email-content">
-        <h3 class="section-title">Shipping Address</h3>
-        <div class="shipping-address">
-          {{SHIPPING_ADDRESS}}
-        </div>
-      </td>
-    </tr>
-    
-    <!-- CTA -->
-    <tr>
-      <td class="cta-section">
-        <a href="https://electricink.ie/howtousecosmetics" class="cta-button">Learn How to Use Your Products</a>
-      </td>
-    </tr>
-    
-    <!-- Footer -->
-    <tr>
-      <td class="email-footer">
-        <p style="margin: 0 0 10px 0;">
-          Questions about your order?<br>
-          Contact us: <a href="mailto:electricink.ie@gmail.com">electricink.ie@gmail.com</a><br>
-          WhatsApp: <a href="https://wa.link/kzetgg">+353 83 147 3502</a>
-        </p>
-        
-        <div class="social-links">
-          <a href="https://instagram.com/electricinkie">Instagram</a> | 
-          <a href="https://electricink.ie">Website</a>
-        </div>
-        
-        <p style="margin: 0; font-size: 12px; color: #999;">
-          © 2025 Electric Ink IE. All rights reserved.<br>
-          Dublin, Ireland
-        </p>
-      </td>
-    </tr>
-    
   </table>
   
 </body>

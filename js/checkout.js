@@ -1124,7 +1124,8 @@
       });
 
       // Email 2: Admin notification
-      await fetch('/api/send-order-email', {
+      console.log('🔵 Enviando para admin...', { orderNumber: emailData.orderNumber });
+      const adminResponse = await fetch('/api/send-order-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1132,6 +1133,8 @@
           data: emailData
         })
       });
+      const adminResult = await adminResponse.json();
+      console.log('🔵 Response admin:', adminResponse.status, adminResult);
     } catch (error) {
       console.error('Email sending failed (non-blocking):', error);
       // Don't block checkout flow if emails fail
