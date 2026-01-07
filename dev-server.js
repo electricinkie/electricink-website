@@ -12,7 +12,7 @@ const webhookStripeHandler = require('./api/webhooks-stripe.js');
 const app = express();
 
 // Middleware para parsing JSON
-// Ensure webhook route receives raw body for Stripe signature verification
+// Permitir raw body para Stripe webhook antes do JSON parser
 app.use('/api/webhooks-stripe', express.raw({ type: '*/*' }));
 app.use(express.json({ limit: '1mb' }));
 

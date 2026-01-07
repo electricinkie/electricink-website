@@ -255,9 +255,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         items = [];
       }
 
-      // Prefer cents metadata (added by backend). Fallback to legacy fields.
-      const subtotal_cents = parseInt(paymentIntent.metadata.subtotal_cents || paymentIntent.metadata.subtotal || '0', 10);
-      const shipping_cents = parseInt(paymentIntent.metadata.shipping_cents || paymentIntent.metadata.shippingCost || '0', 10);
+      // Usar apenas campos *_cents da metadata (valores em cents)
+      const subtotal_cents = parseInt(paymentIntent.metadata.subtotal_cents || '0', 10);
+      const shipping_cents = parseInt(paymentIntent.metadata.shipping_cents || '0', 10);
 
       const order = {
         orderId,
