@@ -336,8 +336,16 @@ module.exports = async function handler(req, res) {
 
   let items, shippingMethod, metadata, shippingAddress;
   try {
-    // Validação robusta do input
-    const validatedData = checkoutSchema.parse(req.body);
+    // Aceitar ambos formatos: { items: [...] } (server) ou { cartItems: [...] } (frontend)
+    const payload = {
+      items: req.body.items || req.body.cartItems,
+      shippingMethod: req.body.shippingMethod || (req.body.shippingAddress && req.body.shippingAddress.method) || 'standard',
+      email: req.body.email || (req.body.metadata && req.body.metadata.customer_email),
+      name: req.body.name || (req.body.metadata && req.body.metadata.customer_name)
+    };
+
+    // Validação robusta do input usando o payload normalizado
+    const validatedData = checkoutSchema.parse(payload);
     items = validatedData.items;
     shippingMethod = validatedData.shippingMethod;
     metadata = req.body.metadata || {};
@@ -381,7 +389,7 @@ module.exports = async function handler(req, res) {
     // Improved error handling
     try {
       const crypto = require('crypto');
-      const totals = validateAndCalculateTotal(cartItems, shippingAddress);
+      const totals = validateAndCalculateTotal(items, shippingAddress);
       logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
         shipping: totals.shipping,
@@ -393,7 +401,7 @@ module.exports = async function handler(req, res) {
       const cartHash = crypto
         .createHash('sha256')
         .update(JSON.stringify({
-          items: cartItems.map(i => ({ id: i.id, qty: i.quantity })),
+          items: items.map(i => ({ id: i.id, qty: i.quantity })),
           shipping: shippingAddress?.method,
           timestamp: Math.floor(Date.now() / 300000) // 5 minutos
         }))
@@ -408,7 +416,7 @@ module.exports = async function handler(req, res) {
           subtotal: totals.subtotal.toFixed(2),
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),
-          items_count: cartItems.length,
+          items_count: items.length,
           backend_validated: 'true' // Security flag
         },
         automatic_payment_methods: {
@@ -426,7 +434,7 @@ module.exports = async function handler(req, res) {
     } catch (error) {
       captureException(error, {
         endpoint: 'create-payment-intent',
-        context: { cartItems, shippingAddress }
+        context: { items, shippingAddress }
       });
       logger.error('Error creating payment intent', error.message);
       if (error.message.includes('Invalid')) {
@@ -437,7 +445,7 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     captureException(error, {
       endpoint: 'create-payment-intent',
-      context: { cartItems: req.body?.cartItems, shippingAddress: req.body?.shippingAddress }
+      context: { items: req.body?.items || req.body?.cartItems, shippingAddress: req.body?.shippingAddress }
     });
     logger.error('Error processing request', error.message);
     return res.status(500).json({ error: 'Internal server error' });
