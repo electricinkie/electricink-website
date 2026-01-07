@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'product
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
-const admin = require('firebase-admin');
+const { getFirestore, admin } = require('./lib/firebase-admin');
 const logger = require('./lib/logger');
 const { v4: uuidv4 } = require('uuid');
 
@@ -31,26 +31,7 @@ try {
   console.error('[RESEND-INIT] ❌ Failed to initialize:', error);
 }
 
-// Initialize Firebase Admin (fail-closed)
-if (!admin.apps || !admin.apps.length) {
-  try {
-    if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-      throw new Error('FIREBASE_SERVICE_ACCOUNT is required for Firestore');
-    }
-    const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-    let serviceAccount;
-    if (raw.trim().startsWith('{')) {
-      serviceAccount = JSON.parse(raw);
-    } else {
-      serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
-    }
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-    console.log('\u2705 Firebase Admin initialized');
-  } catch (e) {
-    console.error('Failed to initialize Firebase Admin:', e);
-    throw e;
-  }
-}
+
 
 // Vercel serverless config
 module.exports.config = {
@@ -98,14 +79,18 @@ async function validateResendConfig() {
 /**
  * Main webhook handler
  */
+
 module.exports = async function handler(req, res) {
+  console.log('\n🟢 WEBHOOK INICIADO');
+  console.log('🟢 Method:', req.method);
+  console.log('🟢 URL:', req.url);
 
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, stripe-signature, x-request-id');
 
-  // Gera requestId único para cada requisição
+  // Gera requestId único
   const requestId = req.headers['x-request-id'] || uuidv4();
   res.setHeader('x-request-id', requestId);
 
@@ -118,36 +103,50 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed', requestId });
   }
 
-
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    logger.error(JSON.stringify({
-      msg: 'STRIPE_WEBHOOK_SECRET not configured',
-      orderId: null,
-      requestId,
-      timestamp: new Date().toISOString(),
-      status: 'error'
-    }));
+    console.error('❌ STRIPE_WEBHOOK_SECRET não configurado');
     return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
-  // Validate Resend configuration early (non-blocking for webhook validity)
+  // Validate Resend (non-blocking)
   try {
     const configCheck = await validateResendConfig();
     console.log('[RESEND-CONFIG] Validation:', configCheck);
   } catch (e) {
     console.error('[RESEND-CONFIG] Validation failed:', e && e.message);
   }
+
   let event;
 
   try {
-    // Get raw body for signature verification
-    const rawBody = await getRawBody(req);
+    // CORREÇÃO CRÍTICA: Usar req.body se já foi processado por express.raw()
+    let rawBody;
+    
+    if (req.body && Buffer.isBuffer(req.body)) {
+      // Dev-server com express.raw() - body já processado
+      rawBody = req.body;
+      console.log('🔍 Usando req.body (express.raw)');
+    } else if (req.body && typeof req.body === 'string') {
+      // Body como string
+      rawBody = Buffer.from(req.body);
+      console.log('🔍 Convertendo string para Buffer');
+    } else {
+      // Vercel/produção - ler stream
+      rawBody = await getRawBody(req);
+      console.log('🔍 Usando getRawBody (stream)');
+    }
+    
+    console.log('🔍 Raw body length:', rawBody.length);
 
     // Verify webhook signature
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+
+    console.log('✅ Assinatura verificada!');
+    console.log('✅ Event type:', event.type);
+    console.log('✅ Event ID:', event.id);
 
     logger.info(JSON.stringify({
       msg: 'Webhook verified',
@@ -158,9 +157,10 @@ module.exports = async function handler(req, res) {
       status: 'verified'
     }));
   } catch (err) {
+    console.error('❌ Erro na verificação de assinatura:', err.message);
     captureException(err, {
       endpoint: 'webhooks-stripe',
-      context: { eventType: 'signature-verification', sig: req.headers['stripe-signature'], requestId }
+      context: { eventType: 'signature-verification', requestId }
     });
     logger.error(JSON.stringify({
       msg: 'Webhook signature verification failed',
@@ -177,7 +177,9 @@ module.exports = async function handler(req, res) {
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
+        console.log('🎯 Chamando handlePaymentIntentSucceeded...');
         await handlePaymentIntentSucceeded(event, requestId);
+        console.log('🎯 handlePaymentIntentSucceeded concluído');
         break;
       case 'payment_intent.payment_failed':
         await handlePaymentIntentFailed(event.data.object, requestId);
@@ -194,8 +196,13 @@ module.exports = async function handler(req, res) {
           status: 'warn'
         }));
     }
+    console.log('✅ Retornando 200');
     res.status(200).json({ received: true, requestId });
   } catch (error) {
+    console.error('\n❌❌❌ ERRO NO PROCESSAMENTO ❌❌❌');
+    console.error('❌ Error:', error.message);
+    console.error('❌ Stack:', error.stack);
+    
     logger.error(JSON.stringify({
       msg: 'Webhook processing error',
       error: error && error.message,
@@ -205,9 +212,7 @@ module.exports = async function handler(req, res) {
       status: 'error'
     }));
     captureException(error);
-    // Retornar 500 para erros de processamento transientes para que
-    // Stripe possa re-tentar automaticamente. Somente ocultar falhas
-    // não-retriáveis explicitamente.
+    
     return res.status(500).json({ 
       error: 'Webhook processing failed',
       reason: error.message,
@@ -217,13 +222,38 @@ module.exports = async function handler(req, res) {
 };
 
 /**
+ * Remove campos undefined recursivamente
+ */
+function removeUndefined(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(removeUndefined).filter(item => item !== undefined);
+  }
+  if (obj && typeof obj === 'object') {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = removeUndefined(value);
+      }
+      return acc;
+    }, {});
+  }
+  return obj;
+}
+
+/**
  * Handle successful payment
  */
 async function handlePaymentIntentSucceeded(event, requestId) {
+  const paymentIntent = event.data.object;
   try {
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🔔 handlePaymentIntentSucceeded INICIADA');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     // ============ IDEMPOTÊNCIA: usar paymentIntent.id como orderId ============
-    const db = admin.apps && admin.apps.length ? admin.firestore() : null;
-    const paymentIntent = event.data.object;
+    const db = getFirestore();
+    console.log('🔍 Admin apps length:', admin.apps?.length);
+    console.log('🔍 DB inicializado:', !!db);
+    console.log('🔍 PaymentIntent ID:', paymentIntent.id);
+    // ...existing code...
     const orderId = paymentIntent.id; // ID único do Stripe
 
     // Fail-fast: if Firestore isn't initialized we MUST fail the webhook so Stripe retries
@@ -268,21 +298,21 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         currency: paymentIntent.currency,
         status: 'paid',
         paymentStatus: paymentIntent.status,
-        customerEmail: paymentIntent.metadata.email,
-        customerName: paymentIntent.metadata.name,
+        customerEmail: paymentIntent.metadata.email || paymentIntent.receipt_email || 'no-email@test.com',
+        customerName: paymentIntent.metadata.name || 'Test Customer',
         customerPhone: paymentIntent.metadata.phone || null,
-        shippingAddress: {
-          street: paymentIntent.metadata.street,
-          number: paymentIntent.metadata.number,
-          complement: paymentIntent.metadata.complement || null,
-          neighborhood: paymentIntent.metadata.neighborhood,
-          city: paymentIntent.metadata.city,
-          state: paymentIntent.metadata.state,
-          postalCode: paymentIntent.metadata.postalCode,
-          country: paymentIntent.metadata.country || 'IE'
-        },
+          shippingAddress: {
+            street: paymentIntent.metadata.street || 'Test Street',
+            number: paymentIntent.metadata.number || '1',
+            complement: paymentIntent.metadata.complement || null,
+            neighborhood: paymentIntent.metadata.neighborhood || 'N/A',
+            city: paymentIntent.metadata.city || 'Dublin',
+            state: paymentIntent.metadata.state || 'Dublin',
+            postalCode: paymentIntent.metadata.postalCode || 'D01',
+            country: paymentIntent.metadata.country || 'IE'
+          },
         items,
-        shippingMethod: paymentIntent.metadata.shippingMethod,
+        shippingMethod: paymentIntent.metadata.shippingMethod || null,
         shippingCost_cents: shipping_cents,
         subtotal_cents: subtotal_cents,
         total_cents: paymentIntent.amount,
@@ -297,6 +327,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       };
       // Tentar criar document com ID específico (atomicidade)
       const orderRef = db.collection('orders').doc(orderId);
+      console.log('🔍 Iniciando transaction para order:', orderId);
+      console.log('🔍 Order ref path:', orderRef.path);
       try {
         await db.runTransaction(async (transaction) => {
           const orderDoc = await transaction.get(orderRef);
@@ -310,8 +342,14 @@ async function handlePaymentIntentSucceeded(event, requestId) {
             }));
             return;
           }
-          transaction.set(orderRef, order);
+          const cleanOrder = removeUndefined(order);
+          console.log('🧹 Order original fields:', Object.keys(order).length);
+          console.log('🧹 Order limpa fields:', Object.keys(cleanOrder).length);
+          transaction.set(orderRef, cleanOrder);
+          console.log('✅ Transaction.set executado');
         });
+        console.log('✅ Order criada com sucesso no Firestore');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         logger.info(JSON.stringify({
           msg: 'Order created successfully',
           orderId,
