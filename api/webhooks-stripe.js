@@ -6,6 +6,29 @@
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
+const admin = require('firebase-admin');
+const logger = require('./lib/logger');
+
+// Initialize Firebase Admin if credentials are provided
+if (!admin.apps || !admin.apps.length) {
+  try {
+    if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+      console.log('FIREBASE_SERVICE_ACCOUNT not configured; Firestore operations disabled');
+    } else {
+      const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+      let serviceAccount;
+      if (raw.trim().startsWith('{')) {
+        serviceAccount = JSON.parse(raw);
+      } else {
+        serviceAccount = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
+      }
+      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+      console.log('✅ Firebase Admin initialized');
+    }
+  } catch (e) {
+    console.warn('Failed to initialize Firebase Admin', e && e.message);
+  }
+}
 
 // Vercel serverless config
 module.exports.config = {
@@ -63,7 +86,7 @@ module.exports = async function handler(req, res) {
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await handlePaymentIntentSucceeded(event.data.object);
+        await handlePaymentIntentSucceeded(event.data.object, event);
         break;
 
       case 'payment_intent.payment_failed':
@@ -92,22 +115,129 @@ module.exports = async function handler(req, res) {
 /**
  * Handle successful payment
  */
-async function handlePaymentIntentSucceeded(paymentIntent) {
-  console.log('💳 Payment succeeded:', paymentIntent.id);
-  
-  // Extract order data from metadata
-  const { orderId, customerEmail, orderNumber } = paymentIntent.metadata;
+async function handlePaymentIntentSucceeded(paymentIntent, event) {
+  try {
+    logger.info('Processing payment_intent.succeeded', { paymentIntentId: paymentIntent.id });
 
-  // TODO: Update order status in database
-  // TODO: Send confirmation email via Resend
-  // TODO: Trigger inventory update
+    // 1. Gera orderId único
+    const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-  console.log('Order completed:', {
-    orderId,
-    orderNumber,
-    amount: paymentIntent.amount / 100,
-    customerEmail,
-  });
+    // 2. Parse items do metadata
+    let items = [];
+    try {
+      items = JSON.parse(paymentIntent.metadata.items || '[]');
+    } catch (e) {
+      logger.error('Failed to parse items from metadata', e);
+      items = [];
+    }
+
+    // 3. Monta documento do pedido
+    const orderData = {
+      orderId,
+      paymentIntentId: paymentIntent.id,
+      stripeCustomerId: paymentIntent.customer || null,
+      
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      
+      status: 'paid',
+      paymentStatus: paymentIntent.status,
+      
+      customerEmail: paymentIntent.metadata.email,
+      customerName: paymentIntent.metadata.name,
+      customerPhone: paymentIntent.metadata.phone || null,
+      
+      shippingAddress: {
+        street: paymentIntent.metadata.street,
+        number: paymentIntent.metadata.number,
+        complement: paymentIntent.metadata.complement || null,
+        neighborhood: paymentIntent.metadata.neighborhood,
+        city: paymentIntent.metadata.city,
+        state: paymentIntent.metadata.state,
+        postalCode: paymentIntent.metadata.postalCode,
+        country: paymentIntent.metadata.country || 'IE'
+      },
+      
+      items,
+      
+      shippingMethod: paymentIntent.metadata.shippingMethod,
+      shippingCost: parseInt(paymentIntent.metadata.shippingCost || 0),
+      
+      subtotal: parseInt(paymentIntent.metadata.subtotal || 0),
+      total: paymentIntent.amount,
+      
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      paidAt: admin.firestore.FieldValue.serverTimestamp(),
+      
+      source: 'webhook',
+      webhookEventId: event.id
+    };
+
+    // 4. Salva no Firestore
+    if (!admin.apps || !admin.apps.length) {
+      logger.warn('Firestore not initialized; skipping order save', { orderId });
+    } else {
+      const db = admin.firestore();
+      await db.collection('orders').doc(orderId).set(orderData);
+      logger.info('✅ Order saved to Firestore', { orderId });
+    }
+
+    // 5. Envia email de confirmação (fallback)
+    try {
+      const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://electricink-website.vercel.app';
+
+      const emailData = {
+        orderNumber: orderId,
+        email: orderData.customerEmail,
+        items: orderData.items,
+        totals: {
+          subtotal: orderData.subtotal,
+          shipping: orderData.shippingCost,
+          total: orderData.total
+        },
+        shipping: orderData.shippingAddress
+      };
+
+      // Customer confirmation
+      const custResp = await fetch(`${baseUrl}/api/send-order-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'order-confirmation', data: emailData })
+      });
+
+      if (custResp.ok) {
+        logger.info('✅ Confirmation email sent', { orderId });
+      } else {
+        logger.warn('⚠️ Email sending failed (non-critical)', { orderId, status: custResp.status });
+      }
+
+      // Admin notification
+      const adminResp = await fetch(`${baseUrl}/api/send-order-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'order-notification-admin', data: emailData })
+      });
+
+      if (adminResp.ok) {
+        logger.info('✅ Admin notification email sent', { orderId });
+      } else {
+        logger.warn('⚠️ Admin email failed (non-critical)', { orderId, status: adminResp.status });
+      }
+
+    } catch (emailError) {
+      logger.warn('⚠️ Email error (non-critical)', emailError);
+    }
+
+    return { success: true, orderId };
+
+  } catch (error) {
+    logger.error('❌ Error in handlePaymentIntentSucceeded', error);
+    captureException(error, { 
+      context: 'webhook-payment-intent-succeeded',
+      paymentIntentId: paymentIntent.id 
+    });
+    throw error; // Re-throw para Stripe retentar
+  }
 }
 
 /**
