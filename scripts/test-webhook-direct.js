@@ -15,8 +15,8 @@ const fetch = require('node-fetch');
         currency: 'eur',
         status: 'succeeded',
         metadata: {
-          email: 'test@electricink.ie',
-          name: 'Test Customer',
+          customer_email: 'test@electricink.ie',
+          customer_name: 'Test Customer',
           street: 'Test Street',
           number: '123',
           city: 'Dublin',

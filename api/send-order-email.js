@@ -14,12 +14,14 @@ try {
 }
 const fs = require('fs');
 const path = require('path');
+const publicBaseUrl = process.env.PUBLIC_BASE_URL || 'https://electricink.ie';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
 const { captureException } = require('./lib/sentry');
 
 // ❌ REMOVIDO DAQUI: const resend = new Resend(process.env.RESEND_API_KEY);
 // ✅ Agora será instanciado DENTRO do handler
 
-// ────────── Helper: Load Template ──────────
 function loadTemplate(templateName) {
   try {
     const templatePath = path.join(process.cwd(), 'email-templates', `${templateName}.html`);
@@ -46,11 +48,10 @@ function formatOrderItems(items) {
   return items.map(item => `
     <div class="order-item">
       <div class="item-image">
-        <img src="${item.image || 'https://electricink.ie/images/placeholder.jpg'}" alt="${item.name}">
+        <img src="${item.image || `${publicBaseUrl}/images/placeholder.jpg`}" alt="${item.name}">
       </div>
       <div class="item-details">
         <div class="item-name">${item.name}</div>
-        ${item.variant ? `<div class="item-variant">${item.variant}</div>` : ''}
         <div class="item-qty">Quantity: ${item.quantity}</div>
       </div>
       <div class="item-price">€${(item.price * item.quantity).toFixed(2)}</div>
@@ -62,7 +63,6 @@ function formatOrderItems(items) {
 function formatOrderItemsTable(items) {
   return items.map(item => `
     <tr>
-      <td>
         <span class="item-name">${item.name}</span>
         ${item.variant ? `<span class="item-variant">${item.variant}</span>` : ''}
       </td>
@@ -119,7 +119,7 @@ function enrichItems(items) {
     try { captureException(e, { fn: 'enrichItems' }); } catch (ie) { /* ignore */ }
   }
   
-  const publicBaseUrl = 'https://electricink.ie';
+  // publicBaseUrl já está definido no topo do arquivo
   return (items || []).map(item => {
     const product = products[item.id] || {};
     let variant = null;
@@ -157,7 +157,7 @@ module.exports = async function handler(req, res) {
   // CORS headers
   const ALLOWED_ORIGINS = [
     'https://electricink-website.vercel.app',
-    'https://electricink.ie',
+    publicBaseUrl,
     'http://localhost:3000',
     'http://127.0.0.1:3000'
   ];
@@ -209,7 +209,7 @@ module.exports = async function handler(req, res) {
       });
 
       emailResult = await resend.emails.send({
-        from: 'Electric Ink <noreply@electricink.ie>',
+        from: `Electric Ink <${EMAIL_FROM}>`,
         to: data.email,
         subject: `Order Confirmation #${orderNumber}`,
         html: html
@@ -232,7 +232,7 @@ module.exports = async function handler(req, res) {
       const html = replacePlaceholders(template, {
         ORDER_NUMBER: orderNumber,
         CUSTOMER_NAME: `${data.shipping?.firstName || ''} ${data.shipping?.lastName || ''}`,
-        CUSTOMER_EMAIL: data.email || '',
+        CUSTOMER_EMAIL: data.customer_email || '',
         CUSTOMER_PHONE: data.shipping?.phone || '',
         CUSTOMER_PHONE_WHATSAPP: phoneWhatsApp,
         SHIPPING_ADDRESS: shippingAddress,
@@ -249,8 +249,8 @@ module.exports = async function handler(req, res) {
       });
 
       emailResult = await resend.emails.send({
-        from: 'Electric Ink Orders <orders@electricink.ie>',
-        to: 'electricink.ie@gmail.com',
+        to: ADMIN_EMAIL,
+        from: `Electric Ink Orders <${EMAIL_FROM}>`,
         subject: `🔔 New Order #${orderNumber}`,
         html: html
       });
@@ -274,7 +274,7 @@ module.exports = async function handler(req, res) {
       });
 
       emailResult = await resend.emails.send({
-        from: 'Electric Ink <noreply@electricink.ie>',
+        from: `Electric Ink <${EMAIL_FROM}>`,
         to: data.email,
         subject: 'Payment Issue - Electric Ink IE',
         html: html

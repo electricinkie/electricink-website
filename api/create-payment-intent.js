@@ -124,7 +124,7 @@ async function checkRateLimit(key) {
  * @returns {number} Shipping cost in EUR
  */
 function calculateShipping(subtotal, address = {}) {
-  const FREE_SHIPPING_THRESHOLD = 130;
+  const FREE_SHIPPING_THRESHOLD = 120;
   const STANDARD_RATE = 11.50;
   const SAMEDAY_RATE = 7.50;
   const PICKUP_RATE = 0;
@@ -315,7 +315,7 @@ module.exports = async function handler(req, res) {
         variant: z.string().optional()
       })
     ).min(1, 'Cart cannot be empty').max(50, 'Max 50 different products'),
-    shippingMethod: z.enum(['standard', 'express', 'pickup', 'same-day'], {
+    shippingMethod: z.enum(['standard', 'pickup', 'same-day'], {
       errorMap: () => ({ message: 'Invalid shipping method' })
     }),
     email: z.string().email('Invalid email').optional(),
@@ -328,7 +328,7 @@ module.exports = async function handler(req, res) {
     const payload = {
       items: req.body.items || req.body.cartItems,
       shippingMethod: req.body.shippingMethod || (req.body.shippingAddress && req.body.shippingAddress.method) || 'standard',
-      email: req.body.email || (req.body.metadata && req.body.metadata.customer_email),
+      customer_email: req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email),
       name: req.body.name || (req.body.metadata && req.body.metadata.customer_name)
     };
 
@@ -394,7 +394,8 @@ module.exports = async function handler(req, res) {
           timestamp: Math.floor(Date.now() / 300000) // 5 minutos
         }))
         .digest('hex');
-      const idempotencyKey = `pi_${cartHash}`;
+      const emailHash = crypto.createHash('sha256').update(req.body.customer_email || req.body.email || (metadata && metadata.customer_email) || 'guest').digest('hex').substring(0, 8);
+      const idempotencyKey = `pi_${emailHash}_${cartHash}`;
 
       // Build a sanitized metadata object (whitelist) to avoid client-side injection
       const itemsSnapshot = JSON.stringify(items.map(i => ({ id: i.id, q: i.quantity })));
@@ -403,7 +404,8 @@ module.exports = async function handler(req, res) {
         // allow only minimal, non-sensitive fields from client
         customer_email: incomingMetadata.customer_email || incomingMetadata.email || '',
         customer_name: incomingMetadata.customer_name || incomingMetadata.name || '',
-        items: itemsSnapshot,
+        // Store compact items representation to avoid Stripe metadata limits
+        items: JSON.stringify(items.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity }))),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
         backend_validated: 'true'
