@@ -449,11 +449,12 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           });
 
           if (db) {
-            await db.collection('orders').doc(orderId).update({
+            const emailUpdate = removeUndefined({
               adminEmailStatus: 'sent',
               adminEmailId: adminEmailResult.id,
               adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
             });
+            await db.collection('orders').doc(orderId).update(emailUpdate);
           }
 
         } catch (emailError) {
@@ -465,14 +466,15 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           });
 
           if (db) {
-            await db.collection('orders').doc(orderId).update({
+            const emailErrorUpdate = removeUndefined({
               adminEmailStatus: 'failed',
               adminEmailError: emailError.message,
               adminEmailErrorCode: emailError.statusCode,
               adminEmailFailedAt: admin.firestore.FieldValue.serverTimestamp()
             });
+            await db.collection('orders').doc(orderId).update(emailErrorUpdate);
 
-            await db.collection('failed_emails').add({
+            await db.collection('failed_emails').add(removeUndefined({
               type: 'admin',
               orderId: orderId,
               orderData: { orderId },
@@ -480,7 +482,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
               errorCode: emailError.statusCode,
               attemptedAt: admin.firestore.FieldValue.serverTimestamp(),
               retryCount: 0
-            });
+            }));
           }
 
           console.warn('[EMAIL-DEBUG] Webhook continuing despite email failure');
