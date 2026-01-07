@@ -412,13 +412,19 @@ module.exports = async function handler(req, res) {
         .digest('hex');
       const idempotencyKey = `pi_${cartHash}`;
 
-      // Include minimal immutable snapshot of items in metadata so webhook can reconstruct the order
-      // Keep metadata small to avoid Stripe metadata limits: only id and quantity.
+      // Build a sanitized metadata object (whitelist) to avoid client-side injection
       const itemsSnapshot = JSON.stringify(items.map(i => ({ id: i.id, q: i.quantity })));
-      metadata.items = itemsSnapshot;
-      // Also include totals in cents to avoid unit inconsistencies later in the webhook
-      metadata.subtotal_cents = String(Math.round(totals.subtotal * 100));
-      metadata.shipping_cents = String(Math.round(totals.shipping * 100));
+      const incomingMetadata = req.body.metadata || {};
+      const metadataSanitized = {
+        // allow only minimal, non-sensitive fields from client
+        customer_email: incomingMetadata.customer_email || incomingMetadata.email || '',
+        customer_name: incomingMetadata.customer_name || incomingMetadata.name || '',
+        items: itemsSnapshot,
+        subtotal_cents: String(Math.round(totals.subtotal * 100)),
+        shipping_cents: String(Math.round(totals.shipping * 100)),
+        backend_validated: 'true'
+      };
+      metadata = metadataSanitized;
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents

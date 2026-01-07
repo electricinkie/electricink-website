@@ -109,9 +109,15 @@ function enrichItems(items) {
       try {
         const obj = require(path.join(dataDir, file));
         if (obj && typeof obj === 'object') products = { ...products, ...obj };
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Failed to load product data file', file, e && e.message);
+        try { captureException(e, { file }); } catch (ie) { /* ignore */ }
+      }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.warn('Failed to read data directory for enrichItems:', e && e.message);
+    try { captureException(e, { fn: 'enrichItems' }); } catch (ie) { /* ignore */ }
+  }
   
   const publicBaseUrl = 'https://electricink.ie';
   return (items || []).map(item => {

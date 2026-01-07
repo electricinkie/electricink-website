@@ -40,6 +40,14 @@
             dsn: SENTRY_DSN,
             environment: window.location.hostname.includes('vercel.app') ? 'preview' : 'production',
             sampleRate: 1.0,
+            integrations: [
+              // if console logging integration is available on the bundle, enable it
+              (window.Sentry && typeof window.Sentry.consoleLoggingIntegration === 'function')
+                ? window.Sentry.consoleLoggingIntegration({ levels: ['log', 'warn', 'error'] })
+                : undefined
+            ],
+            // Enable logs to be sent to Sentry
+            enableLogs: true,
             beforeSend(event) {
               try {
                 const cart = localStorage.getItem('electricink_cart');

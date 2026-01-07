@@ -205,12 +205,13 @@ module.exports = async function handler(req, res) {
       status: 'error'
     }));
     captureException(error);
-    // Retornar 200 mesmo com erro para evitar re-tentativas infinitas
-    // (Stripe já salvou o evento, podemos reprocessar manualmente se necessário)
-    return res.status(200).json({ 
-      received: true,
-      error: 'Processing failed but acknowledged',
-      reason: error.message 
+    // Retornar 500 para erros de processamento transientes para que
+    // Stripe possa re-tentar automaticamente. Somente ocultar falhas
+    // não-retriáveis explicitamente.
+    return res.status(500).json({ 
+      error: 'Webhook processing failed',
+      reason: error.message,
+      requestId
     });
   }
 };
@@ -225,9 +226,18 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     const paymentIntent = event.data.object;
     const orderId = paymentIntent.id; // ID único do Stripe
 
+    // Fail-fast: if Firestore isn't initialized we MUST fail the webhook so Stripe retries
     if (!db) {
-      logger.warn(JSON.stringify({
-        msg: 'Firestore not initialized; skipping order save', orderId, requestId, timestamp: new Date().toISOString(), status: 'warn' }));
+      const error = new Error('Firestore not initialized');
+      logger.error(JSON.stringify({
+        msg: 'Firestore not initialized - cannot save order', 
+        orderId, 
+        requestId, 
+        timestamp: new Date().toISOString(), 
+        status: 'error' 
+      }));
+      captureException(error, { context: 'webhook-firestore-init', requestId });
+      throw error;
     } else {
       // Usar items direto do metadata (sem enrichment)
       let items = [];
@@ -244,11 +254,17 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         }));
         items = [];
       }
+
+      // Prefer cents metadata (added by backend). Fallback to legacy fields.
+      const subtotal_cents = parseInt(paymentIntent.metadata.subtotal_cents || paymentIntent.metadata.subtotal || '0', 10);
+      const shipping_cents = parseInt(paymentIntent.metadata.shipping_cents || paymentIntent.metadata.shippingCost || '0', 10);
+
       const order = {
         orderId,
         paymentIntentId: paymentIntent.id,
         stripeCustomerId: paymentIntent.customer || null,
-        amount: paymentIntent.amount,
+        // Monetary values stored in cents (integer)
+        amount: paymentIntent.amount, // total in cents
         currency: paymentIntent.currency,
         status: 'paid',
         paymentStatus: paymentIntent.status,
@@ -267,9 +283,13 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         },
         items,
         shippingMethod: paymentIntent.metadata.shippingMethod,
-        shippingCost: parseInt(paymentIntent.metadata.shippingCost || 0),
-        subtotal: parseInt(paymentIntent.metadata.subtotal || 0),
-        total: paymentIntent.amount,
+        shippingCost_cents: shipping_cents,
+        subtotal_cents: subtotal_cents,
+        total_cents: paymentIntent.amount,
+        // Backwards-compatible human-readable values (EUR)
+        shippingCost: (shipping_cents / 100),
+        subtotal: (subtotal_cents / 100),
+        total: (paymentIntent.amount / 100),
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         paidAt: admin.firestore.FieldValue.serverTimestamp(),
         source: 'webhook',
@@ -356,7 +376,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         console.log('[EMAIL-DEBUG] Environment check:', {
           resendConfigured: !!resend,
           hasApiKey: !!process.env.RESEND_API_KEY,
-          apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 8) + '...',
           nodeEnv: process.env.NODE_ENV
         });
 
