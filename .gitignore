@@ -35,6 +35,10 @@ Thumbs.db
 *.swp
 *.swo
 
+# Firebase Service Account Key (NUNCA versionar)
+serviceAccountKey.json
+api/serviceAccountKey.json
+
 # Editor
 .vscode/
 .idea/
@@ -61,3 +65,5 @@ coverage/
 tmp/
 temp/
 *.tmp
+service-account-base64.txt
+dev-server.log
