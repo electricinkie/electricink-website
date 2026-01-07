@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Função helper
+    function isAdmin() {
+      return request.auth != null 
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Users: apenas o próprio usuário pode ler/criar seu doc
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && !request.resource.data.keys().hasAny(['role']); // NÃO pode setar role
+      allow update: if false; // Apenas admin via console
+    }
+    
+    // Orders: APENAS admin pode ler/atualizar
+    match /orders/{orderId} {
+      allow read: if isAdmin();
+      allow update: if isAdmin() 
+        && request.resource.data.keys().hasOnly(['status', 'updatedAt', 'trackingNumber']);
+      allow create: if false; // Apenas webhook pode criar
+    }
+    
+    // Bloqueia tudo que não tem regra
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

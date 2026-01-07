@@ -218,7 +218,7 @@ module.exports = async function handler(req, res) {
 /**
  * Handle successful payment
  */
-async function handlePaymentIntentSucceeded(paymentIntent, event, requestId) {
+async function handlePaymentIntentSucceeded(event, requestId) {
   try {
     // ============ IDEMPOTÊNCIA: usar paymentIntent.id como orderId ============
     const db = admin.apps && admin.apps.length ? admin.firestore() : null;

@@ -412,17 +412,13 @@ module.exports = async function handler(req, res) {
         .digest('hex');
       const idempotencyKey = `pi_${cartHash}`;
 
-      // Include immutable snapshot of items in metadata so webhook can reconstruct the order
-      const itemsSnapshot = JSON.stringify(items.map(i => ({
-        id: i.id,
-        name: i.name || '',
-        quantity: i.quantity,
-        price: i.price
-      })));
-      if (itemsSnapshot.length > 500) {
-        throw new Error('Snapshot of items for metadata exceeds 500 characters. Reduce cart size or item details.');
-      }
+      // Include minimal immutable snapshot of items in metadata so webhook can reconstruct the order
+      // Keep metadata small to avoid Stripe metadata limits: only id and quantity.
+      const itemsSnapshot = JSON.stringify(items.map(i => ({ id: i.id, q: i.quantity })));
       metadata.items = itemsSnapshot;
+      // Also include totals in cents to avoid unit inconsistencies later in the webhook
+      metadata.subtotal_cents = String(Math.round(totals.subtotal * 100));
+      metadata.shipping_cents = String(Math.round(totals.shipping * 100));
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
