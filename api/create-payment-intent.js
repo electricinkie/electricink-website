@@ -412,6 +412,28 @@ module.exports = async function handler(req, res) {
       };
       metadata = metadataSanitized;
 
+      // Build a CHECKOUT payload using explicit `stripe_price_id` provided by the
+      // frontend. Do NOT attempt to guess or infer Stripe price IDs server-side.
+      try {
+        // Mandatory blindagem: every incoming cart item must include `stripe_price_id`
+        items.forEach(item => {
+          if (!item.stripe_price_id) {
+            const nameOrId = item.name || item.id || 'unknown';
+            throw new Error(`Invalid cart item: missing stripe_price_id (${nameOrId})`);
+          }
+        });
+
+        const lineItems = items.map(item => ({
+          price: item.stripe_price_id,
+          quantity: item.quantity
+        }));
+
+        logger.info('CHECKOUT_PAYLOAD', { lineItems });
+      } catch (e) {
+        logger.error('Failed to build CHECKOUT_PAYLOAD for audit', e && e.message);
+        throw e; // propagate so the request fails fast when price IDs are missing
+      }
+
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
         currency: 'eur',

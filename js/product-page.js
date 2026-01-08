@@ -14,6 +14,7 @@
   // LOAD products from multiple JSON files (cosmetics + needles)
   let productData;
   const productFiles = [
+    '/data/product-accessories.json',
     '/data/products-cosmetics.json',
     '/data/products-artistic-inks.json',
     '/data/products-needles-022.json',
@@ -200,6 +201,20 @@
     variantSelect.dispatchEvent(new Event('change'));
   }
 
+  // ======= Helper: Resolve Stripe priceId (FRONT) =======
+  function resolveStripePriceId(product, variant) {
+    if (variant && (variant.stripe_price_id || variant.priceId || variant.price_id)) {
+      return variant.stripe_price_id || variant.priceId || variant.price_id;
+    }
+    if (product && product.stripe && (product.stripe.priceId || product.stripe.price_id)) {
+      return product.stripe.priceId || product.stripe.price_id;
+    }
+    if (product && (product.priceId || product.price_id)) {
+      return product.priceId || product.price_id;
+    }
+    throw new Error(`Stripe priceId not found for product ${product && product.id}`);
+  }
+
   // RENDER How to Use accordion (if exists and NOT cartridges)
   if (productData.content?.usage_instructions && category !== 'cartridges') {
     const howToContainer = document.getElementById('productHowToUse');
@@ -353,29 +368,51 @@
         return;
       }
       
+      // Resolve priceId explicitly and fail if missing
+      let resolvedPriceId;
+      try {
+        resolvedPriceId = resolveStripePriceId(productData, selectedVariant);
+      } catch (err) {
+        console.error('Stripe price resolution failed (variant):', err);
+        alert('Product price not configured correctly. Please contact support.');
+        return;
+      }
+
+      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
+
       itemToAdd = {
         id: `${productId}-${selectedVariant.id}`,
         name: `${name} - ${selectedVariant.label}`,
         price: selectedVariant.price,
-        stripe_price_id: selectedVariant.stripe_price_id,
+        stripe_price_id: resolvedPriceId,
         image: selectedVariant.image || mainImage,
         variant: selectedVariant.label
       };
     } else {
       // Simple product
       const price = productData.basic?.price || productData.price;
-      const priceId = productData.stripe?.price_id || productData.price_id;
-      
+      // Resolve priceId explicitly and fail if missing
+      let resolvedPriceId;
+      try {
+        resolvedPriceId = resolveStripePriceId(productData, undefined);
+      } catch (err) {
+        console.error('Stripe price resolution failed (simple product):', err, productData);
+        alert('Product price not configured correctly. Please contact support.');
+        return;
+      }
+
+      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: null, resolvedPriceId });
+
       if (!price) {
         alert('Product price not available');
         return;
       }
-      
+
       itemToAdd = {
         id: productId,
         name: name,
         price: price,
-        stripe_price_id: priceId,
+        stripe_price_id: resolvedPriceId,
         image: mainImage
       };
     }

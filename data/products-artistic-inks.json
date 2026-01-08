@@ -9,13 +9,40 @@
       "Improves flow",
       "Sterile and gamma-treated"
     ],
-    "stripe": {"productId": "prod_TkKwH2bSLeWfNQ", "priceId": "price_1SmqH4Aiq7NBxfpwjk4vVkAR"},
+    "stripe": {
+      "productId": "prod_TkKwH2bSLeWfNQ",
+      "priceId": "price_1SmqH4Aiq7NBxfpwjk4vVkAR"
+    },
     "price": 4.25,
     "size": "30mL",
     "variants": [
-      {"id": "diluent-30ml", "size": "30mL", "label": "30mL", "price": 4.25, "priceId": "price_1SmqH4Aiq7NBxfpwjk4vVkAR", "stripe_price_id": "price_1SmqH4Aiq7NBxfpwjk4vVkAR", "image": "/images/products/artistic-inks/30ml-diluente.webp"},
-      {"id": "diluent-120ml", "size": "120mL", "label": "120mL", "price": 10.00, "priceId": "price_1SmqH4Aiq7NBxfpwBzvkAyGy", "stripe_price_id": "price_1SmqH4Aiq7NBxfpwBzvkAyGy", "image": "/images/products/artistic-inks/120ml-diluente.webp"},
-      {"id": "diluent-240ml", "size": "240mL", "label": "240mL", "price": 16.00, "priceId": "price_1SmqH4Aiq7NBxfpw88DpmqhM", "stripe_price_id": "price_1SmqH4Aiq7NBxfpw88DpmqhM", "image": "/images/products/artistic-inks/240ml-diluente.webp"}
+      {
+        "id": "diluent-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 4.25,
+        "priceId": "price_1SmqH4Aiq7NBxfpwjk4vVkAR",
+        "stripe_price_id": "price_1SmqH4Aiq7NBxfpwjk4vVkAR",
+        "image": "/images/products/artistic-inks/30ml-diluente.webp"
+      },
+      {
+        "id": "diluent-120ml",
+        "size": "120mL",
+        "label": "120mL",
+        "price": 10.0,
+        "priceId": "price_1SmqH4Aiq7NBxfpwBzvkAyGy",
+        "stripe_price_id": "price_1SmqH4Aiq7NBxfpwBzvkAyGy",
+        "image": "/images/products/artistic-inks/120ml-diluente.webp"
+      },
+      {
+        "id": "diluent-240ml",
+        "size": "240mL",
+        "label": "240mL",
+        "price": 16.0,
+        "priceId": "price_1SmqH4Aiq7NBxfpw88DpmqhM",
+        "stripe_price_id": "price_1SmqH4Aiq7NBxfpw88DpmqhM",
+        "image": "/images/products/artistic-inks/240ml-diluente.webp"
+      }
     ],
     "image": "/images/products/artistic-inks/30ml-diluente.webp",
     "images": [
@@ -32,7 +59,6 @@
     "featured": true,
     "reachCompliant": false
   },
-
   "raven-black": {
     "id": "raven-black",
     "name": "Raven Black",
@@ -44,12 +70,31 @@
       "No sedimentation or coagulation",
       "High resistance to fading"
     ],
-    "stripe": {"productId": "prod_TkKPQEPTC3ZJyU", "priceId": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw"},
+    "stripe": {
+      "productId": "prod_TkKPQEPTC3ZJyU",
+      "priceId": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw"
+    },
     "price": 21.25,
     "size": "30mL",
     "variants": [
-      {"id": "raven-black-30ml", "size": "30mL", "label": "30mL", "price": 21.25, "priceId": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw", "stripe_price_id": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw", "image": "/images/products/artistic-inks/30ml-raven-black.webp"},
-      {"id": "raven-black-240ml", "size": "240mL", "label": "240mL", "price": 63.00, "priceId": "price_1SmpkxAiq7NBxfpwRH2EdnbF", "stripe_price_id": "price_1SmpkxAiq7NBxfpwRH2EdnbF", "image": "/images/products/artistic-inks/240ml-raven-black.webp"}
+      {
+        "id": "raven-black-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw",
+        "stripe_price_id": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw",
+        "image": "/images/products/artistic-inks/30ml-raven-black.webp"
+      },
+      {
+        "id": "raven-black-240ml",
+        "size": "240mL",
+        "label": "240mL",
+        "price": 63.0,
+        "priceId": "price_1SmpkxAiq7NBxfpwRH2EdnbF",
+        "stripe_price_id": "price_1SmpkxAiq7NBxfpwRH2EdnbF",
+        "image": "/images/products/artistic-inks/240ml-raven-black.webp"
+      }
     ],
     "image": "/images/products/artistic-inks/30ml-raven-black.webp",
     "images": [
@@ -66,7 +111,6 @@
     "featured": true,
     "reachCompliant": true
   },
-
   "ghost-white": {
     "id": "ghost-white",
     "name": "Ghost White",
@@ -78,13 +122,40 @@
       "No sedimentation or coagulation",
       "High resistance to fading"
     ],
-    "stripe": {"productId": "prod_TkKT0jR3CSgXAr", "priceId": "price_1SmpotAiq7NBxfpwwxlsH0n2"},
+    "stripe": {
+      "productId": "prod_TkKT0jR3CSgXAr",
+      "priceId": "price_1SmpotAiq7NBxfpwwxlsH0n2"
+    },
     "price": 21.25,
     "size": "30mL",
     "variants": [
-      {"id": "ghost-white-30ml", "size": "30mL", "label": "30mL", "price": 21.25, "priceId": "price_1SmpotAiq7NBxfpwwxlsH0n2", "stripe_price_id": "price_1SmpotAiq7NBxfpwwxlsH0n2", "image": "/images/products/artistic-inks/30ml-ghost-white.webp"},
-      {"id": "ghost-white-120ml", "size": "120mL", "label": "120mL", "price": 42.00, "priceId": "price_1SmpotAiq7NBxfpwKpqM0VyR", "stripe_price_id": "price_1SmpotAiq7NBxfpwKpqM0VyR", "image": "/images/products/artistic-inks/120ml-ghost-white.webp"},
-      {"id": "ghost-white-240ml", "size": "240mL", "label": "240mL", "price": 63.00, "priceId": "price_1SmpotAiq7NBxfpwBS44QqtX", "stripe_price_id": "price_1SmpotAiq7NBxfpwBS44QqtX", "image": "/images/products/artistic-inks/240ml-ghost-white.webp"}
+      {
+        "id": "ghost-white-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmpotAiq7NBxfpwwxlsH0n2",
+        "stripe_price_id": "price_1SmpotAiq7NBxfpwwxlsH0n2",
+        "image": "/images/products/artistic-inks/30ml-ghost-white.webp"
+      },
+      {
+        "id": "ghost-white-120ml",
+        "size": "120mL",
+        "label": "120mL",
+        "price": 42.0,
+        "priceId": "price_1SmpotAiq7NBxfpwKpqM0VyR",
+        "stripe_price_id": "price_1SmpotAiq7NBxfpwKpqM0VyR",
+        "image": "/images/products/artistic-inks/120ml-ghost-white.webp"
+      },
+      {
+        "id": "ghost-white-240ml",
+        "size": "240mL",
+        "label": "240mL",
+        "price": 63.0,
+        "priceId": "price_1SmpotAiq7NBxfpwBS44QqtX",
+        "stripe_price_id": "price_1SmpotAiq7NBxfpwBS44QqtX",
+        "image": "/images/products/artistic-inks/240ml-ghost-white.webp"
+      }
     ],
     "image": "/images/products/artistic-inks/30ml-ghost-white.webp",
     "images": [
@@ -102,7 +173,6 @@
     "featured": true,
     "reachCompliant": true
   },
-
   "red": {
     "id": "red",
     "name": "Red",
@@ -114,11 +184,22 @@
       "No sedimentation or coagulation",
       "High resistance to fading"
     ],
-    "stripe": {"productId": "prod_TkKW0d7nf9TUXa", "priceId": "price_1SmprRAiq7NBxfpwVL8NKUBi"},
+    "stripe": {
+      "productId": "prod_TkKW0d7nf9TUXa",
+      "priceId": "price_1SmprRAiq7NBxfpwVL8NKUBi"
+    },
     "price": 21.25,
     "size": "30mL",
     "variants": [
-      {"id": "red-30ml", "size": "30mL", "label": "30mL", "price": 21.25, "priceId": "price_1SmprRAiq7NBxfpwVL8NKUBi", "stripe_price_id": "price_1SmprRAiq7NBxfpwVL8NKUBi", "image": "/images/products/artistic-inks/30ml-red.webp"}
+      {
+        "id": "red-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmprRAiq7NBxfpwVL8NKUBi",
+        "stripe_price_id": "price_1SmprRAiq7NBxfpwVL8NKUBi",
+        "image": "/images/products/artistic-inks/30ml-red.webp"
+      }
     ],
     "image": "/images/products/artistic-inks/30ml-red.webp",
     "images": [
@@ -134,8 +215,7 @@
     "featured": false,
     "reachCompliant": true
   },
-
-"orange": {
+  "orange": {
     "id": "orange",
     "name": "Orange",
     "category": "Inks",
@@ -540,26 +620,41 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe": {"productId":"prod_TkKk2JXM14pZX0","priceId":"price_1Smq5EAiq7NBxfpw3f5Tia6P"},
-    "price":21.25,
-    "size":"30mL",
+    "stripe": {
+      "productId": "prod_TkKk2JXM14pZX0",
+      "priceId": "price_1Smq5EAiq7NBxfpw3f5Tia6P"
+    },
+    "price": 21.25,
+    "size": "30mL",
     "variants": [
-      {"id": "deepest-pink-30ml", "size": "30mL", "label": "30mL", "price": 21.25, "priceId": "price_1Smq5EAiq7NBxfpw3f5Tia6P", "stripe_price_id": "price_1Smq5EAiq7NBxfpw3f5Tia6P", "image": "/images/products/artistic-inks/30ml-deepest-pink.webp"}
+      {
+        "id": "deepest-pink-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1Smq5EAiq7NBxfpw3f5Tia6P",
+        "stripe_price_id": "price_1Smq5EAiq7NBxfpw3f5Tia6P",
+        "image": "/images/products/artistic-inks/30ml-deepest-pink.webp"
+      }
     ],
-    "image":"/images/products/artistic-inks/30ml-deepest-pink.webp",
-    "images":["/images/products/artistic-inks/30ml-deepest-pink.webp","/images/products/artistic-inks/raio-deepest-pink.webp"],
+    "image": "/images/products/artistic-inks/30ml-deepest-pink.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-deepest-pink.webp",
+      "/images/products/artistic-inks/30ml-deepest-pink.webp",
+      "/images/products/artistic-inks/raio-deepset-pink.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-      "reachCompliant": false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "electric-blue": {
-    "id":"electric-blue",
-    "name":"Electric Blue",
+    "id": "electric-blue",
+    "name": "Electric Blue",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -568,24 +663,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKl7Qaw2HO1Un","priceId":"price_1Smq5pAiq7NBxfpwEQ9WuIjk"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"electric-blue-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1Smq5pAiq7NBxfpwEQ9WuIjk","stripe_price_id":"price_1Smq5pAiq7NBxfpwEQ9WuIjk","image":"/images/products/artistic-inks/30ml-electric-blue.webp"}],
-    "image":"/images/products/artistic-inks/30ml-electric-blue.webp",
-    "images":["/images/products/artistic-inks/30ml-electric-blue.webp","/images/products/artistic-inks/raio-electric-blue.webp"],
+    "stripe": {
+      "productId": "prod_TkKl7Qaw2HO1Un",
+      "priceId": "price_1Smq5pAiq7NBxfpwEQ9WuIjk"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "electric-blue-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1Smq5pAiq7NBxfpwEQ9WuIjk",
+        "stripe_price_id": "price_1Smq5pAiq7NBxfpwEQ9WuIjk",
+        "image": "/images/products/artistic-inks/30ml-electric-blue.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-electric-blue.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-electric-blue.webp",
+      "/images/products/artistic-inks/raio-electric-blue.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "olympic-blue": {
-    "id":"olympic-blue",
-    "name":"Olympic Blue",
+    "id": "olympic-blue",
+    "name": "Olympic Blue",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -594,24 +705,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKmKryuEM9GkU","priceId":"price_1Smq6XAiq7NBxfpwBmByn5Ev"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"olympic-blue-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1Smq6XAiq7NBxfpwBmByn5Ev","stripe_price_id":"price_1Smq6XAiq7NBxfpwBmByn5Ev","image":"/images/products/artistic-inks/30ml-olympic-blue.webp"}],
-    "image":"/images/products/artistic-inks/30ml-olympic-blue.webp",
-    "images":["/images/products/artistic-inks/30ml-olympic-blue.webp","/images/products/artistic-inks/raio-olympic-blue.webp"],
+    "stripe": {
+      "productId": "prod_TkKmKryuEM9GkU",
+      "priceId": "price_1Smq6XAiq7NBxfpwBmByn5Ev"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "olympic-blue-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1Smq6XAiq7NBxfpwBmByn5Ev",
+        "stripe_price_id": "price_1Smq6XAiq7NBxfpwBmByn5Ev",
+        "image": "/images/products/artistic-inks/30ml-olympic-blue.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-olympic-blue.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-olympic-blue.webp",
+      "/images/products/artistic-inks/raio-olympic-blue.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "navy-blue": {
-    "id":"navy-blue",
-    "name":"Navy Blue",
+    "id": "navy-blue",
+    "name": "Navy Blue",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -620,24 +747,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKmEsn3GU0HYJ","priceId":"price_1Smq70Aiq7NBxfpwkrykpndl"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"navy-blue-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1Smq70Aiq7NBxfpwkrykpndl","stripe_price_id":"price_1Smq70Aiq7NBxfpwkrykpndl","image":"/images/products/artistic-inks/30ml-navy-blue.webp"}],
-    "image":"/images/products/artistic-inks/30ml-navy-blue.webp",
-    "images":["/images/products/artistic-inks/30ml-navy-blue.webp","/images/products/artistic-inks/raio-navy-blue.webp"],
+    "stripe": {
+      "productId": "prod_TkKmEsn3GU0HYJ",
+      "priceId": "price_1Smq70Aiq7NBxfpwkrykpndl"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "navy-blue-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1Smq70Aiq7NBxfpwkrykpndl",
+        "stripe_price_id": "price_1Smq70Aiq7NBxfpwkrykpndl",
+        "image": "/images/products/artistic-inks/30ml-navy-blue.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-navy-blue.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-navy-blue.webp",
+      "/images/products/artistic-inks/raio-navy-blue.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "deep-violet": {
-    "id":"deep-violet",
-    "name":"Deep Violet",
+    "id": "deep-violet",
+    "name": "Deep Violet",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -646,24 +789,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKptYBJKM6qjC","priceId":"price_1Smq9zAiq7NBxfpwSvINK6OS"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"deep-violet-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1Smq9zAiq7NBxfpwSvINK6OS","stripe_price_id":"price_1Smq9zAiq7NBxfpwSvINK6OS","image":"/images/products/artistic-inks/30ml-deep-violet.webp"}],
-    "image":"/images/products/artistic-inks/30ml-deep-violet.webp",
-    "images":["/images/products/artistic-inks/30ml-deep-violet.webp","/images/products/artistic-inks/raio-deep-violet.webp"],
+    "stripe": {
+      "productId": "prod_TkKptYBJKM6qjC",
+      "priceId": "price_1Smq9zAiq7NBxfpwSvINK6OS"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "deep-violet-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1Smq9zAiq7NBxfpwSvINK6OS",
+        "stripe_price_id": "price_1Smq9zAiq7NBxfpwSvINK6OS",
+        "image": "/images/products/artistic-inks/30ml-deep-violet.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-deep-violet.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-deep-violet.webp",
+      "/images/products/artistic-inks/raio-deep-violet.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "brilliant-green": {
-    "id":"brilliant-green",
-    "name":"Brilliant Green",
+    "id": "brilliant-green",
+    "name": "Brilliant Green",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -672,24 +831,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKqWbtqat4Fny","priceId":"price_1SmqAgAiq7NBxfpwGD20oscK"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"brilliant-green-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqAgAiq7NBxfpwGD20oscK","stripe_price_id":"price_1SmqAgAiq7NBxfpwGD20oscK","image":"/images/products/artistic-inks/30ml-brilliant-green.webp"}],
-    "image":"/images/products/artistic-inks/30ml-brilliant-green.webp",
-    "images":["/images/products/artistic-inks/30ml-brilliant-green.webp","/images/products/artistic-inks/raio-brilliant-green.webp"],
+    "stripe": {
+      "productId": "prod_TkKqWbtqat4Fny",
+      "priceId": "price_1SmqAgAiq7NBxfpwGD20oscK"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "brilliant-green-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqAgAiq7NBxfpwGD20oscK",
+        "stripe_price_id": "price_1SmqAgAiq7NBxfpwGD20oscK",
+        "image": "/images/products/artistic-inks/30ml-brilliant-green.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-brilliant-green.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-brilliant-green.webp",
+      "/images/products/artistic-inks/raio-brilliant-green.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "snake-green": {
-    "id":"snake-green",
-    "name":"Snake Green",
+    "id": "snake-green",
+    "name": "Snake Green",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -698,24 +873,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKrOrCdJaSM4F","priceId":"price_1SmqBQAiq7NBxfpwGs86JVYa"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"snake-green-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqBQAiq7NBxfpwGs86JVYa","stripe_price_id":"price_1SmqBQAiq7NBxfpwGs86JVYa","image":"/images/products/artistic-inks/30ml-snake-green.webp"}],
-    "image":"/images/products/artistic-inks/30ml-snake-green.webp",
-    "images":["/images/products/artistic-inks/30ml-snake-green.webp","/images/products/artistic-inks/raio-snake-green.webp"],
+    "stripe": {
+      "productId": "prod_TkKrOrCdJaSM4F",
+      "priceId": "price_1SmqBQAiq7NBxfpwGs86JVYa"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "snake-green-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqBQAiq7NBxfpwGs86JVYa",
+        "stripe_price_id": "price_1SmqBQAiq7NBxfpwGs86JVYa",
+        "image": "/images/products/artistic-inks/30ml-snake-green.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-snake-green.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-snake-green.webp",
+      "/images/products/artistic-inks/raio-snake-green.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "true-green": {
-    "id":"true-green",
-    "name":"True Green",
+    "id": "true-green",
+    "name": "True Green",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -724,24 +915,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKrjCTZzHPD0C","priceId":"price_1SmqBwAiq7NBxfpwx8AZUjgC"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"true-green-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqBwAiq7NBxfpwx8AZUjgC","stripe_price_id":"price_1SmqBwAiq7NBxfpwx8AZUjgC","image":"/images/products/artistic-inks/30ml-true-green.webp"}],
-    "image":"/images/products/artistic-inks/30ml-true-green.webp",
-    "images":["/images/products/artistic-inks/30ml-true-green.webp","/images/products/artistic-inks/raio-true-green.webp"],
+    "stripe": {
+      "productId": "prod_TkKrjCTZzHPD0C",
+      "priceId": "price_1SmqBwAiq7NBxfpwx8AZUjgC"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "true-green-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqBwAiq7NBxfpwx8AZUjgC",
+        "stripe_price_id": "price_1SmqBwAiq7NBxfpwx8AZUjgC",
+        "image": "/images/products/artistic-inks/30ml-true-green.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-true-green.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-true-green.webp",
+      "/images/products/artistic-inks/raio-true-green.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "deepest-green": {
-    "id":"deepest-green",
-    "name":"Deepest Green",
+    "id": "deepest-green",
+    "name": "Deepest Green",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -750,24 +957,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKsRWX1GBwQqb","priceId":"price_1SmqCaAiq7NBxfpwLiyjepQv"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"deepest-green-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqCaAiq7NBxfpwLiyjepQv","stripe_price_id":"price_1SmqCaAiq7NBxfpwLiyjepQv","image":"/images/products/artistic-inks/30ml-deepest-green.webp"}],
-    "image":"/images/products/artistic-inks/30ml-deepest-green.webp",
-    "images":["/images/products/artistic-inks/30ml-deepest-green.webp","/images/products/artistic-inks/raio-deepest-green.webp"],
+    "stripe": {
+      "productId": "prod_TkKsRWX1GBwQqb",
+      "priceId": "price_1SmqCaAiq7NBxfpwLiyjepQv"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "deepest-green-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqCaAiq7NBxfpwLiyjepQv",
+        "stripe_price_id": "price_1SmqCaAiq7NBxfpwLiyjepQv",
+        "image": "/images/products/artistic-inks/30ml-deepest-green.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-deepest-green.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-deepest-green.webp",
+      "/images/products/artistic-inks/raio-deepest-green.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "golden-tan": {
-    "id":"golden-tan",
-    "name":"Golden Tan",
+    "id": "golden-tan",
+    "name": "Golden Tan",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -776,24 +999,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKsyy7E0mgy64","priceId":"price_1SmqD4Aiq7NBxfpwNfyDwB6s"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"golden-tan-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqD4Aiq7NBxfpwNfyDwB6s","stripe_price_id":"price_1SmqD4Aiq7NBxfpwNfyDwB6s","image":"/images/products/artistic-inks/30ml-golden-tan.webp"}],
-    "image":"/images/products/artistic-inks/30ml-golden-tan.webp",
-    "images":["/images/products/artistic-inks/30ml-golden-tan.webp","/images/products/artistic-inks/raio-golden-tan.webp"],
+    "stripe": {
+      "productId": "prod_TkKsyy7E0mgy64",
+      "priceId": "price_1SmqD4Aiq7NBxfpwNfyDwB6s"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "golden-tan-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqD4Aiq7NBxfpwNfyDwB6s",
+        "stripe_price_id": "price_1SmqD4Aiq7NBxfpwNfyDwB6s",
+        "image": "/images/products/artistic-inks/30ml-golden-tan.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-golden-tan.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-golden-tan.webp",
+      "/images/products/artistic-inks/raio-golden-tan.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "snake-brown": {
-    "id":"snake-brown",
-    "name":"Snake Brown",
+    "id": "snake-brown",
+    "name": "Snake Brown",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -802,24 +1041,40 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKtPGGYvu5LxW","priceId":"price_1SmqDdAiq7NBxfpwwEygm665"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"snake-brown-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqDdAiq7NBxfpwwEygm665","stripe_price_id":"price_1SmqDdAiq7NBxfpwwEygm665","image":"/images/products/artistic-inks/30ml-snake-brown.webp"}],
-    "image":"/images/products/artistic-inks/30ml-snake-brown.webp",
-    "images":["/images/products/artistic-inks/30ml-snake-brown.webp","/images/products/artistic-inks/raio-snake-brown.webp"],
+    "stripe": {
+      "productId": "prod_TkKtPGGYvu5LxW",
+      "priceId": "price_1SmqDdAiq7NBxfpwwEygm665"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "snake-brown-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqDdAiq7NBxfpwwEygm665",
+        "stripe_price_id": "price_1SmqDdAiq7NBxfpwwEygm665",
+        "image": "/images/products/artistic-inks/30ml-snake-brown.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-snake-brown.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-snake-brown.webp",
+      "/images/products/artistic-inks/raio-snake-brown.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "eagle-brown": {
-    "id":"eagle-brown",
-    "name":"Eagle Brown",
+    "id": "eagle-brown",
+    "name": "Eagle Brown",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
@@ -828,23 +1083,39 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe":{"productId":"prod_TkKuzKiF8uAjOt","priceId":"price_1SmqEhAiq7NBxfpwdoBrCjLk"},
-    "price":21.25,
-    "size":"30mL",
-    "variants":[{"id":"eagle-brown-30ml","size":"30mL","label":"30mL","price":21.25,"priceId":"price_1SmqEhAiq7NBxfpwdoBrCjLk","stripe_price_id":"price_1SmqEhAiq7NBxfpwdoBrCjLk","image":"/images/products/artistic-inks/30ml-eagle-brown.webp"}],
-    "image":"/images/products/artistic-inks/30ml-eagle-brown.webp",
-    "images":["/images/products/artistic-inks/30ml-eagle-brown.webp","/images/products/artistic-inks/raio-eagle-brown.webp"],
+    "stripe": {
+      "productId": "prod_TkKuzKiF8uAjOt",
+      "priceId": "price_1SmqEhAiq7NBxfpwdoBrCjLk"
+    },
+    "price": 21.25,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "eagle-brown-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqEhAiq7NBxfpwdoBrCjLk",
+        "stripe_price_id": "price_1SmqEhAiq7NBxfpwdoBrCjLk",
+        "image": "/images/products/artistic-inks/30ml-eagle-brown.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-eagle-brown.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-eagle-brown.webp",
+      "/images/products/artistic-inks/raio-eagle-brown.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
-    "inStock":false,
-    "featured":false,
-    "reachCompliant":false
+    "inStock": false,
+    "featured": false,
+    "reachCompliant": false
   },
   "monkey-brown": {
-    "id":"monkey-brown",
+    "id": "monkey-brown",
     "name": "Monkey Brown",
     "category": "Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
@@ -854,14 +1125,28 @@
       "High resistance to fading",
       "Gamma-sterilized for safety"
     ],
-    "stripe": {"productId": "prod_TkKvDInkjBH907", "priceId": "price_1SmqFJAiq7NBxfpwXE6xmQID"},
+    "stripe": {
+      "productId": "prod_TkKvDInkjBH907",
+      "priceId": "price_1SmqFJAiq7NBxfpwXE6xmQID"
+    },
     "price": 21.25,
     "size": "30mL",
     "variants": [
-      {"id": "monkey-brown-30ml", "size": "30mL", "label": "30mL", "price": 21.25, "priceId": "price_1SmqFJAiq7NBxfpwXE6xmQID", "stripe_price_id": "price_1SmqFJAiq7NBxfpwXE6xmQID", "image": "/images/products/artistic-inks/30ml-monkey-brown.webp"}
+      {
+        "id": "monkey-brown-30ml",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 21.25,
+        "priceId": "price_1SmqFJAiq7NBxfpwXE6xmQID",
+        "stripe_price_id": "price_1SmqFJAiq7NBxfpwXE6xmQID",
+        "image": "/images/products/artistic-inks/30ml-monkey-brown.webp"
+      }
     ],
     "image": "/images/products/artistic-inks/30ml-monkey-brown.webp",
-    "images": ["/images/products/artistic-inks/30ml-monkey-brown.webp","/images/products/artistic-inks/raio-monkey-brown.webp"],
+    "images": [
+      "/images/products/artistic-inks/30ml-monkey-brown.webp",
+      "/images/products/artistic-inks/raio-monkey-brown.webp"
+    ],
     "content": {
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
@@ -871,5 +1156,4 @@
     "featured": false,
     "reachCompliant": false
   }
-
 }

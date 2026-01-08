@@ -42,6 +42,13 @@
       return false;
     }
 
+    // Normalize and require a single canonical Stripe price id field: `stripe_price_id`
+    const normalizedPriceId = item.stripe_price_id || item.priceId || item.price_id || (item.stripe && (item.stripe.priceId || item.stripe.price_id)) || null;
+    if (!normalizedPriceId) {
+      console.error('Missing stripe_price_id for item, refusing to add to cart:', item);
+      return false;
+    }
+
     const cart = getCart();
     
     // Verifica se item já existe (mesmo id + variant)
@@ -50,6 +57,11 @@
     if (existingIndex !== -1) {
       // Item já existe - aumenta quantidade
       cart[existingIndex].quantity += 1;
+
+      // Ensure existing item has normalized stripe_price_id
+      if (!cart[existingIndex].stripe_price_id) {
+        cart[existingIndex].stripe_price_id = normalizedPriceId;
+      }
     } else {
       // Item novo - adiciona ao cart
       cart.push({
@@ -58,7 +70,7 @@
         price: item.price,
         image: item.image || '/images/placeholder.jpg',
         variant: item.variant || null,
-        stripe_price_id: item.stripe_price_id || null,
+        stripe_price_id: normalizedPriceId,
         quantity: 1
       });
     }
@@ -67,6 +79,11 @@
     if (saveCart(cart)) {
       if (window.toast) {
         window.toast.success(`${item.name} added to cart!`);
+      }
+      try {
+        console.log('[CART_STATE]', cart);
+      } catch (e) {
+        console.error('Audit log failed (CART_STATE):', e);
       }
       return true;
     }

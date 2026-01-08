@@ -63,6 +63,7 @@
   // LOAD products from multiple JSON files (cosmetics + needles)
   let allProducts = {};
   const productFiles = [
+    '/data/product-accessories.json',
     '/data/products-cosmetics.json',
     '/data/products-artistic-inks.json',
     '/data/products-needles-022.json',

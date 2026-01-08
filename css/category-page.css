@@ -180,7 +180,7 @@
   width: 100%;
   aspect-ratio: 1;
   object-fit: contain;
-  background: #f8f8f8;
+  background: #fff;
   transition: transform 0.3s ease;
 }
 

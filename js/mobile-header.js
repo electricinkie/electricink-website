@@ -79,11 +79,11 @@
             </svg>
           </button>
           <ul class="mobile-submenu">
-            <li><a href="/category.html?category=cosmetics">Cosmetics</a></li>
-            <li><a href="/category.html?category=cartridges">Cartridges</a></li>
-            <li><a href="/category.html?category=machines">Machines</a></li>
-            <li><a href="/category.html?category=needles">Needles</a></li>
-            <li><a href="/category.html?category=accessories">Accessories</a></li>
+            <li><a href="/category.html?cat=cartridges">Cartridges</a></li>
+            <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>
+            <li><a href="/category.html?cat=inks">Inks</a></li>
+            <li><a href="/category.html?cat=accessories">Accessories</a></li>
+            <li><a href="/category.html?cat=machines">Machines</a></li>
           </ul>
         </li>
         

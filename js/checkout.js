@@ -1028,7 +1028,9 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
       // 🔧 FIX: Normalize product IDs (underscore → hífen)
       const cartItems = cart.map(item => ({
         id: item.id.replace(/_/g, '-'),  // transfer_it → transfer-it
-        quantity: item.quantity
+        quantity: item.quantity,
+        stripe_price_id: item.stripe_price_id,
+        ...(item.variant && { variant: item.variant })
       }));
       
       console.log('🔍 Normalized cart items:', cartItems);
