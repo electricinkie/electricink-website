@@ -12,12 +12,11 @@
       "Available in 38mm and 45mm sizes",
       "Compatible with Electra Pen, Ultra Pen, and Ultra Pen 2"
     ],
-    "stripe_product_id": "prod_TkwOadafeLFuIO",
-    "pricing": {
-      "price": null,
-      "currency": "EUR",
-      "stripe_price_id": null
+    "stripe": {
+      "productId": "prod_TkwOadafeLFuIO",
+      "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6"
     },
+    "price": 132.15,
     "variants": [
       {
         "id": "grip-ultra-pen-balance-flex-38mm",
@@ -25,8 +24,7 @@
         "size": "38mm",
         "price": 132.15,
         "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6",
-        "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6",
-        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex38mm.webp"
+        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp"
       },
       {
         "id": "grip-ultra-pen-balance-flex-45mm",
@@ -34,13 +32,12 @@
         "size": "45mm",
         "price": 146.80,
         "priceId": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
-        "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp"
       }
     ],
-    "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex38mm.webp",
+    "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
     "images": [
-      "/images/products/tattoo-machines/grip-ultra-pen-balance-flex38mm.webp",
+      "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
       "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp"
     ],
     "content": {
@@ -78,11 +75,9 @@
       "Adjustable needle exposure via rotation",
       "Durable construction from high-resistance materials"
     ],
-    "stripe_product_id": "prod_TkwU45FeLI0wwU",
-    "pricing": {
-      "price": 52.85,
-      "currency": "EUR",
-      "stripe_price_id": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
+    "stripe": {
+      "productId": "prod_TkwU45FeLI0wwU",
+      "priceId": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
     },
     "price": 52.85,
     "image": "/images/products/tattoo-machines/grip-pen-3-cover.webp",
@@ -102,8 +97,7 @@
       "meta_description": "Grip for Pen 3 (4.0mm stroke, 38mm) offering superior comfort, Flex connector and adjustable needle exposure.",
       "keywords": ["grip pen 3","pen grip","tattoo grip","Electric Ink Pen 3"]
     },
-    "isAccessory": true,
-    "accessoryOf": "Tattoo Machines",
+    
     "inStock": true
   },
 
@@ -120,24 +114,23 @@
       "Shock absorption technology with retractable rods",
       "Lightweight: 85 grams"
     ],
-    "stripe_product_id": "prod_TkwWcYWrWbHmU5",
-    "pricing": {
-      "price": 118.30,
-      "currency": "EUR",
-      "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1"
+    "stripe": {
+      "productId": "prod_TkwWcYWrWbHmU5",
+      "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1"
     },
+    "price": 118.30,
     "variants": [
-      { "id": "electra-pop-black", "color": "Black", "label": "Black", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-black-1.webp" },
-      { "id": "electra-pop-blue", "color": "Blue", "label": "Blue", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp" },
-      { "id": "electra-pop-pink", "color": "Pink", "label": "Pink", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp" },
-      { "id": "electra-pop-white", "color": "White", "label": "White", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-white-1.webp" },
-      { "id": "electra-pop-lilac", "color": "Lilac", "label": "Lilac", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp" },
-      { "id": "electra-pop-silver", "color": "Silver", "label": "Silver", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp" },
-      { "id": "electra-pop-bordeaux", "color": "Bordeaux", "label": "Bordeaux", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp" },
-      { "id": "electra-pop-smoke-grey", "color": "Smoke Grey", "label": "Smoke Grey", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp" },
-      { "id": "electra-pop-neon-coral", "color": "Neon Coral", "label": "Neon Coral", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp" },
-      { "id": "electra-pop-neon-yellow", "color": "Neon Yellow", "label": "Neon Yellow", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp" },
-      { "id": "electra-pop-neon-orange", "color": "Neon Orange", "label": "Neon Orange", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp" }
+      { "id": "electra-pop-black", "color": "Black", "label": "Black", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-black-1.webp" },
+      { "id": "electra-pop-blue", "color": "Blue", "label": "Blue", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp" },
+      { "id": "electra-pop-pink", "color": "Pink", "label": "Pink", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp" },
+      { "id": "electra-pop-white", "color": "White", "label": "White", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-white-1.webp" },
+      { "id": "electra-pop-lilac", "color": "Lilac", "label": "Lilac", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp" },
+      { "id": "electra-pop-silver", "color": "Silver", "label": "Silver", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp" },
+      { "id": "electra-pop-bordeaux", "color": "Bordeaux", "label": "Bordeaux", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp" },
+      { "id": "electra-pop-smoke-grey", "color": "Smoke Grey", "label": "Smoke Grey", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp" },
+      { "id": "electra-pop-neon-coral", "color": "Neon Coral", "label": "Neon Coral", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp" },
+      { "id": "electra-pop-neon-yellow", "color": "Neon Yellow", "label": "Neon Yellow", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp" },
+      { "id": "electra-pop-neon-orange", "color": "Neon Orange", "label": "Neon Orange", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp" }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
     "images": [
@@ -274,15 +267,14 @@
       "Ultra-resistant industrial polymer construction",
       "Lightweight: 85 grams"
     ],
-    "stripe_product_id": "prod_TkwbZLto4pyKdn",
-    "pricing": {
-      "price": 147.85,
-      "currency": "EUR",
-      "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
+    "stripe": {
+      "productId": "prod_TkwbZLto4pyKdn",
+      "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
     },
+    "price": 147.85,
     "variants": [
-      { "id": "electra-pop-pro-black", "color": "Black", "label": "Black", "price": 147.85, "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp" },
-      { "id": "electra-pop-pro-pink", "color": "Pink", "label": "Pink", "price": 147.85, "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp" }
+      { "id": "electra-pop-pro-black", "color": "Black", "label": "Black", "price": 147.85, "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp" },
+      { "id": "electra-pop-pro-pink", "color": "Pink", "label": "Pink", "price": 147.85, "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp" }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
     "images": [
@@ -337,11 +329,9 @@
       "Universal cartridge compatibility",
       "Magnetic Coupling (MC2) with RCA Adapter"
     ],
-    "stripe_product_id": "prod_TkxRC9EqfpyVB5",
-    "pricing": {
-      "price": 322.55,
-      "currency": "EUR",
-      "stripe_price_id": "price_1SnRWEAiq7NBxfpw235gURaJ"
+    "stripe": {
+      "productId": "prod_TkxRC9EqfpyVB5",
+      "priceId": "price_1SnRWEAiq7NBxfpw235gURaJ"
     },
     "price": 322.55,
     "image": "/images/products/tattoo-machines/pen-3-cover.webp",
@@ -390,10 +380,9 @@
       "Long Adjustable Damping System (LADS1)",
       "Ergonomic design and high-performance motor"
     ],
-    "pricing": {
-      "price": 846.70,
-      "currency": "EUR",
-      "stripe_price_id": null
+    "stripe": {
+      "productId": "prod_TkwaRscy82RkNj",
+      "priceId": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0"
     },
     "price": 846.70,
     "image": "/images/products/tattoo-machines/ultra-pen-1-cover.webp",
@@ -443,11 +432,9 @@
       "Magnetic Coupling MC2 with RCA adapter",
       "Adjustable damping system: 30-click adjustment"
     ],
-    "stripe_product_id": "prod_TkwYdAGyqrMKW0",
-    "pricing": {
-      "price": 1034.80,
-      "currency": "EUR",
-      "stripe_price_id": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
+    "stripe": {
+      "productId": "prod_TkwYdAGyqrMKW0",
+      "priceId": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
     },
     "price": 1034.80,
     "image": "/images/products/tattoo-machines/ultra-pen-2-cover.webp",

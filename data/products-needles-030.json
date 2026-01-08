@@ -23,6 +23,16 @@
       "/images/products/cartridges/rl-0.30/0.30-rl-cover-2.webp",
       "/images/products/cartridges/rl-0.30/coifa-rl.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Liner ×0.30 (10un) | Electric Ink Ireland",
+      "meta_description": "Standard 0.30mm Round Liner for precise line work. Super Long Taper ideal for fine lines and detailed techniques. Shop now at Electric Ink Ireland.",
+      "keywords": ["needles", "round liner", "0.30mm", "fine line", "tattoo cartridge"]
+    },
     "inStock": true,
     "featured": true
   },

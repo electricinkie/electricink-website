@@ -3,6 +3,28 @@
     "id": "diluent",
     "name": "Diluent",
     "category": "Inks",
+      "subcategory": "Diluents & Sets",
+      "subcategory": "Black Inks",
+      "subcategory": "White & Specialty Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
+      "subcategory": "Color Inks",
     "description": "Diluent for Easy Glow inks — use to adjust viscosity and flow for machine or manual painting.",
     "features": [
       "Adjusts viscosity",
@@ -55,6 +77,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Diluent | Electric Ink Ireland",
+      "meta_description": "Diluent for Easy Glow inks — use to adjust viscosity and flow for machine or manual painting. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "diluent", "tattoo ink", "viscosity", "flow"]
+    },
     "inStock": false,
     "featured": true,
     "reachCompliant": false
@@ -106,6 +138,16 @@
       "tagline": "Intense Black, Maximum Coverage!",
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
+    },
+    "inventory": {
+      "stock_quantity": 20,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Raven Black | Electric Ink Ireland",
+      "meta_description": "Experience Raven Black, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "raven black", "REACH compliant", "tattoo ink", "maximum coverage"]
     },
     "inStock": true,
     "featured": true,
@@ -169,6 +211,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
     },
+    "inventory": {
+      "stock_quantity": 15,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Ghost White | Electric Ink Ireland",
+      "meta_description": "Experience Ghost White, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "ghost white", "REACH compliant", "tattoo ink", "perfect coverage"]
+    },
     "inStock": true,
     "featured": true,
     "reachCompliant": true
@@ -210,6 +262,16 @@
       "tagline": "Bold, Vibrant Red Perfection!",
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Red | Electric Ink Ireland",
+      "meta_description": "Experience Red, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "red", "REACH compliant", "tattoo ink", "vibrant red"]
     },
     "inStock": false,
     "featured": false,
@@ -253,6 +315,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Orange | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "orange", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -295,6 +367,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Florida Orange | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "florida orange", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -325,6 +407,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Coral | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "coral", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -357,6 +449,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Navy Grey | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "navy grey", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -387,6 +489,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Steel Grey | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "steel grey", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -419,6 +531,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Coconut Cream | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "coconut cream", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -449,6 +571,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Canary Yellow | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "canary yellow", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -481,6 +613,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Bus Yellow | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "bus yellow", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -511,6 +653,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Mustard | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "mustard", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -543,6 +695,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Pink | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "electric pink", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -574,6 +736,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Bubblegum | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "bubblegum", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -604,6 +776,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Rose | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "rose", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -648,6 +830,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Deepest Pink | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "deepest pink", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -689,6 +881,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Blue | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "electric blue", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -732,6 +934,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Olympic Blue | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "olympic blue", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -773,6 +985,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Navy Blue | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "navy blue", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -816,6 +1038,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Deep Violet | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "deep violet", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -857,6 +1089,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Brilliant Green | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "brilliant green", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -900,6 +1142,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Snake Green | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "snake green", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -941,6 +1193,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "True Green | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "true green", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -984,6 +1246,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Deepest Green | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "deepest green", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -1025,6 +1297,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Golden Tan | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "golden tan", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,
@@ -1068,6 +1350,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Snake Brown | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "snake brown", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -1110,6 +1402,16 @@
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Eagle Brown | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "eagle brown", "easy glow", "tattoo ink", "vibrant colour"]
+    },
     "inStock": false,
     "featured": false,
     "reachCompliant": false
@@ -1151,6 +1453,16 @@
       "technology": "Advanced Easy Glow Technology: No Sedimentation, High Resistance to environmental factors, Gamma-sterilized for safety.",
       "warning": "IMPORTANT: This ink is not approved in Europe and its use is intended for practices on synthetic skin and/or painting only.",
       "delivery_notice": "Extended Delivery Time: This product is available to order. We currently keep Raven Black and Ghost White in stock. Delivery times may be slightly longer for other colours — message us on WhatsApp for details."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Monkey Brown | Electric Ink Ireland",
+      "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
+      "keywords": ["inks", "monkey brown", "easy glow", "tattoo ink", "vibrant colour"]
     },
     "inStock": false,
     "featured": false,

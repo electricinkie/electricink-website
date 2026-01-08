@@ -213,6 +213,16 @@
     "content": {
       "usage_instructions": "Apply gel, spread evenly in a thin layer.\nPosition stencil, press 10-15 seconds.\nRemove slowly for a clean, sharp stencil."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "The Gloo Stencil Transfer | Electric Ink Ireland",
+      "meta_description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing. Shop now at Electric Ink Ireland.",
+      "keywords": ["cosmetics", "stencil transfer", "during tattoo", "gel formula", "tattoo"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -272,6 +282,16 @@
     "content": {
       "usage_instructions": "Apply a thin layer on prepared skin.\nPosition stencil, press firmly 10-15 seconds.\nRemove carefully—stays clear throughout the session."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Transfer It | Electric Ink Ireland",
+      "meta_description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage. Shop now at Electric Ink Ireland.",
+      "keywords": ["cosmetics", "stencil fixation", "during tattoo", "gel formula", "tattoo"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -300,6 +320,16 @@
     ],
     "content": {
       "usage_instructions": "Spray onto absorbent paper and press onto stencil for 5 seconds.\nFor freehand: spray directly onto skin to fix the drawing."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Stencil Fix Spray | Electric Ink Ireland",
+      "meta_description": "Professional spray for extra stencil fixation. Removes excess carbon, prevents smudging, and keeps skin hydrated. Perfect for stencils and freehand work. Shop now at Electric Ink Ireland.",
+      "keywords": ["cosmetics", "stencil fix", "spray", "during tattoo", "tattoo"]
     },
     "inStock": true
   },
@@ -352,6 +382,16 @@
     "content": {
       "usage_instructions": "Apply foam directly to tattooed area.\nGently spread evenly over skin.\nThoroughly clean with disposable paper."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Clean Up | Electric Ink Ireland",
+      "meta_description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results. Shop now at Electric Ink Ireland.",
+      "keywords": ["cosmetics", "clean up", "during tattoo", "foam", "tattoo"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -378,6 +418,16 @@
       "/images/products/cosmetics/clean-up-1l.webp",
       "/images/products/cosmetics/clean-up-info.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Clean Up Refill | Electric Ink Ireland",
+      "meta_description": "1L refill for foam bottle. Same pH-balanced formula that optimizes pigment retention and reduces irritation. Eco-friendly bulk option for busy studios. Shop now at Electric Ink Ireland.",
+      "keywords": ["cosmetics", "clean up refill", "during tattoo", "foam", "tattoo"]
+    },
     "inStock": true
   },
   "cat-slobber": {

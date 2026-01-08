@@ -72,6 +72,16 @@
       "/images/products/cartridges/rl-0.25/0.25-rl-cover-2.webp",
       "/images/products/cartridges/rl-0.25/coifa-rl.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Liner ×0.25 | Electric Ink Ireland",
+      "meta_description": "Precision 0.25mm Round Liner for detailed line work. Super Long Taper ideal for fine lines, mini realism, and colour techniques. Shop now at Electric Ink Ireland.",
+      "keywords": ["needles", "round liner", "0.25mm", "fine line", "tattoo cartridge"]
+    },
     "inStock": true,
     "featured": true
   },

@@ -1,0 +1,35 @@
+{
+  "Tattoo Machines": {
+    "availability_notice": true,
+    "message": {
+      "title": "Available on Request",
+      "text": "The products in this category are available to order — just message us on WhatsApp and we'll arrange everything for you.",
+      "whatsapp_link": "https://wa.me/353SEUNUMERO",
+      "display_position": "top"
+    }
+  },
+  "Accessories": {
+    "availability_notice": true,
+    "message": {
+      "title": "Available on Request",
+      "text": "The products in this category are available to order — just message us on WhatsApp and we'll arrange everything for you.",
+      "whatsapp_link": "https://wa.me/353SEUNUMERO",
+      "display_position": "top"
+    }
+  },
+  "Inks": {
+    "availability_notice": true,
+    "message": {
+      "title": "Limited Stock Available",
+      "text": "Ghost White and Raven Black are in stock. Other colors available on request — message us on WhatsApp.",
+      "whatsapp_link": "https://wa.me/353SEUNUMERO",
+      "display_position": "top"
+    }
+  },
+  "Cosmetics": {
+    "availability_notice": false
+  },
+  "Needles": {
+    "availability_notice": false
+  }
+}

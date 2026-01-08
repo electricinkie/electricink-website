@@ -3,6 +3,17 @@
     "id": "tattoo-grips",
     "name": "Tattoo Grips",
     "category": "Accessories",
+      "subcategory": "Hygiene & Protection",
+      "subcategory": "Hygiene & Protection",
+      "subcategory": "Practice & Training",
+      "subcategory": "Transfer & Stencils",
+      "subcategory": "Machine Accessories",
+      "subcategory": "Machine Accessories",
+      "subcategory": "Machine Accessories",
+      "subcategory": "Grips & Supplies",
+      "subcategory": "Grips & Supplies",
+      "subcategory": "Hygiene & Protection",
+      "subcategory": "Hygiene & Protection",
     "description": "Elastic cover wrap ideal to secure grips on tattoo machines. Self-adhesive elastic fabric reduces vibration, improves hold, and resists moisture.",
     "features": [
       "Self-adhesive elastic fabric",
@@ -33,6 +44,16 @@
     ],
     "content": {
       "product_details": "Dimensions: 5cm x 4.50m. Self-adhesive elastic wrap to secure grips and reduce vibration."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Grips | Electric Ink Ireland",
+      "meta_description": "Elastic cover wrap ideal to secure grips on tattoo machines. Self-adhesive elastic fabric reduces vibration, improves hold, and resists moisture. Shop now at Electric Ink Ireland.",
+      "keywords": ["accessories", "tattoo grips", "elastic wrap", "vibration reduction", "tattoo machine"]
     },
     "inStock": true,
     "featured": false
@@ -77,6 +98,16 @@
     "content": {
       "key_features": "Durable silicone with rubber base for needle protection. Sterilize with 70% alcohol before use. Dispose in sanitary waste after use."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Silicone Ink Cups | Electric Ink Ireland",
+      "meta_description": "High-quality silicone ink cups with rubber base to protect needle tips. Durable, flexible and easy to sterilize for safe use. Shop now at Electric Ink Ireland.",
+      "keywords": ["accessories", "ink cups", "silicone", "needle protection", "tattoo"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -100,6 +131,16 @@
     "images": ["/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp"],
     "content": {
       "specifications": "Colour: Transparent. Quantity: 25 units. Size: 6mm x 18mm x 0.08mm."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pen Machine Cover - 25 Units | Electric Ink Ireland",
+      "meta_description": "Transparent pen machine protectors designed to fit Pen 3 and Ultra Pen 2. Pack of 25 protectors for hygienic use. Shop now at Electric Ink Ireland.",
+      "keywords": ["accessories", "pen machine cover", "tattoo", "hygiene", "protectors"]
     },
     "inStock": true,
     "featured": false
@@ -133,6 +174,16 @@
     "content": {
       "dimensions": "60mm x 700mm x 0.008mm. Length covers clip-cords up to 70cm."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Clip Cord Protector | Electric Ink Ireland",
+      "meta_description": "Disposable plastic covers compatible with RCA, clip-cord and magnetic cables. Helps prevent contamination and keeps cables clean. Shop now at Electric Ink Ireland.",
+      "keywords": ["accessories", "clip cord protector", "tattoo", "cable protection", "disposable"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -162,6 +213,16 @@
     "content": {
       "product_details": "Capacity options: 250mL and 500mL. Durable material and simple maintenance."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Wash Bottle | Electric Ink Ireland",
+      "meta_description": "Professional wash bottle available in 250mL and 500mL capacities. Durable and easy to clean for studio use. Shop now at Electric Ink Ireland.",
+      "keywords": ["accessories", "wash bottle", "tattoo", "studio hygiene", "cleaning"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -184,6 +245,16 @@
     "images": ["/images/products/accessories/foam-bottle.webp"],
     "content": {
       "product_details": "Convenient foam dispenser, 210mL capacity. Ideal for studio hygiene."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Foam Bottle | Electric Ink Ireland",
+      "meta_description": "Foam dispenser bottle (210mL) for soap — converts liquid into rich foam for efficient cleaning in the studio. Shop now at Electric Ink Ireland.",
+      "keywords": ["accessories", "foam bottle", "tattoo", "studio hygiene", "cleaning"]
     },
     "inStock": true,
     "featured": false
