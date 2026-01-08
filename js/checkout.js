@@ -4,6 +4,8 @@
  * Handles checkout form validation and payment processing
  */
 
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
+
 (function() {
   'use strict';
 
@@ -32,7 +34,6 @@
   
   let shippingMethod = 'standard'; // 'standard', 'same-day', 'pickup'
   const VAT_RATE = 0.23; // 23% VAT for Ireland
-  const FREE_SHIPPING_THRESHOLD = 120; // Free shipping above €120
   const STANDARD_RATE = 11.50; // Standard shipping rate
   const SAMEDAY_RATE = 7.50; // Same-day Dublin rate
   const PICKUP_RATE = 0; // Store pickup is free
@@ -264,7 +265,8 @@
       ];
       
       // Check if free shipping threshold met
-      const freeShippingThreshold = 130;
+      // Use canonical threshold from constants
+      const freeShippingThreshold = FREE_SHIPPING_THRESHOLD;
       const qualifiesForFreeShipping = totals.subtotal >= freeShippingThreshold;
       
       // Calculate initial shipping (default to standard unless free shipping)
@@ -344,7 +346,7 @@
           shippingOptions = shippingOptions.map(opt => ({
             ...opt,
             amount: 0,
-            detail: opt.id === 'pickup' ? opt.detail : 'FREE - Subtotal over €130',
+            detail: opt.id === 'pickup' ? opt.detail : `FREE - Subtotal over €${FREE_SHIPPING_THRESHOLD}`,
           }));
         }
         

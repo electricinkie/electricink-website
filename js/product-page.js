@@ -15,6 +15,7 @@
   let productData;
   const productFiles = [
     '/data/products-cosmetics.json',
+    '/data/products-artistic-inks.json',
     '/data/products-needles-022.json',
     '/data/products-needles-025.json',
     '/data/products-needles-030.json'
@@ -406,7 +407,8 @@
   
   if (categoryLink) {
     categoryLink.textContent = breadcrumbCategory;
-    categoryLink.href = `/category.html?cat=${category || 'all'}`;
+    const catParam = category ? encodeURIComponent(category.toString().toLowerCase()) : 'all';
+    categoryLink.href = `/category.html?cat=${catParam}`;
   }
   
   const breadcrumbProduct = document.getElementById('breadcrumb-product');

@@ -16,12 +16,12 @@
     },
     'cartridges': {
       title: 'Cartridges',
-      description: 'Premium tattoo cartridges for all techniques',
+      description: 'Pro tattoo cartridges for all techniques',
       icon: '🔧'
     },
     'inks': {
-      title: 'Inks',
-      description: 'High-quality tattoo inks',
+      title: 'Artistic Inks',
+      description: 'High-quality artistic inks',
       icon: '🎨'
     },
     'accessories': {
@@ -64,6 +64,7 @@
   let allProducts = {};
   const productFiles = [
     '/data/products-cosmetics.json',
+    '/data/products-artistic-inks.json',
     '/data/products-needles-022.json',
     '/data/products-needles-025.json',
     '/data/products-needles-030.json'

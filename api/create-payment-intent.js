@@ -11,6 +11,7 @@ const { z } = require('zod');
 const logger = require('./lib/logger');
 const fs = require('fs');
 const path = require('path');
+const { FREE_SHIPPING_THRESHOLD } = require('./lib/constants');
 
 // Runtime environment diagnostic (do NOT log full secrets)
 logger.info('Environment check', {
@@ -124,7 +125,6 @@ async function checkRateLimit(key) {
  * @returns {number} Shipping cost in EUR
  */
 function calculateShipping(subtotal, address = {}) {
-  const FREE_SHIPPING_THRESHOLD = 120;
   const STANDARD_RATE = 11.50;
   const SAMEDAY_RATE = 7.50;
   const PICKUP_RATE = 0;

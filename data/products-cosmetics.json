@@ -59,27 +59,7 @@
     "inStock": true,
     "featured": true
   },
-  "test-0-50": {
-    "id": "test-0-50",
-    "name": "Teste 0.50 euro",
-    "category": "Cosmetics",
-    "subcategory": "Test",
-    "description": "Produto de teste para validar fluxo de compra.",
-    "stripe": {
-      "productId": "prod_Tkalz60zl9UMKe",
-      "priceId": "price_1Sn5ZiAiq7NBxfpwCl8Ew9dW"
-    },
-    "price": 0.5,
-    "size": "1 unit",
-    "image": "/images/products/cosmetics/test-0-50.webp",
-    "images": [
-      "/images/products/cosmetics/test-0-50.webp"
-    ],
-    "content": {
-      "usage_instructions": "Produto de teste. Não é para revenda."
-    },
-    "inStock": true
-  },
+  
   "slimer-gel": {
     "id": "slimer-gel",
     "name": "Slimer Tattoo Gel",

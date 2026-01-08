@@ -2,12 +2,13 @@
 // CART.JS - SHOPPING CART LOGIC
 // ========================================
 
+import { FREE_SHIPPING_THRESHOLD } from './constants.js';
+
 (function() {
   'use strict';
 
   // ────────── Constants ──────────
   const CART_KEY = 'electricink_cart';
-  const FREE_SHIPPING_THRESHOLD = 120; // €120 para frete grátis
   const SHIPPING_COST = 8.50; // €8.50 frete normal
   
   // ────────── DOM Elements ──────────

@@ -24,9 +24,7 @@ const fetch = require('node-fetch');
           postalCode: 'D01',
           country: 'IE',
           shippingMethod: 'standard',
-          items: JSON.stringify([
-            { id: 'prod_test123', quantity: 1 }
-          ]),
+          items: JSON.stringify([]),
           subtotal_cents: '4500',
           shipping_cents: '500'
         }
