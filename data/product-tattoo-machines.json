@@ -1,0 +1,498 @@
+{
+  "grip-ultra-pen-balance-flex": {
+    "id": "grip-ultra-pen-balance-flex",
+    "name": "Grip Ultra Pen Balance Flex",
+    "category": "Tattoo Machines",
+    "subcategory": "Grips & Accessories",
+    "description": "INTERCHANGEABLE AND TAILORED FOR YOU!\nThe Adjustable Balance Grip is designed by our engineering team to be used with cartridges on the Electra Pen rotary machine and is also interchangeable with the Ultra Pen rotary machine. Available in 38mm and 45mm sizes, this grip's advanced technology makes it easy to adjust needle exposure and features a cartridge alignment system, offering complete freedom in positioning the machine during tattoo procedures. Its ergonomic design provides enhanced comfort and security, while the range of sizes allows each artist to find the perfect fit.",
+    "features": [
+      "Adjustable needle exposure",
+      "Cartridge alignment system",
+      "Ergonomic design for enhanced comfort",
+      "Available in 38mm and 45mm sizes",
+      "Compatible with Electra Pen, Ultra Pen, and Ultra Pen 2"
+    ],
+    "stripe_product_id": "prod_TkwOadafeLFuIO",
+    "pricing": {
+      "price": null,
+      "currency": "EUR",
+      "stripe_price_id": null
+    },
+    "variants": [
+      {
+        "id": "grip-ultra-pen-balance-flex-38mm",
+        "label": "38mm",
+        "size": "38mm",
+        "price": 132.15,
+        "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6",
+        "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6",
+        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex38mm.webp"
+      },
+      {
+        "id": "grip-ultra-pen-balance-flex-45mm",
+        "label": "45mm",
+        "size": "45mm",
+        "price": 146.80,
+        "priceId": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
+        "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
+        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp"
+      }
+    ],
+    "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex38mm.webp",
+    "images": [
+      "/images/products/tattoo-machines/grip-ultra-pen-balance-flex38mm.webp",
+      "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp"
+    ],
+    "content": {
+      "compatibility": "Compatible with the Electric Ink Electra Pen rotary machine, Ultra Pen, and Ultra Pen 2.",
+      "key_features": [
+        "Adjustable needle exposure",
+        "Cartridge alignment system",
+        "Ergonomic design for enhanced comfort",
+        "Two sizes for personalised balance"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 30,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Grip Ultra Pen Balance Flex | Professional Tattoo Equipment",
+      "meta_description": "Adjustable Balance Grip compatible with Electra Pen and Ultra Pen. Available in 38mm and 45mm. Ergonomic design and cartridge alignment system.",
+      "keywords": ["tattoo grip","adjustable grip","Electra Pen grip","Ultra Pen grip","tattoo accessories"]
+    },
+    "inStock": true
+  },
+
+  "grip-pen-3": {
+    "id": "grip-pen-3",
+    "name": "Grip Pen 3",
+    "category": "Tattoo Machines",
+    "subcategory": "Grips & Accessories",
+    "description": "ENHANCE YOUR TATTOOING EXPERIENCE WITH THE ELECTRIC INK GRIP FOR PEN 3 – 4.0MM, 38MM, DESIGNED FOR ARTISTS WHO DEMAND SUPERIOR COMFORT AND CONTROL.\nCrafted from highly durable materials, this grip offers a larger counterweight and 38mm diameter, ensuring optimal ergonomics without sacrificing comfort. The Flex connector is compatible with both Electric Ink and Universal cartridges, allowing for seamless integration and adaptability. With clockwise and counter-clockwise rotation, you can easily adjust the needle exposure to suit your specific needs.",
+    "features": [
+      "Exclusive compatibility with Electric Ink Pen 3",
+      "38mm diameter for comfortable grip",
+      "Flex connector compatible with Electric Ink and Universal cartridges",
+      "Adjustable needle exposure via rotation",
+      "Durable construction from high-resistance materials"
+    ],
+    "stripe_product_id": "prod_TkwU45FeLI0wwU",
+    "pricing": {
+      "price": 52.85,
+      "currency": "EUR",
+      "stripe_price_id": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
+    },
+    "price": 52.85,
+    "image": "/images/products/tattoo-machines/grip-pen-3-cover.webp",
+    "images": [
+      "/images/products/tattoo-machines/grip-pen-3-cover.webp",
+      "/images/products/tattoo-machines/grip-pen-3-cover-1.webp",
+      "/images/products/tattoo-machines/grip-pen-3-cover-2.webp"
+    ],
+    "content": {},
+    "inventory": {
+      "stock_quantity": 50,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Grip Pen 3 | Professional Tattoo Equipment",
+      "meta_description": "Grip for Pen 3 (4.0mm stroke, 38mm) offering superior comfort, Flex connector and adjustable needle exposure.",
+      "keywords": ["grip pen 3","pen grip","tattoo grip","Electric Ink Pen 3"]
+    },
+    "isAccessory": true,
+    "accessoryOf": "Tattoo Machines",
+    "inStock": true
+  },
+
+  "electra-pop": {
+    "id": "electra-pop",
+    "name": "Electra Pop",
+    "category": "Tattoo Machines",
+    "subcategory": "Rotary Machines",
+    "description": "With over 100,000 units sold and approved by tattoo artists worldwide, the Electra Pop is your go-to machine for growth and evolution in the tattoo industry. Engineered by Electric Ink with a high-performance Mabuchi motor, this machine offers power, precision, and affordability. Crafted from ultra-durable industrial polymer, the Electra Pop is lightweight and ergonomic, ensuring comfort during long sessions.\n\nVersatile and adaptable, the Electra Pop accommodates both traditional needles and cartridges, making it ideal for various techniques, including lining, shading, and filling. The machine is designed with cutting-edge shock absorption technology, ensuring accurate pigmentation while minimizing skin damage. Experience smooth, quiet operation with low vibration, allowing for precise control with every stroke.",
+    "features": [
+      "3.3mm stroke length for precise lining and powerful shading",
+      "High-performance Mabuchi DC motor, exclusively developed for Electric Ink",
+      "Ultra-resistant industrial polymer construction",
+      "Shock absorption technology with retractable rods",
+      "Lightweight: 85 grams"
+    ],
+    "stripe_product_id": "prod_TkwWcYWrWbHmU5",
+    "pricing": {
+      "price": 118.30,
+      "currency": "EUR",
+      "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1"
+    },
+    "variants": [
+      { "id": "electra-pop-black", "color": "Black", "label": "Black", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-black-1.webp" },
+      { "id": "electra-pop-blue", "color": "Blue", "label": "Blue", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp" },
+      { "id": "electra-pop-pink", "color": "Pink", "label": "Pink", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp" },
+      { "id": "electra-pop-white", "color": "White", "label": "White", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-white-1.webp" },
+      { "id": "electra-pop-lilac", "color": "Lilac", "label": "Lilac", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp" },
+      { "id": "electra-pop-silver", "color": "Silver", "label": "Silver", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp" },
+      { "id": "electra-pop-bordeaux", "color": "Bordeaux", "label": "Bordeaux", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp" },
+      { "id": "electra-pop-smoke-grey", "color": "Smoke Grey", "label": "Smoke Grey", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp" },
+      { "id": "electra-pop-neon-coral", "color": "Neon Coral", "label": "Neon Coral", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp" },
+      { "id": "electra-pop-neon-yellow", "color": "Neon Yellow", "label": "Neon Yellow", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp" },
+      { "id": "electra-pop-neon-orange", "color": "Neon Orange", "label": "Neon Orange", "price": 118.30, "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp" }
+    ],
+    "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
+    "images": [
+      "/images/products/tattoo-machines/electra-pop-black-1.webp",
+      "/images/products/tattoo-machines/electra-pop-black-2.webp",
+      "/images/products/tattoo-machines/electra-pop-black-3.webp",
+      "/images/products/tattoo-machines/electra-pop-black-4.webp",
+      "/images/products/tattoo-machines/electra-pop-black-5.webp",
+      "/images/products/tattoo-machines/electra-pop-black-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-blue-1.webp",
+      "/images/products/tattoo-machines/electra-pop-blue-2.webp",
+      "/images/products/tattoo-machines/electra-pop-blue-3.webp",
+      "/images/products/tattoo-machines/electra-pop-blue-4.webp",
+      "/images/products/tattoo-machines/electra-pop-blue-5.webp",
+      "/images/products/tattoo-machines/electra-pop-blue-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-pink-1.webp",
+      "/images/products/tattoo-machines/electra-pop-pink-2.webp",
+      "/images/products/tattoo-machines/electra-pop-pink-3.webp",
+      "/images/products/tattoo-machines/electra-pop-pink-4.webp",
+      "/images/products/tattoo-machines/electra-pop-pink-5.webp",
+      "/images/products/tattoo-machines/electra-pop-pink-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-lilac-1.webp",
+      "/images/products/tattoo-machines/electra-pop-lilac-2.webp",
+      "/images/products/tattoo-machines/electra-pop-lilac-3.webp",
+      "/images/products/tattoo-machines/electra-pop-lilac-4.webp",
+      "/images/products/tattoo-machines/electra-pop-lilac-5.webp",
+      "/images/products/tattoo-machines/electra-pop-lilac-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-silver-1.webp",
+      "/images/products/tattoo-machines/electra-pop-silver-2.webp",
+      "/images/products/tattoo-machines/electra-pop-silver-3.webp",
+      "/images/products/tattoo-machines/electra-pop-silver-4.webp",
+      "/images/products/tattoo-machines/electra-pop-silver-5.webp",
+      "/images/products/tattoo-machines/electra-pop-silver-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp",
+      "/images/products/tattoo-machines/electra-pop-bordeaux-2.webp",
+      "/images/products/tattoo-machines/electra-pop-bordeaux-3.webp",
+      "/images/products/tattoo-machines/electra-pop-bordeaux-4.webp",
+      "/images/products/tattoo-machines/electra-pop-bordeaux-5.webp",
+      "/images/products/tattoo-machines/electra-pop-bordeaux-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp",
+      "/images/products/tattoo-machines/electra-pop-smoke-grey-2.webp",
+      "/images/products/tattoo-machines/electra-pop-smoke-grey-3.webp",
+      "/images/products/tattoo-machines/electra-pop-smoke-grey-4.webp",
+      "/images/products/tattoo-machines/electra-pop-smoke-grey-5.webp",
+      "/images/products/tattoo-machines/electra-pop-smoke-grey-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-coral-2.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-coral-3.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-coral-4.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-coral-5.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-coral-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-orange-2.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-orange-3.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-orange-4.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-orange-5.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-orange-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-yellow-2.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-yellow-3.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-yellow-4.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-yellow-5.webp",
+      "/images/products/tattoo-machines/electra-pop-neon-yellow-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-orange-1.webp",
+      "/images/products/tattoo-machines/electra-pop-orange-2.webp",
+      "/images/products/tattoo-machines/electra-pop-orange-3.webp",
+      "/images/products/tattoo-machines/electra-pop-orange-4.webp",
+      "/images/products/tattoo-machines/electra-pop-orange-5.webp",
+      "/images/products/tattoo-machines/electra-pop-orange-6.webp",
+
+      "/images/products/tattoo-machines/electra-pop-white-1.webp",
+      "/images/products/tattoo-machines/electra-pop-white-2.webp",
+      "/images/products/tattoo-machines/electra-pop-white-3.webp",
+      "/images/products/tattoo-machines/electra-pop-white-4.webp",
+      "/images/products/tattoo-machines/electra-pop-white-5.webp",
+      "/images/products/tattoo-machines/electra-pop-white-6.webp"
+    ],
+    "content": {
+      "key_features": [
+        "3.3mm stroke length",
+        "High-performance Mabuchi DC motor",
+        "Shock absorption technology",
+        "Lightweight: 85 grams"
+      ],
+      "specifications": {
+        "stroke_length": "3.3mm",
+        "motor": "High-performance Mabuchi DC motor",
+        "material": "Ultra-resistant industrial polymer",
+        "weight": "85g",
+        "dimensions": "67.5mm (H) x 30mm (W) x 97.3mm (L)",
+        "connection": "RCA (cable not included)",
+        "voltage_range": "6 to 12 volts",
+        "operating_frequency": "75 to 150Hz"
+      },
+      "included_items": [
+        "1 Electra Pop Tattoo Machine",
+        "Instruction Manual",
+        "Warranty Terms"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 20,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Electra Pop | Professional Tattoo Equipment",
+      "meta_description": "Electra Pop rotary tattoo machine with Mabuchi motor, shock absorption technology and ergonomic polymer body. Available in multiple colours.",
+      "keywords": ["Electra Pop","rotary tattoo machine","Mabuchi motor","lightweight tattoo machine"]
+    },
+    "inStock": true
+  },
+
+  "electra-pop-pro": {
+    "id": "electra-pop-pro",
+    "name": "Electra Pop Pro",
+    "category": "Tattoo Machines",
+    "subcategory": "Rotary Machines",
+    "description": "The Electra Pop Pro combines quality and advanced technology at a cost-effective price. Building on the original Electra Pop, the Pro version offers enhanced features, making it ideal for various tattoo styles.\n\nEquipped with an exclusive high-performance Mabuchi motor, the Electra Pop Pro delivers precision and power. Its adjustable stroke allows for easy switching between lining and shading, while shock absorption rods ensure precise pigmentation and minimize skin damage.\n\nCrafted from ultra-resistant industrial polymer, this lightweight and ergonomic machine provides comfort during long sessions. It is compatible with both traditional needles and cartridges and can be used with a variety of grips and tips.",
+    "features": [
+      "Adjustable stroke: Switch between 3.3mm and 4mm",
+      "High-performance Mabuchi DC motor",
+      "Shock absorption technology with retractable rods",
+      "Ultra-resistant industrial polymer construction",
+      "Lightweight: 85 grams"
+    ],
+    "stripe_product_id": "prod_TkwbZLto4pyKdn",
+    "pricing": {
+      "price": 147.85,
+      "currency": "EUR",
+      "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
+    },
+    "variants": [
+      { "id": "electra-pop-pro-black", "color": "Black", "label": "Black", "price": 147.85, "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp" },
+      { "id": "electra-pop-pro-pink", "color": "Pink", "label": "Pink", "price": 147.85, "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp" }
+    ],
+    "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
+    "images": [
+      "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-black-2.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-black-3.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-black-4.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-pink-2.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-pink-3.webp",
+      "/images/products/tattoo-machines/electra-pop-pro-pink-4.webp"
+    ],
+    "content": {
+      "specifications": {
+        "motor": "Precision DC motor",
+        "voltage_range": "6 to 12V",
+        "average_power_consumption": "1.1W",
+        "starting_current": "280mA",
+        "stroke_length": "Adjustable 3.3mm to 4mm",
+        "weight": "85g",
+        "dimensions": "67.5mm (H) x 30mm (W) x 97.3mm (L)"
+      },
+      "included_items": [
+        "1 Electra Pop Pro Tattoo Machine",
+        "1 Stroke Adjustment Key",
+        "Instruction Manual"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 15,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Electra Pop Pro | Professional Tattoo Equipment",
+      "meta_description": "Electra Pop Pro rotary machine with adjustable stroke, Mabuchi motor and shock absorption technology. Available in Black and Pink.",
+      "keywords": ["Electra Pop Pro","rotary tattoo machine","adjustable stroke","professional tattoo machine"]
+    },
+    "inStock": true
+  },
+
+  "pen-3": {
+    "id": "pen-3",
+    "name": "Pen 3",
+    "category": "Tattoo Machines",
+    "subcategory": "Rotary Machines",
+    "description": "Designed and developed for tattoo artists who demand high performance and exceptional precision, the Pen 3 - 4.0 brings advanced technology to your daily work. Equipped with a Neodymium 22R Motor, it’s larger, more robust, and more powerful, reaching speeds only achievable by Electric Ink machines. This unique motor was exclusively developed for Electric Ink tattoo machines.\n\nThe Pen 3 - 4.0 features a 4.0mm stroke length, offering greater precision in your lines and superior ink application quality. Its ergonomic design is made from high-resistance and durable materials, and it includes a grip compatible with universal cartridges. Additionally, it has a mount for the wireless Power 3 power supply and an RCA adapter for the wireless Power 1 and traditional cable.",
+    "features": [
+      "Neodymium 22R Motor: Exclusive to Electric Ink",
+      "4.0mm stroke length for optimal precision",
+      "Ergonomic, high-resistance durable construction",
+      "Universal cartridge compatibility",
+      "Magnetic Coupling (MC2) with RCA Adapter"
+    ],
+    "stripe_product_id": "prod_TkxRC9EqfpyVB5",
+    "pricing": {
+      "price": 322.55,
+      "currency": "EUR",
+      "stripe_price_id": "price_1SnRWEAiq7NBxfpw235gURaJ"
+    },
+    "price": 322.55,
+    "image": "/images/products/tattoo-machines/pen-3-cover.webp",
+    "images": [
+      "/images/products/tattoo-machines/pen-3-cover.webp",
+      "/images/products/tattoo-machines/pen-3-2.webp",
+      "/images/products/tattoo-machines/pen-3-3.webp",
+      "/images/products/tattoo-machines/pen-3-4.webp",
+      "/images/products/tattoo-machines/pen-3-5.webp",
+      "/images/products/tattoo-machines/pen-3-6.webp",
+      "/images/products/tattoo-machines/pen-3-7.webp",
+      "/images/products/tattoo-machines/pen-3-8.webp",
+      "/images/products/tattoo-machines/pen-3-9.webp",
+      "/images/products/tattoo-machines/pen-3-10.webp",
+      "/images/products/tattoo-machines/pen-3-11.webp"
+    ],
+    "content": {
+      "specifications": {
+        "stroke_length": "4.0mm",
+        "connection": "RCA",
+        "weight": "~150g"
+      }
+    },
+    "inventory": {
+      "stock_quantity": 12,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
+    },
+    "seo": {
+      "meta_title": "Electric Ink Pen 3 | Professional Tattoo Machine",
+      "meta_description": "Pen 3 rotary tattoo machine with 4.0mm stroke. Compatible with Universal cartridges and Electric Ink grips.",
+      "keywords": ["Pen 3","rotary machine","tattoo pen"]
+    },
+    "inStock": true
+  },
+
+  "ultra-pen": {
+    "id": "ultra-pen",
+    "name": "Ultra Pen",
+    "category": "Tattoo Machines",
+    "subcategory": "Rotary Machines",
+    "description": "The Ultra Pen Tattoo Machine by Electric Ink is a versatile, compact, and powerful rotary tattoo machine designed for all tattoo styles and techniques. Ergonomic design, PAS2 alignment, and high-performance motor for professional use.",
+    "features": [
+      "FLEX system compatibility",
+      "Permanently Aligned System 2 (PAS2)",
+      "Long Adjustable Damping System (LADS1)",
+      "Ergonomic design and high-performance motor"
+    ],
+    "pricing": {
+      "price": 846.70,
+      "currency": "EUR",
+      "stripe_price_id": null
+    },
+    "price": 846.70,
+    "image": "/images/products/tattoo-machines/ultra-pen-1-cover.webp",
+    "images": [
+      "/images/products/tattoo-machines/ultra-pen-1-cover.webp",
+      "/images/products/tattoo-machines/ultra-pen-1-2.webp",
+      "/images/products/tattoo-machines/ultra-pen-1-3.webp",
+      "/images/products/tattoo-machines/ultra-pen-1-4.webp",
+      "/images/products/tattoo-machines/ultra-pen-1-5.webp",
+      "/images/products/tattoo-machines/ultra-pen-1-6.webp"
+    ],
+    "content": {
+      "specifications": {
+        "motor": "High-performance Neodymium Electric Ink motor",
+        "voltage": "6 to 12V",
+        "stroke_length": "3.5mm",
+        "weight": "150g"
+      },
+      "included_items": [
+        "1 Ultra Pen machine",
+        "Instruction manual"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 8,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
+    },
+    "seo": {
+      "meta_title": "Electric Ink Ultra Pen | Professional Tattoo Machine",
+      "meta_description": "Ultra Pen rotary tattoo machine with PAS2 alignment, LADS1 damping and ergonomic design.",
+      "keywords": ["Ultra Pen","tattoo pen","rotary machine"]
+    },
+    "inStock": true
+  },
+
+  "ultra-pen-2-combo": {
+    "id": "ultra-pen-2-combo",
+    "name": "Ultra Pen 2 - Combo",
+    "category": "Tattoo Machines",
+    "subcategory": "Professional Kits",
+    "description": "ULTRA PEN 2 - 4.0MM STROKE\nThe Ultra Pen 2 is the latest evolution of the innovative Ultra Pen, developed over 12 years of research by Electric Ink's mechanical engineering team. Designed for tattoo artists who demand high performance and precision, this machine features an exclusive Neodymium 22R motor—more powerful, robust, and faster than ever. Its ergonomic, slim design includes a 25mm grip compatible with Universal cartridges, offering comfort and flexibility during tattooing. The Ultra Pen 2 also includes an adjustable damping system (LADS1) for precise ink application without damaging the skin, and a Permanently Aligned System (PAS2) to maintain cartridge alignment.",
+    "features": [
+      "4.0mm stroke length for precise lines and shading",
+      "Neodymium 22R motor: Exclusive to Electric Ink",
+      "25mm Universal grip compatibility",
+      "Magnetic Coupling MC2 with RCA adapter",
+      "Adjustable damping system: 30-click adjustment"
+    ],
+    "stripe_product_id": "prod_TkwYdAGyqrMKW0",
+    "pricing": {
+      "price": 1034.80,
+      "currency": "EUR",
+      "stripe_price_id": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
+    },
+    "price": 1034.80,
+    "image": "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
+    "images": [
+      "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-cover-2.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-cover-3.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-1.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-2.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-3.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-4.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-5.webp"
+    ],
+    "content": {
+      "specifications": {
+        "motor": "Neodymium 22R motor",
+        "voltage": "5 to 10V",
+        "connection": "MC2 with RCA adapter",
+        "current": "0.05 to 0.50A",
+        "stitch_frequency": "±80 to ±170 Hz",
+        "grip": "25mm",
+        "stroke": "4.0mm",
+        "needle_protrusion": "0 to 5mm adjustable",
+        "weight": "114g (without grip), 159g (with grip)",
+        "dimensions": "125mm x 25mm"
+      },
+      "included_items": [
+        "1 Ultra Pen 2 Tattoo Machine with Universal Grip",
+        "1 Power 3 Wireless Power Supply (31mm) with Adapter",
+        "1 Electric Ink Carrying Case",
+        "1 Electric Ink Battery Charger with Cable",
+        "2 Rechargeable Li-Ion Batteries for Power 3 (31mm)",
+        "1 Ultra Pen Adjustment Key"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 5,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Ultra Pen 2 Combo | Professional Tattoo Equipment",
+      "meta_description": "Ultra Pen 2 combo kit with Neodymium 22R motor, 25mm universal grip, adjustable damping system and full accessory kit.",
+      "keywords": ["Ultra Pen 2","tattoo combo kit","professional tattoo pen","Neodymium motor"]
+    },
+    "inStock": true
+  }
+}

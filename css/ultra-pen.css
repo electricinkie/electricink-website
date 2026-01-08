@@ -232,6 +232,51 @@
   margin-bottom: 20px;
 }
 
+/* Split action: WhatsApp (left) + Add to Cart (right) */
+.product-showcase .product-actions {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  overflow: visible;
+}
+
+.product-showcase .product-actions .btn-whatsapp-order {
+  flex: 1 1 50%;
+  width: auto;
+  padding: 16px 20px;
+  border-radius: 12px 0 0 12px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.product-showcase .product-actions .btn-add-to-cart {
+  flex: 1 1 50%;
+  width: auto;
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+  background: #000;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.product-showcase .product-actions .btn-add-to-cart:hover {
+  background: #43BDAB;
+  color: #000;
+  transform: translateY(-2px);
+}
+
 .btn-whatsapp-order {
   display: flex;
   align-items: center;
@@ -254,6 +299,20 @@
   background: #20BA5A;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
+/* Ensure both action buttons have identical sizing and box model */
+.product-showcase .product-actions .btn-whatsapp-order,
+.product-showcase .product-actions .btn-add-to-cart {
+  height: 52px;
+  padding: 0 20px;
+  font-size: 16px;
+  font-family: 'Outfit', sans-serif;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .wa-icon {
@@ -428,5 +487,18 @@
   .btn-whatsapp-order {
     padding: 16px 24px;
     font-size: 15px;
+  }
+
+  /* Stack on mobile for better tap targets */
+  .product-showcase .product-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .product-showcase .product-actions .btn-whatsapp-order,
+  .product-showcase .product-actions .btn-add-to-cart {
+    border-radius: 12px !important;
+    width: 100%;
+    z-index: 0;
   }
 }

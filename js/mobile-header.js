@@ -78,12 +78,13 @@
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </button>
-          <ul class="mobile-submenu">
+            <ul class="mobile-submenu">
             <li><a href="/category.html?cat=cartridges">Cartridges</a></li>
-            <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>
+            <li><a href="/category.html?cat=needles">Needles</a></li>
             <li><a href="/category.html?cat=inks">Inks</a></li>
-            <li><a href="/category.html?cat=accessories">Accessories</a></li>
+            <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>
             <li><a href="/category.html?cat=machines">Machines</a></li>
+            <li><a href="/category.html?cat=accessories">Accessories</a></li>
           </ul>
         </li>
         

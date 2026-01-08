@@ -708,7 +708,7 @@
   line-height: 1.6;
   color: #666;
   margin-bottom: 16px;
-  padding-left: 40px;
+  padding-left: 32px;
   position: relative;
 }
 
@@ -717,13 +717,13 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #43BDAB;
   color: #FFF;
   font-family: 'Outfit', sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   display: flex;
   align-items: center;

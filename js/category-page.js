@@ -29,6 +29,21 @@
       description: 'Essential tattoo tools and accessories',
       icon: '🛠️'
     },
+    'tattoo machines': {
+      title: 'Tattoo Machines',
+      description: 'Professional tattoo machines, grips and full kits',
+      icon: '🖋️'
+    },
+    'tattoo-machines': {
+      title: 'Tattoo Machines',
+      description: 'Professional tattoo machines, grips and full kits',
+      icon: '🖋️'
+    },
+    'machines': {
+      title: 'Tattoo Machines',
+      description: 'Professional rotary machines and equipment',
+      icon: '⚙️'
+    },
     'all': {
       title: 'All Products',
       description: 'Browse our complete range of professional supplies',
@@ -68,7 +83,8 @@
     '/data/products-artistic-inks.json',
     '/data/products-needles-022.json',
     '/data/products-needles-025.json',
-    '/data/products-needles-030.json'
+    '/data/products-needles-030.json',
+    '/data/product-tattoo-machines.json'
   ];
 
   try {
@@ -173,6 +189,12 @@
       filteredProducts = productsArray.filter(p => {
         const c = (p.category || '').toLowerCase();
         return c === 'cartridges' || c === 'needles';
+      });
+    } else if (catLower === 'tattoo-machines' || catLower === 'tattoo machines' || catLower === 'tattoo' || catLower === 'machines') {
+      // Tattoo Machines category - include any product whose category mentions 'tattoo'
+      filteredProducts = productsArray.filter(p => {
+        const c = (p.category || '').toLowerCase();
+        return c.includes('tattoo');
       });
     } else {
       filteredProducts = productsArray.filter(p => (p.category || '').toLowerCase() === catLower);

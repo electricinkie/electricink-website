@@ -30,10 +30,11 @@
               </button>
               <ul class="desktop-dropdown-menu" role="menu">
                 <li role="none"><a href="/category.html?cat=cartridges" role="menuitem">Cartridges</a></li>
-                <li role="none"><a href="/category.html?cat=cosmetics" role="menuitem">Cosmetics</a></li>
+                <li role="none"><a href="/category.html?cat=needles" role="menuitem">Needles</a></li>
                 <li role="none"><a href="/category.html?cat=inks" role="menuitem">Inks</a></li>
-                <li role="none"><a href="/category.html?cat=accessories" role="menuitem">Accessories</a></li>
+                <li role="none"><a href="/category.html?cat=cosmetics" role="menuitem">Cosmetics</a></li>
                 <li role="none"><a href="/category.html?cat=machines" role="menuitem">Machines</a></li>
+                <li role="none"><a href="/category.html?cat=accessories" role="menuitem">Accessories</a></li>
               </ul>
             </li>
             
