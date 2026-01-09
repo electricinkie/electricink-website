@@ -290,6 +290,12 @@
         const c = (p.category || '').toLowerCase();
         return c.includes('tattoo');
       });
+    } else if (catLower === 'power-supplies' || catLower === 'power supplies') {
+      // Power Supplies - match product.category 'Power Supplies'
+      filteredProducts = productsArray.filter(p => {
+        const c = (p.category || '').toLowerCase();
+        return c === 'power supplies';
+      });
     } else {
       filteredProducts = productsArray.filter(p => (p.category || '').toLowerCase() === catLower);
     }
