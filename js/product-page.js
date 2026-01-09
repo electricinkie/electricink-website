@@ -107,14 +107,24 @@
   const priceEl = document.getElementById('productPrice');
   if (productData.variants && productData.variants.length > 0) {
     // Has variants - determine if variants share a single price (Cosmetics behaviour)
-    const variantPrices = productData.variants.map(v => typeof v.price === 'number' ? v.price : null).filter(Boolean);
-    const uniquePrices = Array.from(new Set(variantPrices.map(p => p.toFixed(2))));
-    if (uniquePrices.length === 1) {
-      // All variants share same price - display single price
-      priceEl.textContent = `€${parseFloat(uniquePrices[0]).toFixed(2)}`;
+    const variantPrices = productData.variants
+      .map(v => (typeof v.price === 'number' && !isNaN(v.price)) ? v.price : null)
+      .filter(p => typeof p === 'number');
+
+    if (variantPrices.length === 0) {
+      // No numeric variant prices: fall back to product-level price or range
+      const basePrice = productData.basic?.price ?? productData.price;
+      priceEl.textContent = basePrice ? `€${Number(basePrice).toFixed(2)}` : (productData.price_range?.display || 'Price unavailable');
     } else {
-      // Multiple prices - show price range / first variant
-      priceEl.textContent = productData.price_range?.display || `from €${productData.variants[0].price.toFixed(2)}`;
+      const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
+      if (uniquePrices.length === 1) {
+        // All variants share same price - display single price
+        priceEl.textContent = `€${parseFloat(uniquePrices[0]).toFixed(2)}`;
+      } else {
+        // Multiple prices - show price range using the lowest variant price
+        const minPrice = Math.min(...variantPrices);
+        priceEl.textContent = productData.price_range?.display || `from €${Number(minPrice).toFixed(2)}`;
+      }
     }
   } else {
     // Simple product - single price
@@ -170,20 +180,31 @@
     }
 
     // Populate options
-    const variantPrices = productData.variants.map(v => typeof v.price === 'number' ? v.price : null).filter(Boolean);
-    const uniquePrices = Array.from(new Set(variantPrices.map(p => p.toFixed(2))));
-    const sharedPrice = uniquePrices.length === 1;
+    const variantPrices = productData.variants
+      .map(v => (typeof v.price === 'number' && !isNaN(v.price)) ? v.price : null)
+      .filter(p => typeof p === 'number');
+    const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
+    const sharedPrice = variantPrices.length > 0 && uniquePrices.length === 1;
 
     productData.variants.forEach((variant, index) => {
       const option = document.createElement('option');
       option.value = variant.id;
-      // If all variants share the same price, avoid showing per-option price (Cosmetics canonical behavior)
-      option.textContent = sharedPrice ? `${variant.label}` : `${variant.label} - €${variant.price.toFixed(2)}`;
-      option.dataset.price = sharedPrice ? (productData.basic?.price || productData.price || variant.price) : variant.price;
+
+      // Determine option price safely (use product price as fallback when sharedPrice)
+      const optPrice = sharedPrice
+        ? (productData.basic?.price ?? productData.price ?? variant.price)
+        : variant.price;
+      option.dataset.price = (typeof optPrice === 'number' && !isNaN(optPrice)) ? String(optPrice) : '';
+
       // Ensure a usable priceId is available on the option: prefer variant, otherwise fall back to product-level ids
       option.dataset.priceId = variant.stripe_price_id || variant.priceId || variant.price_id || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || '';
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
+
+      // Use dataset.price for display to avoid calling toFixed on undefined
+      const displayPrice = parseFloat(option.dataset.price);
+      option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}`;
+
       variantSelect.appendChild(option);
     });
 
@@ -397,16 +418,22 @@
 
       console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
 
+      const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
+        ? selectedVariant.price
+        : (productData.basic?.price ?? productData.price ?? null);
+
+      if (resolvedVariantPrice === null) {
+        console.error('No price available for selected variant or product', { productId, selectedVariant });
+        alert('Product price not available');
+        return;
+      }
+
       itemToAdd = {
         id: `${productId}-${selectedVariant.id}`,
         name: `${name} - ${selectedVariant.label}`,
-        price: selectedVariant.price,
+        price: resolvedVariantPrice,
         image: selectedVariant.image || mainImage,
-        variant: {
-          id: selectedVariant.id,
-          label: selectedVariant.label,
-          stripe_price_id: selectedVariant.stripe_price_id || selectedVariant.priceId || selectedVariant.price_id || null
-        },
+        variant: selectedVariant.id || selectedVariant.label || null,
         stripe_price_id: resolvedPriceId
       };
     } else {

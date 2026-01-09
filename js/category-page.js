@@ -238,12 +238,23 @@
       // Handle price (single price OR price range for variants)
       let priceDisplay;
       if (data.variants && data.variants.length > 0) {
-        // Has variants - use price range
-        priceDisplay = data.price_range?.display || `from €${data.variants[0].price.toFixed(2)}`;
+        // Has variants - prefer explicit price_range.display, otherwise try variant.price or product price
+        const priceRangeDisplay = data.price_range && data.price_range.display;
+        const firstPrice = (data.variants[0] && typeof data.variants[0].price === 'number')
+          ? data.variants[0].price
+          : (typeof data.price === 'number' ? data.price : (typeof data.basic?.price === 'number' ? data.basic.price : NaN));
+
+        if (priceRangeDisplay) {
+          priceDisplay = priceRangeDisplay;
+        } else if (!isNaN(firstPrice)) {
+          priceDisplay = `from €${firstPrice.toFixed(2)}`;
+        } else {
+          priceDisplay = 'Price unavailable';
+        }
       } else {
-        // Single product - use basic price
-        const price = data.basic?.price || data.price;
-        priceDisplay = price ? `€${price.toFixed(2)}` : 'Price unavailable';
+        // Single product - use basic price or product-level price
+        const price = typeof data.basic?.price === 'number' ? data.basic.price : data.price;
+        priceDisplay = (typeof price === 'number' && !isNaN(price)) ? `€${price.toFixed(2)}` : 'Price unavailable';
       }
 
       // Map 'Needles' category to 'Cartridges' and expose variant

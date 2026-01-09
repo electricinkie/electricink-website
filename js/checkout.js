@@ -1026,31 +1026,100 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
     try {
       // Prepare cart items for backend validation
       // 🔧 FIX: Normalize product IDs (underscore → hífen)
-      const cartItems = cart.map(item => {
-        // Resolve stripe price id from multiple possible locations to
-        // support legacy shapes where priceId may live on the product root
-        // or inside a variant object.
-        const priceCandidate = item.stripe_price_id
-          || (item.variant && (item.variant.stripe_price_id || item.variant.priceId || item.variant.price_id))
-          || item.priceId
-          || item.price_id
-          || null;
+      // Build cartItems while normalizing `quantity` and resolving missing `stripe_price_id`.
+      // If any item lacks a price id (older carts), attempt to fetch product JSONs client-side
+      // and use the product-level `stripe_price_id` as a safe fallback.
+      const PRODUCT_FILES = [
+        '/data/product-accessories.json',
+        '/data/products-cosmetics.json',
+        '/data/products-artistic-inks.json',
+        '/data/product-tattoo-machines.json',
+        '/data/products-needles-022.json',
+        '/data/products-needles-025.json',
+        '/data/products-needles-030.json'
+      ];
 
-        if (!priceCandidate) {
-          console.error('[CHECKOUT] Missing stripe price id for cart item:', item);
-          throw new Error(`Invalid cart item: missing stripe_price_id (${item.id})`);
+      let productsCache = null;
+      async function fetchAllProducts() {
+        if (productsCache) return productsCache;
+        const responses = await Promise.all(PRODUCT_FILES.map(p => fetch(p).catch(() => ({ ok: false }))));
+        const merged = {};
+        for (let i = 0; i < responses.length; i++) {
+          const res = responses[i];
+          const path = PRODUCT_FILES[i];
+          if (!res || !res.ok) continue;
+          try {
+            const json = await res.json();
+            Object.assign(merged, json);
+          } catch (e) {
+            console.warn('Failed to parse', path, e && e.message);
+          }
+        }
+        productsCache = merged;
+        return merged;
+      }
+
+      const cartItems = [];
+      for (const rawItem of cart) {
+        // Normalize quantity to a number
+        const quantity = Number(rawItem.quantity);
+        if (isNaN(quantity) || quantity <= 0) {
+          throw new Error(`Invalid quantity for ${rawItem.id}: ${rawItem.quantity}`);
         }
 
-        // Ensure we send a canonical `stripe_price_id` to the backend
-        if (!item.stripe_price_id) item.stripe_price_id = priceCandidate;
+        // Try known places for stripe price id
+        let priceCandidate = rawItem.stripe_price_id
+          || (rawItem.variant && (rawItem.variant.stripe_price_id || rawItem.variant.priceId || rawItem.variant.price_id))
+          || rawItem.priceId
+          || rawItem.price_id
+          || null;
 
-        return {
-          id: item.id.replace(/_/g, '-'),
-          quantity: item.quantity,
-          stripe_price_id: item.stripe_price_id,
-          ...(item.variant && { variant: item.variant })
-        };
-      });
+        // If still missing, attempt to fetch product files and resolve product-level price id
+        if (!priceCandidate) {
+          try {
+            const allProducts = await fetchAllProducts();
+            const itemId = (rawItem.id || '').replace(/_/g, '-');
+
+            // Exact product match
+            if (allProducts[itemId]) {
+              const p = allProducts[itemId];
+              priceCandidate = p.stripe_price_id || (p.stripe && (p.stripe.priceId || p.stripe.price_id)) || p.priceId || p.price_id || null;
+            }
+
+            // Suffix match against variant ids
+            if (!priceCandidate) {
+              const tokens = itemId.split('-');
+              for (let s = 1; s <= Math.min(3, tokens.length - 1); s++) {
+                const suffix = tokens.slice(tokens.length - s).join('-');
+                for (const p of Object.values(allProducts)) {
+                  if (p.variants && p.variants.find(v => v.id === suffix || v.priceId === suffix || v.stripe_price_id === suffix)) {
+                    priceCandidate = p.stripe_price_id || (p.stripe && (p.stripe.priceId || p.stripe.price_id)) || null;
+                    break;
+                  }
+                }
+                if (priceCandidate) break;
+              }
+            }
+          } catch (e) {
+            console.warn('Could not fetch product data to resolve missing stripe_price_id', e && e.message);
+          }
+        }
+
+        if (!priceCandidate) {
+          console.error('[CHECKOUT] Missing stripe price id for cart item after resolution attempt:', rawItem);
+          throw new Error(`Invalid cart item: missing stripe_price_id (${rawItem.id})`);
+        }
+
+        // Ensure canonical field
+        if (!rawItem.stripe_price_id) rawItem.stripe_price_id = priceCandidate;
+
+        cartItems.push({
+          id: (rawItem.id || '').replace(/_/g, '-'),
+          quantity,
+          stripe_price_id: rawItem.stripe_price_id,
+          ...(rawItem.variant && { variant: rawItem.variant })
+        });
+      }
       
       console.log('🔍 Normalized cart items:', cartItems);
 

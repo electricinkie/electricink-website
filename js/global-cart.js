@@ -74,7 +74,9 @@
         name: item.name,
         price: item.price,
         image: item.image || '/images/placeholder.jpg',
-        variant: item.variant || null,
+        variant: (typeof item.variant === 'object')
+          ? (item.variant.id || item.variant.label || null)
+          : (item.variant || null),
         stripe_price_id: normalizedPriceId,
         quantity: 1
       });
