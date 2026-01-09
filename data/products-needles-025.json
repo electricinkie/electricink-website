@@ -8,7 +8,7 @@
     "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Round Liner (RL)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Fine line","Mini realism","Black & grey realism","Colour realism"],
-    "stripe": {"productId":"prod_TjWsCYXNx1w7Em"},
+    "stripe": {"productId":"prod_TjWsCYXNx1w7Em","priceId":"price_1Sm3oiAiq7NBxfpwUKq5DWPn"},
     "price": 27.8,
     "variants": [
       {
@@ -95,7 +95,7 @@
     "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Round Shader (RS)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Solid fills","Bold lines","Light shading","Shadows & blending"],
-    "stripe": {"productId":"prod_TjWyA4HOfAs2HC"},
+    "stripe": {"productId":"prod_TjWyA4HOfAs2HC","priceId":"price_1Sm3uQAiq7NBxfpw8cQnk3cg"},
     "price": 31.0,
     "variants": [
       {
@@ -141,6 +141,16 @@
       "/images/products/cartridges/rs-0.25/0.25-rs-cover-2.webp",
       "/images/products/cartridges/rs-0.25/coifa-rs.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Shader Ø0.25 | Electric Ink Ireland",
+      "meta_description": "Versatile 0.25mm Round Shader for smooth shading and solid fills.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round shader", "0.25mm", "solid fills"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -154,7 +164,7 @@
     "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Round Magnum (RMG)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends"],
-    "stripe": {"productId":"prod_TjX5fvpr73vMfQ"},
+    "stripe": {"productId":"prod_TjX5fvpr73vMfQ","priceId":"price_1Sm41UAiq7NBxfpw10Z2VYoy"},
     "price": 30.5,
     "variants": [
       {
@@ -236,6 +246,16 @@
       "/images/products/cartridges/rmg-0.25/0.25-rmg-cover-2.webp",
       "/images/products/cartridges/rmg-0.25/coifa-rmg.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Magnum Ø0.25 | Electric Ink Ireland",
+      "meta_description": "Efficient 0.25mm Round Magnum for smooth gradients and colour packing.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round magnum", "0.25mm", "colour packing"]
+    },
     "inStock": true,
     "featured": true
   }

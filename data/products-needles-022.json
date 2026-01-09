@@ -24,7 +24,8 @@
       "Colour realism"
     ],
     "stripe": {
-      "productId": "prod_TjWlEPhxpYZOlC"
+      "productId": "prod_TjWlEPhxpYZOlC",
+      "priceId": "price_1Sm3heAiq7NBxfpwKkRuPLEv"
     },
     "price": 27.8,
     "variants": [

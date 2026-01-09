@@ -95,6 +95,7 @@
     "id": "raven-black",
     "name": "Raven Black",
     "category": "Inks",
+    "subcategory": "Black Inks",
     "description": "Experience Raven Black, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation.",
     "features": [
       "REACH compliant (EU 2020/2081)",
@@ -157,6 +158,7 @@
     "id": "ghost-white",
     "name": "Ghost White",
     "category": "Inks",
+    "subcategory": "White & Specialty Inks",
     "description": "Experience Ghost White, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation.",
     "features": [
       "REACH compliant (EU 2020/2081)",
@@ -229,6 +231,7 @@
     "id": "red",
     "name": "Red",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Experience Red, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation.",
     "features": [
       "REACH compliant (EU 2020/2081)",
@@ -281,6 +284,7 @@
     "id": "orange",
     "name": "Orange",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -333,6 +337,7 @@
     "id": "florida-orange",
     "name": "Florida Orange",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -385,6 +390,7 @@
     "id": "coral",
     "name": "Coral",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -397,6 +403,7 @@
       "priceId": "price_1SmpxWAiq7NBxfpwQFgbviUn"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-coral.webp",
     "images": [
@@ -426,6 +433,7 @@
     "id": "navy-grey",
     "name": "Navy Grey",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -438,6 +446,7 @@
       "priceId": "price_1SmpyGAiq7NBxfpwcZoIfJFO"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-navy-grey.webp",
     "images": [
@@ -467,6 +476,7 @@
     "id": "steel-grey",
     "name": "Steel Grey",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -479,6 +489,7 @@
       "priceId": "price_1Smpz4Aiq7NBxfpwuJ7EKGOc"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-steel-grey.webp",
     "images": [
@@ -508,6 +519,7 @@
     "id": "coconut-cream",
     "name": "Coconut Cream",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -520,6 +532,7 @@
       "priceId": "price_1Smq09Aiq7NBxfpwF9UEwfAH"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-coconut-cream.webp",
     "images": [
@@ -549,6 +562,7 @@
     "id": "canary-yellow",
     "name": "Canary Yellow",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -561,6 +575,7 @@
       "priceId": "price_1Smq0uAiq7NBxfpw4tdTdfE2"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-canary-yellow.webp",
     "images": [
@@ -590,6 +605,7 @@
     "id": "bus-yellow",
     "name": "Bus Yellow",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -602,6 +618,7 @@
       "priceId": "price_1Smq1kAiq7NBxfpwwktKBNPk"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-bus-yellow.webp",
     "images": [
@@ -631,6 +648,7 @@
     "id": "mustard",
     "name": "Mustard",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -643,6 +661,7 @@
       "priceId": "price_1Smq2SAiq7NBxfpwDHxaasyq"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-mustard.webp",
     "images": [
@@ -672,6 +691,7 @@
     "id": "electric-pink",
     "name": "Electric Pink",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -684,6 +704,7 @@
       "priceId": "price_1Smq37Aiq7NBxfpwhJZHvxAO"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-electric-pink.webp",
     "images": [
@@ -713,6 +734,7 @@
     "id": "bubblegum",
     "name": "Bubblegum",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -725,6 +747,7 @@
       "priceId": "price_1Smq41Aiq7NBxfpw33T6wBnw"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-bubblegum.webp",
     "images": [
@@ -754,6 +777,7 @@
     "id": "rose",
     "name": "Rose",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -766,6 +790,7 @@
       "priceId": "price_1Smq4ZAiq7NBxfpwk9bJnJGW"
     },
     "price": 21.25,
+    "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-rose.webp",
     "images": [
@@ -795,6 +820,7 @@
     "id": "deepest-pink",
     "name": "Deepest Pink",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -848,6 +874,7 @@
     "id": "electric-blue",
     "name": "Electric Blue",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -900,6 +927,7 @@
     "id": "olympic-blue",
     "name": "Olympic Blue",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -952,6 +980,7 @@
     "id": "navy-blue",
     "name": "Navy Blue",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1004,6 +1033,7 @@
     "id": "deep-violet",
     "name": "Deep Violet",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1056,6 +1086,7 @@
     "id": "brilliant-green",
     "name": "Brilliant Green",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1108,6 +1139,7 @@
     "id": "snake-green",
     "name": "Snake Green",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1160,6 +1192,7 @@
     "id": "true-green",
     "name": "True Green",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1212,6 +1245,7 @@
     "id": "deepest-green",
     "name": "Deepest Green",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1264,6 +1298,7 @@
     "id": "golden-tan",
     "name": "Golden Tan",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1316,6 +1351,7 @@
     "id": "snake-brown",
     "name": "Snake Brown",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1368,6 +1404,7 @@
     "id": "eagle-brown",
     "name": "Eagle Brown",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",
@@ -1420,6 +1457,7 @@
     "id": "monkey-brown",
     "name": "Monkey Brown",
     "category": "Inks",
+    "subcategory": "Color Inks",
     "description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces.",
     "features": [
       "Easy Glow technology",

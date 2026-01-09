@@ -16,6 +16,7 @@
       "priceId": "price_1Sm19RAiq7NBxfpwp4mtau1V"
     },
     "price": 8.15,
+    "variants": [],
     "size": "25g",
     "image": "/images/products/cosmetics/tattoo-balm-25g.webp",
     "images": [
@@ -26,6 +27,16 @@
     ],
     "content": {
       "usage_instructions": "Apply 2-3 times daily for 14 days."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Balm | Electric Ink Ireland",
+      "meta_description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "aftercare", "tattoo balm", "post-tattoo care"]
     },
     "inStock": true,
     "featured": true
@@ -47,6 +58,7 @@
       "priceId": "price_1Sm1CHAiq7NBxfpwWPOFVz98"
     },
     "price": 6.50,
+    "variants": [],
     "size": "30g",
     "image": "/images/products/cosmetics/tattoo-cream-30g.webp",
     "images": [
@@ -55,6 +67,16 @@
     ],
     "content": {
       "usage_instructions": "Use daily to moisturize healed tattoos and maintain vibrancy."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Cream Derma | Electric Ink Ireland",
+      "meta_description": "Lightweight moisturizer for healed tattoos. Plant-based oils and butters provide deep hydration with anti-aging antioxidants. Keep your ink bold and vibrant.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "aftercare", "tattoo cream derma", "moisturizer"]
     },
     "inStock": true,
     "featured": true
@@ -108,6 +130,16 @@
     "content": {
       "usage_instructions": "Apply during tattooing as needed.\nReduces inflammation immediately.\nMaintains stencil clarity and improves ink visibility."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Slimer Tattoo Gel | Electric Ink Ireland",
+      "meta_description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "during tattoo", "slimer tattoo gel", "gel lubricant"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -128,6 +160,7 @@
       "priceId": "price_1Sm1ICAiq7NBxfpw7gNrJWEi"
     },
     "price": 13.50,
+    "variants": [],
     "size": "250g",
     "image": "/images/products/cosmetics/scrub-out-250g.webp",
     "images": [
@@ -136,6 +169,16 @@
     ],
     "content": {
       "usage_instructions": "Apply sufficient amount onto the area to be tattooed.\nGently massage in circular motion to exfoliate skin.\nRinse thoroughly with Clean Up/Prep to remove debris."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Skin Scrub Out | Electric Ink Ireland",
+      "meta_description": "Exfoliating gel removes dead cells and impurities. Softens skin, facilitates ink application, and makes the process safer. Essential for preparation.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "pre-tattoo", "skin scrub", "exfoliating gel"]
     },
     "inStock": true
   },
@@ -156,6 +199,7 @@
       "priceId": "price_1Sm1KoAiq7NBxfpwSEEBe3N4"
     },
     "price": 12.25,
+    "variants": [],
     "size": "200mL",
     "image": "/images/products/cosmetics/prep-200ml.webp",
     "images": [
@@ -164,6 +208,16 @@
     ],
     "content": {
       "usage_instructions": "Apply directly on skin or on disposable absorbent paper.\nSpread foam evenly across area for easy hair removal.\nRemove excess foam with absorbent paper—no rinsing needed."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Prep | Electric Ink Ireland",
+      "meta_description": "Shaving foam with Aloe Vera and Chamomile. Enhances razor glide during hair removal and cleanses skin. Calms and moisturizes. No rinsing needed.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "pre-tattoo", "tattoo prep", "shaving foam"]
     },
     "inStock": true
   },
@@ -312,6 +366,7 @@
       "priceId": "price_1Sm1W8Aiq7NBxfpwmkBIpvUp"
     },
     "price": 7.10,
+    "variants": [],
     "size": "120mL",
     "image": "/images/products/cosmetics/fix-120ml.webp",
     "images": [
@@ -412,6 +467,7 @@
       "priceId": "price_1Sm1akAiq7NBxfpwoTcDpGHw"
     },
     "price": 14.70,
+    "variants": [],
     "size": "1L",
     "image": "/images/products/cosmetics/clean-up-1l.webp",
     "images": [
@@ -525,6 +581,16 @@
     "content": {
       "usage_instructions": "Apply a thin, even layer over the area.\nGently massage into skin.\nReapply as needed for hydration and glide."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Cat Slobber Butter | Electric Ink Ireland",
+      "meta_description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "during tattoo", "cat slobber butter", "needle glide"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -576,6 +642,16 @@
     "content": {
       "usage_instructions": "Apply a thin layer during tattooing to ensure smooth needle glide and skin protection.\nReapply as necessary."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Vaseline Slip Premium | Electric Ink Ireland",
+      "meta_description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "during tattoo", "vaseline slip premium", "needle glide"]
+    },
     "inStock": true
   },
   "after-all": {
@@ -624,6 +700,16 @@
     ],
     "content": {
       "usage_instructions": "Apply After All to cleaned, tattooed area.\nGently pat skin dry with soft paper.\nNo rinsing necessary."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo After All | Electric Ink Ireland",
+      "meta_description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "aftercare", "tattoo after all", "antiseptic spray"]
     },
     "inStock": true,
     "featured": true
@@ -674,6 +760,16 @@
     "content": {
       "usage_instructions": "Apply a layer of Barrier Film over the tattoo and allow it to dry completely.\nTo remove: rinse with warm water or use Clean Up."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Barrier Film | Electric Ink Ireland",
+      "meta_description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "aftercare", "barrier film", "second skin"]
+    },
     "inStock": true
   },
   "tattoo-dry-10units": {
@@ -693,12 +789,23 @@
       "priceId": "price_1Sm1xXAiq7NBxfpwgTnMwun3"
     },
     "price": 12.20,
+    "variants": [],
     "size": "10 units",
     "image": "/images/products/cosmetics/dry-10g.webp",
     "images": [
       "/images/products/cosmetics/dry-10g.webp",
       "/images/products/cosmetics/dry-10g-2.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Dry Solidifier | Electric Ink Ireland",
+      "meta_description": "Solidifies liquid tattoo waste (blood, fluids, inks). Prevents leaks, reduces contamination risk, and ensures safe disposal. 10 individual units per box.... Shop Electric Ink Ireland.",
+      "keywords": ["cosmetics", "during tattoo", "tattoo dry solidifier", "solidifier"]
+    },
     "inStock": true
   }
 }

@@ -3,6 +3,7 @@
     "id": "tattoo-grips",
     "name": "Tattoo Grips",
     "category": "Accessories",
+    "subcategory": "Grips & Supplies",
       "subcategory": "Hygiene & Protection",
       "subcategory": "Hygiene & Protection",
       "subcategory": "Practice & Training",
@@ -63,6 +64,7 @@
     "id": "silicone-ink-cups",
     "name": "Silicone Ink Cups",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "High-quality silicone ink cups with rubber base to protect needle tips. Durable, flexible and easy to sterilize for safe use.",
     "features": [
       "High-quality silicone",
@@ -117,6 +119,7 @@
     "id": "pen-machine-cover-25-units",
     "name": "Pen Machine Cover - 25 Units",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Transparent pen machine protectors designed to fit Pen 3 and Ultra Pen 2. Pack of 25 protectors for hygienic use.",
     "features": [
       "Fits Pen 3 and Ultra Pen 2",
@@ -126,6 +129,7 @@
     ],
     "stripe": { "productId": "prod_TkqbVXdpviuUMT", "priceId": "price_1SnKtuAiq7NBxfpwU8DjVxgy" },
     "price": 6.55,
+    "variants": [],
     "size": "25 units",
     "image": "/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp",
     "images": ["/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp"],
@@ -150,6 +154,7 @@
     "id": "clip-cord-protector",
     "name": "Clip Cord Protector",
     "category": "Accessories",
+    "subcategory": "Machine Accessories",
     "description": "Disposable plastic covers compatible with RCA, clip-cord and magnetic cables. Helps prevent contamination and keeps cables clean.",
     "features": [
       "Compatible with RCA, clip-cord and magnetic cables",
@@ -192,6 +197,7 @@
     "id": "electric-ink-wash-bottle",
     "name": "Electric Ink Wash Bottle",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Professional wash bottle available in 250mL and 500mL capacities. Durable and easy to clean for studio use.",
     "features": [
       "Available in 250mL and 500mL",
@@ -231,6 +237,7 @@
     "id": "foam-bottle",
     "name": "Foam Bottle",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Foam dispenser bottle (210mL) for soap — converts liquid into rich foam for efficient cleaning in the studio.",
     "features": [
       "210mL capacity",
@@ -240,6 +247,7 @@
     ],
     "stripe": { "productId": "prod_Tkqjhxh3m7ifs7", "priceId": "price_1SnL1hAiq7NBxfpwtmT5aLSu" },
     "price": 4.70,
+    "variants": [],
     "size": "210mL",
     "image": "/images/products/accessories/foam-bottle.webp",
     "images": ["/images/products/accessories/foam-bottle.webp"],
@@ -264,6 +272,7 @@
     "id": "black-medical-bibs",
     "name": "Black Medical Bibs",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.",
     "features": [
       "Waterproof and absorbent",
@@ -285,6 +294,16 @@
     "content": {
       "product_details": "Sterilized with ethylene oxide and Beta/Gamma rays. Absorbent tissue with waterproof layer."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Black Medical Bibs | Electric Ink Ireland",
+      "meta_description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.... Shop Electric Ink Ireland.",
+      "keywords": ["accessories", "hygiene & protection", "black medical bibs", "medical bibs", "disposable"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -293,6 +312,7 @@
     "id": "black-nitrile-gloves",
     "name": "Black Nitrile Gloves (Powder-Free)",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.",
     "features": [
       "Powder-free and latex-free",
@@ -318,6 +338,16 @@
     "content": {
       "product_details": "Powder-free nitrile for allergy-friendly protection. Designed for precision work and long sessions."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Black Nitrile Gloves (Powder-Free) | Electric Ink Ireland",
+      "meta_description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.... Shop Electric Ink Ireland.",
+      "keywords": ["accessories", "hygiene & protection", "black nitrile gloves", "powder-free", "nitrile gloves"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -326,6 +356,7 @@
     "id": "latex-gloves",
     "name": "Latex Gloves (Powder-Free)",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.",
     "features": [
       "Powder-free latex",
@@ -357,6 +388,16 @@
     "content": {
       "product_details": "Powder-free latex gloves available in Black and White. Sizes XS–XL. Colour affects price to match Stripe setup."
     },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Latex Gloves (Powder-Free) | Electric Ink Ireland",
+      "meta_description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.... Shop Electric Ink Ireland.",
+      "keywords": ["accessories", "hygiene & protection", "latex gloves", "powder-free", "professional gloves"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -365,6 +406,7 @@
     "id": "transparent-plastic-film",
     "name": "Transparent Plastic Film",
     "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
     "description": "Durable transparent osmotic film coil for professional use. Ideal to cover stretchers, armrests, chairs and equipment for hygiene.",
     "features": [
       "Size: 30cm x 300m",
@@ -375,6 +417,7 @@
 
     "stripe": { "productId": "prod_TktNPZ4nPPgOgp", "priceId": "price_1SnNb5Aiq7NBxfpwAsfecGoo" },
     "price": 9.00,
+    "variants": [],
     "size": "30cm x 300m",
     "image": "/images/products/accessories/transparent-plastic-film-cover.webp",
     "images": [
@@ -382,6 +425,16 @@
     ],
     "content": {
       "product_details": "Transparent cling film roll for covering equipment. Length: 300m, width: 30cm."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Transparent Plastic Film | Electric Ink Ireland",
+      "meta_description": "Durable transparent film roll for professional use. Ideal to cover equipment for hygiene.... Shop Electric Ink Ireland.",
+      "keywords": ["accessories", "hygiene & protection", "transparent plastic film", "cling film", "covering equipment"]
     },
     "inStock": true,
     "featured": false

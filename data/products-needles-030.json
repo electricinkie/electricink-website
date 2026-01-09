@@ -8,7 +8,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","10 units per box"],
     "specs": {"needleType":"Round Liner (RL)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":10},
     "applications": ["Fine line","Mini realism","Black & grey realism","Colour realism"],
-    "stripe": {"productId":"prod_TjhJwWkOc0F85o"},
+    "stripe": {"productId":"prod_TjhJwWkOc0F85o","priceId":"price_1SmDudAiq7NBxfpwzkhtpgGJ"},
+    "price": 18.0,
     "variants": [
       {"id":"rl-030-03-10un","configuration":"RL03","label":"RL03 - 3 Needles","price":18.0,"priceId":"price_1SmDudAiq7NBxfpwzkhtpgGJ","stripe_price_id":"price_1SmDudAiq7NBxfpwzkhtpgGJ","image":"/images/products/cartridges/rl-0.30/0.30-rl-cover.webp"},
       {"id":"rl-030-05-10un","configuration":"RL05","label":"RL05 - 5 Needles","price":18.0,"priceId":"price_1SmDudAiq7NBxfpwyLkk07Nw","stripe_price_id":"price_1SmDudAiq7NBxfpwyLkk07Nw","image":"/images/products/cartridges/rl-0.30/0.30-rl-cover.webp"},
@@ -45,7 +46,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Round Liner (RL)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Fine line","Mini realism","Black & grey realism","Colour realism"],
-    "stripe": {"productId":"prod_TjhR8pJa853cMa"},
+    "stripe": {"productId":"prod_TjhR8pJa853cMa","priceId":"price_1SmE2JAiq7NBxfpwdCYynktI"},
+    "price": 28.8,
     "variants": [
       {"id":"rl-030-03-20un","configuration":"RL03","label":"RL03 - 3 Needles","price":28.8,"priceId":"price_1SmE2JAiq7NBxfpwdCYynktI","stripe_price_id":"price_1SmE2JAiq7NBxfpwdCYynktI","image":"/images/products/cartridges/rl-0.30/0.30-rl-cover.webp"},
       {"id":"rl-030-05-20un","configuration":"RL05","label":"RL05 - 5 Needles","price":30.5,"priceId":"price_1SmE2JAiq7NBxfpwU8F84xPi","stripe_price_id":"price_1SmE2JAiq7NBxfpwU8F84xPi","image":"/images/products/cartridges/rl-0.30/0.30-rl-cover.webp"},
@@ -60,6 +62,16 @@
       "/images/products/cartridges/rl-0.30/0.30-rl-cover-2.webp",
       "/images/products/cartridges/rl-0.30/coifa-rl.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Liner Ø0.30 (20un) | Electric Ink Ireland",
+      "meta_description": "Value 20-unit box for busy studios.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round liner", "0.30mm", "fine line"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -72,7 +84,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","10 units per box"],
     "specs": {"needleType":"Round Shader (RS)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":10},
     "applications": ["Solid fills","Bold lines","Light shading","Shadows & blending"],
-    "stripe": {"productId":"prod_TjhXO4l74HjELb"},
+    "stripe": {"productId":"prod_TjhXO4l74HjELb","priceId":"price_1SmE7zAiq7NBxfpwmjDQfnlH"},
+    "price": 18.0,
     "variants": [
       {"id":"rs-030-07-10un","configuration":"RS07","label":"RS07 - 7 Needles","price":18.0,"priceId":"price_1SmE7zAiq7NBxfpwmjDQfnlH","stripe_price_id":"price_1SmE7zAiq7NBxfpwmjDQfnlH","image":"/images/products/cartridges/rs-0.30/0.30-rs-cover.webp"},
       {"id":"rs-030-09-10un","configuration":"RS09","label":"RS09 - 9 Needles","price":21.0,"priceId":"price_1SmE7zAiq7NBxfpwRtgdZtsJ","stripe_price_id":"price_1SmE7zAiq7NBxfpwRtgdZtsJ","image":"/images/products/cartridges/rs-0.30/0.30-rs-cover.webp"},
@@ -85,6 +98,16 @@
       "/images/products/cartridges/rs-0.30/0.30-rs-cover-2.webp",
       "/images/products/cartridges/rs-0.30/coifa-rs.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Shader Ø0.30 (10un) | Electric Ink Ireland",
+      "meta_description": "Versatile 0.30mm Round Shader for smooth shading and fills.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round shader", "0.30mm", "shading"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -97,7 +120,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Round Shader (RS)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Solid fills","Bold lines","Light shading","Shadows & blending"],
-    "stripe": {"productId":"prod_TjhaIfGNjDQ4Ey"},
+    "stripe": {"productId":"prod_TjhaIfGNjDQ4Ey","priceId":"price_1SmEBiAiq7NBxfpwvZcAdnvb"},
+    "price": 31.0,
     "variants": [
       {"id":"rs-030-07-20un","configuration":"RS07","label":"RS07 - 7 Needles","price":31.0,"priceId":"price_1SmEBiAiq7NBxfpwvZcAdnvb","stripe_price_id":"price_1SmEBiAiq7NBxfpwvZcAdnvb","image":"/images/products/cartridges/rs-0.30/0.30-rs-cover.webp"},
       {"id":"rs-030-09-20un","configuration":"RS09","label":"RS09 - 9 Needles","price":32.35,"priceId":"price_1SmEBiAiq7NBxfpwxuqom5Ee","stripe_price_id":"price_1SmEBiAiq7NBxfpwxuqom5Ee","image":"/images/products/cartridges/rs-0.30/0.30-rs-cover.webp"},
@@ -110,6 +134,16 @@
       "/images/products/cartridges/rs-0.30/0.30-rs-cover-2.webp",
       "/images/products/cartridges/rs-0.30/coifa-rs.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Shader Ø0.30 (20un) | Electric Ink Ireland",
+      "meta_description": "Value 20-unit box for busy studios.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round shader", "0.30mm", "shading"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -122,7 +156,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","10 units per box"],
     "specs": {"needleType":"Round Magnum (RMG)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":10},
     "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends","Neo-traditional work"],
-    "stripe": {"productId":"prod_TjhhpsKAcBWNMS"},
+    "stripe": {"productId":"prod_TjhhpsKAcBWNMS","priceId":"price_1SmEIZAiq7NBxfpwcHtikzIm"},
+    "price": 18.0,
     "variants": [
       {"id":"rmg-030-07-10un","configuration":"RMG07","label":"RMG07 - 7 Needles","price":18.0,"priceId":"price_1SmEIZAiq7NBxfpwcHtikzIm","stripe_price_id":"price_1SmEIZAiq7NBxfpwcHtikzIm","image":"/images/products/cartridges/rmg-0.30/0.30-rmg-cover.webp"},
       {"id":"rmg-030-09-10un","configuration":"RMG09","label":"RMG09 - 9 Needles","price":21.0,"priceId":"price_1SmEIZAiq7NBxfpwDxs0adCA","stripe_price_id":"price_1SmEIZAiq7NBxfpwDxs0adCA","image":"/images/products/cartridges/rmg-0.30/0.30-rmg-cover.webp"},
@@ -139,6 +174,16 @@
       "/images/products/cartridges/rmg-0.30/0.30-rmg-cover-2.webp",
       "/images/products/cartridges/rmg-0.30/coifa-rmg.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Magnum Ø0.30 (10un) | Electric Ink Ireland",
+      "meta_description": "Efficient 0.30mm Round Magnum for smooth gradients and colour packing.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round magnum", "0.30mm", "colour packing"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -151,7 +196,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Round Magnum (RMG)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends","Neo-traditional work"],
-    "stripe": {"productId":"prod_TjhqtxLJCwjgkL"},
+    "stripe": {"productId":"prod_TjhqtxLJCwjgkL","priceId":"price_1SmER2Aiq7NBxfpwJSKMRWa2"},
+    "price": 30.5,
     "variants": [
       {"id":"rmg-030-07-20un","configuration":"RMG07","label":"RMG07 - 7 Needles","price":30.5,"priceId":"price_1SmER2Aiq7NBxfpwJSKMRWa2","stripe_price_id":"price_1SmER2Aiq7NBxfpwJSKMRWa2","image":"/images/products/cartridges/rmg-0.30/0.30-rmg-cover.webp"},
       {"id":"rmg-030-09-20un","configuration":"RMG09","label":"RMG09 - 9 Needles","price":32.35,"priceId":"price_1SmER2Aiq7NBxfpwqQVQbTVe","stripe_price_id":"price_1SmER2Aiq7NBxfpwqQVQbTVe","image":"/images/products/cartridges/rmg-0.30/0.30-rmg-cover.webp"},
@@ -168,6 +214,16 @@
       "/images/products/cartridges/rmg-0.30/0.30-rmg-cover-2.webp",
       "/images/products/cartridges/rmg-0.30/coifa-rmg.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Round Magnum Ø0.30 (20un) | Electric Ink Ireland",
+      "meta_description": "Professional 20-unit box for larger-volume colour packing.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "round magnum", "0.30mm", "colour packing"]
+    },
     "inStock": true,
     "featured": false
   },
@@ -180,7 +236,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","10 units per box"],
     "specs": {"needleType":"Magnum (MG)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":10},
     "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends"],
-    "stripe": {"productId":"prod_TjhvEobM8ohbuh"},
+    "stripe": {"productId":"prod_TjhvEobM8ohbuh","priceId":"price_1SmEVVAiq7NBxfpwmmOKQiiz"},
+    "price": 16.25,
     "variants": [
       {"id":"mg-030-07-10un","configuration":"MG07","label":"MG07 - 7 Needles","price":16.25,"priceId":"price_1SmEVVAiq7NBxfpwmmOKQiiz","stripe_price_id":"price_1SmEVVAiq7NBxfpwmmOKQiiz","image":"/images/products/cartridges/mg-0.30/0.30-mg-cover.webp"},
       {"id":"mg-030-09-10un","configuration":"MG09","label":"MG09 - 9 Needles","price":19.0,"priceId":"price_1SmEXoAiq7NBxfpwg8WeSXhO","stripe_price_id":"price_1SmEXoAiq7NBxfpwg8WeSXhO","image":"/images/products/cartridges/mg-0.30/0.30-mg-cover.webp"},
@@ -197,6 +254,16 @@
       "/images/products/cartridges/mg-0.30/0.30-mg-cover-2.webp",
       "/images/products/cartridges/mg-0.30/coifa-mg.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Magnum Ø0.30 (10un) | Electric Ink Ireland",
+      "meta_description": "Versatile 0.30mm Magnum for efficient colour packing and smooth shading.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "magnum", "0.30mm", "colour packing"]
+    },
     "inStock": true,
     "featured": true
   },
@@ -209,7 +276,8 @@
     "features": ["0.30mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
     "specs": {"needleType":"Magnum (MG)","diameter":"0.30mm","taper":"Super Long Taper","unitsPerBox":20},
     "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends"],
-    "stripe": {"productId":"prod_Tji34cY8Hx6mtY"},
+    "stripe": {"productId":"prod_Tji34cY8Hx6mtY","priceId":"price_1SmEdbAiq7NBxfpwLFFBmIhF"},
+    "price": 30.5,
     "variants": [
       {"id":"mg-030-07-20un","configuration":"MG07","label":"MG07 - 7 Needles","price":30.5,"priceId":"price_1SmEdbAiq7NBxfpwLFFBmIhF","stripe_price_id":"price_1SmEdbAiq7NBxfpwLFFBmIhF","image":"/images/products/cartridges/mg-0.30/0.30-mg-cover.webp"},
       {"id":"mg-030-09-20un","configuration":"MG09","label":"MG09 - 9 Needles","price":33.55,"priceId":"price_1SmEdbAiq7NBxfpwopXrTjrH","stripe_price_id":"price_1SmEdbAiq7NBxfpwopXrTjrH","image":"/images/products/cartridges/mg-0.30/0.30-mg-cover.webp"},
@@ -226,6 +294,16 @@
       "/images/products/cartridges/mg-0.30/0.30-mg-cover-2.webp",
       "/images/products/cartridges/mg-0.30/coifa-mg.webp"
     ],
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Pro Cartridge Magnum Ø0.30 (20un) | Electric Ink Ireland",
+      "meta_description": "Professional 20-unit box for large-volume use.... Shop Electric Ink Ireland.",
+      "keywords": ["needles", "magnum", "0.30mm", "large volume"]
+    },
     "inStock": true,
     "featured": false
   }
