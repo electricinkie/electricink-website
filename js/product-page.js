@@ -106,26 +106,8 @@
   // RENDER price
   const priceEl = document.getElementById('productPrice');
   if (productData.variants && productData.variants.length > 0) {
-    // Has variants - determine if variants share a single price (Cosmetics behaviour)
-    const variantPrices = productData.variants
-      .map(v => (typeof v.price === 'number' && !isNaN(v.price)) ? v.price : null)
-      .filter(p => typeof p === 'number');
-
-    if (variantPrices.length === 0) {
-      // No numeric variant prices: fall back to product-level price or range
-      const basePrice = productData.basic?.price ?? productData.price;
-      priceEl.textContent = basePrice ? `€${Number(basePrice).toFixed(2)}` : (productData.price_range?.display || 'Price unavailable');
-    } else {
-      const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
-      if (uniquePrices.length === 1) {
-        // All variants share same price - display single price
-        priceEl.textContent = `€${parseFloat(uniquePrices[0]).toFixed(2)}`;
-      } else {
-        // Multiple prices - show price range using the lowest variant price
-        const minPrice = Math.min(...variantPrices);
-        priceEl.textContent = productData.price_range?.display || `from €${Number(minPrice).toFixed(2)}`;
-      }
-    }
+    // Has variants - show price range
+    priceEl.textContent = productData.price_range?.display || `from €${productData.variants[0].price.toFixed(2)}`;
   } else {
     // Simple product - single price
     const price = productData.basic?.price || productData.price;
@@ -180,40 +162,21 @@
     }
 
     // Populate options
-    const variantPrices = productData.variants
-      .map(v => (typeof v.price === 'number' && !isNaN(v.price)) ? v.price : null)
-      .filter(p => typeof p === 'number');
-    const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
-    const sharedPrice = variantPrices.length > 0 && uniquePrices.length === 1;
-
     productData.variants.forEach((variant, index) => {
       const option = document.createElement('option');
       option.value = variant.id;
-
-      // Determine option price safely (use product price as fallback when sharedPrice)
-      const optPrice = sharedPrice
-        ? (productData.basic?.price ?? productData.price ?? variant.price)
-        : variant.price;
-      option.dataset.price = (typeof optPrice === 'number' && !isNaN(optPrice)) ? String(optPrice) : '';
-
-      // Ensure a usable priceId is available on the option: prefer variant, otherwise fall back to product-level ids
-      option.dataset.priceId = variant.stripe_price_id || variant.priceId || variant.price_id || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || '';
+      option.textContent = `${variant.label} - €${variant.price.toFixed(2)}`;
+      option.dataset.price = variant.price;
+      option.dataset.priceId = variant.stripe_price_id;
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
-
-      // Use dataset.price for display to avoid calling toFixed on undefined
-      const displayPrice = parseFloat(option.dataset.price);
-      option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}`;
-
       variantSelect.appendChild(option);
     });
 
     // Update price and image on change
     variantSelect.onchange = function() {
       const selected = this.options[this.selectedIndex];
-      // normalize price display
-      const p = parseFloat(selected.dataset.price);
-      priceEl.textContent = isNaN(p) ? priceEl.textContent : `€${p.toFixed(2)}`;
+      priceEl.textContent = `€${selected.dataset.price}`;
 
       // Update image if variant has one
       if (selected.dataset.image) {
@@ -387,100 +350,92 @@
 
   // ADD TO CART button
   document.getElementById('addToCartBtn').onclick = function() {
-    // Build item defensively and validate before calling global cart
-    // If product has variants, require selection
+    let itemToAdd;
+    
     if (productData.variants && productData.variants.length > 0) {
+      // Product with variants
       const variantSelect = document.getElementById('variantSelect');
+      
       if (!variantSelect || variantSelect.selectedIndex === -1) {
-        alert('Por favor, selecione uma opção (cor/tamanho)');
+        alert('Please select a variant');
         return;
       }
-
+      
       const selectedOption = variantSelect.options[variantSelect.selectedIndex];
       const selectedVariant = productData.variants.find(v => v.id === selectedOption.value);
+      
       if (!selectedVariant) {
-        alert('Opção inválida selecionada');
+        alert('Invalid variant selected');
         return;
       }
-
+      
+      // Resolve priceId explicitly and fail if missing
       let resolvedPriceId;
       try {
         resolvedPriceId = resolveStripePriceId(productData, selectedVariant);
       } catch (err) {
-        console.error('❌ Stripe price resolution failed (variant):', err);
-        alert('Erro: preço do produto não configurado. Contacte o suporte.');
+        console.error('Stripe price resolution failed (variant):', err);
+        alert('Product price not configured correctly. Please contact support.');
         return;
       }
 
-      const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
-        ? selectedVariant.price
-        : (productData.basic?.price ?? productData.price ?? null);
+      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
 
-      if (resolvedVariantPrice === null) {
-        console.error('❌ No price available for selected variant or product', { productId, selectedVariant });
-        alert('Preço do produto indisponível');
-        return;
-      }
-
-      const itemToAdd = {
+      itemToAdd = {
         id: `${productId}-${selectedVariant.id}`,
-        product_id: productId,
         name: `${name} - ${selectedVariant.label}`,
-        price: resolvedVariantPrice,
-        image: selectedVariant.image || mainImage,
-        variant_id: selectedVariant.id || null,
-        variant: selectedVariant || null,
+        price: selectedVariant.price,
         stripe_price_id: resolvedPriceId,
-        quantity: 1
+        image: selectedVariant.image || mainImage,
+        variant: selectedVariant.label
       };
-
-      console.log('✅ Adicionando ao carrinho:', itemToAdd);
-      if (window.cart && window.cart.addItem) {
-        if (!window.cart.addItem(itemToAdd)) {
-          alert('Falha ao adicionar ao carrinho. Tente novamente.');
-        }
-      } else {
-        alert('Sistema de carrinho indisponível. Recarregue a página.');
+    } else {
+      // Simple product
+      const price = productData.basic?.price || productData.price;
+      // Resolve priceId explicitly and fail if missing
+      let resolvedPriceId;
+      try {
+        resolvedPriceId = resolveStripePriceId(productData, undefined);
+      } catch (err) {
+        console.error('Stripe price resolution failed (simple product):', err, productData);
+        alert('Product price not configured correctly. Please contact support.');
+        return;
       }
 
-      return;
+      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: null, resolvedPriceId });
+
+      if (!price) {
+        alert('Product price not available');
+        return;
+      }
+
+      itemToAdd = {
+        id: productId,
+        name: name,
+        price: price,
+        stripe_price_id: resolvedPriceId,
+        image: mainImage
+      };
     }
-
-    // Simple product (no variants)
-    const price = productData.basic?.price || productData.price;
-    let resolvedPriceIdSimple;
-    try {
-      resolvedPriceIdSimple = resolveStripePriceId(productData, undefined);
-    } catch (err) {
-      console.error('❌ Stripe price resolution failed (simple product):', err, productData);
-      alert('Erro: preço do produto não configurado. Contacte o suporte.');
-      return;
-    }
-
-    if (!price) {
-      alert('Preço do produto indisponível');
-      return;
-    }
-
-    const itemToAdd = {
-      id: productId,
-      product_id: productId,
-      name: name,
-      price: price,
-      image: mainImage,
-      variant_id: null,
-      variant: null,
-      stripe_price_id: resolvedPriceIdSimple || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || null,
-      quantity: 1
-    };
-
-    console.log('✅ Adicionando ao carrinho:', itemToAdd);
+    
+    // Add to cart usando global system
     if (window.cart && window.cart.addItem) {
-      if (!window.cart.addItem(itemToAdd)) {
-        alert('Falha ao adicionar ao carrinho. Tente novamente.');
+      if (window.cart.addItem(itemToAdd)) {
+        // Success feedback no botão
+        const btn = this;
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Added!';
+        btn.style.background = '#43BDAB';
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+        }, 2000);
+      } else {
+        alert('Failed to add item to cart. Please try again.');
       }
     } else {
-      alert('Sistema de carrinho indisponível. Recarregue a página.');
+      alert('Cart system not available. Please refresh the page.');
     }
   };
 

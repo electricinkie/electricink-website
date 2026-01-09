@@ -36,26 +36,14 @@
 
   // ────────── Add Item to Cart ──────────
   function addItem(item) {
-    // Validação defensiva
-    if (!item || !item.id) {
-      console.error('❌ Tentativa de adicionar item inválido:', item);
-      try { alert('Erro ao adicionar produto. Por favor, tente novamente.'); } catch (e) {}
-      return false;
-    }
-
-    if (!item.name || typeof item.price === 'undefined' || item.price === null) {
-      console.error('❌ Item sem dados essenciais:', item);
-      try { alert('Produto com dados incompletos.'); } catch (e) {}
+    // Validação
+    if (!item || !item.id || !item.name || !item.price) {
+      console.error('Invalid item:', item);
       return false;
     }
 
     // Normalize and require a single canonical Stripe price id field: `stripe_price_id`
-    // Accept price id coming from variant object when present (shared-price variants rely on product-level ids)
-    const normalizedPriceId = item.stripe_price_id
-      || (item.variant && (item.variant.stripe_price_id || item.variant.priceId || item.variant.price_id))
-      || item.priceId || item.price_id
-      || (item.stripe && (item.stripe.priceId || item.stripe.price_id))
-      || null;
+    const normalizedPriceId = item.stripe_price_id || item.priceId || item.price_id || (item.stripe && (item.stripe.priceId || item.stripe.price_id)) || null;
     if (!normalizedPriceId) {
       console.error('Missing stripe_price_id for item, refusing to add to cart:', item);
       return false;
@@ -81,9 +69,7 @@
         name: item.name,
         price: item.price,
         image: item.image || '/images/placeholder.jpg',
-        variant: (typeof item.variant === 'object')
-          ? (item.variant.id || item.variant.label || null)
-          : (item.variant || null),
+        variant: item.variant || null,
         stripe_price_id: normalizedPriceId,
         quantity: 1
       });
