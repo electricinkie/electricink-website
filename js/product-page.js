@@ -387,105 +387,100 @@
 
   // ADD TO CART button
   document.getElementById('addToCartBtn').onclick = function() {
-    let itemToAdd;
-    
+    // Build item defensively and validate before calling global cart
+    // If product has variants, require selection
     if (productData.variants && productData.variants.length > 0) {
-      // Product with variants
       const variantSelect = document.getElementById('variantSelect');
-      
       if (!variantSelect || variantSelect.selectedIndex === -1) {
-        alert('Please select a variant');
+        alert('Por favor, selecione uma opção (cor/tamanho)');
         return;
       }
-      
+
       const selectedOption = variantSelect.options[variantSelect.selectedIndex];
       const selectedVariant = productData.variants.find(v => v.id === selectedOption.value);
-      
       if (!selectedVariant) {
-        alert('Invalid variant selected');
+        alert('Opção inválida selecionada');
         return;
       }
-      
-      // Resolve priceId explicitly and fail if missing
+
       let resolvedPriceId;
       try {
         resolvedPriceId = resolveStripePriceId(productData, selectedVariant);
       } catch (err) {
-        console.error('Stripe price resolution failed (variant):', err);
-        alert('Product price not configured correctly. Please contact support.');
+        console.error('❌ Stripe price resolution failed (variant):', err);
+        alert('Erro: preço do produto não configurado. Contacte o suporte.');
         return;
       }
-
-      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
 
       const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
         ? selectedVariant.price
         : (productData.basic?.price ?? productData.price ?? null);
 
       if (resolvedVariantPrice === null) {
-        console.error('No price available for selected variant or product', { productId, selectedVariant });
-        alert('Product price not available');
+        console.error('❌ No price available for selected variant or product', { productId, selectedVariant });
+        alert('Preço do produto indisponível');
         return;
       }
 
-      itemToAdd = {
+      const itemToAdd = {
         id: `${productId}-${selectedVariant.id}`,
+        product_id: productId,
         name: `${name} - ${selectedVariant.label}`,
         price: resolvedVariantPrice,
         image: selectedVariant.image || mainImage,
-        variant: selectedVariant.id || selectedVariant.label || null,
-        stripe_price_id: resolvedPriceId
+        variant_id: selectedVariant.id || null,
+        variant: selectedVariant || null,
+        stripe_price_id: resolvedPriceId,
+        quantity: 1
       };
-    } else {
-      // Simple product
-      const price = productData.basic?.price || productData.price;
-      // Resolve priceId explicitly and fail if missing
-      let resolvedPriceId;
-      try {
-        resolvedPriceId = resolveStripePriceId(productData, undefined);
-      } catch (err) {
-        console.error('Stripe price resolution failed (simple product):', err, productData);
-        alert('Product price not configured correctly. Please contact support.');
-        return;
-      }
 
-      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: null, resolvedPriceId });
-
-      if (!price) {
-        alert('Product price not available');
-        return;
-      }
-
-      itemToAdd = {
-        id: productId,
-        name: name,
-        price: price,
-        image: mainImage,
-        variant: null,
-        // For simple products (no variants) prefer explicit resolvedPriceId,
-        // otherwise fall back to product-level fields if present.
-        stripe_price_id: resolvedPriceId || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || null
-      };
-    }
-    
-    // Add to cart usando global system
-    if (window.cart && window.cart.addItem) {
-      if (window.cart.addItem(itemToAdd)) {
-        // Success feedback no botão
-        const btn = this;
-        const originalText = btn.textContent;
-        btn.textContent = '✓ Added!';
-        btn.style.background = '#43BDAB';
-        
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.background = '';
-        }, 2000);
+      console.log('✅ Adicionando ao carrinho:', itemToAdd);
+      if (window.cart && window.cart.addItem) {
+        if (!window.cart.addItem(itemToAdd)) {
+          alert('Falha ao adicionar ao carrinho. Tente novamente.');
+        }
       } else {
-        alert('Failed to add item to cart. Please try again.');
+        alert('Sistema de carrinho indisponível. Recarregue a página.');
+      }
+
+      return;
+    }
+
+    // Simple product (no variants)
+    const price = productData.basic?.price || productData.price;
+    let resolvedPriceIdSimple;
+    try {
+      resolvedPriceIdSimple = resolveStripePriceId(productData, undefined);
+    } catch (err) {
+      console.error('❌ Stripe price resolution failed (simple product):', err, productData);
+      alert('Erro: preço do produto não configurado. Contacte o suporte.');
+      return;
+    }
+
+    if (!price) {
+      alert('Preço do produto indisponível');
+      return;
+    }
+
+    const itemToAdd = {
+      id: productId,
+      product_id: productId,
+      name: name,
+      price: price,
+      image: mainImage,
+      variant_id: null,
+      variant: null,
+      stripe_price_id: resolvedPriceIdSimple || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || null,
+      quantity: 1
+    };
+
+    console.log('✅ Adicionando ao carrinho:', itemToAdd);
+    if (window.cart && window.cart.addItem) {
+      if (!window.cart.addItem(itemToAdd)) {
+        alert('Falha ao adicionar ao carrinho. Tente novamente.');
       }
     } else {
-      alert('Cart system not available. Please refresh the page.');
+      alert('Sistema de carrinho indisponível. Recarregue a página.');
     }
   };
 

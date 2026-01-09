@@ -36,9 +36,16 @@
 
   // ────────── Add Item to Cart ──────────
   function addItem(item) {
-    // Validação
-    if (!item || !item.id || !item.name || !item.price) {
-      console.error('Invalid item:', item);
+    // Validação defensiva
+    if (!item || !item.id) {
+      console.error('❌ Tentativa de adicionar item inválido:', item);
+      try { alert('Erro ao adicionar produto. Por favor, tente novamente.'); } catch (e) {}
+      return false;
+    }
+
+    if (!item.name || typeof item.price === 'undefined' || item.price === null) {
+      console.error('❌ Item sem dados essenciais:', item);
+      try { alert('Produto com dados incompletos.'); } catch (e) {}
       return false;
     }
 
