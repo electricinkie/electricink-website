@@ -1,0 +1,532 @@
+{
+  "battery-plus-power3-slim": {
+    "id": "battery-plus-power3-slim",
+    "name": "Rechargeable Battery Plus for Power 3 SLIM - 24mm",
+    "category": "Power Supplies",
+    "subcategory": "Batteries & Chargers",
+    "description": "High-capacity 1400mAh Li-Ion battery for Power 3 SLIM. Enhanced efficiency and extended autonomy for longer tattoo sessions.",
+    "features": [
+      "1400mAh capacity (enhanced)",
+      "3.7V Li-Ion rechargeable",
+      "Compatible with Power 3 SLIM (24mm)",
+      "Compact design: 35mm height, 18mm diameter",
+      "High-quality system prevents equipment damage",
+      "Charger not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl17IQOJNZ4SHD",
+      "priceId": "price_1SnV5RAiq7NBxfpwsV9gh4v4"
+    },
+    "price": 8.10,
+    "variants": [],
+    "image": "/images/products/power-supplies/battery-plus-power3-slim.webp",
+    "images": [
+      "/images/products/power-supplies/battery-plus-power3-slim.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "EIB - 18350 Plus",
+        "voltage": "3.7V",
+        "capacity": "1400mAh",
+        "weight": "23g",
+        "dimensions": "Height 35mm, Diameter 18mm",
+        "type": "Li-Ion Rechargeable"
+      },
+      "usage_notes": "Always use original or compatible high-quality charger. Battery autonomy varies based on machine model, voltage, amperage, needle exposure, and operation mode. Remove battery when not in use to preserve lifespan.",
+      "included_items": [
+        "1x Rechargeable Battery 18350 Plus"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Battery Plus Power 3 SLIM 1400mAh | Electric Ink Ireland",
+      "meta_description": "High-capacity 1400mAh Li-Ion battery for Power 3 SLIM. Extended autonomy for longer sessions. 3.7V rechargeable. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "batteries chargers", "power 3 slim battery", "1400mah", "tattoo power supply"]
+    },
+    "inStock": true
+  },
+  "battery-power1": {
+    "id": "battery-power1",
+    "name": "Rechargeable Battery LI-ION for Power 1",
+    "category": "Power Supplies",
+    "subcategory": "Batteries & Chargers",
+    "description": "1400mAh Li-Ion battery for Power 1 supply. Maximum efficiency and autonomy with high-quality system for safe operation.",
+    "features": [
+      "1400mAh capacity",
+      "3.7V Li-Ion rechargeable",
+      "Compatible with Power 1 supply",
+      "Compact: 49.5mm height, 18mm diameter",
+      "Prevents potential equipment damage",
+      "Charger not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl19Wj8opsDZ5i",
+      "priceId": "price_1SnV7JAiq7NBxfpwuCDFkSBe"
+    },
+    "price": 12.10,
+    "variants": [],
+    "image": "/images/products/power-supplies/battery-power1.webp",
+    "images": [
+      "/images/products/power-supplies/battery-power1.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "EIB - 18500",
+        "voltage": "3.7V",
+        "capacity": "1400mAh",
+        "weight": "33.5g",
+        "dimensions": "Height 49.5mm, Diameter 18mm",
+        "type": "Li-Ion Rechargeable"
+      },
+      "usage_notes": "Battery life depends on charging quality, machine model, operation mode, and current consumption. Perform full recharges and store at room temperature for optimal lifespan.",
+      "included_items": [
+        "1x Rechargeable Battery 18500"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Battery Power 1 1400mAh Li-Ion | Electric Ink Ireland",
+      "meta_description": "1400mAh Li-Ion battery for Power 1 supply. Maximum efficiency and safe operation. 3.7V rechargeable. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "batteries chargers", "power 1 battery", "1400mah", "li-ion battery"]
+    },
+    "inStock": true
+  },
+  "battery-power3-slim": {
+    "id": "battery-power3-slim",
+    "name": "Rechargeable Battery for Power 3 SLIM",
+    "category": "Power Supplies",
+    "subcategory": "Batteries & Chargers",
+    "description": "900mAh Li-Ion battery for Power 3 SLIM (24mm). Compact and reliable power for your wireless power supply.",
+    "features": [
+      "900mAh capacity",
+      "3.7V Li-Ion rechargeable",
+      "Compatible with Power 3 SLIM (24mm)",
+      "Compact: 35mm height, 18mm diameter",
+      "Safe operation system",
+      "Charger not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1IoLq238gn5f",
+      "priceId": "price_1SnVFeAiq7NBxfpwFi0cARc5"
+    },
+    "price": 6.70,
+    "variants": [],
+    "image": "/images/products/power-supplies/battery-power3-slim.webp",
+    "images": [
+      "/images/products/power-supplies/battery-power3-slim.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "EIB - 18350",
+        "voltage": "3.7V",
+        "capacity": "900mAh",
+        "weight": "22.5g",
+        "dimensions": "Height 35mm, Diameter 18mm",
+        "type": "Li-Ion Rechargeable"
+      },
+      "usage_notes": "Battery autonomy varies depending on factors like charging quality, machine model, and operation mode. Keep spare batteries for uninterrupted sessions.",
+      "included_items": [
+        "1x Rechargeable Battery 18350"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Battery Power 3 SLIM 900mAh | Electric Ink Ireland",
+      "meta_description": "900mAh Li-Ion battery for Power 3 SLIM. Compact and reliable power. 3.7V rechargeable, 24mm compatible. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "batteries chargers", "power 3 slim", "900mah", "18350 battery"]
+    },
+    "inStock": true
+  },
+  "battery-power3-bold": {
+    "id": "battery-power3-bold",
+    "name": "Rechargeable Battery for Power 3 BOLD",
+    "category": "Power Supplies",
+    "subcategory": "Batteries & Chargers",
+    "description": "High-capacity 2000mAh Li-Ion battery for Power 3 (31mm). Maximum autonomy for extended tattooing sessions.",
+    "features": [
+      "2000mAh high capacity",
+      "3.7V Li-Ion rechargeable",
+      "Compatible with Power 3 BOLD (31mm)",
+      "35mm height, 26mm diameter",
+      "Extended autonomy",
+      "Charger not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1JEU7VPzM5Sg",
+      "priceId": "price_1SnVH3Aiq7NBxfpwZeIRRQQY"
+    },
+    "price": 11.40,
+    "variants": [],
+    "image": "/images/products/power-supplies/battery-power3-bold.webp",
+    "images": [
+      "/images/products/power-supplies/battery-power3-bold.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "EIB - 26350",
+        "voltage": "3.7V",
+        "capacity": "2000mAh",
+        "weight": "46g",
+        "dimensions": "Height 35mm, Diameter 26mm",
+        "type": "Li-Ion Rechargeable"
+      },
+      "usage_notes": "Optimizes battery performance by performing full recharges. Store in cool, dry place. Remove when not in use to preserve lifespan.",
+      "included_items": [
+        "1x Rechargeable Battery 26350"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Battery Power 3 BOLD 2000mAh | Electric Ink Ireland",
+      "meta_description": "High-capacity 2000mAh Li-Ion battery for Power 3 BOLD. Maximum autonomy for extended sessions. 31mm compatible. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "batteries chargers", "power 3 bold", "2000mah", "26350 battery"]
+    },
+    "inStock": true
+  },
+  "charger-electric-ink": {
+    "id": "charger-electric-ink",
+    "name": "Electric Ink Battery Charger",
+    "category": "Power Supplies",
+    "subcategory": "Batteries & Chargers",
+    "description": "Dual USB battery charger with fast charging (1A per channel). LED indicator, short-circuit protection, and overload safeguards.",
+    "features": [
+      "Dual USB ports for simultaneous charging",
+      "Fast charging: 1.0A per channel, 4.2V",
+      "LED battery status indicator",
+      "Short circuit and overload protection",
+      "Compatible with 18350, 18500, 26350 batteries",
+      "Lightweight and portable (62g with cable)"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1KdS9AmhYoMA",
+      "priceId": "price_1SnVHvAiq7NBxfpwjfyZoSHp"
+    },
+    "price": 24.20,
+    "variants": [],
+    "image": "/images/products/power-supplies/charger-electric-ink.webp",
+    "images": [
+      "/images/products/power-supplies/charger-electric-ink.webp"
+    ],
+    "content": {
+      "specifications": {
+        "input_power": "DC 5V 2A",
+        "output_power": "DC 4.2V 2x1A",
+        "auto_shutoff_voltage": "4.2V ±0.05V",
+        "operating_temperature": "0°C ~ 40°C",
+        "weight": "62g (with USB cable)",
+        "dimensions": "100mm x 46mm x 26mm",
+        "compatibility": "14500, 16340, 18350, 18490, 18500, 18650, 26350, 26650"
+      },
+      "usage_notes": "Compatible with Electric Ink Power 1 and Power 3 batteries. Batteries sold separately. High-quality flame retardant material ensures safety.",
+      "included_items": [
+        "1x Battery Charger",
+        "1x USB Cable"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Electric Ink Battery Charger | Dual USB | Electric Ink IE",
+      "meta_description": "Dual USB battery charger for Li-Ion batteries. Fast charging (1A), LED indicator, safety protection. Compatible with Power 1 & 3. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "batteries chargers", "battery charger", "dual usb", "li-ion charger"]
+    },
+    "inStock": true
+  },
+  "wireless-power1": {
+    "id": "wireless-power1",
+    "name": "Wireless PS Power 1",
+    "category": "Power Supplies",
+    "subcategory": "Wireless Power Supplies",
+    "description": "Wireless power supply with Bluetooth connectivity. Compatible with Electra Pop, Pen 2, Ultra Pen, and Pen 3. App-enabled control.",
+    "features": [
+      "Automatic wireless connection",
+      "Bluetooth technology",
+      "Compatible with Electra Pop, Driller, Pen 2, Ultra Pen, Pen 3",
+      "RCA connection with adjustable keys",
+      "Electric Ink app integration (iOS/Android)",
+      "Battery and charger not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1Lx090DrbR2f",
+      "priceId": "price_1SnVIvAiq7NBxfpwg5PgUqra"
+    },
+    "price": 188.15,
+    "variants": [],
+    "image": "/images/products/power-supplies/wireless-power1.webp",
+    "images": [
+      "/images/products/power-supplies/wireless-power1.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "Wireless Power 1",
+        "recommended_battery": "Li-Ion 18490 3.7V 1400mAh",
+        "connectivity": "Bluetooth",
+        "compatibility": "Electra Pop, Driller, Pen 2, Ultra Pen, Electra Pen, Pen 3, Ultra Pen 2"
+      },
+      "usage_notes": "Automatic connection with compatible machines. Use Electric Ink app for unit change, value adjustment, working memories, and software updates.",
+      "included_items": [
+        "1x Wireless Power 1 Supply"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Wireless Power 1 Supply | Bluetooth | Electric Ink Ireland",
+      "meta_description": "Wireless power supply with Bluetooth. Compatible with Electra Pop, Pen 2, Ultra Pen. App-enabled control. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "wireless power supplies", "power 1", "bluetooth", "wireless tattoo power"]
+    },
+    "inStock": true
+  },
+  "power3-slim": {
+    "id": "power3-slim",
+    "name": "Power 3 SLIM - Wireless Power Supply",
+    "category": "Power Supplies",
+    "subcategory": "Wireless Power Supplies",
+    "description": "Compact wireless power supply with gesture control, MC2 coupling, and Bluetooth 5.3. Features Sensitivity Indicator and Kick Booster for extended motor life.",
+    "features": [
+      "Gesture control for on/off and speed adjustment",
+      "MC2 Magnetic Coupling with RCA adapter",
+      "Bluetooth 5.3 connectivity",
+      "LED Sensitivity Indicator with ammeter",
+      "Kick Booster function",
+      "Tattooxímetro (Tattoo Performance Monitor)",
+      "Multi-language support",
+      "Speed memories and short-circuit protection",
+      "Compact: 57mm length, 24mm diameter",
+      "Battery not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1NryMeQ6en1Z",
+      "priceId": "price_1SnVKZAiq7NBxfpwju6KXwmK"
+    },
+    "price": 275.00,
+    "variants": [],
+    "image": "/images/products/power-supplies/power3-slim.webp",
+    "images": [
+      "/images/products/power-supplies/power3-slim.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "EI-WM3",
+        "bluetooth": "5.3",
+        "power_source": "Battery 18350, Li-Ion 3.2~4.2V, 900mAh",
+        "output_voltage": "5~12VDC",
+        "working_current": "0.8A",
+        "max_current": "2A (peak)",
+        "weight_without_battery": "27.35g",
+        "weight_with_battery": "49.63g",
+        "dimensions": "57mm length, 24mm diameter",
+        "protections": "Battery reversal, over-discharge, output short-circuit, output charging",
+        "compatibility": "Pen 3, Transverse Nano, Transverse Tank"
+      },
+      "usage_notes": "Recommended battery: Li-Ion 900mAh 18350 for Power 3 SLIM. Up to 6 hours continuous work with proper battery setup.",
+      "included_items": [
+        "1x Power 3 SLIM Power Supply",
+        "1x RCA Adapter"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Power 3 SLIM Wireless | Gesture Control | Electric Ink IE",
+      "meta_description": "Compact wireless power supply with gesture control, MC2 coupling, Bluetooth 5.3. Sensitivity Indicator and Kick Booster. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "wireless power supplies", "power 3 slim", "gesture control", "mc2 coupling"]
+    },
+    "inStock": true
+  },
+  "power3": {
+    "id": "power3",
+    "name": "Power 3 - Wireless Tattoo Power Supply",
+    "category": "Power Supplies",
+    "subcategory": "Wireless Power Supplies",
+    "description": "Advanced wireless power supply with gesture control, MC2 coupling, and Bluetooth 5.3. Features Sensitivity Indicator and Kick Booster.",
+    "features": [
+      "Gesture control for on/off and speed adjustment",
+      "MC2 Magnetic Coupling with RCA adapter",
+      "Bluetooth 5.3 connectivity",
+      "LED Sensitivity Indicator with ammeter",
+      "Kick Booster function",
+      "Tattooxímetro (Tattoo Performance Monitor)",
+      "Multi-language support",
+      "Speed memories and short-circuit protection",
+      "Up to 16 hours continuous work",
+      "Battery not included"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1OHcBoIjafDZ",
+      "priceId": "price_1SnVLgAiq7NBxfpwRqzRajg4"
+    },
+    "price": 290.00,
+    "variants": [],
+    "image": "/images/products/power-supplies/power3.webp",
+    "images": [
+      "/images/products/power-supplies/power3.webp"
+    ],
+    "content": {
+      "specifications": {
+        "model": "EI-WM3",
+        "bluetooth": "5.3",
+        "power_source": "Battery 26350, Li-Ion 3.2~4.2V, 2000mAh",
+        "output_voltage": "5~12VDC",
+        "working_current": "0.8A",
+        "max_current": "2A (peak)",
+        "weight_without_battery": "31.53g",
+        "weight_with_battery": "77g",
+        "dimensions": "57mm length, 31mm diameter",
+        "protections": "Battery reversal, over-discharge, output short-circuit, output charging",
+        "compatibility": "Pen 3 and all Electric Ink Rotary Machines with RCA"
+      },
+      "usage_notes": "Recommended battery: Li-Ion 2000mAh 26350 for Power 3. Provides up to 16 hours of continuous work.",
+      "included_items": [
+        "1x Power 3 Power Supply",
+        "1x RCA Adapter"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Power 3 Wireless | Advanced Features | Electric Ink IE",
+      "meta_description": "Advanced wireless power supply with gesture control, MC2 coupling, Bluetooth 5.3. Up to 16 hours autonomy. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "wireless power supplies", "power 3", "16 hours", "professional power supply"]
+    },
+    "inStock": true
+  },
+  "kit-power3-slim": {
+    "id": "kit-power3-slim",
+    "name": "Kit Power 3 SLIM - Wireless Power Supply",
+    "category": "Power Supplies",
+    "subcategory": "Complete Kits",
+    "description": "Complete kit: Power 3 SLIM wireless supply + charger + 2x 18350 batteries (900mAh). Ready for up to 6 hours continuous work.",
+    "features": [
+      "Power 3 SLIM wireless supply included",
+      "Electric Ink battery charger included",
+      "2x Rechargeable 18350 batteries (900mAh)",
+      "Up to 6 hours continuous work",
+      "Gesture control and Bluetooth 5.3",
+      "Complete setup ready to use"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1RKuhd8alSRy",
+      "priceId": "price_1SnVOAAiq7NBxfpw7riCmps0"
+    },
+    "price": 288.95,
+    "variants": [],
+    "image": "/images/products/power-supplies/kit-power3-slim.webp",
+    "images": [
+      "/images/products/power-supplies/kit-power3-slim.webp"
+    ],
+    "content": {
+      "specifications": {
+        "power_supply_model": "EI-WM3 Slim",
+        "bluetooth": "5.3",
+        "output": "5~12V, 0.8A (working), 2A (peak)",
+        "dimensions": "57mm length, 24mm diameter",
+        "battery_capacity": "900mAh per battery",
+        "charger_input": "DC 5V 2A",
+        "charger_output": "DC 4.2V 2x1A"
+      },
+      "usage_notes": "Complete kit for immediate use. Batteries provide up to 6 hours continuous work with proper settings.",
+      "included_items": [
+        "1x Power 3 SLIM Wireless Supply",
+        "1x Electric Ink Battery Charger",
+        "2x Rechargeable Li-Ion 18350 Batteries (900mAh)",
+        "1x RCA Adapter",
+        "1x USB Cable"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Kit Power 3 SLIM Complete | Ready to Use | Electric Ink IE",
+      "meta_description": "Complete kit: Power 3 SLIM + charger + 2 batteries. Up to 6 hours continuous work. Everything included. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "complete kits", "power 3 slim kit", "wireless kit", "complete setup"]
+    },
+    "inStock": true
+  },
+  "kit-power3": {
+    "id": "kit-power3",
+    "name": "Kit Power 3 - Wireless Power Supply",
+    "category": "Power Supplies",
+    "subcategory": "Complete Kits",
+    "description": "Complete kit: Power 3 wireless supply + charger + 2x 26350 batteries (2000mAh). Ready for up to 16 hours continuous work.",
+    "features": [
+      "Power 3 wireless supply included",
+      "Electric Ink battery charger included",
+      "2x Rechargeable 26350 batteries (2000mAh)",
+      "Up to 16 hours continuous work",
+      "Gesture control and Bluetooth 5.3",
+      "Professional complete setup"
+    ],
+    "stripe": {
+      "productId": "prod_Tl1Si6LssviRl1",
+      "priceId": "price_1SnVPJAiq7NBxfpwbkgap62b"
+    },
+    "price": 335.98,
+    "variants": [],
+    "image": "/images/products/power-supplies/kit-power3.webp",
+    "images": [
+      "/images/products/power-supplies/kit-power3.webp"
+    ],
+    "content": {
+      "specifications": {
+        "power_supply_model": "EI-WM3",
+        "bluetooth": "5.3",
+        "output": "5~12V, 0.8A (working), 2A (peak)",
+        "dimensions": "57mm length, 31mm diameter",
+        "battery_capacity": "2000mAh per battery",
+        "charger_input": "DC 5V 2A",
+        "charger_output": "DC 4.2V 2x1A"
+      },
+      "usage_notes": "Professional complete kit for extended sessions. Batteries provide up to 16 hours continuous work depending on settings.",
+      "included_items": [
+        "1x Power 3 Wireless Supply",
+        "1x Electric Ink Battery Charger",
+        "2x Rechargeable Li-Ion 26350 Batteries (2000mAh)",
+        "1x RCA Adapter",
+        "1x USB Cable"
+      ]
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Kit Power 3 Complete | 16h Autonomy | Electric Ink IE",
+      "meta_description": "Complete kit: Power 3 + charger + 2 batteries (2000mAh). Up to 16 hours continuous work. Professional setup. Shop Electric Ink Ireland.",
+      "keywords": ["power supplies", "complete kits", "power 3 kit", "16 hours", "professional kit"]
+    },
+    "inStock": true
+  }
+}
