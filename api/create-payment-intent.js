@@ -312,7 +312,9 @@ module.exports = async function handler(req, res) {
       z.object({
         id: z.string().min(1, 'Product ID required'),
         quantity: z.number().int().positive().max(100, 'Max 100 units per product'),
-        variant: z.string().optional()
+        variant: z.string().optional(),
+        // Preserve incoming Stripe price id supplied by frontend
+        stripe_price_id: z.string().optional()
       })
     ).min(1, 'Cart cannot be empty').max(50, 'Max 50 different products'),
     shippingMethod: z.enum(['standard', 'pickup', 'same-day'], {
@@ -340,10 +342,10 @@ module.exports = async function handler(req, res) {
     shippingAddress = req.body.shippingAddress || {};
   } catch (error) {
     if (error instanceof z.ZodError) {
-      logger.warn('Invalid request data', { errors: error.errors });
+      logger.warn('Invalid request data', { errors: error.issues });
       return res.status(400).json({
         error: 'Invalid request data',
-        details: error.errors.map(e => ({
+        details: error.issues.map(e => ({
           field: e.path.join('.'),
           message: e.message
         }))

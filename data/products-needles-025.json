@@ -5,10 +5,28 @@
     "category": "Needles",
     "subcategory": "Round Liner",
     "description": "Precision 0.25mm Round Liner for detailed line work. Super Long Taper ideal for fine lines, mini realism, and colour techniques.",
-    "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
-    "specs": {"needleType":"Round Liner (RL)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
-    "applications": ["Fine line","Mini realism","Black & grey realism","Colour realism"],
-    "stripe": {"productId":"prod_TjWsCYXNx1w7Em","priceId":"price_1Sm3oiAiq7NBxfpwUKq5DWPn"},
+    "features": [
+      "0.25mm diameter",
+      "Super Long Taper",
+      "Silicone safety membrane",
+      "20 units per box"
+    ],
+    "specs": {
+      "needleType": "Round Liner (RL)",
+      "diameter": "0.25mm",
+      "taper": "Super Long Taper",
+      "unitsPerBox": 20
+    },
+    "applications": [
+      "Fine line",
+      "Mini realism",
+      "Black & grey realism",
+      "Colour realism"
+    ],
+    "stripe": {
+      "productId": "prod_TjWsCYXNx1w7Em",
+      "priceId": "price_1Sm3oiAiq7NBxfpwUKq5DWPn"
+    },
     "price": 27.8,
     "variants": [
       {
@@ -80,29 +98,53 @@
     "seo": {
       "meta_title": "Pro Cartridge Round Liner ×0.25 | Electric Ink Ireland",
       "meta_description": "Precision 0.25mm Round Liner for detailed line work. Super Long Taper ideal for fine lines, mini realism, and colour techniques. Shop now at Electric Ink Ireland.",
-      "keywords": ["needles", "round liner", "0.25mm", "fine line", "tattoo cartridge"]
+      "keywords": [
+        "needles",
+        "round liner",
+        "0.25mm",
+        "fine line",
+        "tattoo cartridge"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUKq5DWPn"
   },
-
   "rs-025": {
     "id": "rs-025",
     "name": "Pro Cartridge Round Shader Ø0.25",
     "category": "Needles",
     "subcategory": "Round Shader",
     "description": "Versatile 0.25mm Round Shader for smooth shading and solid fills.",
-    "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
-    "specs": {"needleType":"Round Shader (RS)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
-    "applications": ["Solid fills","Bold lines","Light shading","Shadows & blending"],
-    "stripe": {"productId":"prod_TjWyA4HOfAs2HC","priceId":"price_1Sm3uQAiq7NBxfpw8cQnk3cg"},
-    "price": 31.0,
+    "features": [
+      "0.25mm diameter",
+      "Super Long Taper",
+      "Silicone safety membrane",
+      "20 units per box"
+    ],
+    "specs": {
+      "needleType": "Round Shader (RS)",
+      "diameter": "0.25mm",
+      "taper": "Super Long Taper",
+      "unitsPerBox": 20
+    },
+    "applications": [
+      "Solid fills",
+      "Bold lines",
+      "Light shading",
+      "Shadows & blending"
+    ],
+    "stripe": {
+      "productId": "prod_TjWyA4HOfAs2HC",
+      "priceId": "price_1Sm3uQAiq7NBxfpw8cQnk3cg"
+    },
+    "price": 31,
     "variants": [
       {
         "id": "rs-025-07",
         "configuration": "RS07",
         "label": "RS07 - 7 Needles",
-        "price": 31.0,
+        "price": 31,
         "priceId": "price_1Sm3uQAiq7NBxfpw8cQnk3cg",
         "stripe_price_id": "price_1Sm3uQAiq7NBxfpw8cQnk3cg",
         "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp"
@@ -149,22 +191,45 @@
     "seo": {
       "meta_title": "Pro Cartridge Round Shader Ø0.25 | Electric Ink Ireland",
       "meta_description": "Versatile 0.25mm Round Shader for smooth shading and solid fills.... Shop Electric Ink Ireland.",
-      "keywords": ["needles", "round shader", "0.25mm", "solid fills"]
+      "keywords": [
+        "needles",
+        "round shader",
+        "0.25mm",
+        "solid fills"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1Sm3uQAiq7NBxfpw8cQnk3cg"
   },
-
   "rmg-025": {
     "id": "rmg-025",
     "name": "Pro Cartridge Round Magnum Ø0.25",
     "category": "Needles",
     "subcategory": "Round Magnum",
     "description": "Efficient 0.25mm Round Magnum for smooth gradients and colour packing.",
-    "features": ["0.25mm diameter","Super Long Taper","Silicone safety membrane","20 units per box"],
-    "specs": {"needleType":"Round Magnum (RMG)","diameter":"0.25mm","taper":"Super Long Taper","unitsPerBox":20},
-    "applications": ["Large solid fills","Colour realism","Black & grey shading","Gradients & soft blends"],
-    "stripe": {"productId":"prod_TjX5fvpr73vMfQ","priceId":"price_1Sm41UAiq7NBxfpw10Z2VYoy"},
+    "features": [
+      "0.25mm diameter",
+      "Super Long Taper",
+      "Silicone safety membrane",
+      "20 units per box"
+    ],
+    "specs": {
+      "needleType": "Round Magnum (RMG)",
+      "diameter": "0.25mm",
+      "taper": "Super Long Taper",
+      "unitsPerBox": 20
+    },
+    "applications": [
+      "Large solid fills",
+      "Colour realism",
+      "Black & grey shading",
+      "Gradients & soft blends"
+    ],
+    "stripe": {
+      "productId": "prod_TjX5fvpr73vMfQ",
+      "priceId": "price_1Sm41UAiq7NBxfpw10Z2VYoy"
+    },
     "price": 30.5,
     "variants": [
       {
@@ -254,9 +319,15 @@
     "seo": {
       "meta_title": "Pro Cartridge Round Magnum Ø0.25 | Electric Ink Ireland",
       "meta_description": "Efficient 0.25mm Round Magnum for smooth gradients and colour packing.... Shop Electric Ink Ireland.",
-      "keywords": ["needles", "round magnum", "0.25mm", "colour packing"]
+      "keywords": [
+        "needles",
+        "round magnum",
+        "0.25mm",
+        "colour packing"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm41UAiq7NBxfpw10Z2VYoy"
   }
 }

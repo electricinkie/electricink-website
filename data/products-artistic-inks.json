@@ -3,28 +3,7 @@
     "id": "diluent",
     "name": "Diluent",
     "category": "Inks",
-      "subcategory": "Diluents & Sets",
-      "subcategory": "Black Inks",
-      "subcategory": "White & Specialty Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
-      "subcategory": "Color Inks",
+    "subcategory": "Color Inks",
     "description": "Diluent for Easy Glow inks — use to adjust viscosity and flow for machine or manual painting.",
     "features": [
       "Adjusts viscosity",
@@ -51,7 +30,7 @@
         "id": "diluent-120ml",
         "size": "120mL",
         "label": "120mL",
-        "price": 10.0,
+        "price": 10,
         "priceId": "price_1SmqH4Aiq7NBxfpwBzvkAyGy",
         "stripe_price_id": "price_1SmqH4Aiq7NBxfpwBzvkAyGy",
         "image": "/images/products/artistic-inks/120ml-diluente.webp"
@@ -60,7 +39,7 @@
         "id": "diluent-240ml",
         "size": "240mL",
         "label": "240mL",
-        "price": 16.0,
+        "price": 16,
         "priceId": "price_1SmqH4Aiq7NBxfpw88DpmqhM",
         "stripe_price_id": "price_1SmqH4Aiq7NBxfpw88DpmqhM",
         "image": "/images/products/artistic-inks/240ml-diluente.webp"
@@ -85,11 +64,18 @@
     "seo": {
       "meta_title": "Diluent | Electric Ink Ireland",
       "meta_description": "Diluent for Easy Glow inks — use to adjust viscosity and flow for machine or manual painting. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "diluent", "tattoo ink", "viscosity", "flow"]
+      "keywords": [
+        "inks",
+        "diluent",
+        "tattoo ink",
+        "viscosity",
+        "flow"
+      ]
     },
     "inStock": false,
     "featured": true,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqH4Aiq7NBxfpwjk4vVkAR"
   },
   "raven-black": {
     "id": "raven-black",
@@ -123,7 +109,7 @@
         "id": "raven-black-240ml",
         "size": "240mL",
         "label": "240mL",
-        "price": 63.0,
+        "price": 63,
         "priceId": "price_1SmpkxAiq7NBxfpwRH2EdnbF",
         "stripe_price_id": "price_1SmpkxAiq7NBxfpwRH2EdnbF",
         "image": "/images/products/artistic-inks/240ml-raven-black.webp"
@@ -148,11 +134,18 @@
     "seo": {
       "meta_title": "Raven Black | Electric Ink Ireland",
       "meta_description": "Experience Raven Black, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "raven black", "REACH compliant", "tattoo ink", "maximum coverage"]
+      "keywords": [
+        "inks",
+        "raven black",
+        "REACH compliant",
+        "tattoo ink",
+        "maximum coverage"
+      ]
     },
     "inStock": true,
     "featured": true,
-    "reachCompliant": true
+    "reachCompliant": true,
+    "stripe_price_id": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw"
   },
   "ghost-white": {
     "id": "ghost-white",
@@ -186,7 +179,7 @@
         "id": "ghost-white-120ml",
         "size": "120mL",
         "label": "120mL",
-        "price": 42.0,
+        "price": 42,
         "priceId": "price_1SmpotAiq7NBxfpwKpqM0VyR",
         "stripe_price_id": "price_1SmpotAiq7NBxfpwKpqM0VyR",
         "image": "/images/products/artistic-inks/120ml-ghost-white.webp"
@@ -195,7 +188,7 @@
         "id": "ghost-white-240ml",
         "size": "240mL",
         "label": "240mL",
-        "price": 63.0,
+        "price": 63,
         "priceId": "price_1SmpotAiq7NBxfpwBS44QqtX",
         "stripe_price_id": "price_1SmpotAiq7NBxfpwBS44QqtX",
         "image": "/images/products/artistic-inks/240ml-ghost-white.webp"
@@ -221,11 +214,18 @@
     "seo": {
       "meta_title": "Ghost White | Electric Ink Ireland",
       "meta_description": "Experience Ghost White, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "ghost white", "REACH compliant", "tattoo ink", "perfect coverage"]
+      "keywords": [
+        "inks",
+        "ghost white",
+        "REACH compliant",
+        "tattoo ink",
+        "perfect coverage"
+      ]
     },
     "inStock": true,
     "featured": true,
-    "reachCompliant": true
+    "reachCompliant": true,
+    "stripe_price_id": "price_1SmpotAiq7NBxfpwwxlsH0n2"
   },
   "red": {
     "id": "red",
@@ -274,11 +274,18 @@
     "seo": {
       "meta_title": "Red | Electric Ink Ireland",
       "meta_description": "Experience Red, meticulously crafted through careful selection of raw materials, precision equipment, and thorough testing. This REACH-compliant ink offers reduced healing time, enhanced fluidity, and exceptional colour fidelity, ensuring your tattoos have superior coverage and strong fixation. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "red", "REACH compliant", "tattoo ink", "vibrant red"]
+      "keywords": [
+        "inks",
+        "red",
+        "REACH compliant",
+        "tattoo ink",
+        "vibrant red"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": true
+    "reachCompliant": true,
+    "stripe_price_id": "price_1SmprRAiq7NBxfpwVL8NKUBi"
   },
   "orange": {
     "id": "orange",
@@ -327,11 +334,18 @@
     "seo": {
       "meta_title": "Orange | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "orange", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "orange",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmpvZAiq7NBxfpwlDmaSC5E"
   },
   "florida-orange": {
     "id": "florida-orange",
@@ -380,11 +394,18 @@
     "seo": {
       "meta_title": "Florida Orange | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "florida orange", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "florida orange",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmpwoAiq7NBxfpwhrzZuRxX"
   },
   "coral": {
     "id": "coral",
@@ -423,11 +444,18 @@
     "seo": {
       "meta_title": "Coral | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "coral", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "coral",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmpxWAiq7NBxfpwQFgbviUn"
   },
   "navy-grey": {
     "id": "navy-grey",
@@ -466,11 +494,18 @@
     "seo": {
       "meta_title": "Navy Grey | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "navy grey", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "navy grey",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmpyGAiq7NBxfpwcZoIfJFO"
   },
   "steel-grey": {
     "id": "steel-grey",
@@ -509,11 +544,18 @@
     "seo": {
       "meta_title": "Steel Grey | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "steel grey", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "steel grey",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smpz4Aiq7NBxfpwuJ7EKGOc"
   },
   "coconut-cream": {
     "id": "coconut-cream",
@@ -552,11 +594,18 @@
     "seo": {
       "meta_title": "Coconut Cream | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "coconut cream", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "coconut cream",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq09Aiq7NBxfpwF9UEwfAH"
   },
   "canary-yellow": {
     "id": "canary-yellow",
@@ -595,11 +644,18 @@
     "seo": {
       "meta_title": "Canary Yellow | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "canary yellow", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "canary yellow",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq0uAiq7NBxfpw4tdTdfE2"
   },
   "bus-yellow": {
     "id": "bus-yellow",
@@ -638,11 +694,18 @@
     "seo": {
       "meta_title": "Bus Yellow | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "bus yellow", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "bus yellow",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq1kAiq7NBxfpwwktKBNPk"
   },
   "mustard": {
     "id": "mustard",
@@ -681,11 +744,18 @@
     "seo": {
       "meta_title": "Mustard | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "mustard", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "mustard",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq2SAiq7NBxfpwDHxaasyq"
   },
   "electric-pink": {
     "id": "electric-pink",
@@ -724,11 +794,18 @@
     "seo": {
       "meta_title": "Electric Pink | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "electric pink", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "electric pink",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq37Aiq7NBxfpwhJZHvxAO"
   },
   "bubblegum": {
     "id": "bubblegum",
@@ -767,11 +844,18 @@
     "seo": {
       "meta_title": "Bubblegum | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "bubblegum", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "bubblegum",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq41Aiq7NBxfpw33T6wBnw"
   },
   "rose": {
     "id": "rose",
@@ -810,11 +894,18 @@
     "seo": {
       "meta_title": "Rose | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "rose", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "rose",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq4ZAiq7NBxfpwk9bJnJGW"
   },
   "deepest-pink": {
     "id": "deepest-pink",
@@ -864,11 +955,18 @@
     "seo": {
       "meta_title": "Deepest Pink | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "deepest pink", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "deepest pink",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq5EAiq7NBxfpw3f5Tia6P"
   },
   "electric-blue": {
     "id": "electric-blue",
@@ -917,11 +1015,18 @@
     "seo": {
       "meta_title": "Electric Blue | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "electric blue", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "electric blue",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq5pAiq7NBxfpwEQ9WuIjk"
   },
   "olympic-blue": {
     "id": "olympic-blue",
@@ -970,11 +1075,18 @@
     "seo": {
       "meta_title": "Olympic Blue | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "olympic blue", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "olympic blue",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq6XAiq7NBxfpwBmByn5Ev"
   },
   "navy-blue": {
     "id": "navy-blue",
@@ -1023,11 +1135,18 @@
     "seo": {
       "meta_title": "Navy Blue | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "navy blue", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "navy blue",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq70Aiq7NBxfpwkrykpndl"
   },
   "deep-violet": {
     "id": "deep-violet",
@@ -1076,11 +1195,18 @@
     "seo": {
       "meta_title": "Deep Violet | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "deep violet", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "deep violet",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1Smq9zAiq7NBxfpwSvINK6OS"
   },
   "brilliant-green": {
     "id": "brilliant-green",
@@ -1129,11 +1255,18 @@
     "seo": {
       "meta_title": "Brilliant Green | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "brilliant green", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "brilliant green",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqAgAiq7NBxfpwGD20oscK"
   },
   "snake-green": {
     "id": "snake-green",
@@ -1182,11 +1315,18 @@
     "seo": {
       "meta_title": "Snake Green | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "snake green", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "snake green",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqBQAiq7NBxfpwGs86JVYa"
   },
   "true-green": {
     "id": "true-green",
@@ -1235,11 +1375,18 @@
     "seo": {
       "meta_title": "True Green | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "true green", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "true green",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqBwAiq7NBxfpwx8AZUjgC"
   },
   "deepest-green": {
     "id": "deepest-green",
@@ -1288,11 +1435,18 @@
     "seo": {
       "meta_title": "Deepest Green | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "deepest green", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "deepest green",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqCaAiq7NBxfpwLiyjepQv"
   },
   "golden-tan": {
     "id": "golden-tan",
@@ -1341,11 +1495,18 @@
     "seo": {
       "meta_title": "Golden Tan | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "golden tan", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "golden tan",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqD4Aiq7NBxfpwNfyDwB6s"
   },
   "snake-brown": {
     "id": "snake-brown",
@@ -1394,11 +1555,18 @@
     "seo": {
       "meta_title": "Snake Brown | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "snake brown", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "snake brown",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqDdAiq7NBxfpwwEygm665"
   },
   "eagle-brown": {
     "id": "eagle-brown",
@@ -1447,11 +1615,18 @@
     "seo": {
       "meta_title": "Eagle Brown | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "eagle brown", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "eagle brown",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqEhAiq7NBxfpwdoBrCjLk"
   },
   "monkey-brown": {
     "id": "monkey-brown",
@@ -1500,10 +1675,17 @@
     "seo": {
       "meta_title": "Monkey Brown | Electric Ink Ireland",
       "meta_description": "Electric Ink introduces the Easy Glow line, a fluid ink with high pigment concentration, perfect for artists who prefer quick application without extensive dilution. Crafted from selected raw materials and backed by Electric Ink's 15+ years of expertise, Easy Glow delivers vibrant colour, easy application, and fast healing on synthetic surfaces. Shop now at Electric Ink Ireland.",
-      "keywords": ["inks", "monkey brown", "easy glow", "tattoo ink", "vibrant colour"]
+      "keywords": [
+        "inks",
+        "monkey brown",
+        "easy glow",
+        "tattoo ink",
+        "vibrant colour"
+      ]
     },
     "inStock": false,
     "featured": false,
-    "reachCompliant": false
+    "reachCompliant": false,
+    "stripe_price_id": "price_1SmqFJAiq7NBxfpwXE6xmQID"
   }
 }

@@ -14,14 +14,9 @@ body {
   overflow-x: hidden;
 }
 
-.site-header {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-}
+/* NOTE: header rules are defined in mobile-header.css / desktop-header.css.
+   Avoid redefining `.site-header` here to prevent layout conflicts (logo overlap).
+   Keep checkout-specific layout scoped to `.checkout-main` instead. */
 
 .checkout-main {
   background: #FAFAFA;

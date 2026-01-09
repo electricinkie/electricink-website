@@ -67,3 +67,4 @@ temp/
 *.tmp
 service-account-base64.txt
 dev-server.log
+.env*.local

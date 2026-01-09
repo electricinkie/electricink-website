@@ -43,7 +43,12 @@
     }
 
     // Normalize and require a single canonical Stripe price id field: `stripe_price_id`
-    const normalizedPriceId = item.stripe_price_id || item.priceId || item.price_id || (item.stripe && (item.stripe.priceId || item.stripe.price_id)) || null;
+    // Accept price id coming from variant object when present (shared-price variants rely on product-level ids)
+    const normalizedPriceId = item.stripe_price_id
+      || (item.variant && (item.variant.stripe_price_id || item.variant.priceId || item.variant.price_id))
+      || item.priceId || item.price_id
+      || (item.stripe && (item.stripe.priceId || item.stripe.price_id))
+      || null;
     if (!normalizedPriceId) {
       console.error('Missing stripe_price_id for item, refusing to add to cart:', item);
       return false;

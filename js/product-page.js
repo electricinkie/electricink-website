@@ -106,8 +106,16 @@
   // RENDER price
   const priceEl = document.getElementById('productPrice');
   if (productData.variants && productData.variants.length > 0) {
-    // Has variants - show price range
-    priceEl.textContent = productData.price_range?.display || `from €${productData.variants[0].price.toFixed(2)}`;
+    // Has variants - determine if variants share a single price (Cosmetics behaviour)
+    const variantPrices = productData.variants.map(v => typeof v.price === 'number' ? v.price : null).filter(Boolean);
+    const uniquePrices = Array.from(new Set(variantPrices.map(p => p.toFixed(2))));
+    if (uniquePrices.length === 1) {
+      // All variants share same price - display single price
+      priceEl.textContent = `€${parseFloat(uniquePrices[0]).toFixed(2)}`;
+    } else {
+      // Multiple prices - show price range / first variant
+      priceEl.textContent = productData.price_range?.display || `from €${productData.variants[0].price.toFixed(2)}`;
+    }
   } else {
     // Simple product - single price
     const price = productData.basic?.price || productData.price;
@@ -162,12 +170,18 @@
     }
 
     // Populate options
+    const variantPrices = productData.variants.map(v => typeof v.price === 'number' ? v.price : null).filter(Boolean);
+    const uniquePrices = Array.from(new Set(variantPrices.map(p => p.toFixed(2))));
+    const sharedPrice = uniquePrices.length === 1;
+
     productData.variants.forEach((variant, index) => {
       const option = document.createElement('option');
       option.value = variant.id;
-      option.textContent = `${variant.label} - €${variant.price.toFixed(2)}`;
-      option.dataset.price = variant.price;
-      option.dataset.priceId = variant.stripe_price_id;
+      // If all variants share the same price, avoid showing per-option price (Cosmetics canonical behavior)
+      option.textContent = sharedPrice ? `${variant.label}` : `${variant.label} - €${variant.price.toFixed(2)}`;
+      option.dataset.price = sharedPrice ? (productData.basic?.price || productData.price || variant.price) : variant.price;
+      // Ensure a usable priceId is available on the option: prefer variant, otherwise fall back to product-level ids
+      option.dataset.priceId = variant.stripe_price_id || variant.priceId || variant.price_id || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || '';
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
       variantSelect.appendChild(option);
@@ -176,7 +190,9 @@
     // Update price and image on change
     variantSelect.onchange = function() {
       const selected = this.options[this.selectedIndex];
-      priceEl.textContent = `€${selected.dataset.price}`;
+      // normalize price display
+      const p = parseFloat(selected.dataset.price);
+      priceEl.textContent = isNaN(p) ? priceEl.textContent : `€${p.toFixed(2)}`;
 
       // Update image if variant has one
       if (selected.dataset.image) {
@@ -385,9 +401,13 @@
         id: `${productId}-${selectedVariant.id}`,
         name: `${name} - ${selectedVariant.label}`,
         price: selectedVariant.price,
-        stripe_price_id: resolvedPriceId,
         image: selectedVariant.image || mainImage,
-        variant: selectedVariant.label
+        variant: {
+          id: selectedVariant.id,
+          label: selectedVariant.label,
+          stripe_price_id: selectedVariant.stripe_price_id || selectedVariant.priceId || selectedVariant.price_id || null
+        },
+        stripe_price_id: resolvedPriceId
       };
     } else {
       // Simple product
@@ -413,8 +433,11 @@
         id: productId,
         name: name,
         price: price,
-        stripe_price_id: resolvedPriceId,
-        image: mainImage
+        image: mainImage,
+        variant: null,
+        // For simple products (no variants) prefer explicit resolvedPriceId,
+        // otherwise fall back to product-level fields if present.
+        stripe_price_id: resolvedPriceId || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || null
       };
     }
     

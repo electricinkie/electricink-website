@@ -17,7 +17,7 @@
       "productId": "prod_Tl17IQOJNZ4SHD",
       "priceId": "price_1SnV5RAiq7NBxfpwsV9gh4v4"
     },
-    "price": 8.10,
+    "price": 8.1,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable battery-plus-power-3-slim-24mm-cover.webp",
     "images": [
@@ -47,9 +47,16 @@
     "seo": {
       "meta_title": "Battery Plus Power 3 SLIM 1400mAh | Electric Ink Ireland",
       "meta_description": "High-capacity 1400mAh Li-Ion battery for Power 3 SLIM. Extended autonomy for longer sessions. 3.7V rechargeable. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "batteries chargers", "power 3 slim battery", "1400mah", "tattoo power supply"]
+      "keywords": [
+        "power supplies",
+        "batteries chargers",
+        "power 3 slim battery",
+        "1400mah",
+        "tattoo power supply"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnV5RAiq7NBxfpwsV9gh4v4"
   },
   "battery-power1": {
     "id": "battery-power1",
@@ -69,7 +76,7 @@
       "productId": "prod_Tl19Wj8opsDZ5i",
       "priceId": "price_1SnV7JAiq7NBxfpwuCDFkSBe"
     },
-    "price": 12.10,
+    "price": 12.1,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable-battery-li-ion-power-1-cover.webp",
     "images": [
@@ -99,9 +106,16 @@
     "seo": {
       "meta_title": "Battery Power 1 1400mAh Li-Ion | Electric Ink Ireland",
       "meta_description": "1400mAh Li-Ion battery for Power 1 supply. Maximum efficiency and safe operation. 3.7V rechargeable. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "batteries chargers", "power 1 battery", "1400mah", "li-ion battery"]
+      "keywords": [
+        "power supplies",
+        "batteries chargers",
+        "power 1 battery",
+        "1400mah",
+        "li-ion battery"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnV7JAiq7NBxfpwuCDFkSBe"
   },
   "battery-power3-slim": {
     "id": "battery-power3-slim",
@@ -121,7 +135,7 @@
       "productId": "prod_Tl1IoLq238gn5f",
       "priceId": "price_1SnVFeAiq7NBxfpwFi0cARc5"
     },
-    "price": 6.70,
+    "price": 6.7,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover.webp",
     "images": [
@@ -152,9 +166,16 @@
     "seo": {
       "meta_title": "Battery Power 3 SLIM 900mAh | Electric Ink Ireland",
       "meta_description": "900mAh Li-Ion battery for Power 3 SLIM. Compact and reliable power. 3.7V rechargeable, 24mm compatible. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "batteries chargers", "power 3 slim", "900mah", "18350 battery"]
+      "keywords": [
+        "power supplies",
+        "batteries chargers",
+        "power 3 slim",
+        "900mah",
+        "18350 battery"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVFeAiq7NBxfpwFi0cARc5"
   },
   "battery-power3-bold": {
     "id": "battery-power3-bold",
@@ -174,7 +195,7 @@
       "productId": "prod_Tl1JEU7VPzM5Sg",
       "priceId": "price_1SnVH3Aiq7NBxfpwZeIRRQQY"
     },
-    "price": 11.40,
+    "price": 11.4,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable-battery-Power-3-bold-cover.webp",
     "images": [
@@ -204,9 +225,16 @@
     "seo": {
       "meta_title": "Battery Power 3 BOLD 2000mAh | Electric Ink Ireland",
       "meta_description": "High-capacity 2000mAh Li-Ion battery for Power 3 BOLD. Maximum autonomy for extended sessions. 31mm compatible. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "batteries chargers", "power 3 bold", "2000mah", "26350 battery"]
+      "keywords": [
+        "power supplies",
+        "batteries chargers",
+        "power 3 bold",
+        "2000mah",
+        "26350 battery"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVH3Aiq7NBxfpwZeIRRQQY"
   },
   "charger-electric-ink": {
     "id": "charger-electric-ink",
@@ -226,7 +254,7 @@
       "productId": "prod_Tl1KdS9AmhYoMA",
       "priceId": "price_1SnVHvAiq7NBxfpwjfyZoSHp"
     },
-    "price": 24.20,
+    "price": 24.2,
     "variants": [],
     "image": "/images/products/power-supplies/electric-ink-charger-cover.webp",
     "images": [
@@ -259,9 +287,16 @@
     "seo": {
       "meta_title": "Electric Ink Battery Charger | Dual USB | Electric Ink IE",
       "meta_description": "Dual USB battery charger for Li-Ion batteries. Fast charging (1A), LED indicator, safety protection. Compatible with Power 1 & 3. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "batteries chargers", "battery charger", "dual usb", "li-ion charger"]
+      "keywords": [
+        "power supplies",
+        "batteries chargers",
+        "battery charger",
+        "dual usb",
+        "li-ion charger"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVHvAiq7NBxfpwjfyZoSHp"
   },
   "wireless-power1": {
     "id": "wireless-power1",
@@ -312,9 +347,16 @@
     "seo": {
       "meta_title": "Wireless Power 1 Supply | Bluetooth | Electric Ink Ireland",
       "meta_description": "Wireless power supply with Bluetooth. Compatible with Electra Pop, Pen 2, Ultra Pen. App-enabled control. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "wireless power supplies", "power 1", "bluetooth", "wireless tattoo power"]
+      "keywords": [
+        "power supplies",
+        "wireless power supplies",
+        "power 1",
+        "bluetooth",
+        "wireless tattoo power"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVIvAiq7NBxfpwg5PgUqra"
   },
   "power3-slim": {
     "id": "power3-slim",
@@ -338,7 +380,7 @@
       "productId": "prod_Tl1NryMeQ6en1Z",
       "priceId": "price_1SnVKZAiq7NBxfpwju6KXwmK"
     },
-    "price": 275.00,
+    "price": 275,
     "variants": [],
     "image": "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover.webp",
     "images": [
@@ -375,9 +417,16 @@
     "seo": {
       "meta_title": "Power 3 SLIM Wireless | Gesture Control | Electric Ink IE",
       "meta_description": "Compact wireless power supply with gesture control, MC2 coupling, Bluetooth 5.3. Sensitivity Indicator and Kick Booster. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "wireless power supplies", "power 3 slim", "gesture control", "mc2 coupling"]
+      "keywords": [
+        "power supplies",
+        "wireless power supplies",
+        "power 3 slim",
+        "gesture control",
+        "mc2 coupling"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVKZAiq7NBxfpwju6KXwmK"
   },
   "power3": {
     "id": "power3",
@@ -401,7 +450,7 @@
       "productId": "prod_Tl1OHcBoIjafDZ",
       "priceId": "price_1SnVLgAiq7NBxfpwRqzRajg4"
     },
-    "price": 290.00,
+    "price": 290,
     "variants": [],
     "image": "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover.webp",
     "images": [
@@ -438,9 +487,16 @@
     "seo": {
       "meta_title": "Power 3 Wireless | Advanced Features | Electric Ink IE",
       "meta_description": "Advanced wireless power supply with gesture control, MC2 coupling, Bluetooth 5.3. Up to 16 hours autonomy. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "wireless power supplies", "power 3", "16 hours", "professional power supply"]
+      "keywords": [
+        "power supplies",
+        "wireless power supplies",
+        "power 3",
+        "16 hours",
+        "professional power supply"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVLgAiq7NBxfpwRqzRajg4"
   },
   "kit-power3-slim": {
     "id": "kit-power3-slim",
@@ -496,9 +552,16 @@
     "seo": {
       "meta_title": "Kit Power 3 SLIM Complete | Ready to Use | Electric Ink IE",
       "meta_description": "Complete kit: Power 3 SLIM + charger + 2 batteries. Up to 6 hours continuous work. Everything included. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "complete kits", "power 3 slim kit", "wireless kit", "complete setup"]
+      "keywords": [
+        "power supplies",
+        "complete kits",
+        "power 3 slim kit",
+        "wireless kit",
+        "complete setup"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVOAAiq7NBxfpw7riCmps0"
   },
   "kit-power3": {
     "id": "kit-power3",
@@ -554,8 +617,15 @@
     "seo": {
       "meta_title": "Kit Power 3 Complete | 16h Autonomy | Electric Ink IE",
       "meta_description": "Complete kit: Power 3 + charger + 2 batteries (2000mAh). Up to 16 hours continuous work. Professional setup. Shop Electric Ink Ireland.",
-      "keywords": ["power supplies", "complete kits", "power 3 kit", "16 hours", "professional kit"]
+      "keywords": [
+        "power supplies",
+        "complete kits",
+        "power 3 kit",
+        "16 hours",
+        "professional kit"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnVPJAiq7NBxfpwbkgap62b"
   }
 }

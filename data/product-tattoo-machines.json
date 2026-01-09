@@ -24,15 +24,17 @@
         "size": "38mm",
         "price": 132.15,
         "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6",
-        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp"
+        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
+        "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6"
       },
       {
         "id": "grip-ultra-pen-balance-flex-45mm",
         "label": "45mm",
         "size": "45mm",
-        "price": 146.80,
+        "price": 146.8,
         "priceId": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
-        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp"
+        "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp",
+        "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg"
       }
     ],
     "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
@@ -57,11 +59,17 @@
     "seo": {
       "meta_title": "Electric Ink Grip Ultra Pen Balance Flex | Professional Tattoo Equipment",
       "meta_description": "Adjustable Balance Grip compatible with Electra Pen and Ultra Pen. Available in 38mm and 45mm. Ergonomic design and cartridge alignment system.",
-      "keywords": ["tattoo grip","adjustable grip","Electra Pen grip","Ultra Pen grip","tattoo accessories"]
+      "keywords": [
+        "tattoo grip",
+        "adjustable grip",
+        "Electra Pen grip",
+        "Ultra Pen grip",
+        "tattoo accessories"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6"
   },
-
   "grip-pen-3": {
     "id": "grip-pen-3",
     "name": "Grip Pen 3",
@@ -96,12 +104,16 @@
     "seo": {
       "meta_title": "Electric Ink Grip Pen 3 | Professional Tattoo Equipment",
       "meta_description": "Grip for Pen 3 (4.0mm stroke, 38mm) offering superior comfort, Flex connector and adjustable needle exposure.",
-      "keywords": ["grip pen 3","pen grip","tattoo grip","Electric Ink Pen 3"]
+      "keywords": [
+        "grip pen 3",
+        "pen grip",
+        "tattoo grip",
+        "Electric Ink Pen 3"
+      ]
     },
-    
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
   },
-
   "electra-pop": {
     "id": "electra-pop",
     "name": "Electra Pop",
@@ -119,19 +131,74 @@
       "productId": "prod_TkwWcYWrWbHmU5",
       "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1"
     },
-    "price": 118.30,
+    "price": 118.3,
     "variants": [
-      { "id": "electra-pop-black", "color": "Black", "label": "Black", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-black-1.webp" },
-      { "id": "electra-pop-blue", "color": "Blue", "label": "Blue", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp" },
-      { "id": "electra-pop-pink", "color": "Pink", "label": "Pink", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp" },
-      { "id": "electra-pop-white", "color": "White", "label": "White", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-white-1.webp" },
-      { "id": "electra-pop-lilac", "color": "Lilac", "label": "Lilac", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp" },
-      { "id": "electra-pop-silver", "color": "Silver", "label": "Silver", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp" },
-      { "id": "electra-pop-bordeaux", "color": "Bordeaux", "label": "Bordeaux", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp" },
-      { "id": "electra-pop-smoke-grey", "color": "Smoke Grey", "label": "Smoke Grey", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp" },
-      { "id": "electra-pop-neon-coral", "color": "Neon Coral", "label": "Neon Coral", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp" },
-      { "id": "electra-pop-neon-yellow", "color": "Neon Yellow", "label": "Neon Yellow", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp" },
-      { "id": "electra-pop-neon-orange", "color": "Neon Orange", "label": "Neon Orange", "price": 118.30, "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1", "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp" }
+      {
+        "id": "black",
+        "color": "Black",
+        "label": "Black",
+        "image": "/images/products/tattoo-machines/electra-pop-black-1.webp"
+      },
+      {
+        "id": "blue",
+        "color": "Blue",
+        "label": "Blue",
+        "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp"
+      },
+      {
+        "id": "pink",
+        "color": "Pink",
+        "label": "Pink",
+        "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp"
+      },
+      {
+        "id": "white",
+        "color": "White",
+        "label": "White",
+        "image": "/images/products/tattoo-machines/electra-pop-white-1.webp"
+      },
+      {
+        "id": "lilac",
+        "color": "Lilac",
+        "label": "Lilac",
+        "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp"
+      },
+      {
+        "id": "silver",
+        "color": "Silver",
+        "label": "Silver",
+        "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp"
+      },
+      {
+        "id": "bordeaux",
+        "color": "Bordeaux",
+        "label": "Bordeaux",
+        "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp"
+      },
+      {
+        "id": "smoke-grey",
+        "color": "Smoke Grey",
+        "label": "Smoke Grey",
+        "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp"
+      },
+      {
+        "id": "neon-coral",
+        "color": "Neon Coral",
+        "label": "Neon Coral",
+        "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp"
+      },
+      {
+        "id": "neon-yellow",
+        "color": "Neon Yellow",
+        "label": "Neon Yellow",
+        "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp"
+      },
+      {
+        "id": "neon-orange",
+        "color": "Neon Orange",
+        "label": "Neon Orange",
+        "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp"
+      }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
     "images": [
@@ -141,77 +208,66 @@
       "/images/products/tattoo-machines/electra-pop-black-4.webp",
       "/images/products/tattoo-machines/electra-pop-black-5.webp",
       "/images/products/tattoo-machines/electra-pop-black-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-blue-1.webp",
       "/images/products/tattoo-machines/electra-pop-blue-2.webp",
       "/images/products/tattoo-machines/electra-pop-blue-3.webp",
       "/images/products/tattoo-machines/electra-pop-blue-4.webp",
       "/images/products/tattoo-machines/electra-pop-blue-5.webp",
       "/images/products/tattoo-machines/electra-pop-blue-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-pink-1.webp",
       "/images/products/tattoo-machines/electra-pop-pink-2.webp",
       "/images/products/tattoo-machines/electra-pop-pink-3.webp",
       "/images/products/tattoo-machines/electra-pop-pink-4.webp",
       "/images/products/tattoo-machines/electra-pop-pink-5.webp",
       "/images/products/tattoo-machines/electra-pop-pink-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-lilac-1.webp",
       "/images/products/tattoo-machines/electra-pop-lilac-2.webp",
       "/images/products/tattoo-machines/electra-pop-lilac-3.webp",
       "/images/products/tattoo-machines/electra-pop-lilac-4.webp",
       "/images/products/tattoo-machines/electra-pop-lilac-5.webp",
       "/images/products/tattoo-machines/electra-pop-lilac-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-silver-1.webp",
       "/images/products/tattoo-machines/electra-pop-silver-2.webp",
       "/images/products/tattoo-machines/electra-pop-silver-3.webp",
       "/images/products/tattoo-machines/electra-pop-silver-4.webp",
       "/images/products/tattoo-machines/electra-pop-silver-5.webp",
       "/images/products/tattoo-machines/electra-pop-silver-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp",
       "/images/products/tattoo-machines/electra-pop-bordeaux-2.webp",
       "/images/products/tattoo-machines/electra-pop-bordeaux-3.webp",
       "/images/products/tattoo-machines/electra-pop-bordeaux-4.webp",
       "/images/products/tattoo-machines/electra-pop-bordeaux-5.webp",
       "/images/products/tattoo-machines/electra-pop-bordeaux-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp",
       "/images/products/tattoo-machines/electra-pop-smoke-grey-2.webp",
       "/images/products/tattoo-machines/electra-pop-smoke-grey-3.webp",
       "/images/products/tattoo-machines/electra-pop-smoke-grey-4.webp",
       "/images/products/tattoo-machines/electra-pop-smoke-grey-5.webp",
       "/images/products/tattoo-machines/electra-pop-smoke-grey-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp",
       "/images/products/tattoo-machines/electra-pop-neon-coral-2.webp",
       "/images/products/tattoo-machines/electra-pop-neon-coral-3.webp",
       "/images/products/tattoo-machines/electra-pop-neon-coral-4.webp",
       "/images/products/tattoo-machines/electra-pop-neon-coral-5.webp",
       "/images/products/tattoo-machines/electra-pop-neon-coral-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp",
       "/images/products/tattoo-machines/electra-pop-neon-orange-2.webp",
       "/images/products/tattoo-machines/electra-pop-neon-orange-3.webp",
       "/images/products/tattoo-machines/electra-pop-neon-orange-4.webp",
       "/images/products/tattoo-machines/electra-pop-neon-orange-5.webp",
       "/images/products/tattoo-machines/electra-pop-neon-orange-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp",
       "/images/products/tattoo-machines/electra-pop-neon-yellow-2.webp",
       "/images/products/tattoo-machines/electra-pop-neon-yellow-3.webp",
       "/images/products/tattoo-machines/electra-pop-neon-yellow-4.webp",
       "/images/products/tattoo-machines/electra-pop-neon-yellow-5.webp",
       "/images/products/tattoo-machines/electra-pop-neon-yellow-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-orange-1.webp",
       "/images/products/tattoo-machines/electra-pop-orange-2.webp",
       "/images/products/tattoo-machines/electra-pop-orange-3.webp",
       "/images/products/tattoo-machines/electra-pop-orange-4.webp",
       "/images/products/tattoo-machines/electra-pop-orange-5.webp",
       "/images/products/tattoo-machines/electra-pop-orange-6.webp",
-
       "/images/products/tattoo-machines/electra-pop-white-1.webp",
       "/images/products/tattoo-machines/electra-pop-white-2.webp",
       "/images/products/tattoo-machines/electra-pop-white-3.webp",
@@ -250,11 +306,16 @@
     "seo": {
       "meta_title": "Electric Ink Electra Pop | Professional Tattoo Equipment",
       "meta_description": "Electra Pop rotary tattoo machine with Mabuchi motor, shock absorption technology and ergonomic polymer body. Available in multiple colours.",
-      "keywords": ["Electra Pop","rotary tattoo machine","Mabuchi motor","lightweight tattoo machine"]
+      "keywords": [
+        "Electra Pop",
+        "rotary tattoo machine",
+        "Mabuchi motor",
+        "lightweight tattoo machine"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1"
   },
-
   "electra-pop-pro": {
     "id": "electra-pop-pro",
     "name": "Electra Pop Pro",
@@ -274,8 +335,18 @@
     },
     "price": 147.85,
     "variants": [
-      { "id": "electra-pop-pro-black", "color": "Black", "label": "Black", "price": 147.85, "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp" },
-      { "id": "electra-pop-pro-pink", "color": "Pink", "label": "Pink", "price": 147.85, "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL", "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp" }
+      {
+        "id": "black",
+        "color": "Black",
+        "label": "Black",
+        "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp"
+      },
+      {
+        "id": "pink",
+        "color": "Pink",
+        "label": "Pink",
+        "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp"
+      }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
     "images": [
@@ -312,11 +383,16 @@
     "seo": {
       "meta_title": "Electric Ink Electra Pop Pro | Professional Tattoo Equipment",
       "meta_description": "Electra Pop Pro rotary machine with adjustable stroke, Mabuchi motor and shock absorption technology. Available in Black and Pink.",
-      "keywords": ["Electra Pop Pro","rotary tattoo machine","adjustable stroke","professional tattoo machine"]
+      "keywords": [
+        "Electra Pop Pro",
+        "rotary tattoo machine",
+        "adjustable stroke",
+        "professional tattoo machine"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
   },
-
   "pen-3": {
     "id": "pen-3",
     "name": "Pen 3",
@@ -365,11 +441,15 @@
     "seo": {
       "meta_title": "Electric Ink Pen 3 | Professional Tattoo Machine",
       "meta_description": "Pen 3 rotary tattoo machine with 4.0mm stroke. Compatible with Universal cartridges and Electric Ink grips.",
-      "keywords": ["Pen 3","rotary machine","tattoo pen"]
+      "keywords": [
+        "Pen 3",
+        "rotary machine",
+        "tattoo pen"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnRWEAiq7NBxfpw235gURaJ"
   },
-
   "ultra-pen": {
     "id": "ultra-pen",
     "name": "Ultra Pen",
@@ -386,7 +466,7 @@
       "productId": "prod_TkwaRscy82RkNj",
       "priceId": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0"
     },
-    "price": 846.70,
+    "price": 846.7,
     "variants": [],
     "image": "/images/products/tattoo-machines/ultra-pen-1-cover.webp",
     "images": [
@@ -417,11 +497,15 @@
     "seo": {
       "meta_title": "Electric Ink Ultra Pen | Professional Tattoo Machine",
       "meta_description": "Ultra Pen rotary tattoo machine with PAS2 alignment, LADS1 damping and ergonomic design.",
-      "keywords": ["Ultra Pen","tattoo pen","rotary machine"]
+      "keywords": [
+        "Ultra Pen",
+        "tattoo pen",
+        "rotary machine"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0"
   },
-
   "ultra-pen-2-combo": {
     "id": "ultra-pen-2-combo",
     "name": "Ultra Pen 2 - Combo",
@@ -439,7 +523,7 @@
       "productId": "prod_TkwYdAGyqrMKW0",
       "priceId": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
     },
-    "price": 1034.80,
+    "price": 1034.8,
     "variants": [],
     "image": "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
     "images": [
@@ -482,8 +566,14 @@
     "seo": {
       "meta_title": "Electric Ink Ultra Pen 2 Combo | Professional Tattoo Equipment",
       "meta_description": "Ultra Pen 2 combo kit with Neodymium 22R motor, 25mm universal grip, adjustable damping system and full accessory kit.",
-      "keywords": ["Ultra Pen 2","tattoo combo kit","professional tattoo pen","Neodymium motor"]
+      "keywords": [
+        "Ultra Pen 2",
+        "tattoo combo kit",
+        "professional tattoo pen",
+        "Neodymium motor"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
   }
 }

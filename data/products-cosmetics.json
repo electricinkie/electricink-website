@@ -36,10 +36,16 @@
     "seo": {
       "meta_title": "Tattoo Balm | Electric Ink Ireland",
       "meta_description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "aftercare", "tattoo balm", "post-tattoo care"]
+      "keywords": [
+        "cosmetics",
+        "aftercare",
+        "tattoo balm",
+        "post-tattoo care"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
   },
   "tattoo-cream-derma-30g": {
     "id": "tattoo-cream-derma-30g",
@@ -57,7 +63,7 @@
       "productId": "prod_TjUAdCColMjp0O",
       "priceId": "price_1Sm1CHAiq7NBxfpwWPOFVz98"
     },
-    "price": 6.50,
+    "price": 6.5,
     "variants": [],
     "size": "30g",
     "image": "/images/products/cosmetics/tattoo-cream-30g.webp",
@@ -76,12 +82,17 @@
     "seo": {
       "meta_title": "Tattoo Cream Derma | Electric Ink Ireland",
       "meta_description": "Lightweight moisturizer for healed tattoos. Plant-based oils and butters provide deep hydration with anti-aging antioxidants. Keep your ink bold and vibrant.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "aftercare", "tattoo cream derma", "moisturizer"]
+      "keywords": [
+        "cosmetics",
+        "aftercare",
+        "tattoo cream derma",
+        "moisturizer"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1CHAiq7NBxfpwWPOFVz98"
   },
-  
   "slimer-gel": {
     "id": "slimer-gel",
     "name": "Slimer Tattoo Gel",
@@ -101,20 +112,20 @@
     "price": 11.25,
     "size": "90g",
     "variants": [
-      { 
+      {
         "id": "slimer-gel-90g",
-        "size": "90g", 
+        "size": "90g",
         "label": "90g",
-        "price": 11.25, 
+        "price": 11.25,
         "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd",
         "stripe_price_id": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd",
         "image": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp"
       },
-      { 
+      {
         "id": "slimer-gel-400g",
-        "size": "400g", 
+        "size": "400g",
         "label": "400g",
-        "price": 18.50, 
+        "price": 18.5,
         "priceId": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l",
         "stripe_price_id": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l",
         "image": "/images/products/cosmetics/slimer-tattoo-gel-400ml.webp"
@@ -138,10 +149,16 @@
     "seo": {
       "meta_title": "Slimer Tattoo Gel | Electric Ink Ireland",
       "meta_description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "during tattoo", "slimer tattoo gel", "gel lubricant"]
+      "keywords": [
+        "cosmetics",
+        "during tattoo",
+        "slimer tattoo gel",
+        "gel lubricant"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd"
   },
   "skin-scrub-out-250g": {
     "id": "skin-scrub-out-250g",
@@ -159,7 +176,7 @@
       "productId": "prod_TjUGg2WGdrsUbl",
       "priceId": "price_1Sm1ICAiq7NBxfpw7gNrJWEi"
     },
-    "price": 13.50,
+    "price": 13.5,
     "variants": [],
     "size": "250g",
     "image": "/images/products/cosmetics/scrub-out-250g.webp",
@@ -178,9 +195,15 @@
     "seo": {
       "meta_title": "Tattoo Skin Scrub Out | Electric Ink Ireland",
       "meta_description": "Exfoliating gel removes dead cells and impurities. Softens skin, facilitates ink application, and makes the process safer. Essential for preparation.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "pre-tattoo", "skin scrub", "exfoliating gel"]
+      "keywords": [
+        "cosmetics",
+        "pre-tattoo",
+        "skin scrub",
+        "exfoliating gel"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1ICAiq7NBxfpw7gNrJWEi"
   },
   "tattoo-prep-200ml": {
     "id": "tattoo-prep-200ml",
@@ -217,9 +240,15 @@
     "seo": {
       "meta_title": "Tattoo Prep | Electric Ink Ireland",
       "meta_description": "Shaving foam with Aloe Vera and Chamomile. Enhances razor glide during hair removal and cleanses skin. Calms and moisturizes. No rinsing needed.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "pre-tattoo", "tattoo prep", "shaving foam"]
+      "keywords": [
+        "cosmetics",
+        "pre-tattoo",
+        "tattoo prep",
+        "shaving foam"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1KoAiq7NBxfpwSEEBe3N4"
   },
   "gloo-stencil": {
     "id": "gloo-stencil",
@@ -233,27 +262,27 @@
       "Dermatologically tested",
       "Professional results"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjULsjQFxQ5b8F",
       "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
     },
-    "price": 10.00,
+    "price": 10,
     "size": "30mL",
     "variants": [
-      { 
+      {
         "id": "gloo-stencil-30ml",
-        "size": "30mL", 
+        "size": "30mL",
         "label": "30mL",
-        "price": 10.00, 
+        "price": 10,
         "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
         "stripe_price_id": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
         "image": "/images/products/cosmetics/gloo-30g.webp"
       },
-      { 
+      {
         "id": "gloo-stencil-120ml",
-        "size": "120mL", 
+        "size": "120mL",
         "label": "120mL",
-        "price": 26.00, 
+        "price": 26,
         "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
         "stripe_price_id": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
         "image": "/images/products/cosmetics/gloo-240g.webp"
@@ -275,10 +304,17 @@
     "seo": {
       "meta_title": "The Gloo Stencil Transfer | Electric Ink Ireland",
       "meta_description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing. Shop now at Electric Ink Ireland.",
-      "keywords": ["cosmetics", "stencil transfer", "during tattoo", "gel formula", "tattoo"]
+      "keywords": [
+        "cosmetics",
+        "stencil transfer",
+        "during tattoo",
+        "gel formula",
+        "tattoo"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
   },
   "transfer-it": {
     "id": "transfer-it",
@@ -292,36 +328,36 @@
       "Won't dry out area",
       "Extended coverage"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjUS3eS4PCSUr1",
       "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
     },
-    "price": 9.00,
+    "price": 9,
     "size": "30mL",
     "variants": [
-      { 
+      {
         "id": "transfer-it-30ml",
-        "size": "30mL", 
+        "size": "30mL",
         "label": "30mL",
-        "price": 9.00, 
+        "price": 9,
         "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ",
         "stripe_price_id": "price_1Sm1TMAiq7NBxfpw2WoWPudJ",
         "image": "/images/products/cosmetics/it-30ml.webp"
       },
-      { 
+      {
         "id": "transfer-it-120ml",
-        "size": "120mL", 
+        "size": "120mL",
         "label": "120mL",
-        "price": 16.35, 
+        "price": 16.35,
         "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO",
         "stripe_price_id": "price_1Sm1TMAiq7NBxfpwa2GqTGeO",
         "image": "/images/products/cosmetics/it-120ml.webp"
       },
-      { 
+      {
         "id": "transfer-it-240ml",
-        "size": "240mL", 
+        "size": "240mL",
         "label": "240mL",
-        "price": 24.50, 
+        "price": 24.5,
         "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m",
         "stripe_price_id": "price_1Sm1TMAiq7NBxfpwOb98757m",
         "image": "/images/products/cosmetics/it-240ml.webp"
@@ -344,10 +380,17 @@
     "seo": {
       "meta_title": "Transfer It | Electric Ink Ireland",
       "meta_description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage. Shop now at Electric Ink Ireland.",
-      "keywords": ["cosmetics", "stencil fixation", "during tattoo", "gel formula", "tattoo"]
+      "keywords": [
+        "cosmetics",
+        "stencil fixation",
+        "during tattoo",
+        "gel formula",
+        "tattoo"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
   },
   "stencil-fix-120ml": {
     "id": "stencil-fix-120ml",
@@ -365,7 +408,7 @@
       "productId": "prod_TjUVpNsfZVRD3l",
       "priceId": "price_1Sm1W8Aiq7NBxfpwmkBIpvUp"
     },
-    "price": 7.10,
+    "price": 7.1,
     "variants": [],
     "size": "120mL",
     "image": "/images/products/cosmetics/fix-120ml.webp",
@@ -384,9 +427,16 @@
     "seo": {
       "meta_title": "Stencil Fix Spray | Electric Ink Ireland",
       "meta_description": "Professional spray for extra stencil fixation. Removes excess carbon, prevents smudging, and keeps skin hydrated. Perfect for stencils and freehand work. Shop now at Electric Ink Ireland.",
-      "keywords": ["cosmetics", "stencil fix", "spray", "during tattoo", "tattoo"]
+      "keywords": [
+        "cosmetics",
+        "stencil fix",
+        "spray",
+        "during tattoo",
+        "tattoo"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1W8Aiq7NBxfpwmkBIpvUp"
   },
   "clean-up": {
     "id": "clean-up",
@@ -400,27 +450,27 @@
       "Maintains pH balance",
       "Promotes faster healing"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjUXvUXA83i0pO",
       "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
     },
-    "price": 9.00,
+    "price": 9,
     "size": "90mL",
     "variants": [
-      { 
+      {
         "id": "clean-up-90ml",
-        "size": "90mL", 
+        "size": "90mL",
         "label": "90mL",
-        "price": 9.00, 
+        "price": 9,
         "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW",
         "stripe_price_id": "price_1Sm1YkAiq7NBxfpw3AgyJySW",
         "image": "/images/products/cosmetics/clean-up-90ml.webp"
       },
-      { 
+      {
         "id": "clean-up-200ml",
-        "size": "200mL", 
+        "size": "200mL",
         "label": "200mL",
-        "price": 10.65, 
+        "price": 10.65,
         "priceId": "price_1Sm1YlAiq7NBxfpwavldit9Z",
         "stripe_price_id": "price_1Sm1YlAiq7NBxfpwavldit9Z",
         "image": "/images/products/cosmetics/clean-up-200ml.webp"
@@ -445,10 +495,17 @@
     "seo": {
       "meta_title": "Tattoo Clean Up | Electric Ink Ireland",
       "meta_description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results. Shop now at Electric Ink Ireland.",
-      "keywords": ["cosmetics", "clean up", "during tattoo", "foam", "tattoo"]
+      "keywords": [
+        "cosmetics",
+        "clean up",
+        "during tattoo",
+        "foam",
+        "tattoo"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
   },
   "clean-up-refill-1l": {
     "id": "clean-up-refill-1l",
@@ -466,7 +523,7 @@
       "productId": "prod_TjUZzKGZrguF2C",
       "priceId": "price_1Sm1akAiq7NBxfpwoTcDpGHw"
     },
-    "price": 14.70,
+    "price": 14.7,
     "variants": [],
     "size": "1L",
     "image": "/images/products/cosmetics/clean-up-1l.webp",
@@ -482,9 +539,16 @@
     "seo": {
       "meta_title": "Tattoo Clean Up Refill | Electric Ink Ireland",
       "meta_description": "1L refill for foam bottle. Same pH-balanced formula that optimizes pigment retention and reduces irritation. Eco-friendly bulk option for busy studios. Shop now at Electric Ink Ireland.",
-      "keywords": ["cosmetics", "clean up refill", "during tattoo", "foam", "tattoo"]
+      "keywords": [
+        "cosmetics",
+        "clean up refill",
+        "during tattoo",
+        "foam",
+        "tattoo"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1akAiq7NBxfpwoTcDpGHw"
   },
   "cat-slobber": {
     "id": "cat-slobber",
@@ -498,70 +562,70 @@
       "Vegan formula",
       "Multiple fragrance options"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjUgesU7XvVSmA",
       "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ"
     },
-    "price": 9.00,
+    "price": 9,
     "size": "90g",
     "fragrance": "Traditional",
     "variants": [
-      { 
+      {
         "id": "cat-slobber-90g-traditional",
-        "size": "90g", 
-        "fragrance": "Traditional", 
+        "size": "90g",
+        "fragrance": "Traditional",
         "label": "90g - Traditional",
-        "price": 9.00, 
+        "price": 9,
         "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "image": "/images/products/cosmetics/cat-slobber-90g-tradicional.webp"
       },
-      { 
+      {
         "id": "cat-slobber-90g-clove-cinnamon",
-        "size": "90g", 
-        "fragrance": "Clove & Cinnamon", 
+        "size": "90g",
+        "fragrance": "Clove & Cinnamon",
         "label": "90g - Clove & Cinnamon",
-        "price": 9.00, 
+        "price": 9,
         "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "image": "/images/products/cosmetics/cat-slobber-90g-clove&cinnamon.webp"
       },
-      { 
+      {
         "id": "cat-slobber-90g-mint",
-        "size": "90g", 
-        "fragrance": "Mint", 
+        "size": "90g",
+        "fragrance": "Mint",
         "label": "90g - Mint",
-        "price": 9.00, 
+        "price": 9,
         "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "image": "/images/products/cosmetics/cat-slobber-90g-mint.webp"
       },
-      { 
+      {
         "id": "cat-slobber-250g-traditional",
-        "size": "250g", 
-        "fragrance": "Traditional", 
+        "size": "250g",
+        "fragrance": "Traditional",
         "label": "250g - Traditional",
-        "price": 25.70, 
+        "price": 25.7,
         "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "image": "/images/products/cosmetics/cat-slobber-250g-tradicional.webp"
       },
-      { 
+      {
         "id": "cat-slobber-250g-clove-cinnamon",
-        "size": "250g", 
-        "fragrance": "Clove & Cinnamon", 
+        "size": "250g",
+        "fragrance": "Clove & Cinnamon",
         "label": "250g - Clove & Cinnamon",
-        "price": 25.70, 
+        "price": 25.7,
         "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "image": "/images/products/cosmetics/cat-slobber-250g-clove&cinnamon.webp"
       },
-      { 
+      {
         "id": "cat-slobber-250g-mint",
-        "size": "250g", 
-        "fragrance": "Mint", 
+        "size": "250g",
+        "fragrance": "Mint",
         "label": "250g - Mint",
-        "price": 25.70, 
+        "price": 25.7,
         "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "image": "/images/products/cosmetics/cat-slobber-250g-mint.webp"
@@ -589,10 +653,16 @@
     "seo": {
       "meta_title": "Cat Slobber Butter | Electric Ink Ireland",
       "meta_description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "during tattoo", "cat slobber butter", "needle glide"]
+      "keywords": [
+        "cosmetics",
+        "during tattoo",
+        "cat slobber butter",
+        "needle glide"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ"
   },
   "vaseline-slip": {
     "id": "vaseline-slip",
@@ -606,27 +676,27 @@
       "Smooth needle glide",
       "Prevents irritation"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjUk5X0HS4DDOR",
       "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
     },
-    "price": 8.20,
+    "price": 8.2,
     "size": "90g",
     "variants": [
-      { 
+      {
         "id": "vaseline-slip-90g",
-        "size": "90g", 
+        "size": "90g",
         "label": "90g",
-        "price": 8.20, 
+        "price": 8.2,
         "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
         "stripe_price_id": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
         "image": "/images/products/cosmetics/slip-premium-90g.webp"
       },
-      { 
+      {
         "id": "vaseline-slip-150g",
-        "size": "150g", 
+        "size": "150g",
         "label": "150g",
-        "price": 9.80, 
+        "price": 9.8,
         "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
         "stripe_price_id": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
         "image": "/images/products/cosmetics/slip-premium-150g.webp"
@@ -650,9 +720,15 @@
     "seo": {
       "meta_title": "Vaseline Slip Premium | Electric Ink Ireland",
       "meta_description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "during tattoo", "vaseline slip premium", "needle glide"]
+      "keywords": [
+        "cosmetics",
+        "during tattoo",
+        "vaseline slip premium",
+        "needle glide"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
   },
   "after-all": {
     "id": "after-all",
@@ -666,27 +742,27 @@
       "No rinse needed",
       "Rapid recovery"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjUoGWkFxCNru7",
       "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr"
     },
-    "price": 9.80,
+    "price": 9.8,
     "size": "90mL",
     "variants": [
-      { 
+      {
         "id": "after-all-90ml",
-        "size": "90mL", 
+        "size": "90mL",
         "label": "90mL",
-        "price": 9.80, 
+        "price": 9.8,
         "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr",
         "stripe_price_id": "price_1Sm1oPAiq7NBxfpwOvWFWJBr",
         "image": "/images/products/cosmetics/after-all-90ml.webp"
       },
-      { 
+      {
         "id": "after-all-250ml",
-        "size": "250mL", 
+        "size": "250mL",
         "label": "250mL",
-        "price": 15.50, 
+        "price": 15.5,
         "priceId": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN",
         "stripe_price_id": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN",
         "image": "/images/products/cosmetics/after-all-250ml.webp"
@@ -709,10 +785,16 @@
     "seo": {
       "meta_title": "Tattoo After All | Electric Ink Ireland",
       "meta_description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "aftercare", "tattoo after all", "antiseptic spray"]
+      "keywords": [
+        "cosmetics",
+        "aftercare",
+        "tattoo after all",
+        "antiseptic spray"
+      ]
     },
     "inStock": true,
-    "featured": true
+    "featured": true,
+    "stripe_price_id": "price_1Sm1oPAiq7NBxfpwOvWFWJBr"
   },
   "barrier-film": {
     "id": "barrier-film",
@@ -726,27 +808,27 @@
       "Protects healing skin",
       "Easy application"
     ],
-    "stripe": { 
+    "stripe": {
       "productId": "prod_TjUtBF8BzltzEq",
       "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
     },
-    "price": 14.70,
+    "price": 14.7,
     "size": "25mL",
     "variants": [
-      { 
+      {
         "id": "barrier-film-25ml",
-        "size": "25mL", 
+        "size": "25mL",
         "label": "25mL",
-        "price": 14.70, 
+        "price": 14.7,
         "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
         "stripe_price_id": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
         "image": "/images/products/cosmetics/barrier-film-25ml.webp"
       },
-      { 
+      {
         "id": "barrier-film-100ml",
-        "size": "100mL", 
+        "size": "100mL",
         "label": "100mL",
-        "price": 32.70, 
+        "price": 32.7,
         "priceId": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy",
         "stripe_price_id": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy",
         "image": "/images/products/cosmetics/barrier-film-100ml.webp"
@@ -768,9 +850,15 @@
     "seo": {
       "meta_title": "Tattoo Barrier Film | Electric Ink Ireland",
       "meta_description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "aftercare", "barrier film", "second skin"]
+      "keywords": [
+        "cosmetics",
+        "aftercare",
+        "barrier film",
+        "second skin"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
   },
   "tattoo-dry-10units": {
     "id": "tattoo-dry-10units",
@@ -788,7 +876,7 @@
       "productId": "prod_TjUxSHvTIln5AK",
       "priceId": "price_1Sm1xXAiq7NBxfpwgTnMwun3"
     },
-    "price": 12.20,
+    "price": 12.2,
     "variants": [],
     "size": "10 units",
     "image": "/images/products/cosmetics/dry-10g.webp",
@@ -804,8 +892,14 @@
     "seo": {
       "meta_title": "Tattoo Dry Solidifier | Electric Ink Ireland",
       "meta_description": "Solidifies liquid tattoo waste (blood, fluids, inks). Prevents leaks, reduces contamination risk, and ensures safe disposal. 10 individual units per box.... Shop Electric Ink Ireland.",
-      "keywords": ["cosmetics", "during tattoo", "tattoo dry solidifier", "solidifier"]
+      "keywords": [
+        "cosmetics",
+        "during tattoo",
+        "tattoo dry solidifier",
+        "solidifier"
+      ]
     },
-    "inStock": true
+    "inStock": true,
+    "stripe_price_id": "price_1Sm1xXAiq7NBxfpwgTnMwun3"
   }
 }

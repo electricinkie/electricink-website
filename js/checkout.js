@@ -1026,12 +1026,31 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
     try {
       // Prepare cart items for backend validation
       // 🔧 FIX: Normalize product IDs (underscore → hífen)
-      const cartItems = cart.map(item => ({
-        id: item.id.replace(/_/g, '-'),  // transfer_it → transfer-it
-        quantity: item.quantity,
-        stripe_price_id: item.stripe_price_id,
-        ...(item.variant && { variant: item.variant })
-      }));
+      const cartItems = cart.map(item => {
+        // Resolve stripe price id from multiple possible locations to
+        // support legacy shapes where priceId may live on the product root
+        // or inside a variant object.
+        const priceCandidate = item.stripe_price_id
+          || (item.variant && (item.variant.stripe_price_id || item.variant.priceId || item.variant.price_id))
+          || item.priceId
+          || item.price_id
+          || null;
+
+        if (!priceCandidate) {
+          console.error('[CHECKOUT] Missing stripe price id for cart item:', item);
+          throw new Error(`Invalid cart item: missing stripe_price_id (${item.id})`);
+        }
+
+        // Ensure we send a canonical `stripe_price_id` to the backend
+        if (!item.stripe_price_id) item.stripe_price_id = priceCandidate;
+
+        return {
+          id: item.id.replace(/_/g, '-'),
+          quantity: item.quantity,
+          stripe_price_id: item.stripe_price_id,
+          ...(item.variant && { variant: item.variant })
+        };
+      });
       
       console.log('🔍 Normalized cart items:', cartItems);
 

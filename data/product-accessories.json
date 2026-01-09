@@ -1,65 +1,96 @@
 {
-  "tattoo-grips": {
-    "id": "tattoo-grips",
-    "name": "Tattoo Grips",
-    "category": "Accessories",
-    "subcategory": "Grips & Supplies",
+    "tattoo-grips": {
+      "id": "tattoo-grips",
+      "name": "Tattoo Grips",
+      "category": "Accessories",
       "subcategory": "Hygiene & Protection",
-      "subcategory": "Hygiene & Protection",
-      "subcategory": "Practice & Training",
-      "subcategory": "Transfer & Stencils",
-      "subcategory": "Machine Accessories",
-      "subcategory": "Machine Accessories",
-      "subcategory": "Machine Accessories",
-      "subcategory": "Grips & Supplies",
-      "subcategory": "Grips & Supplies",
-      "subcategory": "Hygiene & Protection",
-      "subcategory": "Hygiene & Protection",
-    "description": "Elastic cover wrap ideal to secure grips on tattoo machines. Self-adhesive elastic fabric reduces vibration, improves hold, and resists moisture.",
-    "features": [
-      "Self-adhesive elastic fabric",
-      "Non-slip surface",
-      "Reduces vibration",
-      "Moisture-resistant"
-    ],
-    "stripe": { "productId": "prod_TkqYQhBAIqBCuj", "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh" },
-    "price": 3.25,
-    "size": "5cm x 4.50m",
-    "variants": [
-      { "id": "tattoo-grips-turquoise", "label": "Turquoise", "colour": "Turquoise", "price": 3.25, "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "image": "/images/products/accessories/turquoise-grip.webp" },
-      { "id": "tattoo-grips-black", "label": "Black", "colour": "Black", "price": 3.25, "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "image": "/images/products/accessories/black-grip.webp" },
-      { "id": "tattoo-grips-purple", "label": "Purple", "colour": "Purple", "price": 3.25, "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "image": "/images/products/accessories/purple-grip.webp" },
-      { "id": "tattoo-grips-red", "label": "Red", "colour": "Red", "price": 3.25, "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "image": "/images/products/accessories/red-grip.webp" },
-      { "id": "tattoo-grips-blue", "label": "Blue", "colour": "Blue", "price": 3.25, "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "image": "/images/products/accessories/blue-grip.webp" },
-      { "id": "tattoo-grips-beige", "label": "Beige", "colour": "Beige", "price": 3.25, "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh", "image": "/images/products/accessories/beige-grip.webp" }
-    ],
-    "image": "/images/products/accessories/all-grips.webp",
-    "images": [
-      "/images/products/accessories/all-grips.webp",
-      "/images/products/accessories/turquoise-grip.webp",
-      "/images/products/accessories/black-grip.webp",
-      "/images/products/accessories/purple-grip.webp",
-      "/images/products/accessories/red-grip.webp",
-      "/images/products/accessories/blue-grip.webp",
-      "/images/products/accessories/beige-grip.webp"
-    ],
-    "content": {
-      "product_details": "Dimensions: 5cm x 4.50m. Self-adhesive elastic wrap to secure grips and reduce vibration."
-    },
-    "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
-    },
-    "seo": {
-      "meta_title": "Tattoo Grips | Electric Ink Ireland",
-      "meta_description": "Elastic cover wrap ideal to secure grips on tattoo machines. Self-adhesive elastic fabric reduces vibration, improves hold, and resists moisture. Shop now at Electric Ink Ireland.",
-      "keywords": ["accessories", "tattoo grips", "elastic wrap", "vibration reduction", "tattoo machine"]
-    },
-    "inStock": true,
-    "featured": false
-  },
+      "description": "Elastic cover wrap ideal to secure grips on tattoo machines. Self-adhesive elastic fabric reduces vibration, improves hold, and resists moisture.",
+      "features": [
+        "Self-adhesive elastic fabric",
+        "Non-slip surface",
+        "Reduces vibration",
+        "Moisture-resistant"
+      ],
 
+      "stripe": {
+        "productId": "prod_TkqYQhBAIqBCuj",
+        "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
+      },
+
+      "price": 3.25,
+      "size": "5cm x 4.50m",
+
+      "variants": [
+        {
+          "id": "turquoise",
+          "label": "Turquoise",
+          "colour": "Turquoise",
+          "image": "/images/products/accessories/turquoise-grip.webp"
+        },
+        {
+          "id": "black",
+          "label": "Black",
+          "colour": "Black",
+          "image": "/images/products/accessories/black-grip.webp"
+        },
+        {
+          "id": "purple",
+          "label": "Purple",
+          "colour": "Purple",
+          "image": "/images/products/accessories/purple-grip.webp"
+        },
+        {
+          "id": "red",
+          "label": "Red",
+          "colour": "Red",
+          "image": "/images/products/accessories/red-grip.webp"
+        },
+        {
+          "id": "blue",
+          "label": "Blue",
+          "colour": "Blue",
+          "image": "/images/products/accessories/blue-grip.webp"
+        },
+        {
+          "id": "beige",
+          "label": "Beige",
+          "colour": "Beige",
+          "image": "/images/products/accessories/beige-grip.webp"
+        }
+      ],
+
+      "image": "/images/products/accessories/all-grips.webp",
+
+      "images": [
+        "/images/products/accessories/all-grips.webp",
+        "/images/products/accessories/turquoise-grip.webp",
+        "/images/products/accessories/black-grip.webp",
+        "/images/products/accessories/purple-grip.webp",
+        "/images/products/accessories/red-grip.webp",
+        "/images/products/accessories/blue-grip.webp",
+        "/images/products/accessories/beige-grip.webp"
+      ],
+
+      "inventory": {
+        "stock_quantity": 0,
+        "stock_status": "available_on_request",
+        "low_stock_threshold": 5
+      },
+
+      "seo": {
+        "meta_title": "Tattoo Grips | Electric Ink Ireland",
+        "meta_description": "Elastic cover wrap ideal to secure grips on tattoo machines. Reduces vibration and improves hold.",
+        "keywords": [
+          "tattoo grips",
+          "elastic wrap",
+          "tattoo accessories"
+        ]
+      },
+
+      "inStock": true,
+      "featured": false,
+      "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
+    },
   "silicone-ink-cups": {
     "id": "silicone-ink-cups",
     "name": "Silicone Ink Cups",
@@ -72,18 +103,69 @@
       "Easy to sterilize",
       "Safe disposal"
     ],
-    "stripe": { "productId": "prod_Tkqdv934THWw8Y", "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS" },
+    "stripe": {
+      "productId": "prod_Tkqdv934THWw8Y",
+      "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS"
+    },
     "price": 11.45,
     "size": "Various (see variants)",
     "variants": [
-      { "id": "silicone-ink-cups-s-pink", "size": "S", "label": "S - 500 x 0.5mL (Pink)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-pink-small.webp" },
-      { "id": "silicone-ink-cups-s-blue", "size": "S", "label": "S - 500 x 0.5mL (Blue)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-blue-small.webp" },
-      { "id": "silicone-ink-cups-m-pink", "size": "M", "label": "M - 300 x 1mL (Pink)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-pink-medium.webp" },
-      { "id": "silicone-ink-cups-m-blue", "size": "M", "label": "M - 300 x 1mL (Blue)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-blue-medium.webp" },
-      { "id": "silicone-ink-cups-l-pink", "size": "L", "label": "L - 200 x 2mL (Pink)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-pink-large.webp" },
-      { "id": "silicone-ink-cups-l-blue", "size": "L", "label": "L - 200 x 2mL (Blue)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-blue-large.webp" },
-      { "id": "silicone-ink-cups-xl-pink", "size": "XL", "label": "XL - 100 x 4mL (Pink)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-pink-extra-large.webp" },
-      { "id": "silicone-ink-cups-xl-blue", "size": "XL", "label": "XL - 100 x 4mL (Blue)", "price": 11.45, "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS", "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS", "image": "/images/products/accessories/ink-cap-blue-extra-large.webp" }
+      {
+        "id": "s-pink",
+        "size": "S",
+        "colour": "Pink",
+        "label": "S - 500 x 0.5mL (Pink)",
+        "image": "/images/products/accessories/ink-cap-pink-small.webp"
+      },
+      {
+        "id": "s-blue",
+        "size": "S",
+        "colour": "Blue",
+        "label": "S - 500 x 0.5mL (Blue)",
+        "image": "/images/products/accessories/ink-cap-blue-small.webp"
+      },
+      {
+        "id": "m-pink",
+        "size": "M",
+        "colour": "Pink",
+        "label": "M - 300 x 1mL (Pink)",
+        "image": "/images/products/accessories/ink-cap-pink-medium.webp"
+      },
+      {
+        "id": "m-blue",
+        "size": "M",
+        "colour": "Blue",
+        "label": "M - 300 x 1mL (Blue)",
+        "image": "/images/products/accessories/ink-cap-blue-medium.webp"
+      },
+      {
+        "id": "l-pink",
+        "size": "L",
+        "colour": "Pink",
+        "label": "L - 200 x 2mL (Pink)",
+        "image": "/images/products/accessories/ink-cap-pink-large.webp"
+      },
+      {
+        "id": "l-blue",
+        "size": "L",
+        "colour": "Blue",
+        "label": "L - 200 x 2mL (Blue)",
+        "image": "/images/products/accessories/ink-cap-blue-large.webp"
+      },
+      {
+        "id": "xl-pink",
+        "size": "XL",
+        "colour": "Pink",
+        "label": "XL - 100 x 4mL (Pink)",
+        "image": "/images/products/accessories/ink-cap-pink-extra-large.webp"
+      },
+      {
+        "id": "xl-blue",
+        "size": "XL",
+        "colour": "Blue",
+        "label": "XL - 100 x 4mL (Blue)",
+        "image": "/images/products/accessories/ink-cap-blue-extra-large.webp"
+      }
     ],
     "image": "/images/products/accessories/blue-and-pink-ink-cap-cover.webp",
     "images": [
@@ -108,13 +190,18 @@
     "seo": {
       "meta_title": "Silicone Ink Cups | Electric Ink Ireland",
       "meta_description": "High-quality silicone ink cups with rubber base to protect needle tips. Durable, flexible and easy to sterilize for safe use. Shop now at Electric Ink Ireland.",
-      "keywords": ["accessories", "ink cups", "silicone", "needle protection", "tattoo"]
+      "keywords": [
+        "accessories",
+        "ink cups",
+        "silicone",
+        "needle protection",
+        "tattoo"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS"
   },
-
-
   "pen-machine-cover-25-units": {
     "id": "pen-machine-cover-25-units",
     "name": "Pen Machine Cover - 25 Units",
@@ -127,12 +214,17 @@
       "Pack of 25 units",
       "Durable and lightweight"
     ],
-    "stripe": { "productId": "prod_TkqbVXdpviuUMT", "priceId": "price_1SnKtuAiq7NBxfpwU8DjVxgy" },
+    "stripe": {
+      "productId": "prod_TkqbVXdpviuUMT",
+      "priceId": "price_1SnKtuAiq7NBxfpwU8DjVxgy"
+    },
     "price": 6.55,
     "variants": [],
     "size": "25 units",
     "image": "/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp",
-    "images": ["/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp"],
+    "images": [
+      "/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp"
+    ],
     "content": {
       "specifications": "Colour: Transparent. Quantity: 25 units. Size: 6mm x 18mm x 0.08mm."
     },
@@ -144,12 +236,18 @@
     "seo": {
       "meta_title": "Pen Machine Cover - 25 Units | Electric Ink Ireland",
       "meta_description": "Transparent pen machine protectors designed to fit Pen 3 and Ultra Pen 2. Pack of 25 protectors for hygienic use. Shop now at Electric Ink Ireland.",
-      "keywords": ["accessories", "pen machine cover", "tattoo", "hygiene", "protectors"]
+      "keywords": [
+        "accessories",
+        "pen machine cover",
+        "tattoo",
+        "hygiene",
+        "protectors"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnKtuAiq7NBxfpwU8DjVxgy"
   },
-
   "clip-cord-protector": {
     "id": "clip-cord-protector",
     "name": "Clip Cord Protector",
@@ -162,14 +260,37 @@
       "Covers up to 70cm",
       "Box contains 100 covers"
     ],
-    "stripe": { "productId": "prod_TkqfxykNa8l2B1", "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI" },
-    "price": 14.70,
+    "stripe": {
+      "productId": "prod_TkqfxykNa8l2B1",
+      "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI"
+    },
+    "price": 14.7,
     "size": "60mm x 700mm",
     "variants": [
-      { "id": "clip-cord-protector-red", "label": "Red", "colour": "Red", "price": 14.70, "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI", "stripe_price_id": "price_1SnKxpAiq7NBxfpw1LpEDszI", "image": "/images/products/accessories/clip-cord-protector-red.webp" },
-      { "id": "clip-cord-protector-pink", "label": "Pink", "colour": "Pink", "price": 14.70, "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI", "stripe_price_id": "price_1SnKxpAiq7NBxfpw1LpEDszI", "image": "/images/products/accessories/clip-cord-protector-pink.webp" },
-      { "id": "clip-cord-protector-blue", "label": "Blue", "colour": "Blue", "price": 14.70, "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI", "stripe_price_id": "price_1SnKxpAiq7NBxfpw1LpEDszI", "image": "/images/products/accessories/clip-cord-protector-blue.webp" },
-      { "id": "clip-cord-protector-transparent", "label": "Transparent", "colour": "Transparent", "price": 14.70, "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI", "stripe_price_id": "price_1SnKxpAiq7NBxfpw1LpEDszI", "image": "/images/products/accessories/clip-cord-protector-transparent.webp" }
+      {
+        "id": "red",
+        "label": "Red",
+        "colour": "Red",
+        "image": "/images/products/accessories/clip-cord-protector-red.webp"
+      },
+      {
+        "id": "pink",
+        "label": "Pink",
+        "colour": "Pink",
+        "image": "/images/products/accessories/clip-cord-protector-pink.webp"
+      },
+      {
+        "id": "blue",
+        "label": "Blue",
+        "colour": "Blue",
+        "image": "/images/products/accessories/clip-cord-protector-blue.webp"
+      },
+      {
+        "id": "transparent",
+        "label": "Transparent",
+        "colour": "Transparent",
+        "image": "/images/products/accessories/clip-cord-protector-transparent.webp"
+      }
     ],
     "image": "/images/products/accessories/clip-cord-protector-transparent.webp",
     "images": [
@@ -187,12 +308,18 @@
     "seo": {
       "meta_title": "Clip Cord Protector | Electric Ink Ireland",
       "meta_description": "Disposable plastic covers compatible with RCA, clip-cord and magnetic cables. Helps prevent contamination and keeps cables clean. Shop now at Electric Ink Ireland.",
-      "keywords": ["accessories", "clip cord protector", "tattoo", "cable protection", "disposable"]
+      "keywords": [
+        "accessories",
+        "clip cord protector",
+        "tattoo",
+        "cable protection",
+        "disposable"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnKxpAiq7NBxfpw1LpEDszI"
   },
-
   "electric-ink-wash-bottle": {
     "id": "electric-ink-wash-bottle",
     "name": "Electric Ink Wash Bottle",
@@ -204,12 +331,31 @@
       "Durable construction",
       "Easy to clean"
     ],
-    "stripe": { "productId": "prod_Tkqhoc5rBVgt10", "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs" },
-    "price": 3.50,
+    "stripe": {
+      "productId": "prod_Tkqhoc5rBVgt10",
+      "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs"
+    },
+    "price": 3.5,
     "size": "Multiple",
     "variants": [
-      { "id": "electric-ink-wash-250ml", "size": "250mL", "label": "250mL", "price": 3.50, "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs", "stripe_price_id": "price_1SnL0BAiq7NBxfpwWtDAoTQs", "image": "/images/products/accessories/wash-bottle-200ml.webp" },
-      { "id": "electric-ink-wash-500ml", "size": "500mL", "label": "500mL", "price": 4.50, "priceId": "price_1SnL0BAiq7NBxfpwVJYoPSj3", "stripe_price_id": "price_1SnL0BAiq7NBxfpwVJYoPSj3", "image": "/images/products/accessories/wash-bottle-500ml.webp" }
+      {
+        "id": "electric-ink-wash-250ml",
+        "size": "250mL",
+        "label": "250mL",
+        "price": 3.5,
+        "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
+        "stripe_price_id": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
+        "image": "/images/products/accessories/wash-bottle-200ml.webp"
+      },
+      {
+        "id": "electric-ink-wash-500ml",
+        "size": "500mL",
+        "label": "500mL",
+        "price": 4.5,
+        "priceId": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
+        "stripe_price_id": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
+        "image": "/images/products/accessories/wash-bottle-500ml.webp"
+      }
     ],
     "image": "/images/products/accessories/wash-bottle-200ml.webp",
     "images": [
@@ -227,12 +373,18 @@
     "seo": {
       "meta_title": "Electric Ink Wash Bottle | Electric Ink Ireland",
       "meta_description": "Professional wash bottle available in 250mL and 500mL capacities. Durable and easy to clean for studio use. Shop now at Electric Ink Ireland.",
-      "keywords": ["accessories", "wash bottle", "tattoo", "studio hygiene", "cleaning"]
+      "keywords": [
+        "accessories",
+        "wash bottle",
+        "tattoo",
+        "studio hygiene",
+        "cleaning"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnL0BAiq7NBxfpwWtDAoTQs"
   },
-
   "foam-bottle": {
     "id": "foam-bottle",
     "name": "Foam Bottle",
@@ -245,12 +397,17 @@
       "Durable material",
       "Easy pump mechanism"
     ],
-    "stripe": { "productId": "prod_Tkqjhxh3m7ifs7", "priceId": "price_1SnL1hAiq7NBxfpwtmT5aLSu" },
-    "price": 4.70,
+    "stripe": {
+      "productId": "prod_Tkqjhxh3m7ifs7",
+      "priceId": "price_1SnL1hAiq7NBxfpwtmT5aLSu"
+    },
+    "price": 4.7,
     "variants": [],
     "size": "210mL",
     "image": "/images/products/accessories/foam-bottle.webp",
-    "images": ["/images/products/accessories/foam-bottle.webp"],
+    "images": [
+      "/images/products/accessories/foam-bottle.webp"
+    ],
     "content": {
       "product_details": "Convenient foam dispenser, 210mL capacity. Ideal for studio hygiene."
     },
@@ -262,12 +419,18 @@
     "seo": {
       "meta_title": "Foam Bottle | Electric Ink Ireland",
       "meta_description": "Foam dispenser bottle (210mL) for soap — converts liquid into rich foam for efficient cleaning in the studio. Shop now at Electric Ink Ireland.",
-      "keywords": ["accessories", "foam bottle", "tattoo", "studio hygiene", "cleaning"]
+      "keywords": [
+        "accessories",
+        "foam bottle",
+        "tattoo",
+        "studio hygiene",
+        "cleaning"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnL1hAiq7NBxfpwtmT5aLSu"
   },
-
   "black-medical-bibs": {
     "id": "black-medical-bibs",
     "name": "Black Medical Bibs",
@@ -280,12 +443,31 @@
       "Disposable single-use",
       "Ideal for medical and tattoo settings"
     ],
-    "stripe": { "productId": "prod_Tkt0XymbQwrzqj", "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW" },
-    "price": 9.50,
+    "stripe": {
+      "productId": "prod_Tkt0XymbQwrzqj",
+      "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW"
+    },
+    "price": 9.5,
     "size": "Pack options",
     "variants": [
-      { "id": "black-medical-bibs-100", "label": "100 units", "quantity": 100, "price": 9.50, "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW", "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW", "image": "/images/products/accessories/black-medical-bibs.webp" },
-      { "id": "black-medical-bibs-500", "label": "500 units", "quantity": 500, "price": 21.50, "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz", "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz", "image": "/images/products/accessories/black-medical-bibs.webp" }
+      {
+        "id": "black-medical-bibs-100",
+        "label": "100 units",
+        "quantity": 100,
+        "price": 9.5,
+        "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW",
+        "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW",
+        "image": "/images/products/accessories/black-medical-bibs.webp"
+      },
+      {
+        "id": "black-medical-bibs-500",
+        "label": "500 units",
+        "quantity": 500,
+        "price": 21.5,
+        "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz",
+        "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz",
+        "image": "/images/products/accessories/black-medical-bibs.webp"
+      }
     ],
     "image": "/images/products/accessories/black-medical-bibs.webp",
     "images": [
@@ -302,12 +484,18 @@
     "seo": {
       "meta_title": "Black Medical Bibs | Electric Ink Ireland",
       "meta_description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.... Shop Electric Ink Ireland.",
-      "keywords": ["accessories", "hygiene & protection", "black medical bibs", "medical bibs", "disposable"]
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "black medical bibs",
+        "medical bibs",
+        "disposable"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW"
   },
-
   "black-nitrile-gloves": {
     "id": "black-nitrile-gloves",
     "name": "Black Nitrile Gloves (Powder-Free)",
@@ -320,15 +508,43 @@
       "Snug fit for precision",
       "Ideal for tattoo artists"
     ],
-    "stripe": { "productId": "prod_TktK33s5t8Afm0", "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM" },
-    "price": 7.50,
+    "stripe": {
+      "productId": "prod_TktK33s5t8Afm0",
+      "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
+    },
+    "price": 7.5,
     "size": "Multiple sizes",
     "variants": [
-      { "id": "black-nitrile-xs", "label": "XS", "size": "XS", "price": 7.50, "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "image": "/images/products/accessories/black-nitrile-gloves.webp" },
-      { "id": "black-nitrile-s", "label": "S", "size": "S", "price": 7.50, "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "image": "/images/products/accessories/black-nitrile-gloves.webp" },
-      { "id": "black-nitrile-m", "label": "M", "size": "M", "price": 7.50, "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "image": "/images/products/accessories/black-nitrile-gloves.webp" },
-      { "id": "black-nitrile-l", "label": "L", "size": "L", "price": 7.50, "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "image": "/images/products/accessories/black-nitrile-gloves.webp" },
-      { "id": "black-nitrile-xl", "label": "XL", "size": "XL", "price": 7.50, "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM", "image": "/images/products/accessories/black-nitrile-gloves.webp" }
+      {
+        "id": "xs",
+        "label": "XS",
+        "size": "XS",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "s",
+        "label": "S",
+        "size": "S",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "m",
+        "label": "M",
+        "size": "M",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "l",
+        "label": "L",
+        "size": "L",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "xl",
+        "label": "XL",
+        "size": "XL",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      }
     ],
     "image": "/images/products/accessories/black-nitrile-gloves.webp",
     "images": [
@@ -346,12 +562,18 @@
     "seo": {
       "meta_title": "Black Nitrile Gloves (Powder-Free) | Electric Ink Ireland",
       "meta_description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.... Shop Electric Ink Ireland.",
-      "keywords": ["accessories", "hygiene & protection", "black nitrile gloves", "powder-free", "nitrile gloves"]
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "black nitrile gloves",
+        "powder-free",
+        "nitrile gloves"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
   },
-
   "latex-gloves": {
     "id": "latex-gloves",
     "name": "Latex Gloves (Powder-Free)",
@@ -364,21 +586,113 @@
       "Professional-grade comfort",
       "Available in Black and White"
     ],
-    "stripe": { "productId": "prod_TktMHRYmtSvJBC", "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE" },
-    "price": 9.00,
+    "stripe": {
+      "productId": "prod_TktMHRYmtSvJBC",
+      "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
+    },
+    "price": 9,
     "size": "Multiple sizes",
     "variants": [
-      { "id": "latex-gloves-black-xs", "colour": "Black", "size": "XS", "label": "Black - XS", "price": 9.00, "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "image": "/images/products/accessories/black-latex-gloves.webp" },
-      { "id": "latex-gloves-black-s", "colour": "Black", "size": "S", "label": "Black - S", "price": 9.00, "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "image": "/images/products/accessories/black-latex-gloves.webp" },
-      { "id": "latex-gloves-black-m", "colour": "Black", "size": "M", "label": "Black - M", "price": 9.00, "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "image": "/images/products/accessories/black-latex-gloves.webp" },
-      { "id": "latex-gloves-black-l", "colour": "Black", "size": "L", "label": "Black - L", "price": 9.00, "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "image": "/images/products/accessories/black-latex-gloves.webp" },
-      { "id": "latex-gloves-black-xl", "colour": "Black", "size": "XL", "label": "Black - XL", "price": 9.00, "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE", "image": "/images/products/accessories/black-latex-gloves.webp" },
-
-      { "id": "latex-gloves-white-xs", "colour": "White", "size": "XS", "label": "White - XS", "price": 7.50, "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa", "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa", "image": "/images/products/accessories/white-latex-gloves.webp" },
-      { "id": "latex-gloves-white-s", "colour": "White", "size": "S", "label": "White - S", "price": 7.50, "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa", "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa", "image": "/images/products/accessories/white-latex-gloves.webp" },
-      { "id": "latex-gloves-white-m", "colour": "White", "size": "M", "label": "White - M", "price": 7.50, "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa", "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa", "image": "/images/products/accessories/white-latex-gloves.webp" },
-      { "id": "latex-gloves-white-l", "colour": "White", "size": "L", "label": "White - L", "price": 7.50, "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa", "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa", "image": "/images/products/accessories/white-latex-gloves.webp" },
-      { "id": "latex-gloves-white-xl", "colour": "White", "size": "XL", "label": "White - XL", "price": 7.50, "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa", "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa", "image": "/images/products/accessories/white-latex-gloves.webp" }
+      {
+        "id": "latex-gloves-black-xs",
+        "colour": "Black",
+        "size": "XS",
+        "label": "Black - XS",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-s",
+        "colour": "Black",
+        "size": "S",
+        "label": "Black - S",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-m",
+        "colour": "Black",
+        "size": "M",
+        "label": "Black - M",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-l",
+        "colour": "Black",
+        "size": "L",
+        "label": "Black - L",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-xl",
+        "colour": "Black",
+        "size": "XL",
+        "label": "Black - XL",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-xs",
+        "colour": "White",
+        "size": "XS",
+        "label": "White - XS",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-s",
+        "colour": "White",
+        "size": "S",
+        "label": "White - S",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-m",
+        "colour": "White",
+        "size": "M",
+        "label": "White - M",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-l",
+        "colour": "White",
+        "size": "L",
+        "label": "White - L",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-xl",
+        "colour": "White",
+        "size": "XL",
+        "label": "White - XL",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      }
     ],
     "image": "/images/products/accessories/black-latex-gloves.webp",
     "images": [
@@ -396,12 +710,18 @@
     "seo": {
       "meta_title": "Latex Gloves (Powder-Free) | Electric Ink Ireland",
       "meta_description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.... Shop Electric Ink Ireland.",
-      "keywords": ["accessories", "hygiene & protection", "latex gloves", "powder-free", "professional gloves"]
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "latex gloves",
+        "powder-free",
+        "professional gloves"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
   },
-
   "transparent-plastic-film": {
     "id": "transparent-plastic-film",
     "name": "Transparent Plastic Film",
@@ -414,9 +734,11 @@
       "Easy to handle",
       "Versatile use"
     ],
-
-    "stripe": { "productId": "prod_TktNPZ4nPPgOgp", "priceId": "price_1SnNb5Aiq7NBxfpwAsfecGoo" },
-    "price": 9.00,
+    "stripe": {
+      "productId": "prod_TktNPZ4nPPgOgp",
+      "priceId": "price_1SnNb5Aiq7NBxfpwAsfecGoo"
+    },
+    "price": 9,
     "variants": [],
     "size": "30cm x 300m",
     "image": "/images/products/accessories/transparent-plastic-film-cover.webp",
@@ -434,10 +756,16 @@
     "seo": {
       "meta_title": "Transparent Plastic Film | Electric Ink Ireland",
       "meta_description": "Durable transparent film roll for professional use. Ideal to cover equipment for hygiene.... Shop Electric Ink Ireland.",
-      "keywords": ["accessories", "hygiene & protection", "transparent plastic film", "cling film", "covering equipment"]
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "transparent plastic film",
+        "cling film",
+        "covering equipment"
+      ]
     },
     "inStock": true,
-    "featured": false
+    "featured": false,
+    "stripe_price_id": "price_1SnNb5Aiq7NBxfpwAsfecGoo"
   }
-
 }
