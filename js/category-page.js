@@ -309,8 +309,8 @@
     if (!product) return false;
     const cat = (product.category || '').toString().toLowerCase();
 
-    // 1) All machines are available to order
-    if (cat.includes('machine') || cat.includes('tattoo')) return true;
+    // 1) All machines and power supplies are available to order
+    if (cat.includes('machine') || cat.includes('tattoo') || cat.includes('power')) return true;
 
     // 2) Accessories: most are available to order except specific exceptions
     if (cat === 'accessories' || cat === 'accessory') {
