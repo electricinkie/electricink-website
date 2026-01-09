@@ -19,9 +19,11 @@
     },
     "price": 8.10,
     "variants": [],
-    "image": "/images/products/power-supplies/battery-plus-power3-slim.webp",
+    "image": "/images/products/power-supplies/rechargeable battery-plus-power-3-slim-24mm-cover.webp",
     "images": [
-      "/images/products/power-supplies/battery-plus-power3-slim.webp"
+      "/images/products/power-supplies/rechargeable battery-plus-power-3-slim-24mm-cover.webp",
+      "/images/products/power-supplies/rechargeable battery-plus-power-3-slim-24mm-cover-2.webp",
+      "/images/products/power-supplies/rechargeable battery-plus-power-3-slim-24mm-cover-3.webp"
     ],
     "content": {
       "specifications": {
@@ -69,9 +71,11 @@
     },
     "price": 12.10,
     "variants": [],
-    "image": "/images/products/power-supplies/battery-power1.webp",
+    "image": "/images/products/power-supplies/rechargeable-battery-li-ion-power-1-cover.webp",
     "images": [
-      "/images/products/power-supplies/battery-power1.webp"
+      "/images/products/power-supplies/rechargeable-battery-li-ion-power-1-cover.webp",
+      "/images/products/power-supplies/rechargeable-battery-li-ion-power-1-cover-2.webp",
+      "/images/products/power-supplies/rechargeable-battery-li-ion-power-1-cover-3.webp"
     ],
     "content": {
       "specifications": {
@@ -119,9 +123,12 @@
     },
     "price": 6.70,
     "variants": [],
-    "image": "/images/products/power-supplies/battery-power3-slim.webp",
+    "image": "/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover.webp",
     "images": [
-      "/images/products/power-supplies/battery-power3-slim.webp"
+      "/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover.webp",
+      "/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover-2.webp",
+      "/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover-3.webp",
+      "/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover-4.webp"
     ],
     "content": {
       "specifications": {
@@ -169,9 +176,11 @@
     },
     "price": 11.40,
     "variants": [],
-    "image": "/images/products/power-supplies/battery-power3-bold.webp",
+    "image": "/images/products/power-supplies/rechargeable-battery-Power-3-bold-cover.webp",
     "images": [
-      "/images/products/power-supplies/battery-power3-bold.webp"
+      "/images/products/power-supplies/rechargeable-battery-Power-3-bold-cover.webp",
+      "/images/products/power-supplies/rechargeable-battery-Power-3-bold-cover-2.webp",
+      "/images/products/power-supplies/rechargeable-battery-Power-3-bold-cover-3.webp"
     ],
     "content": {
       "specifications": {
@@ -219,9 +228,12 @@
     },
     "price": 24.20,
     "variants": [],
-    "image": "/images/products/power-supplies/charger-electric-ink.webp",
+    "image": "/images/products/power-supplies/electric-ink-charger-cover.webp",
     "images": [
-      "/images/products/power-supplies/charger-electric-ink.webp"
+      "/images/products/power-supplies/electric-ink-charger-cover.webp",
+      "/images/products/power-supplies/electric-ink-charger-cover-2.webp",
+      "/images/products/power-supplies/electric-ink-charger-cover-3.webp",
+      "/images/products/power-supplies/electric-ink-charger-cover-4.webp"
     ],
     "content": {
       "specifications": {
@@ -271,9 +283,14 @@
     },
     "price": 188.15,
     "variants": [],
-    "image": "/images/products/power-supplies/wireless-power1.webp",
+    "image": "/images/products/power-supplies/Wireless-ps-power-1-cover.webp",
     "images": [
-      "/images/products/power-supplies/wireless-power1.webp"
+      "/images/products/power-supplies/Wireless-ps-power-1-cover.webp",
+      "/images/products/power-supplies/Wireless-ps-power-1-cover-2.webp",
+      "/images/products/power-supplies/Wireless-ps-power-1-cover-3.webp",
+      "/images/products/power-supplies/Wireless-ps-power-1-cover-4.webp",
+      "/images/products/power-supplies/Wireless-ps-power-1-cover-5.webp",
+      "/images/products/power-supplies/Wireless-ps-power-1-cover-6.webp"
     ],
     "content": {
       "specifications": {
@@ -323,9 +340,12 @@
     },
     "price": 275.00,
     "variants": [],
-    "image": "/images/products/power-supplies/power3-slim.webp",
+    "image": "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover.webp",
     "images": [
-      "/images/products/power-supplies/power3-slim.webp"
+      "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover.webp",
+      "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover-2.webp",
+      "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover-3.webp",
+      "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover-4.webp"
     ],
     "content": {
       "specifications": {
@@ -383,9 +403,12 @@
     },
     "price": 290.00,
     "variants": [],
-    "image": "/images/products/power-supplies/power3.webp",
+    "image": "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover.webp",
     "images": [
-      "/images/products/power-supplies/power3.webp"
+      "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover.webp",
+      "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover-2.webp",
+      "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover-3.webp",
+      "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover-4.webp"
     ],
     "content": {
       "specifications": {
@@ -439,9 +462,12 @@
     },
     "price": 288.95,
     "variants": [],
-    "image": "/images/products/power-supplies/kit-power3-slim.webp",
+    "image": "/images/products/power-supplies/kit-power-3-slim-wireless-power-supply-cover.webp",
     "images": [
-      "/images/products/power-supplies/kit-power3-slim.webp"
+      "/images/products/power-supplies/kit-power-3-slim-wireless-power-supply-cover.webp",
+      "/images/products/power-supplies/kit-power-3-slim-wireless-power-supply-cover-2.webp",
+      "/images/products/power-supplies/kit-power-3-slim-wireless-power-supply-cover-3.webp",
+      "/images/products/power-supplies/kit-power-3-slim-wireless-power-supply-cover-4.webp"
     ],
     "content": {
       "specifications": {
@@ -494,9 +520,12 @@
     },
     "price": 335.98,
     "variants": [],
-    "image": "/images/products/power-supplies/kit-power3.webp",
+    "image": "/images/products/power-supplies/kit-power-3-wireless-power-supply-cover.webp",
     "images": [
-      "/images/products/power-supplies/kit-power3.webp"
+      "/images/products/power-supplies/kit-power-3-wireless-power-supply-cover.webp",
+      "/images/products/power-supplies/kit-power-3-wireless-power-supply-cover-2.webp",
+      "/images/products/power-supplies/kit-power-3-wireless-power-supply-cover-3.webp",
+      "/images/products/power-supplies/kit-power-3-wireless-power-supply-cover-4.webp"
     ],
     "content": {
       "specifications": {

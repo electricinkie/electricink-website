@@ -55,8 +55,30 @@
   justify-content: center;
   gap: 12px;
   margin: -20px auto 40px;
+  padding-top: 8px;
   flex-wrap: wrap;
   max-width: 800px;
+  /* allow hover transforms to extend beyond container without being clipped */
+  overflow: visible;
+  position: relative;
+  z-index: 999;
+}
+
+/* Rows used by cartridges filter layout */
+.filter-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  overflow: visible;
+}
+.filter-row-main {
+  margin-bottom: 8px;
+}
+.filter-row-types {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .subcategory-btn {
@@ -72,18 +94,33 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  position: relative; /* enable z-index layering */
+  z-index: 1;
 }
 
 .subcategory-btn:hover {
   border-color: #43BDAB;
   color: #43BDAB;
   transform: translateY(-2px);
+  z-index: 3000; /* raise above fixed header to avoid clipping */
 }
 
 .subcategory-btn.active {
   background: #43BDAB;
   border-color: #43BDAB;
   color: white;
+}
+
+/* Hover específico para filtros de cartridges - sem translateY */
+.cartridges-filters .subcategory-btn:hover {
+  border-color: #43BDAB;
+  color: #43BDAB;
+  transform: none; /* remove o movimento */
+  box-shadow: 0 0 0 3px rgba(67, 189, 171, 0.15); /* glow suave */
+}
+
+.cartridges-filters .subcategory-btn.active:hover {
+  box-shadow: 0 0 0 3px rgba(67, 189, 171, 0.25); /* glow mais forte para ativo */
 }
 
 @media (max-width: 768px) {
@@ -95,6 +132,11 @@
   .subcategory-btn {
     font-size: 12px;
     padding: 10px 18px;
+    /* slightly smaller lift on mobile to reduce overlap */
+    transition: transform 0.2s ease;
+  }
+  .subcategory-btn:hover {
+    transform: translateY(-1px);
   }
 }
 
@@ -111,6 +153,46 @@
 .category-header {
   text-align: center;
   margin-bottom: 60px;
+}
+
+/* Category notice inserted above product count */
+.category-notice {
+  background: linear-gradient(90deg, rgba(67,189,171,0.06), rgba(67,189,171,0.02));
+  border: 1px solid rgba(67,189,171,0.12);
+  color: #0b6b5f;
+  padding: 14px 20px;
+  border-radius: 10px;
+  max-width: 1000px;
+  margin: 18px auto 18px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+  text-align: center;
+}
+.category-notice .notice-title {
+  display: block;
+  font-weight: 800;
+  color: #003f36;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+.category-notice .notice-text {
+  margin: 0;
+  color: #064f44;
+}
+.category-notice a {
+  color: #006b5f;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* highlight specific ink names inside notice */
+.category-notice .notice-text strong {
+  background: rgba(0,0,0,0.03);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 900;
+  color: #002b20;
 }
 
 .category-header h1 {
@@ -203,6 +285,29 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #43BDAB;
+}
+
+/* Product availability badge (reuses homepage badge structure, brand teal variant) */
+.product-availability-badge {
+  display: inline-block;
+  background: rgba(67,189,171,0.10);
+  color: #043A33; /* dark teal for text */
+  border: 1px solid rgba(67,189,171,0.22);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  border-radius: 18px;
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .product-availability-badge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
 }
 
 .product-name {
@@ -330,5 +435,16 @@
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+
+  /* Ensure cartridge filters are stacked and centered on mobile */
+  .subcategory-filters.cartridges-filters {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 6px;
+  }
+  .filter-row-types {
+    gap: 10px;
+    justify-content: center;
   }
 }
