@@ -23,7 +23,7 @@
         
         <!-- Logo (Centered) -->
         <a href="/" class="header-logo" aria-label="Electric Ink IE Home">
-          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland" style="height: 60px; width: auto;">
+          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland" style="height: 40px; width: auto;">
         </a>
         
         <!-- Cart Icon (Right) -->
@@ -80,30 +80,14 @@
           </button>
             <ul class="mobile-submenu">
             <li><a href="/category.html?cat=cartridges">Cartridges</a></li>
+            <li><a href="/category.html?cat=needles">Needles</a></li>
             <li><a href="/category.html?cat=inks">Inks</a></li>
             <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>
             <li><a href="/category.html?cat=machines">Machines</a></li>
             <li><a href="/category.html?cat=accessories">Accessories</a></li>
-            <li><a href="/category.html?cat=power-supplies">Power Supplies</a></li>
           </ul>
         </li>
-
-        <!-- Shopping Cart (moved up for conversion priority) -->
-        <li>
-          <a href="/cart.html" class="mobile-menu-link mobile-menu-link-highlight">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
-            Shopping Cart
-            <span class="menu-cart-count" data-cart-count>0</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <li class="menu-divider"></li>
-
+        
         <!-- How to Use -->
         <li>
           <a href="/howtousecosmetics.html" class="mobile-menu-link">
@@ -139,18 +123,22 @@
         
         <!-- Divider -->
         <li class="menu-divider"></li>
-
-        <!-- Footer actions (Sign in / Profile) -->
-        <li class="menu-footer">
-          <div style="padding:16px">
-            <button id="mobile-auth-button" class="mobile-auth-button" style="width:100%">Sign in</button>
-            <div style="height:8px"></div>
-            <a id="mobile-profile-button" href="/profile.html" class="mobile-profile-link hidden" style="display:block; text-align:center">Profile</a>
-          </div>
+        
+        <!-- Shopping Cart -->
+        <li>
+          <a href="/cart.html" class="mobile-menu-link mobile-menu-link-highlight">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            Shopping Cart
+            <span class="menu-cart-count" data-cart-count>0</span>
+          </a>
         </li>
-
+        
       </ul>
-
+      
     </nav>
   `;
 
@@ -180,23 +168,6 @@
     setupSubmenu();
     updateCartCount();
     setActiveMenuItem();
-
-    // Initialize auth UI (non-blocking). Do NOT create the modal on page load;
-    // only import auth helpers and bind the mobile menu button so the modal is
-    // created/opened when the user clicks the auth button in the menu.
-    (async function() {
-      try {
-        const authMod = await import('/js/auth.js');
-        if (window.FIREBASE_CONFIG) {
-          await authMod.initAuthObserver();
-        }
-        // bind mobile menu auth button to openLoginModal (will create modal on demand)
-        const mobileBtn = document.getElementById('mobile-auth-button');
-        if (mobileBtn) mobileBtn.addEventListener('click', authMod.openLoginModal);
-      } catch (e) {
-        // ignore import/init errors (offline or missing config)
-      }
-    })();
   }
 
   // ────────── Menu Toggle ──────────

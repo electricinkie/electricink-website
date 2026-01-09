@@ -30,11 +30,11 @@
               </button>
               <ul class="desktop-dropdown-menu" role="menu">
                 <li role="none"><a href="/category.html?cat=cartridges" role="menuitem">Cartridges</a></li>
+                <li role="none"><a href="/category.html?cat=needles" role="menuitem">Needles</a></li>
                 <li role="none"><a href="/category.html?cat=inks" role="menuitem">Inks</a></li>
                 <li role="none"><a href="/category.html?cat=cosmetics" role="menuitem">Cosmetics</a></li>
                 <li role="none"><a href="/category.html?cat=machines" role="menuitem">Machines</a></li>
                 <li role="none"><a href="/category.html?cat=accessories" role="menuitem">Accessories</a></li>
-                <li role="none"><a href="/category.html?cat=power-supplies" role="menuitem">Power Supplies</a></li>
               </ul>
             </li>
             
@@ -44,11 +44,7 @@
           </ul>
         </nav>
         
-        <!-- Actions (Login/Profile) + Cart Icon (Right) -->
-        <div class="desktop-actions">
-          <button id="authButton" class="auth-button px-3 py-1 border rounded">Sign in</button>
-          <a id="profileButton" href="/profile.html" class="hidden px-3 py-1 border rounded">Profile</a>
-        </div>
+        <!-- Cart Icon (Right) -->
         <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"/>
@@ -164,23 +160,6 @@
     setupDropdown();
     updateCartCount();
     setActiveMenuItem();
-
-    // Initialize auth UI (non-blocking). Do NOT create the modal on page load;
-    // only import auth helpers and bind the header button so the modal is
-    // created/opened when the user clicks the auth button.
-    (async function() {
-      try {
-        const authMod = await import('/js/auth.js');
-        if (window.FIREBASE_CONFIG) {
-          await authMod.initAuthObserver();
-        }
-        // bind desktop header auth button to openLoginModal (will create modal on demand)
-        const headerBtn = document.getElementById('authButton');
-        if (headerBtn) headerBtn.addEventListener('click', authMod.openLoginModal);
-      } catch (e) {
-        // ignore import/init errors (offline or missing config)
-      }
-    })();
   }
 
   // ────────── Auto Initialize ──────────
