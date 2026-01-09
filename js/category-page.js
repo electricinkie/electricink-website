@@ -44,6 +44,16 @@
       description: 'Professional rotary machines and equipment',
       icon: '⚙️'
     },
+    'power-supplies': {
+      title: 'Power Supplies',
+      description: 'Wireless supplies, batteries, chargers and complete kits',
+      icon: '🔋'
+    },
+    'power supplies': {
+      title: 'Power Supplies',
+      description: 'Wireless supplies, batteries, chargers and complete kits',
+      icon: '🔋'
+    },
     'all': {
       title: 'All Products',
       description: 'Browse our complete range of professional supplies',
@@ -59,10 +69,89 @@
   document.getElementById('categoryDescription').textContent = currentCategory.description;
   document.getElementById('breadcrumb-category').textContent = currentCategory.title;
 
-  // SHOW subcategory filters only for cosmetics
-  if (category === 'cosmetics') {
-    document.getElementById('subcategoryFilters').style.display = 'flex';
-    // Mark the active subcategory button if one was provided in the URL
+  // DISPLAY category-level messages (from data/category-messages.json)
+  async function renderCategoryMessage() {
+    // Suppress category-level availability notices for cartridges
+    if ((category || '').toString().toLowerCase() === 'cartridges') return;
+    try {
+      const res = await fetch('/data/category-messages.json');
+      if (!res.ok) return;
+      const msgs = await res.json();
+      // Try multiple keys so messages match titles or short slugs (e.g. "Artistic Inks" vs "Inks" vs "inks")
+      let entry = null;
+      const candidates = [];
+      candidates.push(currentCategory.title);
+      candidates.push(category);
+      if (category) candidates.push(category.replace(/-/g, ' '));
+      // Common alternate for our inks naming
+      if (currentCategory.title && currentCategory.title.includes('Artistic')) {
+        candidates.push(currentCategory.title.replace(/^Artistic\s*/i, '')); // 'Inks'
+      }
+      candidates.push('Inks');
+
+      for (const k of candidates) {
+        if (!k) continue;
+        if (msgs[k]) { entry = msgs[k]; break; }
+      }
+
+      if (!entry || !entry.availability_notice) return;
+      const msg = entry.message;
+      if (!msg || msg.display_position !== 'top') return;
+      const header = document.querySelector('.category-header');
+      if (!header) return;
+
+      const notice = document.createElement('div');
+      notice.className = 'category-notice';
+      // Use message text directly (may contain an embedded WhatsApp link).
+      notice.innerHTML = `
+        <div class="notice-inner">
+          <strong class="notice-title">${msg.title}</strong>
+          <p class="notice-text">${msg.text}</p>
+        </div>
+      `;
+
+      const productCountEl = document.getElementById('productCount');
+      header.insertBefore(notice, productCountEl);
+    } catch (err) {
+      console.warn('Could not load category messages', err);
+    }
+  }
+
+  renderCategoryMessage();
+
+  // SHOW subcategory/type filters for cosmetics and cartridges
+  if (category === 'cosmetics' || category === 'cartridges') {
+    const filtersEl = document.getElementById('subcategoryFilters');
+    filtersEl.style.display = 'flex';
+    // mark filters container when rendering cartridges so CSS can target cartridge-only layout
+    if (category === 'cartridges') {
+      filtersEl.classList.add('cartridges-filters');
+    } else {
+      filtersEl.classList.remove('cartridges-filters');
+    }
+
+    // If cartridges, generate needle-type buttons (RL, RS, RMG, MG)
+    if (category === 'cartridges') {
+      // Layout: keep ALL PRODUCTS on its own centered row, types on a second centered row
+      filtersEl.innerHTML = `
+        <div class="filter-row filter-row-main">
+          <button class="subcategory-btn active" data-subcategory="all">ALL PRODUCTS</button>
+        </div>
+        <div class="filter-row filter-row-types"></div>
+      `;
+
+      const types = ['RL', 'RS', 'RMG', 'MG'];
+      const typesRow = filtersEl.querySelector('.filter-row-types');
+      types.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'subcategory-btn';
+        btn.dataset.subcategory = t;
+        btn.textContent = t;
+        typesRow.appendChild(btn);
+      });
+    }
+
+    // Mark the active subcategory/type button if one was provided in the URL
     const preButtons = document.querySelectorAll('.subcategory-btn');
     preButtons.forEach(b => {
       if (selectedSubcategory === 'all' && b.dataset.subcategory === 'all') {
@@ -80,6 +169,7 @@
   const productFiles = [
     '/data/product-accessories.json',
     '/data/products-cosmetics.json',
+    '/data/products-power-supplies.json',
     '/data/products-artistic-inks.json',
     '/data/products-needles-022.json',
     '/data/products-needles-025.json',
@@ -170,8 +260,12 @@
         category: mappedCategory,
         variant,
         subcategory: data.subcategory,
+        specs: data.specs || {},
         image,
         priceDisplay,
+        // preserve inventory and stock metadata so availability logic can use it
+        inventory: data.inventory || {},
+        inStock: !!data.inStock,
         hasVariants: !!(data.variants && data.variants.length > 0)
       };
     });
@@ -204,6 +298,40 @@
   console.log('Filtered products:', filteredProducts);
 
   // RENDER function
+  // Determine whether a product should show the "Available to Order" badge
+  function isAvailableToOrder(product) {
+    if (!product) return false;
+    const cat = (product.category || '').toString().toLowerCase();
+
+    // 1) All machines are available to order
+    if (cat.includes('machine') || cat.includes('tattoo')) return true;
+
+    // 2) Accessories: most are available to order except specific exceptions
+    if (cat === 'accessories' || cat === 'accessory') {
+      const exceptions = ['tattoo-grips', 'silicone-ink-cups', 'wrap-grips', 'silicone ink cups'];
+      const pid = (product.id || '').toString().toLowerCase();
+      const pname = (product.name || '').toString().toLowerCase();
+      // if product id or name matches an exception, consider it in stock (no badge)
+      if (exceptions.some(e => pid.includes(e) || pname.includes(e))) return false;
+      return true;
+    }
+
+    // 3) Inks: show badge for inks that are marked available_on_request or not inStock,
+    //    except explicit in-stock colours Raven Black and Ghost White (ids/names match these)
+    if (cat === 'inks' || cat === 'ink' || cat === 'artistic inks') {
+      const inStockExceptions = ['raven-black', 'ghost-white', 'raven black', 'ghost white'];
+      const pid = (product.id || '').toString().toLowerCase();
+      const pname = (product.name || '').toString().toLowerCase();
+      if (inStockExceptions.some(e => pid.includes(e) || pname.includes(e))) return false;
+
+      const stockStatus = (product.inventory && product.inventory.stock_status) || '';
+      if (stockStatus === 'available_on_request' || product.inStock === false) return true;
+      return false;
+    }
+
+    return false;
+  }
+
   function renderProducts(products) {
     const grid = document.getElementById('productsGrid');
     const emptyState = document.getElementById('emptyState');
@@ -260,6 +388,14 @@
 
         // Assemble card
         info.appendChild(categoryBadge);
+
+        // Product-level availability badge ("Available to Order") for inks/accessories
+        if (isAvailableToOrder(product)) {
+          const avail = document.createElement('span');
+          avail.className = 'product-availability-badge';
+          avail.textContent = 'Available to Order';
+          info.appendChild(avail);
+        }
         info.appendChild(name);
         info.appendChild(price);
         info.appendChild(viewBtn);
@@ -274,29 +410,53 @@
 
   // INITIAL render (respect optional selectedSubcategory)
   let initialRenderProducts = filteredProducts;
-  if (category === 'cosmetics' && selectedSubcategory && selectedSubcategory !== 'all') {
-    initialRenderProducts = filteredProducts.filter(p => p.subcategory === selectedSubcategory);
+  if (selectedSubcategory && selectedSubcategory !== 'all') {
+    if (category === 'cosmetics') {
+      initialRenderProducts = filteredProducts.filter(p => p.subcategory === selectedSubcategory);
+    } else if (category === 'cartridges') {
+      const sel = selectedSubcategory.toString();
+      // use word-boundary regex to avoid matching 'MG' inside 'RMG'
+      const needleRegex = new RegExp('\\b' + sel + '\\b', 'i');
+      initialRenderProducts = filteredProducts.filter(p => {
+        const pid = (p.id || '').toLowerCase();
+        const needleType = (p.specs && p.specs.needleType || '').toString();
+        return pid.startsWith(sel.toLowerCase()) || needleRegex.test(needleType);
+      });
+    }
   }
   renderProducts(initialRenderProducts);
 
-  // SUBCATEGORY FILTER LISTENERS (only for cosmetics)
-  if (category === 'cosmetics') {
+  // SUBCATEGORY / TYPE FILTER LISTENERS (for cosmetics and cartridges)
+  if (category === 'cosmetics' || category === 'cartridges') {
     const subcategoryButtons = document.querySelectorAll('.subcategory-btn');
-    
+
     subcategoryButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         // Update active state
         subcategoryButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
-        // Get selected subcategory
+
+        // Get selected subcategory/type
         selectedSubcategory = btn.dataset.subcategory;
-        
+
         // Filter and render
-        const subFiltered = selectedSubcategory === 'all'
-          ? filteredProducts
-          : filteredProducts.filter(p => p.subcategory === selectedSubcategory);
-        
+        let subFiltered;
+        if (category === 'cosmetics') {
+          subFiltered = selectedSubcategory === 'all'
+            ? filteredProducts
+            : filteredProducts.filter(p => p.subcategory === selectedSubcategory);
+        } else if (category === 'cartridges') {
+          const sel = selectedSubcategory.toString();
+          const needleRegex = new RegExp('\\b' + sel + '\\b', 'i');
+          subFiltered = selectedSubcategory === 'all'
+            ? filteredProducts
+            : filteredProducts.filter(p => {
+                const pid = (p.id || '').toLowerCase();
+                const needleType = (p.specs && p.specs.needleType || '').toString();
+                return pid.startsWith(sel.toLowerCase()) || needleRegex.test(needleType);
+              });
+        }
+
         renderProducts(subFiltered);
       });
     });

@@ -85,6 +85,7 @@
             <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>
             <li><a href="/category.html?cat=machines">Machines</a></li>
             <li><a href="/category.html?cat=accessories">Accessories</a></li>
+            <li><a href="/category.html?cat=power-supplies">Power Supplies</a></li>
           </ul>
         </li>
         

@@ -35,6 +35,7 @@
                 <li role="none"><a href="/category.html?cat=cosmetics" role="menuitem">Cosmetics</a></li>
                 <li role="none"><a href="/category.html?cat=machines" role="menuitem">Machines</a></li>
                 <li role="none"><a href="/category.html?cat=accessories" role="menuitem">Accessories</a></li>
+                <li role="none"><a href="/category.html?cat=power-supplies" role="menuitem">Power Supplies</a></li>
               </ul>
             </li>
             
