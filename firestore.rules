@@ -1,6 +1,44 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Orders: only the owning user (by userId) or admin may read.
+    // Clients are forbidden from writing orders — the webhook (admin SDK)
+    // must be the only writer.
+    match /orders/{orderId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.userId || request.auth.token.admin == true
+      );
+
+      // Prevent client-side writes; only admin SDK should write orders.
+      allow write: if false;
+    }
+
+    // Order events: readable only by owner/admin. No client writes.
+    match /order-events/{eventId} {
+      allow read: if request.auth != null && (
+        // attempt to resolve order owner if present on the event
+        (resource.data.orderId != null && get(/databases/$(database)/documents/orders/$(resource.data.orderId)).data.userId == request.auth.uid)
+        || request.auth.token.admin == true
+      );
+      allow write: if false;
+    }
+
+    // Failed payments and other internal logs: admin-only read, no client writes
+    match /failed_payments/{docId} {
+      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow write: if false;
+    }
+
+    // Fallback: deny everything else by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
     // Orders: frontend CANNOT read or write. Admin SDK (server) bypasses rules.
     match /orders/{orderId} {
       allow read: if false;  // Ninguém lê do frontend

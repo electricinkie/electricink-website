@@ -37,3 +37,59 @@ a {
   text-decoration: none;
 }
 
+/* Minimal utility helpers used by the auth modal */
+.hidden { display: none !important; }
+.flex { display: flex !important; }
+.items-center { align-items: center !important; }
+.justify-center { justify-content: center !important; }
+.fixed { position: fixed !important; }
+.inset-0 { top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important; position: fixed !important; }
+.z-50 { z-index: 50 !important; }
+
+/* Auth modal tabs styling: remove heavy gray divider and make subtle underline for active tab */
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: none !important;
+}
+.auth-tabs .tab,
+#loginTab, #signupTab {
+  flex: 1;
+  padding: 8px 10px;
+  background: transparent;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  color: #6b7280; /* subtle gray */
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-tabs .tab-active,
+.tab-active,
+#loginTab.border-black, #signupTab.border-black {
+  color: #000000 !important;
+  border-bottom-color: #43BDAB !important; /* brand accent underline */
+}
+.auth-tabs .tab:hover,
+#loginTab:hover, #signupTab:hover {
+  color: #111827;
+}
+
+/* Small tweak for fallback tab text color classes if present */
+.text-gray-400 { color: #9CA3AF !important; }
+.border-black { border-bottom-color: #000000 !important; }
+
+/* Modal close button styling (improves hit area, contrast and focus) */
+.modal-close {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B7280;
+}
+.modal-close svg { width: 20px; height: 20px; }
+.modal-close:hover { color: #111827; }
+.modal-close:focus { outline: 2px solid #43BDAB; outline-offset: 2px; border-radius: 4px; }
+

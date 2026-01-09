@@ -201,7 +201,303 @@
     "inStock": true,
     "featured": false,
     "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS"
+
+    },
+
+    "black-medical-bibs": {
+    "id": "black-medical-bibs",
+    "name": "Black Medical Bibs",
+    "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
+    "description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.",
+    "features": [
+      "Waterproof and absorbent",
+      "Sterilized for professional use",
+      "Disposable single-use",
+      "Ideal for medical and tattoo settings"
+    ],
+    "stripe": {
+      "productId": "prod_Tkt0XymbQwrzqj",
+      "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW"
+    },
+    "price": 9.5,
+    "size": "Pack options",
+    "variants": [
+      {
+        "id": "black-medical-bibs-100",
+        "label": "100 units",
+        "quantity": 100,
+        "price": 9.5,
+        "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW",
+        "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW",
+        "image": "/images/products/accessories/black-medical-bibs.webp"
+      },
+      {
+        "id": "black-medical-bibs-500",
+        "label": "500 units",
+        "quantity": 500,
+        "price": 21.5,
+        "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz",
+        "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz",
+        "image": "/images/products/accessories/black-medical-bibs.webp"
+      }
+    ],
+    "image": "/images/products/accessories/black-medical-bibs.webp",
+    "images": [
+      "/images/products/accessories/black-medical-bibs.webp"
+    ],
+    "content": {
+      "product_details": "Sterilized with ethylene oxide and Beta/Gamma rays. Absorbent tissue with waterproof layer."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Black Medical Bibs | Electric Ink Ireland",
+      "meta_description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.... Shop Electric Ink Ireland.",
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "black medical bibs",
+        "medical bibs",
+        "disposable"
+      ]
+    },
+    "inStock": true,
+    "featured": false,
+    "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW"
   },
+  
+  "latex-gloves": {
+    "id": "latex-gloves",
+    "name": "Latex Gloves (Powder-Free)",
+    "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
+    "description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.",
+    "features": [
+      "Powder-free latex",
+      "Snug fit and flexibility",
+      "Professional-grade comfort",
+      "Available in Black and White"
+    ],
+    "stripe": {
+      "productId": "prod_TktMHRYmtSvJBC",
+      "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
+    },
+    "price": 9,
+    "size": "Multiple sizes",
+    "variants": [
+      {
+        "id": "latex-gloves-black-xs",
+        "colour": "Black",
+        "size": "XS",
+        "label": "Black - XS",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-s",
+        "colour": "Black",
+        "size": "S",
+        "label": "Black - S",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-m",
+        "colour": "Black",
+        "size": "M",
+        "label": "Black - M",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-l",
+        "colour": "Black",
+        "size": "L",
+        "label": "Black - L",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-black-xl",
+        "colour": "Black",
+        "size": "XL",
+        "label": "Black - XL",
+        "price": 9,
+        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
+        "image": "/images/products/accessories/black-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-xs",
+        "colour": "White",
+        "size": "XS",
+        "label": "White - XS",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-s",
+        "colour": "White",
+        "size": "S",
+        "label": "White - S",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-m",
+        "colour": "White",
+        "size": "M",
+        "label": "White - M",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-l",
+        "colour": "White",
+        "size": "L",
+        "label": "White - L",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      },
+      {
+        "id": "latex-gloves-white-xl",
+        "colour": "White",
+        "size": "XL",
+        "label": "White - XL",
+        "price": 7.5,
+        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
+        "image": "/images/products/accessories/white-latex-gloves.webp"
+      }
+    ],
+    "image": "/images/products/accessories/black-latex-gloves.webp",
+    "images": [
+      "/images/products/accessories/black-latex-gloves.webp",
+      "/images/products/accessories/white-latex-gloves.webp"
+    ],
+    "content": {
+      "product_details": "Powder-free latex gloves available in Black and White. Sizes XS–XL. Colour affects price to match Stripe setup."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Latex Gloves (Powder-Free) | Electric Ink Ireland",
+      "meta_description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.... Shop Electric Ink Ireland.",
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "latex gloves",
+        "powder-free",
+        "professional gloves"
+      ]
+    },
+    "inStock": true,
+    "featured": false,
+    "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
+  },
+
+    "black-nitrile-gloves": {
+    "id": "black-nitrile-gloves",
+    "name": "Black Nitrile Gloves (Powder-Free)",
+    "category": "Accessories",
+    "subcategory": "Hygiene & Protection",
+    "description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.",
+    "features": [
+      "Powder-free and latex-free",
+      "High tear resistance",
+      "Snug fit for precision",
+      "Ideal for tattoo artists"
+    ],
+    "stripe": {
+      "productId": "prod_TktK33s5t8Afm0",
+      "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
+    },
+    "price": 7.5,
+    "size": "Multiple sizes",
+    "variants": [
+      {
+        "id": "xs",
+        "label": "XS",
+        "size": "XS",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "s",
+        "label": "S",
+        "size": "S",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "m",
+        "label": "M",
+        "size": "M",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "l",
+        "label": "L",
+        "size": "L",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      },
+      {
+        "id": "xl",
+        "label": "XL",
+        "size": "XL",
+        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+      }
+    ],
+    "image": "/images/products/accessories/black-nitrile-gloves.webp",
+    "images": [
+      "/images/products/accessories/black-nitrile-gloves.webp",
+      "/images/products/accessories/black-nitrile-gloves-box.webp"
+    ],
+    "content": {
+      "product_details": "Powder-free nitrile for allergy-friendly protection. Designed for precision work and long sessions."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Black Nitrile Gloves (Powder-Free) | Electric Ink Ireland",
+      "meta_description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.... Shop Electric Ink Ireland.",
+      "keywords": [
+        "accessories",
+        "hygiene & protection",
+        "black nitrile gloves",
+        "powder-free",
+        "nitrile gloves"
+      ]
+    },
+    "inStock": true,
+    "featured": false,
+    "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
+  },
+
   "pen-machine-cover-25-units": {
     "id": "pen-machine-cover-25-units",
     "name": "Pen Machine Cover - 25 Units",
@@ -430,297 +726,6 @@
     "inStock": true,
     "featured": false,
     "stripe_price_id": "price_1SnL1hAiq7NBxfpwtmT5aLSu"
-  },
-  "black-medical-bibs": {
-    "id": "black-medical-bibs",
-    "name": "Black Medical Bibs",
-    "category": "Accessories",
-    "subcategory": "Hygiene & Protection",
-    "description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.",
-    "features": [
-      "Waterproof and absorbent",
-      "Sterilized for professional use",
-      "Disposable single-use",
-      "Ideal for medical and tattoo settings"
-    ],
-    "stripe": {
-      "productId": "prod_Tkt0XymbQwrzqj",
-      "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW"
-    },
-    "price": 9.5,
-    "size": "Pack options",
-    "variants": [
-      {
-        "id": "black-medical-bibs-100",
-        "label": "100 units",
-        "quantity": 100,
-        "price": 9.5,
-        "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW",
-        "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW",
-        "image": "/images/products/accessories/black-medical-bibs.webp"
-      },
-      {
-        "id": "black-medical-bibs-500",
-        "label": "500 units",
-        "quantity": 500,
-        "price": 21.5,
-        "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz",
-        "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz",
-        "image": "/images/products/accessories/black-medical-bibs.webp"
-      }
-    ],
-    "image": "/images/products/accessories/black-medical-bibs.webp",
-    "images": [
-      "/images/products/accessories/black-medical-bibs.webp"
-    ],
-    "content": {
-      "product_details": "Sterilized with ethylene oxide and Beta/Gamma rays. Absorbent tissue with waterproof layer."
-    },
-    "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
-    },
-    "seo": {
-      "meta_title": "Black Medical Bibs | Electric Ink Ireland",
-      "meta_description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.... Shop Electric Ink Ireland.",
-      "keywords": [
-        "accessories",
-        "hygiene & protection",
-        "black medical bibs",
-        "medical bibs",
-        "disposable"
-      ]
-    },
-    "inStock": true,
-    "featured": false,
-    "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW"
-  },
-  "black-nitrile-gloves": {
-    "id": "black-nitrile-gloves",
-    "name": "Black Nitrile Gloves (Powder-Free)",
-    "category": "Accessories",
-    "subcategory": "Hygiene & Protection",
-    "description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.",
-    "features": [
-      "Powder-free and latex-free",
-      "High tear resistance",
-      "Snug fit for precision",
-      "Ideal for tattoo artists"
-    ],
-    "stripe": {
-      "productId": "prod_TktK33s5t8Afm0",
-      "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
-    },
-    "price": 7.5,
-    "size": "Multiple sizes",
-    "variants": [
-      {
-        "id": "xs",
-        "label": "XS",
-        "size": "XS",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
-      },
-      {
-        "id": "s",
-        "label": "S",
-        "size": "S",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
-      },
-      {
-        "id": "m",
-        "label": "M",
-        "size": "M",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
-      },
-      {
-        "id": "l",
-        "label": "L",
-        "size": "L",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
-      },
-      {
-        "id": "xl",
-        "label": "XL",
-        "size": "XL",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
-      }
-    ],
-    "image": "/images/products/accessories/black-nitrile-gloves.webp",
-    "images": [
-      "/images/products/accessories/black-nitrile-gloves.webp",
-      "/images/products/accessories/black-nitrile-gloves-box.webp"
-    ],
-    "content": {
-      "product_details": "Powder-free nitrile for allergy-friendly protection. Designed for precision work and long sessions."
-    },
-    "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
-    },
-    "seo": {
-      "meta_title": "Black Nitrile Gloves (Powder-Free) | Electric Ink Ireland",
-      "meta_description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.... Shop Electric Ink Ireland.",
-      "keywords": [
-        "accessories",
-        "hygiene & protection",
-        "black nitrile gloves",
-        "powder-free",
-        "nitrile gloves"
-      ]
-    },
-    "inStock": true,
-    "featured": false,
-    "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
-  },
-  "latex-gloves": {
-    "id": "latex-gloves",
-    "name": "Latex Gloves (Powder-Free)",
-    "category": "Accessories",
-    "subcategory": "Hygiene & Protection",
-    "description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.",
-    "features": [
-      "Powder-free latex",
-      "Snug fit and flexibility",
-      "Professional-grade comfort",
-      "Available in Black and White"
-    ],
-    "stripe": {
-      "productId": "prod_TktMHRYmtSvJBC",
-      "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
-    },
-    "price": 9,
-    "size": "Multiple sizes",
-    "variants": [
-      {
-        "id": "latex-gloves-black-xs",
-        "colour": "Black",
-        "size": "XS",
-        "label": "Black - XS",
-        "price": 9,
-        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-black-s",
-        "colour": "Black",
-        "size": "S",
-        "label": "Black - S",
-        "price": 9,
-        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-black-m",
-        "colour": "Black",
-        "size": "M",
-        "label": "Black - M",
-        "price": 9,
-        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-black-l",
-        "colour": "Black",
-        "size": "L",
-        "label": "Black - L",
-        "price": 9,
-        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-black-xl",
-        "colour": "Black",
-        "size": "XL",
-        "label": "Black - XL",
-        "price": 9,
-        "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-white-xs",
-        "colour": "White",
-        "size": "XS",
-        "label": "White - XS",
-        "price": 7.5,
-        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-white-s",
-        "colour": "White",
-        "size": "S",
-        "label": "White - S",
-        "price": 7.5,
-        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-white-m",
-        "colour": "White",
-        "size": "M",
-        "label": "White - M",
-        "price": 7.5,
-        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-white-l",
-        "colour": "White",
-        "size": "L",
-        "label": "White - L",
-        "price": 7.5,
-        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
-      },
-      {
-        "id": "latex-gloves-white-xl",
-        "colour": "White",
-        "size": "XL",
-        "label": "White - XL",
-        "price": 7.5,
-        "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
-      }
-    ],
-    "image": "/images/products/accessories/black-latex-gloves.webp",
-    "images": [
-      "/images/products/accessories/black-latex-gloves.webp",
-      "/images/products/accessories/white-latex-gloves.webp"
-    ],
-    "content": {
-      "product_details": "Powder-free latex gloves available in Black and White. Sizes XS–XL. Colour affects price to match Stripe setup."
-    },
-    "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
-    },
-    "seo": {
-      "meta_title": "Latex Gloves (Powder-Free) | Electric Ink Ireland",
-      "meta_description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.... Shop Electric Ink Ireland.",
-      "keywords": [
-        "accessories",
-        "hygiene & protection",
-        "latex gloves",
-        "powder-free",
-        "professional gloves"
-      ]
-    },
-    "inStock": true,
-    "featured": false,
-    "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
   },
   "transparent-plastic-film": {
     "id": "transparent-plastic-film",

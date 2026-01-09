@@ -4,7 +4,7 @@
  * Handles checkout form validation and payment processing
  */
 
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
+import { FREE_SHIPPING_THRESHOLD } from './constants.js';
 
 (function() {
   'use strict';
@@ -64,7 +64,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
   // INITIALIZATION
   // ============================================
   
-  function init() {
+  async function init() {
     // Check if Stripe.js loaded
     if (typeof Stripe === 'undefined') {
       console.error('Stripe.js failed to load');
@@ -88,65 +88,68 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
       }
       return;
     }
+    // Normalize cart items array for backend/payment usage
+    const cartItems = [];
 
-    // Load cart
-    loadCart();
-    
-    // Check if cart has items
-    if (cart.length === 0) {
-      window.location.href = '/cart.html';
-      return;
-    }
+    for (const rawItem of cart) {
+      // Normalize quantity to a number
+      const quantity = Number(rawItem.quantity);
+      if (isNaN(quantity) || quantity <= 0) {
+        throw new Error(`Invalid quantity for ${rawItem.id}: ${rawItem.quantity}`);
+      }
 
-    // Calculate totals
-    calculateTotals();
-    
-    // Render order summary
-    renderOrderSummary();
-    
-    // Initialize Stripe Elements
-    initializeStripeElements();
-    
-    // Initialize Express Checkout (Apple Pay / Google Pay)
-    initExpressCheckout();
-    
-    // Setup shipping methods
-    setupShippingMethods();
-    
-    // Setup discount code
-    setupDiscountCode();
-    
-    // Setup discount toggle
-    setupDiscountToggle();
-    
-    // Setup form handler
-    setupFormHandler();
-  }
+      // Try known places for stripe price id
+      let priceCandidate = rawItem.stripe_price_id
+        || (rawItem.variant && (rawItem.variant.stripe_price_id || rawItem.variant.priceId || rawItem.variant.price_id))
+        || rawItem.priceId
+        || rawItem.price_id
+        || null;
 
-  // ============================================
-  // CART MANAGEMENT
-  // ============================================
-  
-  function loadCart() {
-    try {
-      const cartData = localStorage.getItem('electricink_cart');
-      cart = cartData ? JSON.parse(cartData) : [];
-    } catch (error) {
-      console.error('Error loading cart:', error);
-      cart = [];
-    }
-  }
+      // If still missing, attempt to fetch product files and resolve product-level price id
+      if (!priceCandidate) {
+        try {
+          const allProducts = await fetchAllProducts();
+          const itemId = (rawItem.id || '').replace(/_/g, '-');
 
-  function calculateTotals() {
-    // Calculate subtotal
-    totals.subtotal = cart.reduce((sum, item) => {
-      return sum + (item.price * item.quantity);
-    }, 0);
+          // Exact product match
+          if (allProducts[itemId]) {
+            const p = allProducts[itemId];
+            priceCandidate = p.stripe_price_id || (p.stripe && (p.stripe.priceId || p.stripe.price_id)) || p.priceId || p.price_id || null;
+          }
 
-    // Get current shipping method
-    const selectedMethod = document.querySelector('input[name="shippingMethod"]:checked');
-    if (selectedMethod) {
-      shippingMethod = selectedMethod.value;
+          // Suffix match against variant ids
+          if (!priceCandidate) {
+            const tokens = itemId.split('-');
+            for (let s = 1; s <= Math.min(3, tokens.length - 1); s++) {
+              const suffix = tokens.slice(tokens.length - s).join('-');
+              for (const p of Object.values(allProducts)) {
+                if (p.variants && p.variants.find(v => v.id === suffix || v.priceId === suffix || v.stripe_price_id === suffix)) {
+                  priceCandidate = p.stripe_price_id || (p.stripe && (p.stripe.priceId || p.stripe.price_id)) || null;
+                  break;
+                }
+              }
+              if (priceCandidate) break;
+            }
+          }
+        } catch (e) {
+          console.warn('Could not fetch product data to resolve missing stripe_price_id', e && e.message);
+        }
+      }
+
+      if (!priceCandidate) {
+        console.error('[CHECKOUT] Missing stripe price id for cart item after resolution attempt:', rawItem);
+        throw new Error(`Invalid cart item: missing stripe_price_id (${rawItem.id})`);
+      }
+
+      // Ensure canonical field
+      if (!rawItem.stripe_price_id) rawItem.stripe_price_id = priceCandidate;
+
+      cartItems.push({
+        id: (rawItem.id || '').replace(/_/g, '-'),
+        quantity,
+        stripe_price_id: rawItem.stripe_price_id,
+        ...(rawItem.variant && { variant: rawItem.variant })
+      });
     }
 
     // Calculate shipping based on method and subtotal
@@ -1233,7 +1236,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
     }
   }
 
-  function handlePaymentSuccess(paymentIntent) {
+  async function handlePaymentSuccess(paymentIntent) {
     // Save order info to localStorage (completo para success page)
     const orderInfo = {
       paymentIntentId: paymentIntent.id,
@@ -1271,14 +1274,41 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
     // Send confirmation emails
     sendOrderEmails(orderInfo, paymentIntent.id);
 
-    // Clear cart
+    // Save order to Firestore before redirecting to success page.
+    // If saving fails, we still redirect — payment already processed.
     try {
+      const storedCart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
+      const billingDetails = {
+        name: `${elements.form.firstName?.value || ''} ${elements.form.lastName?.value || ''}`.trim() || 'Guest',
+        email: elements.form.email?.value || null
+      };
+
+      const orderData = {
+        items: (storedCart || []).map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          variant: item.variant || null,
+          image: item.image || null,
+        })),
+        total: paymentIntent.amount ? paymentIntent.amount / 100 : totals.total,
+        paymentIntentId: paymentIntent.id,
+        customerEmail: paymentIntent.receipt_email || billingDetails.email || 'no-email@provided.com',
+        customerName: billingDetails.name || paymentIntent.shipping?.name || 'Guest',
+        shippingAddress: paymentIntent.shipping?.address || orderInfo.shipping || null,
+      };
+
+      // Order persistence is handled server-side by the Stripe webhook
+      // (webhook is the single source of truth). Client-side save removed.
+      // Clear cart now that payment succeeded
       localStorage.removeItem('electricink_cart');
       if (window.cart && typeof window.cart.updateCartCount === 'function') {
         window.cart.updateCartCount();
       }
     } catch (error) {
-      console.error('Error clearing cart:', error);
+      console.error('❌ Failed to save order to Firestore:', error);
+      // Continue to success page even if Firestore save fails
     }
 
     // Redirect to success page

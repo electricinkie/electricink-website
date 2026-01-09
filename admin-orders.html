@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin Orders — Electric Ink</title>
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <main class="container">
+      <h1>Admin Orders</h1>
+      <p>Requires admin authentication and appropriate Firestore rules.</p>
+      <div id="ordersList">Loading…</div>
+    </main>
+
+    <script src="/js/firebase-client-config.js" defer></script>
+    <script type="module">
+      import { initFirebase } from './js/firebase-config.js';
+      import { getAllOrders } from './js/orders.js';
+
+      async function boot() {
+        try {
+          await initFirebase();
+        } catch (e) {
+          document.getElementById('ordersList').textContent = 'Firebase init failed: ' + e.message;
+          return;
+        }
+
+        try {
+          const orders = await getAllOrders(200);
+          const list = orders.map(o => `<div class="order-item"><strong>${o.orderId || o.id}</strong> — €${((o.total_cents||o.amount||0)/100).toFixed(2)}</div>`).join('');
+          document.getElementById('ordersList').innerHTML = list || 'No orders';
+        } catch (e) {
+          document.getElementById('ordersList').textContent = 'Failed to fetch orders: ' + e.message;
+        }
+      }
+
+      boot();
+    </script>
+  </body>
+</html>

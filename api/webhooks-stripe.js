@@ -416,6 +416,26 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       status: 'created'
     }));
 
+    // Integrate OMS: enrich order with sequential orderNumber and events
+    try {
+      // OrderManager exports the class
+      const OrderManager = require('./oms/order-manager');
+      const orderManager = new OrderManager(db);
+      const generated = await orderManager.enrichOrder(orderId);
+      logger.info(JSON.stringify({
+        msg: 'OMS enrichment completed',
+        orderId,
+        orderNumber: generated,
+        requestId,
+        timestamp: new Date().toISOString(),
+        status: 'oms_enriched'
+      }));
+    } catch (omsErr) {
+      console.error('[OMS] enrichOrder failed for', orderId, omsErr && omsErr.message);
+      // Non-blocking: capture but continue with email flow
+      try { captureException(omsErr); } catch (e) { /* ignore */ }
+    }
+
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
     if (!resend) {
       logger.warn(JSON.stringify({

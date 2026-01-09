@@ -88,7 +88,8 @@
     "images": [
       "/images/products/cartridges/rl-0.30/0.30-rl-cover.webp",
       "/images/products/cartridges/rl-0.30/0.30-rl-cover-2.webp",
-      "/images/products/cartridges/rl-0.30/coifa-rl.webp"
+      "/images/products/cartridges/rl-0.30/coifa-rl.webp",
+      "/images/products/cartridges/rl-0.30/box-rl-10unt.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -199,7 +200,8 @@
     "images": [
       "/images/products/cartridges/rl-0.30/0.30-rl-cover.webp",
       "/images/products/cartridges/rl-0.30/0.30-rl-cover-2.webp",
-      "/images/products/cartridges/rl-0.30/coifa-rl.webp"
+      "/images/products/cartridges/rl-0.30/coifa-rl.webp",
+      "/images/products/cartridges/rl-0.30/box-rl-20unt.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -291,7 +293,8 @@
     "images": [
       "/images/products/cartridges/rs-0.30/0.30-rs-cover.webp",
       "/images/products/cartridges/rs-0.30/0.30-rs-cover-2.webp",
-      "/images/products/cartridges/rs-0.30/coifa-rs.webp"
+      "/images/products/cartridges/rs-0.30/coifa-rs.webp",
+      "/images/products/cartridges/rs-0.30/box-rs-10un.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -383,7 +386,8 @@
     "images": [
       "/images/products/cartridges/rs-0.30/0.30-rs-cover.webp",
       "/images/products/cartridges/rs-0.30/0.30-rs-cover-2.webp",
-      "/images/products/cartridges/rs-0.30/coifa-rs.webp"
+      "/images/products/cartridges/rs-0.30/coifa-rs.webp",
+      "/images/products/cartridges/rs-0.30/box-rs-20un.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -512,7 +516,8 @@
     "images": [
       "/images/products/cartridges/rmg-0.30/0.30-rmg-cover.webp",
       "/images/products/cartridges/rmg-0.30/0.30-rmg-cover-2.webp",
-      "/images/products/cartridges/rmg-0.30/coifa-rmg.webp"
+      "/images/products/cartridges/rmg-0.30/coifa-rmg.webp",
+      "/images/products/cartridges/rmg-0.30/box-rmg-10un.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -641,7 +646,8 @@
     "images": [
       "/images/products/cartridges/rmg-0.30/0.30-rmg-cover.webp",
       "/images/products/cartridges/rmg-0.30/0.30-rmg-cover-2.webp",
-      "/images/products/cartridges/rmg-0.30/coifa-rmg.webp"
+      "/images/products/cartridges/rmg-0.30/coifa-rmg.webp",
+      "/images/products/cartridges/rmg-0.30/box-rmg-20un.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -769,7 +775,8 @@
     "images": [
       "/images/products/cartridges/mg-0.30/0.30-mg-cover.webp",
       "/images/products/cartridges/mg-0.30/0.30-mg-cover-2.webp",
-      "/images/products/cartridges/mg-0.30/coifa-mg.webp"
+      "/images/products/cartridges/mg-0.30/coifa-mg.webp",
+      "/images/products/cartridges/mg-0.30/box-mg-10un.webp"
     ],
     "inventory": {
       "stock_quantity": 0,
@@ -897,7 +904,8 @@
     "images": [
       "/images/products/cartridges/mg-0.30/0.30-mg-cover.webp",
       "/images/products/cartridges/mg-0.30/0.30-mg-cover-2.webp",
-      "/images/products/cartridges/mg-0.30/coifa-mg.webp"
+      "/images/products/cartridges/mg-0.30/coifa-mg.webp",
+      "/images/products/cartridges/mg-0.30/box-mg-20un.webp"
     ],
     "inventory": {
       "stock_quantity": 0,

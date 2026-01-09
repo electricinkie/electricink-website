@@ -30,17 +30,18 @@
   background: #FFFFFF;
   border-radius: 16px;
   max-width: 400px;
+  position: relative; /* Ensure absolute-positioned controls inside modal (close button) are positioned relative to the modal container rather than to the page. */
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   transform: scale(0.9) translateY(20px);
-  opacity: 0;
+  padding: 44px 28px 24px; /* add extra top padding so the close button doesn't overlap content */
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-backdrop.show .modal-container {
-  transform: scale(1) translateY(0);
-  opacity: 1;
-}
+  position: absolute;
+  top: 12px;
+  right: 12px;
 
 /* ────────── Content ────────── */
 .modal-content {
@@ -50,6 +51,7 @@
 
 /* ────────── Icon ────────── */
 .modal-icon {
+  z-index: 6;
   margin: 0 auto 20px;
   display: flex;
   align-items: center;
@@ -57,6 +59,7 @@
 }
 
 .modal-icon svg {
+  margin-top: 8px; /* Add margin-top to primary buttons for spacing */
   width: 48px;
   height: 48px;
 }
@@ -198,6 +201,62 @@
               0 0 0 3px rgba(67, 189, 171, 0.5);
 }
 
+/* ────────── Auth Form (inside modal) ────────── */
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: transparent;
+  color: #666666;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.tab-active {
+  background: #43BDAB;
+  color: #fff;
+  border-color: rgba(67,189,171,0.15);
+}
+.auth-form {
+  display: block;
+  text-align: left;
+  margin: 0 auto 8px;
+}
+.auth-form label {
+  display: block;
+  font-size: 13px;
+  color: #333333;
+  margin-bottom: 6px;
+}
+.auth-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #E6E6E6;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.auth-form input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(67,189,171,0.12);
+  border-color: #43BDAB;
+}
+.auth-form .modal-btn-primary {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+.auth-form .text-red-500 {
+  margin-top: 6px;
+}
+
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop,
@@ -205,3 +264,35 @@
     transition: none;
   }
 }
+
+/* ────────── Close button & small utility helpers used by auth modal ────────── */
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9CA3AF; /* gray-400 */
+  cursor: pointer;
+  border-radius: 8px;
+}
+.modal-close:hover {
+  color: #4B5563; /* gray-600 */
+  background: rgba(0,0,0,0.03);
+}
+.modal-close:focus {
+  outline: 3px solid rgba(67,189,171,0.18);
+  outline-offset: 2px;
+}
+
+/* small utility classes used in markup to mimic Tailwind-like names */
+.absolute { position: absolute !important; }
+.top-4 { top: 16px !important; }
+.right-4 { right: 16px !important; }
+.w-6 { width: 24px !important; }
+.h-6 { height: 24px !important; }
+.hover\:text-gray-600:hover { color: #4B5563 !important; }
