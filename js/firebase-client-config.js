@@ -43,4 +43,27 @@
 
   // Kick off loading (non-blocking). `firebase-config.js` will check window.FIREBASE_CONFIG when used.
   loadRemoteOrFallback();
+  // Inject a small module to initialize Firebase early (sets persistence before other modules run)
+  try {
+    const bootScript = document.createElement('script');
+    bootScript.type = 'module';
+    bootScript.textContent = `
+      import { initFirebase } from '/js/firebase-config.js';
+      (async () => {
+        try {
+          const res = await initFirebase();
+          if (res && res.ready) {
+            console.info('[FB-BOOT] initFirebase ran early and set persistence');
+          } else {
+            console.warn('[FB-BOOT] initFirebase early run returned not-ready', res && res.error);
+          }
+        } catch (e) {
+          console.warn('[FB-BOOT] initFirebase early failed', e);
+        }
+      })();
+    `;
+    document.head.appendChild(bootScript);
+  } catch (e) {
+    console.warn('Could not inject firebase early-init module:', e);
+  }
 })();

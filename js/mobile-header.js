@@ -203,6 +203,27 @@ import { isAdmin } from './admin-check.js';
     setupUserMenu();
     const mobAuthBtn = document.getElementById('mobile-auth-button');
     mobAuthBtn?.addEventListener('click', () => { try { openAuthModal(); } catch (e) {} });
+    // Immediately apply current auth state AFTER header is injected
+    (async () => {
+      try {
+        const m = await import('./auth.js');
+        const { getCurrentUser } = m;
+        const user = await getCurrentUser();
+        const signedOut = document.querySelector('[data-auth-signed-out]');
+        const signedIn = document.querySelector('[data-auth-signed-in]');
+        const nameEl = document.querySelector('.user-name');
+        if (user) {
+          if (signedOut) signedOut.style.display = 'none';
+          if (signedIn) signedIn.style.display = 'flex';
+          if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+        } else {
+          if (signedOut) signedOut.style.display = 'flex';
+          if (signedIn) signedIn.style.display = 'none';
+        }
+      } catch (e) {
+        // non-fatal; onAuthChange will handle updates when available
+      }
+    })();
   }
 
   // ────────── User Menu & Auth Helpers ──────────
@@ -361,24 +382,3 @@ import { isAdmin } from './admin-check.js';
     updateCartCount: updateCartCount
   };
 
-// Fallback: immediately apply current auth state to header on load.
-(async () => {
-  try {
-    const m = await import('./auth.js');
-    const { getCurrentUser } = m;
-    const user = await getCurrentUser();
-    const signedOut = document.querySelector('[data-auth-signed-out]');
-    const signedIn = document.querySelector('[data-auth-signed-in]');
-    const nameEl = document.querySelector('.user-name');
-    if (user) {
-      if (signedOut) signedOut.style.display = 'none';
-      if (signedIn) signedIn.style.display = 'flex';
-      if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
-    } else {
-      if (signedOut) signedOut.style.display = 'flex';
-      if (signedIn) signedIn.style.display = 'none';
-    }
-  } catch (e) {
-    // non-fatal; onAuthChange will handle updates when available
-  }
-})();
