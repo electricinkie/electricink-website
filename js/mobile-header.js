@@ -206,21 +206,37 @@ import { isAdmin } from './admin-check.js';
     // Immediately apply current auth state AFTER header is injected
     (async () => {
       try {
+        console.log('[MobileHeader] initMobileHeader: checking immediate auth state');
         const m = await import('./auth.js');
         const { getCurrentUser } = m;
-        const user = await getCurrentUser();
+
+        // Quick polling: try a few times to catch restored session before observer fires
+        let user = null;
+        for (let i = 0; i < 6; i++) {
+          try {
+            user = await getCurrentUser();
+            if (user) break;
+          } catch (e) {
+            // ignore transient errors
+          }
+          await new Promise(r => setTimeout(r, 100));
+        }
+
         const signedOut = document.querySelector('[data-auth-signed-out]');
         const signedIn = document.querySelector('[data-auth-signed-in]');
         const nameEl = document.querySelector('.user-name');
         if (user) {
+          console.log('[MobileHeader] applying signed-in UI for', user && user.email);
           if (signedOut) signedOut.style.display = 'none';
           if (signedIn) signedIn.style.display = 'flex';
           if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
         } else {
+          console.log('[MobileHeader] no immediate user found; leaving UI signed-out (observer may update)');
           if (signedOut) signedOut.style.display = 'flex';
           if (signedIn) signedIn.style.display = 'none';
         }
       } catch (e) {
+        console.warn('[MobileHeader] immediate auth check failed:', e && e.message);
         // non-fatal; onAuthChange will handle updates when available
       }
     })();

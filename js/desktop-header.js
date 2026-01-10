@@ -218,10 +218,34 @@ import { isAdmin } from './admin-check.js';
     // Observe auth state
     try {
       onAuthChange((user) => {
+        console.log('[DesktopHeader] onAuthChange callback fired. user=', user && user.email);
         if (user) showSignedInState(user); else showSignedOutState();
       });
     } catch (e) { console.warn('Auth observer not available', e); showSignedOutState(); }
   }
+
+  // Quick immediate check: poll for restored auth if observer hasn't fired yet
+  (async () => {
+    try {
+      console.log('[DesktopHeader] immediate auth check start');
+      const m = await import('./auth.js');
+      const { getCurrentUser } = m;
+      let user = null;
+      for (let i = 0; i < 6; i++) {
+        try { user = await getCurrentUser(); } catch (e) {}
+        if (user) break;
+        await new Promise(r => setTimeout(r, 100));
+      }
+      if (user) {
+        console.log('[DesktopHeader] immediate user found:', user.email);
+        showSignedInState(user);
+      } else {
+        console.log('[DesktopHeader] no immediate user; waiting for observer');
+      }
+    } catch (e) {
+      console.warn('[DesktopHeader] immediate auth check failed:', e && e.message);
+    }
+  })();
 
   // ────────── Auto Initialize ──────────
   if (document.readyState === 'loading') {
