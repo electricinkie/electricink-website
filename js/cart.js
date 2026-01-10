@@ -39,9 +39,12 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     try {
       localStorage.setItem(CART_KEY, JSON.stringify(cart));
       
-      // Update header cart count (se existir)
-      if (window.updateCartCount) {
-        window.updateCartCount();
+      // Notify global cart system if available, otherwise dispatch event
+      if (window.cart && typeof window.cart.updateCartCount === 'function') {
+        try { window.cart.updateCartCount(); } catch (e) { /* ignore */ }
+      } else {
+        // backward-compatible: dispatch event listeners that headers subscribe to
+        window.dispatchEvent(new Event('cart-updated'));
       }
     } catch (error) {
       console.error('Error saving cart:', error);
