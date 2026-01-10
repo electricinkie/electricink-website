@@ -103,15 +103,33 @@
     });
   }
 
-  // RENDER price
+  // RENDER price (defensive: avoid calling toFixed on undefined)
   const priceEl = document.getElementById('productPrice');
   if (productData.variants && productData.variants.length > 0) {
-    // Has variants - show price range
-    priceEl.textContent = productData.price_range?.display || `from €${productData.variants[0].price.toFixed(2)}`;
+    // Has variants - determine numeric variant prices safely
+    const variantPrices = productData.variants
+      .map(v => (typeof v.price === 'number' && !isNaN(v.price)) ? v.price : null)
+      .filter(p => typeof p === 'number');
+
+    if (variantPrices.length === 0) {
+      // No numeric variant prices: fall back to product-level price or range
+      const basePrice = productData.basic?.price ?? productData.price;
+      priceEl.textContent = basePrice ? `€${Number(basePrice).toFixed(2)}` : (productData.price_range?.display || 'Price unavailable');
+    } else {
+      const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
+      if (uniquePrices.length === 1) {
+        // All variants share same price - display single price
+        priceEl.textContent = `€${parseFloat(uniquePrices[0]).toFixed(2)}`;
+      } else {
+        // Multiple prices - show price range using the lowest variant price
+        const minPrice = Math.min(...variantPrices);
+        priceEl.textContent = productData.price_range?.display || `from €${Number(minPrice).toFixed(2)}`;
+      }
+    }
   } else {
-    // Simple product - single price
-    const price = productData.basic?.price || productData.price;
-    priceEl.textContent = price ? `€${price.toFixed(2)}` : 'Price unavailable';
+    // Simple product - use basic price or product-level price defensively
+    const price = (typeof productData.basic?.price === 'number') ? productData.basic.price : productData.price;
+    priceEl.textContent = (typeof price === 'number' && !isNaN(price)) ? `€${price.toFixed(2)}` : 'Price unavailable';
   }
 
   // RENDER images
@@ -161,22 +179,47 @@
       variantsContainer.insertBefore(variantDesc, variantSelect);
     }
 
-    // Populate options
+    // Populate options (use safe price fallback and avoid toFixed on undefined)
+    // Determine whether variants share a single price
+    const variantPrices = productData.variants
+      .map(v => (typeof v.price === 'number' && !isNaN(v.price)) ? v.price : null)
+      .filter(p => typeof p === 'number');
+    const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
+    const sharedPrice = variantPrices.length > 0 && uniquePrices.length === 1;
+
     productData.variants.forEach((variant, index) => {
       const option = document.createElement('option');
       option.value = variant.id;
-      option.textContent = `${variant.label} - €${variant.price.toFixed(2)}`;
-      option.dataset.price = variant.price;
-      option.dataset.priceId = variant.stripe_price_id;
+
+      // Determine option price safely (use product price as fallback when sharedPrice)
+      const optPrice = sharedPrice
+        ? (productData.basic?.price ?? productData.price ?? variant.price)
+        : variant.price;
+      option.dataset.price = (typeof optPrice === 'number' && !isNaN(optPrice)) ? String(optPrice) : '';
+
+      // Ensure a usable priceId is available on the option: prefer variant, otherwise fall back to product-level ids
+      option.dataset.priceId = variant.stripe_price_id || variant.priceId || variant.price_id || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || '';
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
+
+      // Use dataset.price for display to avoid calling toFixed on undefined
+      const displayPrice = parseFloat(option.dataset.price);
+      option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}`;
+
       variantSelect.appendChild(option);
     });
 
-    // Update price and image on change
+    // Update price and image on change (defensive: handle missing dataset.price)
     variantSelect.onchange = function() {
       const selected = this.options[this.selectedIndex];
-      priceEl.textContent = `€${selected.dataset.price}`;
+      const parsed = parseFloat(selected.dataset.price);
+      if (!isNaN(parsed)) {
+        priceEl.textContent = `€${parsed.toFixed(2)}`;
+      } else {
+        // fallback to product-level price or display price range
+        const basePrice = (typeof productData.basic?.price === 'number') ? productData.basic.price : productData.price;
+        priceEl.textContent = basePrice ? `€${Number(basePrice).toFixed(2)}` : (productData.price_range?.display || 'Price unavailable');
+      }
 
       // Update image if variant has one
       if (selected.dataset.image) {
@@ -381,13 +424,24 @@
 
       console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
 
+      // Resolve a usable price for the selected variant (fallback to product price)
+      const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
+        ? selectedVariant.price
+        : (productData.basic?.price ?? productData.price ?? null);
+
+      if (resolvedVariantPrice === null) {
+        console.error('No price available for selected variant or product', { productId, selectedVariant });
+        alert('Product price not available');
+        return;
+      }
+
       itemToAdd = {
         id: `${productId}-${selectedVariant.id}`,
         name: `${name} - ${selectedVariant.label}`,
-        price: selectedVariant.price,
+        price: resolvedVariantPrice,
         stripe_price_id: resolvedPriceId,
         image: selectedVariant.image || mainImage,
-        variant: selectedVariant.label
+        variant: selectedVariant.id || selectedVariant.label || null
       };
     } else {
       // Simple product
