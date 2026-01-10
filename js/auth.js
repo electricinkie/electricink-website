@@ -226,6 +226,7 @@ function initAuthModal() {
       modal.style.display = 'none';
       errorEl.classList.add('hidden');
     } catch (error) {
+        console.error('Firebase signIn error (raw):', error);
       const friendly = mapAuthError(error);
       errorEl.textContent = friendly;
       errorEl.classList.remove('hidden');
@@ -250,6 +251,7 @@ function initAuthModal() {
       modal.style.display = 'none';
       errorEl.classList.add('hidden');
     } catch (error) {
+      console.error('Firebase signUp error (raw):', error);
       const friendly = mapAuthError(error);
       errorEl.textContent = friendly;
       errorEl.classList.remove('hidden');
