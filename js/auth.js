@@ -35,6 +35,37 @@ export async function getCurrentUser() {
   return auth.currentUser || null;
 }
 
+// Ensure a Firestore `users/{uid}` document exists for the authenticated user
+export async function ensureUserProfile(user) {
+  if (!user) return;
+  try {
+    const { uid, email, displayName } = user;
+    const { db } = await initFirebase();
+    const { doc, getDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+    const ref = doc(db, 'users', uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email: email || '',
+        name: displayName || '',
+        discount: 0,
+        createdAt: serverTimestamp()
+      });
+    } else {
+      const data = snap.data() || {};
+      const updates = {};
+      if (!data.email && email) updates.email = email;
+      if (!data.name && displayName) updates.name = displayName;
+      if (Object.keys(updates).length) {
+        await setDoc(ref, updates, { merge: true });
+      }
+    }
+  } catch (err) {
+    // Non-fatal: ensure we don't break auth flow if Firestore is unavailable
+    console.warn('ensureUserProfile failed:', err);
+  }
+}
+
 // ===== MODAL HTML (call `createAuthModal()` once on pages where you want it) =====
 export function createAuthModal() {
   // Avoid inserting duplicate modal
@@ -213,6 +244,7 @@ function initAuthModal() {
       const { auth } = await initFirebase();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
+      await ensureUserProfile(userCredential.user);
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       modal.style.display = 'none';
@@ -289,6 +321,8 @@ export async function initAuthObserver() {
     const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        // Ensure user profile document exists (non-blocking)
+        ensureUserProfile(user).catch(() => {});
         // Logado — hide all auth buttons, show all profile links and set name
         authButtons.forEach(btn => btn.classList.add('hidden'));
         profileButtons.forEach(btn => {

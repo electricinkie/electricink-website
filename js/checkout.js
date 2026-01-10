@@ -5,6 +5,8 @@
  */
 
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
+import { initFirebase } from './firebase-config.js';
+import { getCurrentUser } from './auth.js';
 
 (function() {
   'use strict';
@@ -28,6 +30,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
     subtotal: 0,
     shipping: 0,
     discount: 0,
+    discountPercent: 0,
     vat: 0,
     total: 0
   };
@@ -64,7 +67,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
   // INITIALIZATION
   // ============================================
   
-  function init() {
+  async function init() {
     // Check if Stripe.js loaded
     if (typeof Stripe === 'undefined') {
       console.error('Stripe.js failed to load');
@@ -91,6 +94,13 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
 
     // Load cart
     loadCart();
+
+    // If logged in, fetch discount percent from Firestore so totals include it
+    try {
+      await fetchUserDiscountPercent();
+    } catch (err) {
+      console.warn('Could not fetch user discount:', err);
+    }
     
     // Check if cart has items
     if (cart.length === 0) {
@@ -98,7 +108,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
       return;
     }
 
-    // Calculate totals
+    // Calculate totals (uses any discountPercent fetched earlier)
     calculateTotals();
     
     // Render order summary
@@ -143,6 +153,13 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
       return sum + (item.price * item.quantity);
     }, 0);
 
+    // Calculate discount amount from percent (if any)
+    try {
+      totals.discount = totals.subtotal * ((totals.discountPercent || 0) / 100);
+    } catch (e) {
+      totals.discount = 0;
+    }
+
     // Get current shipping method
     const selectedMethod = document.querySelector('input[name="shippingMethod"]:checked');
     if (selectedMethod) {
@@ -172,6 +189,23 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
 
     // Calculate total (subtotal - discount + shipping + VAT)
     totals.total = subtotalAfterDiscount + totals.shipping + totals.vat;
+  }
+
+  // Fetch user discount percent from Firestore (non-blocking but awaited by init)
+  async function fetchUserDiscountPercent() {
+    try {
+      const user = await getCurrentUser();
+      if (!user) return;
+      const { db } = await initFirebase();
+      const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      const data = snap?.data();
+      if (data && (typeof data.discount === 'number' || data.discount)) {
+        totals.discountPercent = Number(data.discount) || 0;
+      }
+    } catch (err) {
+      console.warn('fetchUserDiscountPercent failed:', err);
+    }
   }
 
   // ============================================
@@ -271,7 +305,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
       
       // Calculate initial shipping (default to standard unless free shipping)
       let initialShipping = qualifiesForFreeShipping ? 0 : 1150;
-      let initialTotal = Math.round((totals.subtotal + (initialShipping / 100)) * 100);
+      let initialTotal = Math.round((totals.subtotal - (totals.discount || 0) + (initialShipping / 100)) * 100);
       
       console.log('   Free shipping?', qualifiesForFreeShipping);
       console.log('   Initial shipping:', initialShipping / 100);
@@ -350,7 +384,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
           }));
         }
         
-        const newTotal = Math.round((totals.subtotal + (shippingAmount / 100)) * 100);
+        const newTotal = Math.round((totals.subtotal - (totals.discount || 0) + (shippingAmount / 100)) * 100);
         
         console.log('   Updated shipping options:', shippingOptions.length);
         console.log('   Shipping amount:', shippingAmount / 100);
@@ -380,7 +414,7 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
           shippingAmount = 0;
         }
         
-        const newTotal = Math.round((totals.subtotal + (shippingAmount / 100)) * 100);
+        const newTotal = Math.round((totals.subtotal - (totals.discount || 0) + (shippingAmount / 100)) * 100);
         
         console.log('   Selected option:', selectedOption.id);
         console.log('   Shipping amount:', shippingAmount / 100);

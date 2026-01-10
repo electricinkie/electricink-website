@@ -1,0 +1,11 @@
+{"users": [
+{
+  "localId": "KxFr93tvEgXykWHtwYt3HCTTAHy2",
+  "email": "contatematth@gmail.com",
+  "emailVerified": false,
+  "passwordHash": "WvdAEPts8jhvBFRqQsf/MpgBA7M6okkOp+kTe/FZhB7xBIne7IrwUWa+qPJMtsqXe1Zx+DxzahCpIQM6tTiL1g==",
+  "salt": "+8vWoRDhIX3rYw==",
+  "createdAt": "1768006560401",
+  "disabled": false,
+  "providerUserInfo": []
+}]}
