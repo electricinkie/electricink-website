@@ -1,5 +1,5 @@
 // ========================================
-// MOBILE HEADER COMPONENT
+// MOBILE HEADER COMPONENT - FIXED
 // Electric Ink IE
 // ========================================
 
@@ -28,36 +28,46 @@ import { isAdmin } from './admin-check.js';
           <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland" style="height: 40px; width: auto;">
         </a>
         
-            <!-- Cart and Auth (Right) -->
-            <div class="mobile-right-actions">
-  <!-- Signed out state -->
-  <div class="header-auth" data-auth-signed-out style="display:flex;align-items:center;gap:8px;">
-    <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="9" cy="21" r="1"/>
-        <circle cx="20" cy="21" r="1"/>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-      </svg>
-      <span class="cart-count" data-cart-count>0</span>
-    </a>
-  </div>
+        <!-- Cart and Auth (Right) -->
+        <div class="mobile-right-actions">
+          <!-- ✅ FIX 1: Signed out state COM botão Sign in -->
+          <div class="header-auth" data-auth-signed-out style="display:flex;align-items:center;gap:8px;">
+            <button class="sign-in-btn" data-open-auth>Sign in</button>
+            <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              <span class="cart-count" data-cart-count>0</span>
+            </a>
+          </div>
 
-  <!-- Signed in state -->
-  <div class="header-auth" data-auth-signed-in style="display:none;align-items:center;gap:8px;">
-    <div class="user-menu">
-      <button class="user-menu-trigger">
-        <span class="user-name">User</span>
-        <svg width="12" height="12" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-      </button>
-      <div class="user-dropdown" style="display:none;">
-        <a href="/profile.html">My Profile</a>
-        <a href="/admin/dashboard.html" data-admin-only style="display:none;">Dashboard</a>
-        <button class="logout-btn">Logout</button>
-      </div>
-    </div>
-  
-  </div>
-        
+          <!-- ✅ FIX 2: Signed in state COM cart icon -->
+          <div class="header-auth" data-auth-signed-in style="display:none;align-items:center;gap:8px;">
+            <div class="user-menu">
+              <button class="user-menu-trigger">
+                <span class="user-name">User</span>
+                <svg width="12" height="12" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+              <div class="user-dropdown" style="display:none;">
+                <a href="/profile.html">My Profile</a>
+                <a href="/admin/dashboard.html" data-admin-only style="display:none;">Dashboard</a>
+                <button class="logout-btn">Logout</button>
+              </div>
+            </div>
+            <!-- ✅ Agora TEM o cart quando logado -->
+            <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              <span class="cart-count" data-cart-count>0</span>
+            </a>
+          </div>
+        </div>
+
       </div>
     </header>
     
@@ -72,10 +82,6 @@ import { isAdmin } from './admin-check.js';
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         </button>
-      </div>
-      
-      <div class="mobile-auth-area mobile-auth-centered">
-        <button id="mobile-auth-button" class="mobile-auth-button">Sign in</button>
       </div>
 
       <ul class="mobile-menu-list">
@@ -104,7 +110,7 @@ import { isAdmin } from './admin-check.js';
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </button>
-            <ul class="mobile-submenu">
+          <ul class="mobile-submenu">
             <li><a href="/category.html?cat=cartridges">Cartridges</a></li>
             <li><a href="/category.html?cat=needles">Needles</a></li>
             <li><a href="/category.html?cat=inks">Inks</a></li>
@@ -169,7 +175,7 @@ import { isAdmin } from './admin-check.js';
         </li>
         
       </ul>
-      
+
     </nav>
   `;
 
@@ -177,19 +183,13 @@ import { isAdmin } from './admin-check.js';
   function initMobileHeader() {
     // REMOVE any existing headers (prevents duplication)
     const existingHeader = document.querySelector('.site-header');
-    if (existingHeader) {
-      existingHeader.remove();
-    }
+    if (existingHeader) existingHeader.remove();
     
     const existingMenu = document.querySelector('.mobile-menu');
-    if (existingMenu) {
-      existingMenu.remove();
-    }
+    if (existingMenu) existingMenu.remove();
     
     const existingBackdrop = document.querySelector('.mobile-menu-backdrop');
-    if (existingBackdrop) {
-      existingBackdrop.remove();
-    }
+    if (existingBackdrop) existingBackdrop.remove();
 
     // Inject header at start of body
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
@@ -199,45 +199,35 @@ import { isAdmin } from './admin-check.js';
     setupSubmenu();
     updateCartCount();
     setActiveMenuItem();
-    // Auth UI wiring for mobile header
     setupUserMenu();
-    const mobAuthBtn = document.getElementById('mobile-auth-button');
-    mobAuthBtn?.addEventListener('click', () => { try { openAuthModal(); } catch (e) {} });
-    // Immediately apply current auth state AFTER header is injected
+
+    // ✅ FIX 3: Wire auth button igual desktop (busca [data-open-auth])
+    const signInBtn = document.querySelector('[data-open-auth]');
+    signInBtn?.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      try { openAuthModal('login'); } catch (err) { console.warn(err); } 
+    });
+
+    // ✅ Immediate auth check (igual desktop)
     (async () => {
       try {
-        console.log('[MobileHeader] initMobileHeader: checking immediate auth state');
+        console.log('[MobileHeader] immediate auth check start');
         const m = await import('./auth.js');
         const { getCurrentUser } = m;
-
-        // Quick polling: try a few times to catch restored session before observer fires
         let user = null;
         for (let i = 0; i < 6; i++) {
-          try {
-            user = await getCurrentUser();
-            if (user) break;
-          } catch (e) {
-            // ignore transient errors
-          }
+          try { user = await getCurrentUser(); } catch (e) {}
+          if (user) break;
           await new Promise(r => setTimeout(r, 100));
         }
-
-        const signedOut = document.querySelector('[data-auth-signed-out]');
-        const signedIn = document.querySelector('[data-auth-signed-in]');
-        const nameEl = document.querySelector('.user-name');
         if (user) {
-          console.log('[MobileHeader] applying signed-in UI for', user && user.email);
-          if (signedOut) signedOut.style.display = 'none';
-          if (signedIn) signedIn.style.display = 'flex';
-          if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+          console.log('[MobileHeader] immediate user found:', user.email);
+          showSignedInState(user);
         } else {
-          console.log('[MobileHeader] no immediate user found; leaving UI signed-out (observer may update)');
-          if (signedOut) signedOut.style.display = 'flex';
-          if (signedIn) signedIn.style.display = 'none';
+          console.log('[MobileHeader] no immediate user; waiting for observer');
         }
       } catch (e) {
         console.warn('[MobileHeader] immediate auth check failed:', e && e.message);
-        // non-fatal; onAuthChange will handle updates when available
       }
     })();
   }
@@ -248,21 +238,22 @@ import { isAdmin } from './admin-check.js';
     document.addEventListener('click', (e) => {
       const trigger = e.target.closest('.user-menu-trigger');
       if (trigger) {
+        e.stopPropagation();
         const dropdown = trigger.parentElement.querySelector('.user-dropdown');
         if (dropdown) dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         return;
       }
       // Close open dropdowns when clicking outside
-      document.querySelectorAll('.user-dropdown').forEach(dd => {
-        if (!dd.contains(e.target)) dd.style.display = 'none';
-      });
+      if (!e.target.closest('.user-menu')) {
+        document.querySelectorAll('.user-dropdown').forEach(dd => dd.style.display = 'none');
+      }
     });
 
     // Logout handler
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.logout-btn');
       if (btn) {
-        try { logout().catch(() => {}); } catch (err) {}
+        try { logout().then(() => window.location.reload()).catch(() => {}); } catch (err) {}
         const dd = btn.closest('.user-dropdown');
         if (dd) dd.style.display = 'none';
       }
@@ -307,7 +298,6 @@ import { isAdmin } from './admin-check.js';
   // ────────── Submenu Toggle ──────────
   function setupSubmenu() {
     const submenuTrigger = document.querySelector('.submenu-trigger');
-    
     submenuTrigger?.addEventListener('click', function() {
       this.parentElement.classList.toggle('open');
     });
@@ -315,16 +305,14 @@ import { isAdmin } from './admin-check.js';
 
   // ────────── Update Cart Count ──────────
   function updateCartCount() {
-    // Prefer global cart API when available
     let totalItems = 0;
     if (window.cart && typeof window.cart.getCartCount === 'function') {
-      totalItems = window.cart.getCartCount();
+      try { totalItems = window.cart.getCartCount(); } catch (e) { totalItems = 0; }
     } else {
       const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
       totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     }
 
-    // Update all cart count badges
     const cartBadges = document.querySelectorAll('[data-cart-count]');
     cartBadges.forEach(badge => {
       badge.textContent = totalItems;
@@ -339,11 +327,8 @@ import { isAdmin } from './admin-check.js';
     
     menuLinks.forEach(link => {
       const href = link.getAttribute('href');
-      
-      // Remove active class from all
       link.classList.remove('active');
       
-      // Check if current page matches link
       if (href === currentPath || 
           (href === '/' && (currentPath === '/' || currentPath === '/index.html')) ||
           (href === '/howtousecosmetics.html' && currentPath.includes('howtouse')) ||
@@ -352,6 +337,39 @@ import { isAdmin } from './admin-check.js';
         link.classList.add('active');
       }
     });
+
+    if (currentPath.includes('category.html') || currentPath.includes('products.html')) {
+      const shopTrigger = document.querySelector('.submenu-trigger');
+      if (shopTrigger) shopTrigger.classList.add('active');
+    }
+  }
+
+  // ────────── Auth helpers (igual desktop) ──────────
+  function showSignedOutState() {
+    const out = document.querySelector('[data-auth-signed-out]');
+    const inEl = document.querySelector('[data-auth-signed-in]');
+    if (out) out.style.display = 'flex';
+    if (inEl) inEl.style.display = 'none';
+  }
+
+  function showSignedInState(user) {
+    const out = document.querySelector('[data-auth-signed-out]');
+    const inEl = document.querySelector('[data-auth-signed-in]');
+    if (out) out.style.display = 'none';
+    if (inEl) inEl.style.display = 'flex';
+    const nameEl = document.querySelector('.user-name');
+    if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+
+    // reveal admin based on Firestore-driven admin list
+    (async () => {
+      try {
+        const isAdminUser = await isAdmin({ user });
+        const adminEls = document.querySelectorAll('[data-admin-only]');
+        adminEls.forEach(el => el.style.display = isAdminUser ? '' : 'none');
+        const mobileAdminLink = document.getElementById('mobile-admin-link');
+        if (mobileAdminLink) mobileAdminLink.style.display = isAdminUser ? 'block' : 'none';
+      } catch (e) { /* ignore */ }
+    })();
   }
 
   // ────────── Listen for Cart Updates ──────────
@@ -364,32 +382,15 @@ import { isAdmin } from './admin-check.js';
     initMobileHeader();
   }
 
-  // Wire global auth state using the shared `onAuthChange` observer
+  // ✅ Wire global auth observer (igual desktop)
   try {
-    onAuthChange(async (user) => {
-      const signedOut = document.querySelector('[data-auth-signed-out]');
-      const signedIn = document.querySelector('[data-auth-signed-in]');
-      const userName = document.querySelector('.user-name');
-      const adminOnlyEls = document.querySelectorAll('[data-admin-only]');
-      const mobileAdminLink = document.getElementById('mobile-admin-link');
-
-      if (user) {
-        if (signedOut) signedOut.style.display = 'none';
-        if (signedIn) signedIn.style.display = 'flex';
-        if (userName) userName.textContent = user.displayName || user.email || 'User';
-        let admin = false;
-        try { admin = await isAdmin({ user }); } catch (e) { admin = false; }
-        adminOnlyEls.forEach(el => el.style.display = admin ? '' : 'none');
-        if (mobileAdminLink) mobileAdminLink.style.display = admin ? 'block' : 'none';
-      } else {
-        if (signedOut) signedOut.style.display = 'flex';
-        if (signedIn) signedIn.style.display = 'none';
-        adminOnlyEls.forEach(el => el.style.display = 'none');
-        if (mobileAdminLink) mobileAdminLink.style.display = 'none';
-      }
+    onAuthChange((user) => {
+      console.log('[MobileHeader] onAuthChange callback fired. user=', user && user.email);
+      if (user) showSignedInState(user); else showSignedOutState();
     });
   } catch (e) {
-    // ignore if auth subsystem not available
+    console.warn('Auth observer not available', e);
+    showSignedOutState();
   }
 
   // ────────── Export for manual init ──────────
@@ -397,4 +398,3 @@ import { isAdmin } from './admin-check.js';
     init: initMobileHeader,
     updateCartCount: updateCartCount
   };
-
