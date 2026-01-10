@@ -49,6 +49,7 @@ import { initAuthObserver, openLoginModal } from './auth.js';
         <div class="desktop-right-actions">
           <button id="authButton" class="desktop-auth-button">Sign in</button>
           <a id="profileButton" href="/profile.html" class="desktop-profile-link hidden" aria-label="Profile"><span>Profile</span></a>
+          <a id="adminLink" href="/admin/dashboard.html" class="desktop-admin-link" style="display:none; margin-left:12px;">Dashboard</a>
 
           <!-- Cart Icon (Right) -->
           <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">

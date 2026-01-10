@@ -342,10 +342,30 @@ export async function initAuthObserver() {
           const span = btn.querySelector('span');
           if (span) span.textContent = user.displayName || 'Profile';
         });
+
+        // Show admin links if user has admin claim
+        (async () => {
+          try {
+            const { getIdTokenResult } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+            const idRes = await getIdTokenResult(user);
+            const isAdmin = !!(idRes && idRes.claims && idRes.claims.admin);
+            const adminLink = document.getElementById('adminLink');
+            const mobileAdminLink = document.getElementById('mobile-admin-link');
+            if (adminLink) adminLink.style.display = isAdmin ? 'inline-block' : 'none';
+            if (mobileAdminLink) mobileAdminLink.style.display = isAdmin ? 'block' : 'none';
+          } catch (e) {
+            // Non-fatal
+            console.warn('Could not verify admin claim:', e);
+          }
+        })();
       } else {
         // Deslogado — show auth buttons, hide profile links
         authButtons.forEach(btn => btn.classList.remove('hidden'));
         profileButtons.forEach(btn => btn.classList.add('hidden'));
+        const adminLink = document.getElementById('adminLink');
+        const mobileAdminLink = document.getElementById('mobile-admin-link');
+        if (adminLink) adminLink.style.display = 'none';
+        if (mobileAdminLink) mobileAdminLink.style.display = 'none';
       }
     });
   } catch (err) {

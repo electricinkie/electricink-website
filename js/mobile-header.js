@@ -144,6 +144,11 @@ import { initAuthObserver, openLoginModal } from './auth.js';
           </a>
         </li>
         
+        <!-- Admin (hidden by default, shown for admins) -->
+        <li id="mobile-admin-link" style="display:none;">
+          <a href="/admin/dashboard.html" class="mobile-menu-link">Admin Dashboard</a>
+        </li>
+        
       </ul>
       
     </nav>
@@ -175,6 +180,10 @@ import { initAuthObserver, openLoginModal } from './auth.js';
     setupSubmenu();
     updateCartCount();
     setActiveMenuItem();
+    // Initialize auth observer and auth button in mobile header
+    try { initAuthObserver(); } catch (e) { /* ignore if auth not available */ }
+    const mobAuthBtn = document.getElementById('mobile-auth-button');
+    mobAuthBtn?.addEventListener('click', () => { try { openLoginModal(); } catch (e) {} });
   }
 
   // ────────── Menu Toggle ──────────
