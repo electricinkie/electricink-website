@@ -471,6 +471,8 @@ module.exports = async function handler(req, res) {
       const providedUid = req.body.authUid || incomingMetadata.authUid || incomingMetadata.user_uid || incomingMetadata.userId || incomingMetadata.user_id || null;
       if (providedUid) {
         metadataSanitized.user_uid = String(providedUid);
+        // Also include authUid for frontend/backoffice compatibility
+        metadataSanitized.authUid = String(providedUid);
       }
       metadata = metadataSanitized;
 

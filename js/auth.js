@@ -7,15 +7,25 @@ export async function initAuth(config) {
 }
 
 export async function signUp(email, password) {
-  const { auth } = await initFirebase();
-  const { createUserWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
-  return createUserWithEmailAndPassword(auth, email, password);
+  try {
+    const { auth } = await initFirebase();
+    const { createUserWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    return await createUserWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.error('Auth signUp error:', { code: err?.code, message: err?.message, raw: err });
+    throw err;
+  }
 }
 
 export async function signIn(email, password) {
-  const { auth } = await initFirebase();
-  const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
-  return signInWithEmailAndPassword(auth, email, password);
+  try {
+    const { auth } = await initFirebase();
+    const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    return await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.error('Auth signIn error:', { code: err?.code, message: err?.message, raw: err });
+    throw err;
+  }
 }
 
 export async function signOutUser() {

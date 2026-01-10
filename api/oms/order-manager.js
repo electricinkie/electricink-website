@@ -32,6 +32,8 @@ class OrderManager {
   /**
    * Enriquece order existente com dados OMS
    * NÃO cria order nova, apenas adiciona campos
+   * 
+   * 🔧 CORREÇÃO: Preserva userId que já foi setado pelo webhook (authUid)
    */
   async enrichOrder(paymentIntentId) {
     const orderRef = this.db.collection('orders').doc(paymentIntentId);
@@ -43,12 +45,16 @@ class OrderManager {
     
     const orderData = orderDoc.data();
     const orderNumber = await this.generateOrderNumber();
-    const userId = orderData.customerEmail || null; // Simplificado por enquanto
+    
+    // 🎯 CORREÇÃO CRÍTICA:
+    // Se userId já existe (setado pelo webhook via authUid), PRESERVA
+    // Se não existe, usa email como fallback (guest checkout)
+    const userId = orderData.userId || orderData.customerEmail || 'guest';
     
     // Atualiza order com campos OMS
     await orderRef.update({
       orderNumber: orderNumber,
-      userId: userId,
+      userId: userId, // Mantém o authUid ou usa email
       omsEnrichedAt: admin.firestore.FieldValue.serverTimestamp()
     });
     
