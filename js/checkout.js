@@ -100,6 +100,14 @@ import { getCurrentUser } from './auth.js';
       await fetchUserDiscountPercent();
     } catch (err) {
       console.warn('Could not fetch user discount:', err);
+      // UX: if Firebase unavailable (CSP/CDN), show discrete notice and continue
+      const note = document.getElementById('accountNotice');
+      if (note) {
+        note.textContent = 'Recursos de conta indisponíveis no momento; o checkout continua funcionando.';
+        note.style.display = 'block';
+      } else if (window.toast && typeof window.toast.info === 'function') {
+        window.toast.info('Account features unavailable; checkout continues.');
+      }
     }
     
     // Check if cart has items
