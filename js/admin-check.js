@@ -20,6 +20,18 @@ export async function isAdmin({ user: providedUser = null, forceRefresh = false 
       return false;
     }
 
+    // First prefer token-based custom claim check (fast, secure)
+    try {
+      const idRes = await user.getIdTokenResult();
+      if (idRes && idRes.claims && idRes.claims.admin) {
+        isAdminCache = true;
+        isAdminCacheAt = now;
+        return true;
+      }
+    } catch (e) {
+      // ignore token-read errors and fallback to admins collection
+    }
+
     const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
     const snap = await getDoc(doc(db, 'admins', user.uid));
     isAdminCache = !!(snap && typeof snap.exists === 'function' ? snap.exists() : snap.exists);
