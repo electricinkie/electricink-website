@@ -1,88 +1,95 @@
 <!doctype html>
 <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Profile — Electric Ink</title>
+  <link rel="stylesheet" href="/css/profile.css">
+  <script src="/js/firebase-client-config.js"></script>
+</head>
+<body>
+  <main class="profile-page">
+    <section class="profile-card">
+      <div class="avatar">🎨</div>
+      <h1 id="user-name">User</h1>
+      <p id="user-email" class="muted">email@example.com</p>
+      <div id="discount-badge" class="discount-badge" style="display:none">
+        🎉 Seu Desconto: <span id="discount-value">0%</span>
+      </div>
+      <button id="logoutBtn" class="btn">Logout</button>
+    </section>
+
+    <section class="orders-section">
+      <h2>Pedidos</h2>
+      <div id="orders-list" class="orders-list">Carregando pedidos...</div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/profile.js"></script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Profile — Electric Ink</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/profile.css">
   </head>
   <body>
-    <main class="container">
-      <h1>My Profile</h1>
-      <div id="authArea">
-        <form id="authForm">
-          <label>Email <input id="email" type="email" required></label>
-          <label>Password <input id="password" type="password" required></label>
-          <button id="signInBtn">Sign in</button>
-          <button id="signUpBtn" type="button">Create my account</button>
-          <button id="signOutBtn" type="button" style="display:none">Sign out</button>
-        </form>
-      </div>
+    <script type="module" src="/js/mobile-header.js"></script>
+    <script type="module" src="/js/desktop-header.js"></script>
 
-      <section id="profile" style="display:none">
-        <h2>Account</h2>
-        <p id="profileInfo"></p>
-        <h3>Orders</h3>
-        <div id="orders"></div>
-      </section>
+    <main class="profile-main">
+      <div class="profile-container">
+        <header class="profile-header" role="banner">
+          <h1 class="profile-title">My Account</h1>
+          <div id="authControls" class="auth-controls">
+            <button id="signInCta" class="btn-outline">Sign in</button>
+          </div>
+        </header>
+
+        <section id="profileCard" class="profile-card" aria-live="polite" style="display:none">
+          <div class="avatar" id="avatar" aria-hidden="true"></div>
+          <div class="profile-meta">
+            <div class="profile-name" id="profileName">Name</div>
+            <div class="profile-email" id="profileEmail">email@example.com</div>
+            <div class="profile-actions">
+              <button id="editProfileBtn" class="btn-link">Edit Profile</button>
+              <button id="logoutBtn" class="btn-ghost">Logout</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="ordersSection" class="orders-section">
+          <h2>Order History</h2>
+          <div id="ordersList" class="orders-list" aria-live="polite"></div>
+          <div id="ordersFooter" class="orders-footer">
+            <button id="loadMoreBtn" class="btn-secondary" style="display:none">Load more</button>
+          </div>
+        </section>
+      </div>
     </main>
 
-    <script src="/js/firebase-client-config.js" defer></script>
-    <script type="module">
-      import { initAuth, signIn, signUp, signOutUser, onAuthChange, getCurrentUser } from './js/auth.js';
-      import { getUserOrdersByEmail } from './js/orders.js';
+    <!-- Inline Edit Modal -->
+    <div id="editModal" class="modal-backdrop" role="dialog" aria-modal="true" style="display:none">
+      <div class="modal" role="document">
+        <button id="closeEditModal" class="modal-close" aria-label="Close">×</button>
+        <h3>Edit Profile</h3>
+        <form id="editForm">
+          <label for="editName">Name</label>
+          <input id="editName" name="name" type="text">
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Save</button>
+            <button type="button" id="cancelEdit" class="btn-ghost">Cancel</button>
+          </div>
+          <p id="editMsg" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
 
-      async function boot() {
-        try {
-          await initAuth();
-        } catch (e) {
-          console.error('Firebase init failed', e);
-          return;
-        }
-
-        const emailEl = document.getElementById('email');
-        const passwordEl = document.getElementById('password');
-        const signInBtn = document.getElementById('signInBtn');
-        const signUpBtn = document.getElementById('signUpBtn');
-        const signOutBtn = document.getElementById('signOutBtn');
-        const profile = document.getElementById('profile');
-        const profileInfo = document.getElementById('profileInfo');
-        const ordersEl = document.getElementById('orders');
-
-        signInBtn.addEventListener('click', async (ev) => {
-          ev.preventDefault();
-          try { await signIn(emailEl.value, passwordEl.value); } catch (err) { alert(err.message); }
-        });
-
-        signUpBtn.addEventListener('click', async (ev) => {
-          ev.preventDefault();
-          try { await signUp(emailEl.value, passwordEl.value); } catch (err) { alert(err.message); }
-        });
-
-        signOutBtn.addEventListener('click', async () => { await signOutUser(); });
-
-        onAuthChange(async (user) => {
-          if (user) {
-            document.getElementById('authForm').style.display = 'none';
-            signOutBtn.style.display = 'inline-block';
-            profile.style.display = 'block';
-            profileInfo.textContent = `Signed in as ${user.email}`;
-            // Load orders (if rules allow querying by email)
-            try {
-              const orders = await getUserOrdersByEmail(user.email);
-              ordersEl.innerHTML = orders.map(o => `<div class="order">${o.orderId || o.id} — €${(o.total || o.total_cents/100 || o.amount/100) }</div>`).join('');
-            } catch (e) {
-              ordersEl.textContent = 'Could not load orders (check rules).';
-            }
-          } else {
-            document.getElementById('authForm').style.display = 'block';
-            signOutBtn.style.display = 'none';
-            profile.style.display = 'none';
-          }
-        });
-      }
-
-      boot();
-    </script>
+    <!-- Scripts -->
+    <script type="module" src="/js/profile.js"></script>
   </body>
 </html>

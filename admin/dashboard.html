@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard - Electric Ink</title>
+  <link rel="stylesheet" href="/css/admin-dashboard.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="admin-header-container">
+      <h1>Electric Ink - Admin</h1>
+      <div class="admin-user" data-admin-only>
+        <span id="admin-name">Loading...</span>
+        <button id="logoutBtn" onclick="window.logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-stats">
+      <div class="stat-card">
+        <h3>Pedidos Pendentes</h3>
+        <p class="stat-number" id="pending-count">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Vendas Hoje</h3>
+        <p class="stat-number" id="today-sales">€0.00</p>
+      </div>
+      <div class="stat-card">
+        <h3>Total Pedidos</h3>
+        <p class="stat-number" id="total-orders">0</p>
+      </div>
+    </section>
+
+    <section class="admin-orders">
+      <div class="section-header">
+        <h2>Pedidos Recentes</h2>
+        <select id="status-filter">
+          <option value="all">Todos</option>
+          <option value="pending">Pendentes</option>
+          <option value="shipped">Enviados</option>
+          <option value="delivered">Entregues</option>
+        </select>
+      </div>
+
+      <div class="orders-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Cliente</th>
+              <th>Data</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr><td colspan="6">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="order-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <button class="close" onclick="closeModal()">&times;</button>
+      <h2>Detalhes do Pedido</h2>
+      <div id="order-details"></div>
+      <div class="modal-actions">
+        <button onclick="markAsShipped()" class="btn-primary">Marcar Enviado</button>
+        <button onclick="closeModal()" class="btn-secondary">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin-dashboard.js"></script>
+</body>
+</html>
