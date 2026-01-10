@@ -96,20 +96,25 @@
     const cart = getCart();
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     
-    // Atualiza todos os elementos com classe 'cart-count'
-    document.querySelectorAll('.cart-count, .sqs-cart-quantity').forEach(el => {
+    // Update all possible badge selectors used across headers and UI
+    const badgeSelectors = [
+      '[data-cart-count]',
+      '.desktop-cart-count',
+      '.cart-count',
+      '.menu-cart-count',
+      '.sqs-cart-quantity'
+    ].join(', ');
+
+    document.querySelectorAll(badgeSelectors).forEach(el => {
       el.textContent = totalItems;
+      el.style.display = totalItems > 0 ? 'flex' : 'none';
     });
-    
-    // Atualiza header cart icon (se existir)
-    const cartIcon = document.querySelector('.header-cart');
-    if (cartIcon) {
-      if (totalItems > 0) {
-        cartIcon.classList.add('has-items');
-      } else {
-        cartIcon.classList.remove('has-items');
-      }
-    }
+
+    // Toggle header icons (desktop and generic header)
+    const desktopCart = document.querySelector('.desktop-cart');
+    const headerCart = document.querySelector('.header-cart');
+    if (desktopCart) desktopCart.classList.toggle('has-items', totalItems > 0);
+    if (headerCart) headerCart.classList.toggle('has-items', totalItems > 0);
   }
 
   // ────────── Get Cart Count ──────────
@@ -138,5 +143,14 @@
   } else {
     init();
   }
+
+  // ────────── Cross-tab sync via storage events ──────────
+  window.addEventListener('storage', (e) => {
+    if (e.key === CART_KEY) {
+      updateCartCount();
+      // ensure other scripts relying on the event run too
+      window.dispatchEvent(new Event('cart-updated'));
+    }
+  });
 
 })();
