@@ -8,7 +8,7 @@
     "start": "node dev-server.js",
     "inject-sentry": "node scripts/inject-sentry-dsn.js",
     "build": "echo 'Dependencies installed'",
-    "vercel-build": "npm install --production=false",
+    "vercel-build": "npm install --production=false && node scripts/inject-firebase-config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
