@@ -73,6 +73,8 @@
   async function renderCategoryMessage() {
     // Suppress category-level availability notices for cartridges
     if ((category || '').toString().toLowerCase() === 'cartridges') return;
+    // Do not show category-level messages on the All Products page
+    if ((category || '').toString().toLowerCase() === 'all') return;
     try {
       const res = await fetch('/data/category-messages.json');
       if (!res.ok) return;

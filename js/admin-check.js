@@ -4,7 +4,7 @@ let isAdminCache = null;
 let isAdminCacheAt = 0; // epoch ms of last resolution
 const ADMIN_CACHE_TTL_MS = 60 * 1000; // 60s TTL
 
-export async function isAdmin({ forceRefresh = false } = {}) {
+export async function isAdmin({ user: providedUser = null, forceRefresh = false } = {}) {
   // TTL check: reuse cache if valid and not forced
   const now = Date.now();
   if (!forceRefresh && isAdminCache !== null && (now - isAdminCacheAt) < ADMIN_CACHE_TTL_MS) {
@@ -13,7 +13,7 @@ export async function isAdmin({ forceRefresh = false } = {}) {
 
   try {
     const { auth, db } = await initFirebase();
-    const user = auth.currentUser;
+    const user = providedUser || auth.currentUser;
     if (!user) {
       isAdminCache = false;
       isAdminCacheAt = now;

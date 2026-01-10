@@ -3,7 +3,8 @@
 // Electric Ink IE
 // ========================================
 
-import { initAuthObserver, openLoginModal } from './auth.js';
+import { onAuthChange, openAuthModal, logout } from './auth.js';
+import { isAdmin } from './admin-check.js';
 
 'use strict';
 
@@ -47,19 +48,36 @@ import { initAuthObserver, openLoginModal } from './auth.js';
         
         <!-- Auth / Cart (Right) -->
         <div class="desktop-right-actions">
-          <button id="authButton" class="desktop-auth-button">Sign in</button>
-          <a id="profileButton" href="/profile.html" class="desktop-profile-link hidden" aria-label="Profile"><span>Profile</span></a>
-          <a id="adminLink" href="/admin/dashboard.html" class="desktop-admin-link" style="display:none; margin-left:12px;">Dashboard</a>
+          <!-- Signed out -->
+          <div class="header-auth" data-auth-signed-out style="display:flex;align-items:center;gap:8px;">
+            <button class="sign-in-btn" data-open-auth>Sign in</button>
+            <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              <span class="desktop-cart-count" data-cart-count>0</span>
+            </a>
+          </div>
 
-          <!-- Cart Icon (Right) -->
-          <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-          </svg>
-          <span class="desktop-cart-count" data-cart-count>0</span>
-          </a>
+          <!-- Signed in -->
+          <div class="header-auth" data-auth-signed-in style="display:none;align-items:center;gap:8px;">
+            <div class="user-menu">
+              <button class="user-menu-trigger">
+                <span class="user-name">User</span>
+                <svg width="12" height="12" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </button>
+              <div class="user-dropdown" style="display:none;">
+                <a href="/profile.html">My Profile</a>
+                <a href="/admin/dashboard.html" data-admin-only style="display:none; margin-left:12px;">Dashboard</a>
+                <button class="logout-btn">Logout</button>
+              </div>
+            </div>
+            <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
+              <span class="desktop-cart-count" data-cart-count>0</span>
+            </a>
+          </div>
         </div>
 
       </div>
@@ -108,18 +126,23 @@ import { initAuthObserver, openLoginModal } from './auth.js';
 
   // ────────── Update Cart Count ──────────
   function updateCartCount() {
-    if (!window.cart) return;
-    
-    const count = window.cart.getCartCount();
-    const countElements = document.querySelectorAll('.desktop-cart-count');
-    
-    countElements.forEach(el => {
-      el.textContent = count;
-      if (count > 0) {
-        el.style.display = 'flex';
-      } else {
-        el.style.display = 'none';
+    // Prefer global cart API when available, otherwise fallback to localStorage
+    let totalItems = 0;
+    if (window.cart && typeof window.cart.getCartCount === 'function') {
+      try {
+        totalItems = window.cart.getCartCount();
+      } catch (e) {
+        totalItems = 0;
       }
+    } else {
+      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
+      totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+
+    const countElements = document.querySelectorAll('.desktop-cart-count');
+    countElements.forEach(el => {
+      el.textContent = totalItems;
+      el.style.display = totalItems > 0 ? 'flex' : 'none';
     });
   }
 
@@ -169,14 +192,35 @@ import { initAuthObserver, openLoginModal } from './auth.js';
     updateCartCount();
     setActiveMenuItem();
 
-    // Initialize auth observer (keeps sign-in/profile buttons in sync)
-    try { initAuthObserver(); } catch (e) { /* ignore if auth not available */ }
+    // Wire auth UI actions
+    const signInBtn = document.querySelector('[data-open-auth]');
+    signInBtn?.addEventListener('click', (e) => { e.preventDefault(); try { openAuthModal('login'); } catch (err) { console.warn(err); } });
 
-    // Wire auth button to open modal
-    const authBtn = document.getElementById('authButton');
-    authBtn?.addEventListener('click', () => {
-      try { openLoginModal(); } catch (e) { /* ignore */ }
+    const userTrigger = document.querySelector('.user-menu-trigger');
+    userTrigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const dropdown = document.querySelector('.user-dropdown');
+      if (!dropdown) return;
+      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
     });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.user-menu')) {
+        const dd = document.querySelector('.user-dropdown');
+        if (dd) dd.style.display = 'none';
+      }
+    });
+
+    document.querySelector('.logout-btn')?.addEventListener('click', async () => {
+      try { await logout(); window.location.reload(); } catch (err) { console.warn(err); }
+    });
+
+    // Observe auth state
+    try {
+      onAuthChange((user) => {
+        if (user) showSignedInState(user); else showSignedOutState();
+      });
+    } catch (e) { console.warn('Auth observer not available', e); showSignedOutState(); }
   }
 
   // ────────── Auto Initialize ──────────
@@ -188,3 +232,29 @@ import { initAuthObserver, openLoginModal } from './auth.js';
 
   // ────────── Listen for cart updates ──────────
   window.addEventListener('cart-updated', updateCartCount);
+
+  // Auth helpers
+  function showSignedOutState() {
+    const out = document.querySelector('[data-auth-signed-out]');
+    const inEl = document.querySelector('[data-auth-signed-in]');
+    if (out) out.style.display = 'flex';
+    if (inEl) inEl.style.display = 'none';
+  }
+
+  function showSignedInState(user) {
+    const out = document.querySelector('[data-auth-signed-out]');
+    const inEl = document.querySelector('[data-auth-signed-in]');
+    if (out) out.style.display = 'none';
+    if (inEl) inEl.style.display = 'flex';
+    const nameEl = document.querySelector('.user-name');
+    if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+
+    // reveal admin based on Firestore-driven admin list
+    (async () => {
+      try {
+        const isAdminUser = await isAdmin({ user });
+        const adminLink = document.querySelector('[data-admin-only]');
+        if (adminLink) adminLink.style.display = isAdminUser ? 'inline-block' : 'none';
+      } catch (e) { /* ignore */ }
+    })();
+  }

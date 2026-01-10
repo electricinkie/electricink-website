@@ -35,14 +35,30 @@ export async function signOutUser() {
 }
 
 export async function onAuthChange(cb) {
-  const { auth } = await initFirebase();
-  const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
-  return onAuthStateChanged(auth, cb);
+  try {
+    const { auth } = await initFirebase();
+    if (!auth) {
+      console.warn('[Auth] Auth not initialized');
+      return;
+    }
+    const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    return onAuthStateChanged(auth, (user) => {
+      if (user) {
+        try { console.log('[Auth] ✅ User signed in:', user.email); } catch (e) {}
+      } else {
+        try { console.log('[Auth] ℹ️ User signed out'); } catch (e) {}
+      }
+      try { cb(user); } catch (e) { console.error('[Auth] onAuthChange callback error:', e); }
+    });
+  } catch (e) {
+    console.warn('[Auth] onAuthChange failed:', e && e.message);
+    return;
+  }
 }
 
 export async function getCurrentUser() {
   const { auth } = await initFirebase();
-  return auth.currentUser || null;
+  return auth.currentUser;
 }
 
 // Ensure a Firestore `users/{uid}` document exists for the authenticated user
@@ -71,7 +87,6 @@ export async function ensureUserProfile(user) {
       }
     }
   } catch (err) {
-    // Non-fatal: ensure we don't break auth flow if Firestore is unavailable
     console.warn('ensureUserProfile failed:', err);
   }
 }
@@ -81,106 +96,217 @@ export function createAuthModal() {
   // Avoid inserting duplicate modal
   if (document.getElementById('authModal')) return;
 
-  // If global modal system exists, reuse its styled container
-  if (window.modal && typeof window.modal.create === 'function') {
-    // build inner form markup (kept minimal classes; ids preserved for existing logic)
-    const inner = `
-      <button id="closeAuthModal" class="modal-close absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-
-      <div class="auth-tabs">
-        <button id="loginTab" class="tab tab-active">Login</button>
-        <button id="signupTab" class="tab">Sign Up</button>
-      </div>
-
-      <h2 id="authModalTitle" class="modal-title">Authentication</h2>
-
-      <form id="loginForm" class="auth-form">
-        <label>Email</label>
-        <input type="email" id="loginEmail" required>
-        <label>Password</label>
-        <input type="password" id="loginPassword" required>
-        <button type="submit" class="modal-btn modal-btn-primary">Login</button>
-        <p id="loginError" class="text-red-500 text-sm hidden" role="alert" aria-live="polite"></p>
-      </form>
-
-      <form id="signupForm" class="auth-form hidden">
-        <label>Name</label>
-        <input type="text" id="signupName" required>
-        <label>Email</label>
-        <input type="email" id="signupEmail" required>
-        <label>Password</label>
-        <input type="password" id="signupPassword" required minlength="6">
-        <button type="submit" class="modal-btn modal-btn-primary">Create Account</button>
-        <p id="signupError" class="text-red-500 text-sm hidden" role="alert" aria-live="polite"></p>
-      </form>
-    `;
-
-    // Create a modal via global system with empty message (we'll replace content)
-    const backdrop = window.modal.create({ title: '', message: '', primaryBtn: '', secondaryBtn: null, icon: '' });
-    const container = backdrop.querySelector('.modal-container');
-    if (!container) return; // fallback
-
-    // replace content and assign id for compatibility
-    container.id = 'authModal';
-    container.innerHTML = `<div class="modal-content">${inner}</div>`;
-
-    // ensure close button works with global system
-    const closeBtn = container.querySelector('#closeAuthModal');
-    closeBtn?.addEventListener('click', () => window.modal.close());
-
-    // initialize logic on the newly injected DOM
-    initAuthModal();
-    return;
-  }
-
-  // Fallback: inject local modal (keeps previous behaviour)
+  // Fallback: inject local modal with perfect inline styles
   const modalHTML = `
-    <div id="authModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
-      <div class="bg-white rounded-lg w-full max-w-md p-6 relative" role="document">
-        <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">\n          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">\n            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>\n          </svg>\n        </button>
+    <div id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle" 
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 999999;
+        padding: 20px;
+      ">
+      <div style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+        width: 100%;
+      ">
+        <div class="modal-content" role="document" 
+          style="
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 440px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: auto;
+          ">
+          <button id="closeAuthModal" 
+            style="
+              position: absolute;
+              top: 16px;
+              right: 16px;
+              background: transparent;
+              border: none;
+              padding: 8px;
+              cursor: pointer;
+              color: #9ca3af;
+              border-radius: 6px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: background 0.2s ease;
+            "
+            >
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
 
-        <!-- Tabs -->
-        <div class="flex border-b mb-6">
-          <button id="loginTab" class="flex-1 pb-3 font-semibold border-b-2 border-black">Login</button>
-          <button id="signupTab" class="flex-1 pb-3 font-semibold text-gray-400">Sign Up</button>
+          <!-- Tabs -->
+          <div style="display: flex; gap: 0; margin-bottom: 32px; border-bottom: 2px solid #e5e7eb; justify-content: center;">
+            <button id="loginTab" 
+              style="
+                padding: 12px 32px;
+                background: transparent;
+                border: none;
+                border-bottom: 3px solid #43BDAB;
+                color: #111827;
+                font-weight: 600;
+                font-size: 15px;
+                cursor: pointer;
+                margin-bottom: -2px;
+                transition: all 0.2s ease;
+              ">Sign in</button>
+            <button id="signupTab" 
+              style="
+                padding: 12px 32px;
+                background: transparent;
+                border: none;
+                border-bottom: 3px solid transparent;
+                color: #6b7280;
+                font-weight: 600;
+                font-size: 15px;
+                cursor: pointer;
+                margin-bottom: -2px;
+                transition: all 0.2s ease;
+              ">Create account</button>
+          </div>
+
+          <!-- Title -->
+          <h2 id="authModalTitle" style="font-size: 24px; font-weight: 700; color: #111827; margin-bottom: 8px; text-align: center;">Welcome back</h2>
+          <p id="authModalSubtitle" style="font-size: 14px; color: #6b7280; text-align: center; margin-bottom: 24px;">Sign in to access your orders and exclusive offers</p>
+
+          <!-- Login Form -->
+          <form id="loginForm" style="display: flex; flex-direction: column; gap: 18px;">
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Email address</label>
+              <input type="email" id="loginEmail" required placeholder="you@example.com" 
+                style="
+                  width: 100%;
+                  padding: 12px 14px;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 8px;
+                  font-size: 15px;
+                  font-family: inherit;
+                  transition: border-color 0.2s ease;
+                  box-sizing: border-box;
+                "
+                    >
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password</label>
+              <input type="password" id="loginPassword" required placeholder="Enter your password" 
+                style="
+                  width: 100%;
+                  padding: 12px 14px;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 8px;
+                  font-size: 15px;
+                  font-family: inherit;
+                  transition: border-color 0.2s ease;
+                  box-sizing: border-box;
+                "
+                  >
+            </div>
+            <button type="submit" 
+              style="
+                width: 100%;
+                padding: 14px;
+                background: #43BDAB;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-top: 8px;
+                transition: all 0.2s ease;
+              "
+              onmouseover="this.style.background='#2dd4bf'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(67, 189, 171, 0.3)'"
+              
+              >Sign in</button>
+            <p id="loginError" style="display: none; color: #dc2626; font-size: 13px; padding: 12px; background: #fef2f2; border-radius: 8px; border-left: 3px solid #dc2626; margin-top: 4px;"></p>
+          </form>
+
+          <!-- Signup Form (hidden initially) -->
+          <form id="signupForm" style="display: none; flex-direction: column; gap: 18px;">
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Full name</label>
+              <input type="text" id="signupName" required placeholder="John Doe" 
+                style="
+                  width: 100%;
+                  padding: 12px 14px;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 8px;
+                  font-size: 15px;
+                  font-family: inherit;
+                  transition: border-color 0.2s ease;
+                  box-sizing: border-box;
+                "
+                onfocus="this.style.borderColor='#43BDAB'; this.style.boxShadow='0 0 0 3px rgba(67, 189, 171, 0.1)'"
+                onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Email address</label>
+              <input type="email" id="signupEmail" required placeholder="you@example.com" 
+                style="
+                  width: 100%;
+                  padding: 12px 14px;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 8px;
+                  font-size: 15px;
+                  font-family: inherit;
+                  transition: border-color 0.2s ease;
+                  box-sizing: border-box;
+                "
+                onfocus="this.style.borderColor='#43BDAB'; this.style.boxShadow='0 0 0 3px rgba(67, 189, 171, 0.1)'"
+                onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password</label>
+              <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters" 
+                style="
+                  width: 100%;
+                  padding: 12px 14px;
+                  border: 2px solid #e5e7eb;
+                  border-radius: 8px;
+                  font-size: 15px;
+                  font-family: inherit;
+                  transition: border-color 0.2s ease;
+                  box-sizing: border-box;
+                "
+                  >
+            <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Minimum 6 characters</p>
+            </div>
+            <button type="submit" 
+              style="
+                width: 100%;
+                padding: 14px;
+                background: #43BDAB;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-top: 8px;
+                transition: all 0.2s ease;
+              "
+              
+              >Create account</button>
+            <p id="signupError" style="display: none; color: #dc2626; font-size: 13px; padding: 12px; background: #fef2f2; border-radius: 8px; border-left: 3px solid #dc2626; margin-top: 4px;"></p>
+          </form>
         </div>
-
-        <!-- Login Form -->
-        <h2 id="authModalTitle" class="sr-only">Authentication</h2>
-        <form id="loginForm" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium mb-1">Email</label>
-            <input type="email" id="loginEmail" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black">
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Password</label>
-            <input type="password" id="loginPassword" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black">
-          </div>
-          <button type="submit" class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">Login</button>
-          <p id="loginError" class="text-red-500 text-sm hidden" role="alert" aria-live="polite"></p>
-        </form>
-
-        <!-- Signup Form (hidden initially) -->
-        <form id="signupForm" class="space-y-4 hidden">
-          <div>
-            <label class="block text-sm font-medium mb-1">Name</label>
-            <input type="text" id="signupName" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black">
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Email</label>
-            <input type="email" id="signupEmail" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black">
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Password</label>
-            <input type="password" id="signupPassword" required minlength="6" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black">
-          </div>
-          <button type="submit" class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">Create Account</button>
-          <p id="signupError" class="text-red-500 text-sm hidden" role="alert" aria-live="polite"></p>
-        </form>
       </div>
     </div>
   `;
@@ -201,25 +327,9 @@ function initAuthModal() {
   loginTab.addEventListener('click', () => setAuthScreen('login'));
   signupTab.addEventListener('click', () => setAuthScreen('signup'));
 
-  // Close modal
-  closeBtn.addEventListener('click', () => {
-    if (window.modal && typeof window.modal.close === 'function') {
-      window.modal.close();
-    } else {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      modal.style.display = 'none';
-    }
-  });
-  modal.addEventListener('click', (e) => { if (e.target === modal) {
-    if (window.modal && typeof window.modal.close === 'function') {
-      window.modal.close();
-    } else {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      modal.style.display = 'none';
-    }
-  }});
+  // Close modal (use helper to animate cleanly)
+  closeBtn.addEventListener('click', () => closeAuthModal());
+  modal.addEventListener('click', (e) => { if (e.target === modal) { closeAuthModal(); }});
 
   // Login
   loginForm.addEventListener('submit', async (e) => {
@@ -230,15 +340,36 @@ function initAuthModal() {
     try {
       const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
       const { auth } = await initFirebase();
-      await signInWithEmailAndPassword(auth, email, password);
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      modal.style.display = 'none';
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      try { console.log('[Auth] ✅ Login successful:', userCredential.user.email); } catch (e) {}
+
+      // Hide errors early
+      try { errorEl.style.display = 'none'; } catch (e) {}
       errorEl.classList.add('hidden');
+
+      // Close modal before showing toast
+      closeAuthModal();
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      if (window.toast && typeof window.toast.show === 'function') {
+        window.toast.show('Welcome back!', 'success');
+      }
+
+      // Force immediate UI update rather than waiting for observer (improves perceived latency)
+      setTimeout(() => {
+        const out = document.querySelector('[data-auth-signed-out]');
+        const inEl = document.querySelector('[data-auth-signed-in]');
+        if (out) out.style.display = 'none';
+        if (inEl) inEl.style.display = 'flex';
+        const nameEl = document.querySelector('.user-name');
+        if (nameEl) nameEl.textContent = userCredential.user.displayName || (userCredential.user.email ? userCredential.user.email.split('@')[0] : 'User');
+      }, 100);
+
     } catch (error) {
-        console.error('Firebase signIn error (raw):', error);
+      console.error('Firebase signIn error (raw):', error);
       const friendly = mapAuthError(error);
       errorEl.textContent = friendly;
+      errorEl.style.display = 'block';
       errorEl.classList.remove('hidden');
     }
   });
@@ -255,36 +386,106 @@ function initAuthModal() {
       const { auth } = await initFirebase();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
+      try { console.log('[Auth] ✅ Signup successful:', userCredential.user.email); } catch (e) {}
       await ensureUserProfile(userCredential.user);
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      modal.style.display = 'none';
+
+      try { errorEl.style.display = 'none'; } catch (e) {}
       errorEl.classList.add('hidden');
+
+      // Close modal and wait for animation
+      closeAuthModal();
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      if (window.toast && typeof window.toast.show === 'function') {
+        window.toast.show('Account created successfully! Welcome to Electric Ink.', 'success');
+      }
+
+      // Force UI update
+      setTimeout(() => {
+        const out = document.querySelector('[data-auth-signed-out]');
+        const inEl = document.querySelector('[data-auth-signed-in]');
+        if (out) out.style.display = 'none';
+        if (inEl) inEl.style.display = 'flex';
+        const nameEl = document.querySelector('.user-name');
+        if (nameEl) nameEl.textContent = name;
+      }, 100);
     } catch (error) {
       console.error('Firebase signUp error (raw):', error);
       const friendly = mapAuthError(error);
       errorEl.textContent = friendly;
+      errorEl.style.display = 'block';
       errorEl.classList.remove('hidden');
     }
   });
 
   // Ensure initial screen is login
   try { setAuthScreen('login'); } catch (e) { /* ignore */ }
+  // Add hover/focus styles via CSS (avoid inline handlers for CSP)
+  try {
+    const style = document.createElement('style');
+    style.textContent = `
+      #authModal input:focus {
+        outline: none;
+        border-color: #43BDAB !important;
+        box-shadow: 0 0 0 3px rgba(67, 189, 171, 0.1) !important;
+      }
+      #authModal button[type="submit"]:hover {
+        background: #2dd4bf !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(67, 189, 171, 0.3);
+      }
+      #authModal button[type="submit"]:active {
+        transform: translateY(0);
+      }
+      #authModal #closeAuthModal:hover {
+        background: #f3f4f6;
+        color: #374151;
+      }
+    `;
+    document.head.appendChild(style);
+  } catch (e) { /* ignore style injection errors */ }
 }
+
+  // Smoothly close the auth modal with a fade-out to avoid visual glitch
+  export function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (!modal) return;
+    // If using global modal system, prefer its close handler but still
+    // fall back to the local modal hide logic so auth modal always closes.
+    if (window.modal && typeof window.modal.close === 'function') {
+      try { window.modal.close(); } catch (e) { /* ignore */ }
+    }
+
+    // Remove any previous closing marker, then add closing marker
+    modal.classList.remove('modal-closing');
+    // Ensure modal is visible when starting fade (in case called while hidden)
+    modal.style.display = modal.style.display || 'flex';
+    // Kick off fade
+    modal.classList.add('modal-closing');
+    // After transition, hide completely
+    const timeout = 300;
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      modal.style.display = 'none';
+      modal.classList.remove('modal-closing');
+    }, timeout);
+  }
 
 // Map Firebase auth errors to user-friendly messages (avoid leaking internal details)
 function mapAuthError(err) {
-  if (!err) return 'Authentication failed. Please try again.';
+  if (!err) return 'Something went wrong. Please try again.';
   const code = err.code || '';
   const map = {
-    'auth/user-not-found': 'Account not found. Please check your email.',
+    'auth/user-not-found': 'No account found with this email. Want to create one?',
     'auth/wrong-password': 'Incorrect password. Try again or reset it.',
-    'auth/email-already-in-use': 'Email already registered. Try signing in.',
+    'auth/email-already-in-use': 'This email is already registered. Sign in instead?',
     'auth/invalid-email': 'Please enter a valid email address.',
-    'auth/weak-password': 'Password is too weak. Use 6+ characters.',
-    'auth/network-request-failed': 'Network error. Check your connection.'
+    'auth/weak-password': 'Password should be at least 6 characters long.',
+    'auth/network-request-failed': 'Connection issue. Please check your internet.',
+    'auth/too-many-requests': 'Too many attempts. Take a break and try again in a few minutes.'
   };
-  return map[code] || 'Authentication failed. Please try again.';
+  return map[code] || 'Something went wrong. Please try again.';
 }
 
 // ===== ABRIR MODAL =====
@@ -292,24 +493,54 @@ export function openAuthModal(tab = 'login') {
   let el = document.getElementById('authModal');
   if (!el) createAuthModal();
   el = document.getElementById('authModal');
-  if (!el) return;
-
-  // If using global modal system, ensure backdrop shown
-  if (el.classList.contains('modal-backdrop')) {
-    el.classList.add('show');
-  } else if (el.classList.contains('modal-container') && el.parentElement && el.parentElement.classList.contains('modal-backdrop')) {
-    el.parentElement.classList.add('show');
-  } else {
-    el.classList.remove('hidden');
-    el.classList.add('flex');
-    el.style.display = 'flex';
+  if (!el) {
+    console.error('Could not create auth modal');
+    return;
   }
 
+  // Force modal visible with high-priority inline styles
+  el.style.display = 'flex';
+  el.style.opacity = '1';
+  el.style.visibility = 'visible';
+  el.classList.remove('hidden');
+  el.classList.remove('modal-closing');
+  el.classList.add('flex');
+
+  // Ensure auth modal is on top of any other modal/backdrop
+  try { el.style.zIndex = '1000000'; } catch (e) { /* ignore style errors */ }
+
+  // Force inner content visible
+  const inner = el.querySelector('.modal-content');
+  if (inner) {
+    inner.style.display = 'block';
+    inner.style.opacity = '1';
+    inner.style.visibility = 'visible';
+    inner.style.transform = 'none';
+  }
+
+  // If auth modal is actually a modal-container created by the global modal
+  // system, ensure its backdrop is visible and has high z-index.
+  try {
+    if (el.classList.contains('modal-container') && el.parentElement && el.parentElement.classList.contains('modal-backdrop')) {
+      const backdrop = el.parentElement;
+      backdrop.style.display = 'flex';
+      backdrop.classList.add('show');
+      backdrop.style.zIndex = '999999';
+      // also ensure container is on top
+      el.style.zIndex = '1000000';
+    }
+  } catch (e) { /* ignore */ }
+
+  // Set tab
   setAuthScreen(tab);
 
-  // focus management: focus first input and trap focus inside modal/backdrop
-  const firstInput = el.querySelector('input:not([type=hidden])');
-  if (firstInput) firstInput.focus();
+  // Focus first input slightly delayed to allow DOM to settle
+  setTimeout(() => {
+    const firstInput = el.querySelector('input:not([type=hidden])');
+    if (firstInput) firstInput.focus();
+  }, 50);
+
+  // Trap focus
   addFocusTrap(el);
 }
 
@@ -396,7 +627,7 @@ function addFocusTrap(modal) {
       }
     }
     if (e.key === 'Escape') {
-      modal.classList.add('hidden');
+      closeAuthModal();
       document.removeEventListener('keydown', keyHandler);
     }
   }
@@ -409,6 +640,8 @@ function setAuthScreen(screen) {
   const signupTab = document.getElementById('signupTab');
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
+  const titleEl = document.getElementById('authModalTitle');
+  const subtitleEl = document.getElementById('authModalSubtitle');
   if (!loginTab || !signupTab || !loginForm || !signupForm) return;
   if (screen === 'signup') {
     // tab styles vary between global modal and fallback
@@ -424,6 +657,8 @@ function setAuthScreen(screen) {
     // Ensure inline display for non-utility CSS setups
     loginForm.style.display = 'none';
     signupForm.style.display = 'block';
+    if (titleEl) titleEl.textContent = 'Create your account';
+    if (subtitleEl) subtitleEl.textContent = "Join Dublin's tattoo community";
   } else {
     signupTab.classList.remove('tab-active');
     loginTab.classList.add('tab-active');
@@ -436,5 +671,7 @@ function setAuthScreen(screen) {
     // Ensure inline display for non-utility CSS setups
     signupForm.style.display = 'none';
     loginForm.style.display = 'block';
+    if (titleEl) titleEl.textContent = 'Welcome back';
+    if (subtitleEl) subtitleEl.textContent = 'Sign in to access your orders and exclusive offers';
   }
 }

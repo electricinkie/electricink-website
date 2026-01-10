@@ -3,7 +3,8 @@
 // Electric Ink IE
 // ========================================
 
-import { initAuthObserver, openLoginModal } from './auth.js';
+import { onAuthChange, openAuthModal, logout } from './auth.js';
+import { isAdmin } from './admin-check.js';
 
 'use strict';
 
@@ -29,19 +30,33 @@ import { initAuthObserver, openLoginModal } from './auth.js';
         
             <!-- Cart and Auth (Right) -->
             <div class="mobile-right-actions">
-              <button id="mobile-auth-button" class="mobile-auth-button">Sign in</button>
-              <a id="mobile-profile-button" href="/profile.html" class="mobile-profile-button hidden"><span>Profile</span></a>
+  <!-- Signed out state -->
+  <div class="header-auth" data-auth-signed-out style="display:flex;align-items:center;gap:8px;">
+    <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"/>
+        <circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      <span class="cart-count" data-cart-count>0</span>
+    </a>
+  </div>
 
-              <!-- Cart Icon (Right) -->
-              <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-          </svg>
-            <span class="cart-count" data-cart-count>0</span>
-          </a>
-        </div>
+  <!-- Signed in state -->
+  <div class="header-auth" data-auth-signed-in style="display:none;align-items:center;gap:8px;">
+    <div class="user-menu">
+      <button class="user-menu-trigger">
+        <span class="user-name">User</span>
+        <svg width="12" height="12" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div class="user-dropdown" style="display:none;">
+        <a href="/profile.html">My Profile</a>
+        <a href="/admin/dashboard.html" data-admin-only style="display:none;">Dashboard</a>
+        <button class="logout-btn">Logout</button>
+      </div>
+    </div>
+  
+  </div>
         
       </div>
     </header>
@@ -59,6 +74,10 @@ import { initAuthObserver, openLoginModal } from './auth.js';
         </button>
       </div>
       
+      <div class="mobile-auth-area mobile-auth-centered">
+        <button id="mobile-auth-button" class="mobile-auth-button">Sign in</button>
+      </div>
+
       <ul class="mobile-menu-list">
         
         <!-- Home -->
@@ -180,10 +199,37 @@ import { initAuthObserver, openLoginModal } from './auth.js';
     setupSubmenu();
     updateCartCount();
     setActiveMenuItem();
-    // Initialize auth observer and auth button in mobile header
-    try { initAuthObserver(); } catch (e) { /* ignore if auth not available */ }
+    // Auth UI wiring for mobile header
+    setupUserMenu();
     const mobAuthBtn = document.getElementById('mobile-auth-button');
-    mobAuthBtn?.addEventListener('click', () => { try { openLoginModal(); } catch (e) {} });
+    mobAuthBtn?.addEventListener('click', () => { try { openAuthModal(); } catch (e) {} });
+  }
+
+  // ────────── User Menu & Auth Helpers ──────────
+  function setupUserMenu() {
+    // Toggle user dropdown when trigger clicked
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('.user-menu-trigger');
+      if (trigger) {
+        const dropdown = trigger.parentElement.querySelector('.user-dropdown');
+        if (dropdown) dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        return;
+      }
+      // Close open dropdowns when clicking outside
+      document.querySelectorAll('.user-dropdown').forEach(dd => {
+        if (!dd.contains(e.target)) dd.style.display = 'none';
+      });
+    });
+
+    // Logout handler
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.logout-btn');
+      if (btn) {
+        try { logout().catch(() => {}); } catch (err) {}
+        const dd = btn.closest('.user-dropdown');
+        if (dd) dd.style.display = 'none';
+      }
+    });
   }
 
   // ────────── Menu Toggle ──────────
@@ -281,15 +327,58 @@ import { initAuthObserver, openLoginModal } from './auth.js';
     initMobileHeader();
   }
 
-  // init auth observer & wire mobile auth button
-  try { initAuthObserver(); } catch (e) { /* ignore */ }
-  const mobAuthBtn = document.getElementById('mobile-auth-button');
-  mobAuthBtn?.addEventListener('click', () => {
-    try { openLoginModal(); } catch (e) { /* ignore */ }
-  });
+  // Wire global auth state using the shared `onAuthChange` observer
+  try {
+    onAuthChange(async (user) => {
+      const signedOut = document.querySelector('[data-auth-signed-out]');
+      const signedIn = document.querySelector('[data-auth-signed-in]');
+      const userName = document.querySelector('.user-name');
+      const adminOnlyEls = document.querySelectorAll('[data-admin-only]');
+      const mobileAdminLink = document.getElementById('mobile-admin-link');
+
+      if (user) {
+        if (signedOut) signedOut.style.display = 'none';
+        if (signedIn) signedIn.style.display = 'flex';
+        if (userName) userName.textContent = user.displayName || user.email || 'User';
+        let admin = false;
+        try { admin = await isAdmin({ user }); } catch (e) { admin = false; }
+        adminOnlyEls.forEach(el => el.style.display = admin ? '' : 'none');
+        if (mobileAdminLink) mobileAdminLink.style.display = admin ? 'block' : 'none';
+      } else {
+        if (signedOut) signedOut.style.display = 'flex';
+        if (signedIn) signedIn.style.display = 'none';
+        adminOnlyEls.forEach(el => el.style.display = 'none');
+        if (mobileAdminLink) mobileAdminLink.style.display = 'none';
+      }
+    });
+  } catch (e) {
+    // ignore if auth subsystem not available
+  }
 
   // ────────── Export for manual init ──────────
   window.MobileHeader = {
     init: initMobileHeader,
     updateCartCount: updateCartCount
   };
+
+// Fallback: immediately apply current auth state to header on load.
+(async () => {
+  try {
+    const m = await import('./auth.js');
+    const { getCurrentUser } = m;
+    const user = await getCurrentUser();
+    const signedOut = document.querySelector('[data-auth-signed-out]');
+    const signedIn = document.querySelector('[data-auth-signed-in]');
+    const nameEl = document.querySelector('.user-name');
+    if (user) {
+      if (signedOut) signedOut.style.display = 'none';
+      if (signedIn) signedIn.style.display = 'flex';
+      if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+    } else {
+      if (signedOut) signedOut.style.display = 'flex';
+      if (signedIn) signedIn.style.display = 'none';
+    }
+  } catch (e) {
+    // non-fatal; onAuthChange will handle updates when available
+  }
+})();

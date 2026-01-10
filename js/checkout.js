@@ -202,7 +202,13 @@ import { getCurrentUser } from './auth.js';
   // Fetch user discount percent from Firestore (non-blocking but awaited by init)
   async function fetchUserDiscountPercent() {
     try {
-      const user = await getCurrentUser();
+      // Make auth optional: getCurrentUser may throw if Firebase not configured.
+      let user = null;
+      try {
+        user = await getCurrentUser();
+      } catch (e) {
+        user = null;
+      }
       if (!user) return;
       const { db } = await initFirebase();
       const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
@@ -1087,11 +1093,17 @@ import { getCurrentUser } from './auth.js';
 
       // Send to backend for SECURE price calculation
       // Attach authUid when available so backend can associate orders to UID
-      const currentUser = await getCurrentUser();
+      // Auth is optional — callers should continue as guest when no user available
+      let currentUser = null;
+      try {
+        currentUser = await getCurrentUser();
+      } catch (e) {
+        currentUser = null;
+      }
       const orderData = {
         cartItems: cartItems,
         shippingAddress: shippingAddress,
-        authUid: currentUser?.uid || null,
+        authUid: (currentUser && currentUser.uid) ? currentUser.uid : null,
         metadata: {
           customer_email: elements.form.email.value,
           customer_name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,

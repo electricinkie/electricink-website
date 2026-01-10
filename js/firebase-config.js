@@ -1,60 +1,38 @@
-// Lightweight Firebase initializer (modular SDK via CDN)
-// USAGE and CONFIG
-// The module expects a Firebase client config available as `window.FIREBASE_CONFIG`.
-// You should set this object in your HTML before importing any modules that
-// call `initFirebase`.
-// Example (place in your HTML <head> or just before the module script):
-//
-// <script>
-//   window.FIREBASE_CONFIG = {
-//     apiKey: "YOUR_API_KEY",
-//     authDomain: "your-project.firebaseapp.com",
-//     projectId: "your-project-id",
-//     storageBucket: "your-project.appspot.com",
-//     messagingSenderId: "1234567890",
-//     appId: "1:1234567890:web:abcdefg",
-//   };
-// </script>
-// <script type="module" src="/js/profile.js"></script>
-//
-// Security note: Do NOT commit secrets to the repository. Use build-time
-// environment injection or hosting provider environment variables to supply
-// the `window.FIREBASE_CONFIG` values in production. The values above are safe
-// to appear in client-side code (they are Firebase public config), but keep
-// credentials for admin/service accounts out of the client.
-//
-// Usage: await initFirebase(window.FIREBASE_CONFIG)
+// ============================================
+// Firebase Config - FIXED PERSISTENCE
+// ============================================
+// MUDANÇAS:
+// 1. setPersistence ANTES de retornar auth
+// 2. Persistence configurada ANTES de qualquer auth operation
+// 3. Logs de debug para troubleshooting
+// ============================================
+
 let _app = null;
 let _auth = null;
 let _db = null;
 
-// Timeout for CDN imports (ms). If imports fail or take too long we degrade gracefully.
 const FIREBASE_IMPORT_TIMEOUT = 5000;
 
 function importWithTimeout(src) {
-  // Wrap dynamic import in a timeout to avoid hanging page loads when CDN is blocked
   return Promise.race([
     import(src),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('Import timeout: ' + src)), FIREBASE_IMPORT_TIMEOUT))
+    new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Import timeout: ' + src)), FIREBASE_IMPORT_TIMEOUT)
+    )
   ]);
 }
 
-/**
- * Initialize Firebase (modular SDK) with graceful degradation.
- * On failure this function does NOT throw; it returns an object with
- * `ready: false` and `error` populated so callers can avoid crashing.
- *
- * IMPORTANT: callers that depend on firebase should check the returned
- * `auth` / `db` values before using them, or rely on the helper
- * `hideFirebaseDependentUI()` to remove UI elements that require Firebase.
- */
 export async function initFirebase(config) {
-  if (_app) return { app: _app, auth: _auth, db: _db, ready: true };
+  // ✅ Se já inicializado, retorna cached instance
+  if (_app && _auth && _db) {
+    console.log('[Firebase] Using cached instance');
+    return { app: _app, auth: _auth, db: _db, ready: true };
+  }
+
   const cfg = config || window.FIREBASE_CONFIG;
   if (!cfg) {
     const msg = 'FIREBASE_CONFIG not provided. Set window.FIREBASE_CONFIG before loading firebase-config.js';
     console.warn(msg);
-    // Provide graceful object instead of throwing to allow page to render fallbacks
     window.__FIREBASE_READY = false;
     window.__FIREBASE_ERROR = msg;
     hideFirebaseDependentUI();
@@ -62,22 +40,67 @@ export async function initFirebase(config) {
   }
 
   try {
+    // ✅ PASSO 1: Import todos os módulos necessários
     const [{ initializeApp }, authMod, firestoreMod] = await Promise.all([
       importWithTimeout('https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js'),
       importWithTimeout('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js'),
       importWithTimeout('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js')
     ]);
 
-    _app = initializeApp(cfg);
-    _auth = authMod.getAuth(_app);
-    _db = firestoreMod.getFirestore(_app);
+    console.log('[Firebase] ✅ SDK modules loaded');
 
+    // ✅ PASSO 2: Initialize app
+    _app = initializeApp(cfg);
+    console.log('[Firebase] ✅ App initialized');
+
+    // ✅ PASSO 3: Get auth instance
+    _auth = authMod.getAuth(_app);
+    console.log('[Firebase] ✅ Auth instance created');
+
+    // ✅ PASSO 4: CRITICAL - Set persistence BEFORE returning auth
+    // This MUST complete before any signIn/signUp operations
+    try {
+      await authMod.setPersistence(_auth, authMod.browserLocalPersistence);
+      console.log('[Firebase] ✅ Persistence set to LOCAL (browserLocalPersistence)');
+    } catch (persistErr) {
+      console.error('[Firebase] ❌ CRITICAL: Could not set persistence:', persistErr);
+      console.warn('[Firebase] ⚠️ User WILL be logged out on page reload!');
+      // Still proceed but warn loudly
+    }
+
+    // ✅ PASSO 5: Verify storage availability (diagnostic)
+    try {
+      // Test localStorage
+      localStorage.setItem('firebase-persistence-test', '1');
+      localStorage.removeItem('firebase-persistence-test');
+      console.log('[Firebase] ✅ localStorage available');
+
+      // Test IndexedDB (Firebase uses this for persistence)
+      const testIDB = indexedDB.open('firebase-persistence-test');
+      testIDB.onsuccess = () => {
+        console.log('[Firebase] ✅ IndexedDB available');
+        try { indexedDB.deleteDatabase('firebase-persistence-test'); } catch (e) {}
+      };
+      testIDB.onerror = () => {
+        console.warn('[Firebase] ⚠️ IndexedDB blocked - persistence may fail');
+      };
+    } catch (e) {
+      console.warn('[Firebase] ⚠️ Storage check failed:', e.message);
+    }
+
+    // ✅ PASSO 6: Initialize Firestore
+    _db = firestoreMod.getFirestore(_app);
+    console.log('[Firebase] ✅ Firestore initialized');
+
+    // ✅ PASSO 7: Mark as ready
     window.__FIREBASE_READY = true;
     window.__FIREBASE_ERROR = null;
+
+    console.log('[Firebase] ✅ Fully initialized and ready');
     return { app: _app, auth: _auth, db: _db, ready: true };
+
   } catch (err) {
-    // Log a friendly message and hide UI parts that depend on Firebase
-    console.warn('Failed to initialize Firebase (graceful fallback):', err && err.message);
+    console.error('[Firebase] ❌ Initialization failed:', err);
     window.__FIREBASE_READY = false;
     window.__FIREBASE_ERROR = err && err.message;
     hideFirebaseDependentUI();
@@ -99,29 +122,20 @@ export function getFirestoreInstance() {
   return _db;
 }
 
-/**
- * Hide elements that depend on Firebase, and optionally show fallbacks.
- * Use `data-firebase-required` on elements that must be hidden when Firebase is unavailable.
- * Use `data-firebase-fallback` on elements that should be shown instead.
- */
 export function hideFirebaseDependentUI() {
   try {
-    // Hide all elements marked as requiring Firebase
     const required = document.querySelectorAll('[data-firebase-required]');
     required.forEach(el => { el.style.display = 'none'; });
 
-    // Show fallback elements if present
     const fallbacks = document.querySelectorAll('[data-firebase-fallback]');
     fallbacks.forEach(el => { el.style.display = ''; });
 
-    // If there's a generic fallback container, populate with message
     const generic = document.getElementById('firebase-fallback');
     if (generic) {
       generic.innerText = 'Some features are temporarily unavailable. Please refresh or try again later.';
       generic.style.display = '';
     }
   } catch (e) {
-    // Non-fatal
     console.warn('hideFirebaseDependentUI failed:', e && e.message);
   }
 }

@@ -1,5 +1,29 @@
 import { initFirebase } from './firebase-config.js';
 import { initAuth, getCurrentUser, logout, openAuthModal, onAuthChange } from './auth.js';
+// Protect profile page: redirect guest users away early without affecting checkout
+async function protectProfile() {
+  try {
+    // Init auth if available (non-fatal)
+    try { await initAuth().catch(() => {}); } catch (e) { /* ignore */ }
+    const user = await getCurrentUser();
+    if (!user) {
+      alert('Please sign in to view your profile');
+      window.location.href = '/';
+      return;
+    }
+    // If user exists, continue — other init code will run as normal
+  } catch (e) {
+    console.error('Profile init failed:', e);
+    window.location.href = '/';
+  }
+}
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', protectProfile);
+  } else {
+    protectProfile();
+  }
+}
 import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
 
 const PAGE_SIZE = 5;
