@@ -65,7 +65,10 @@ async function loadOrders(status = 'all') {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td><strong>${docSnap.id}</strong></td>
-      <td>${order.customerName || order.customerEmail || ''}</td>
+      <td>
+        ${order.customerName || order.customerEmail || ''}
+        ${order.userId ? `<div class="small muted">UID: ${order.userId}</div>` : ''}
+      </td>
       <td>${formatDate(order.createdAt)}</td>
       <td>€${Number(order.total || 0).toFixed(2)}</td>
       <td><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
@@ -85,10 +88,11 @@ window.viewOrder = async function(orderId) {
   const order = snap.data();
   currentOrderId = orderId;
 
-  const detailsHtml = `
+    const detailsHtml = `
     <div class="order-info">
       <p><strong>Order ID:</strong> ${orderId}</p>
       <p><strong>Cliente:</strong> ${order.customerName || ''}</p>
+      <p><strong>UID:</strong> ${order.userId || 'guest'}</p>
       <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
       <p><strong>Data:</strong> ${formatDate(order.createdAt)}</p>
       <p><strong>Status:</strong> ${translateStatus(order.status)}</p>
@@ -109,21 +113,41 @@ window.viewOrder = async function(orderId) {
 window.markAsShipped = async function() {
   if (!currentOrderId) return;
   if (!confirm('Marcar pedido como enviado?')) return;
-  const { doc, updateDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-  await updateDoc(doc(db, 'orders', currentOrderId), { status: 'shipped', shippedAt: serverTimestamp() });
-
-  // trigger backend email
   try {
-    await fetch('/api/send-shipping-confirmation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: currentOrderId })
-    });
-  } catch (e) { console.warn('Email send failed', e); }
+    // Get Firebase ID token to authenticate to server endpoint
+    const token = await auth.currentUser.getIdToken();
 
-  alert('Pedido marcado como enviado!');
-  window.closeModal();
-  await loadDashboard();
+    // Call serverless API which uses OrderManager.updateStatus and creates order-events
+    const resp = await fetch('/api/update-order-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ orderId: currentOrderId, status: 'shipped' })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || 'Failed to update order status');
+    }
+
+    // trigger backend email (unchanged) — server will have recorded the event
+    try {
+      await fetch('/api/send-shipping-confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: currentOrderId })
+      });
+    } catch (e) { console.warn('Email send failed', e); }
+
+    alert('Pedido marcado como enviado!');
+    window.closeModal();
+    await loadDashboard();
+  } catch (err) {
+    console.error('Failed to mark as shipped', err);
+    alert('Não foi possível atualizar o status do pedido: ' + (err.message || 'Erro desconhecido'));
+  }
 };
 
 window.quickShip = async function(orderId) {

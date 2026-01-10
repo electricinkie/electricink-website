@@ -347,6 +347,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     // Usar apenas campos *_cents da metadata (valores em cents)
     const subtotal_cents = parseInt(paymentIntent.metadata.subtotal_cents || '0', 10);
     const shipping_cents = parseInt(paymentIntent.metadata.shipping_cents || '0', 10);
+    const discount_cents = parseInt(paymentIntent.metadata.discount_cents || '0', 10);
+    const discount_percent = parseFloat(paymentIntent.metadata.discount_percent || paymentIntent.metadata.discount || '0');
 
     const customerEmail = paymentIntent.metadata.customer_email || paymentIntent.receipt_email || 'no-email@electricink.ie';
     const customerName = paymentIntent.metadata.customer_name || 'Customer';
@@ -377,13 +379,27 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       total_cents: paymentIntent.amount,
       // Backwards-compatible human-readable values (EUR)
       shippingCost: (shipping_cents / 100),
+      // `subtotal` remains pre-discount; include discount fields separately
       subtotal: (subtotal_cents / 100),
+      discount_cents: discount_cents,
+      discount_percent: discount_percent,
+      discounted_subtotal: ((subtotal_cents - discount_cents) / 100),
       total: (paymentIntent.amount / 100),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       paidAt: admin.firestore.FieldValue.serverTimestamp(),
       source: 'webhook',
       webhookEventId: event.id
     };
+    // Associate `userId` when PaymentIntent metadata contains an authenticated UID.
+    // We accept a few possible metadata keys for compatibility with older clients.
+    const userIdFromMetadata = paymentIntent.metadata?.user_uid || paymentIntent.metadata?.authUid || paymentIntent.metadata?.userId || paymentIntent.metadata?.user_id || null;
+    if (userIdFromMetadata) {
+      // Attach canonical `userId` field so Firestore reads/queries can use UID-first lookup.
+      order.userId = String(userIdFromMetadata);
+    } else {
+      // When absent, we intentionally leave `userId` undefined (guest flow).
+      // Webhook-created guest orders will still have `customerEmail` for email-based lookup.
+    }
     // Tentar criar document com ID específico (atomicidade)
     const orderRef = db.collection('orders').doc(orderId);
     console.log('🔍 Iniciando transaction para order:', orderId);

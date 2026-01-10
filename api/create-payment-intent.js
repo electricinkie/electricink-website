@@ -379,9 +379,58 @@ module.exports = async function handler(req, res) {
     // Improved error handling
     try {
       const crypto = require('crypto');
-      const totals = validateAndCalculateTotal(items, shippingAddress);
+      const totalsRaw = validateAndCalculateTotal(items, shippingAddress);
+      // totalsRaw contains subtotal, shipping, vat, total (pre-discount)
+      let discountPercent = 0;
+      try {
+        // Attempt to read discount from Firestore (prefer uid, fallback to email)
+        initFirestore();
+        if (admin && admin.apps && admin.apps.length) {
+          const db = admin.firestore();
+          const providedUidLocal = providedUid;
+          if (providedUidLocal) {
+            const userDoc = await db.collection('users').doc(String(providedUidLocal)).get();
+            if (userDoc.exists) {
+              discountPercent = Number(userDoc.data()?.discount || 0) || 0;
+            }
+          } else if (req.body.customer_email || req.body.email || incomingMetadata.customer_email) {
+            const emailToFind = req.body.customer_email || req.body.email || incomingMetadata.customer_email;
+            try {
+              const q = await db.collection('users').where('email', '==', String(emailToFind)).limit(1).get();
+              if (!q.empty) {
+                discountPercent = Number(q.docs[0].data()?.discount || 0) || 0;
+              }
+            } catch (qe) {
+              logger.warn('User lookup by email failed', qe && qe.message);
+            }
+          }
+        }
+      } catch (e) {
+        logger.warn('Failed to read discount from Firestore', e && e.message);
+      }
+
+      // Apply discount server-side (ignore any client-supplied discount)
+      const subtotal = Number(totalsRaw.subtotal || 0);
+      const shipping = Number(totalsRaw.shipping || 0);
+      const discountAmount = parseFloat(((discountPercent / 100) * subtotal).toFixed(2));
+      const discountedSubtotal = Math.max(0, parseFloat((subtotal - discountAmount).toFixed(2)));
+      const VAT_RATE = 0.23;
+      const vat = parseFloat(((discountedSubtotal + shipping) * VAT_RATE).toFixed(2));
+      const total = parseFloat((discountedSubtotal + shipping + vat).toFixed(2));
+
+      const totals = {
+        subtotal: subtotal,
+        discountPercent: discountPercent,
+        discount: discountAmount,
+        discountedSubtotal: discountedSubtotal,
+        shipping: shipping,
+        vat: vat,
+        total: total
+      };
       logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
+        discountPercent: totals.discountPercent,
+        discount: totals.discount,
         shipping: totals.shipping,
         vat: totals.vat,
         total: totals.total
@@ -410,8 +459,19 @@ module.exports = async function handler(req, res) {
         items: JSON.stringify(items.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity }))),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
+        discount_percent: String(totals.discountPercent || 0),
+        discount_cents: String(Math.round((totals.discount || 0) * 100)),
+        discounted_subtotal_cents: String(Math.round((totals.discountedSubtotal || totals.subtotal) * 100)),
         backend_validated: 'true'
       };
+      // If client provides an authenticated UID, propagate it into Stripe metadata.
+      // This allows the webhook to associate the resulting Order with the correct
+      // Firebase `userId`. We accept `authUid` in the top-level body or inside
+      // `metadata` to remain backwards-compatible with existing clients.
+      const providedUid = req.body.authUid || incomingMetadata.authUid || incomingMetadata.user_uid || incomingMetadata.userId || incomingMetadata.user_id || null;
+      if (providedUid) {
+        metadataSanitized.user_uid = String(providedUid);
+      }
       metadata = metadataSanitized;
 
       // Build a CHECKOUT payload using explicit `stripe_price_id` provided by the
@@ -444,6 +504,9 @@ module.exports = async function handler(req, res) {
           subtotal: totals.subtotal.toFixed(2),
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),
+          discount_percent: String(totals.discountPercent || 0),
+          discount: totals.discount != null ? totals.discount.toFixed(2) : '0.00',
+          discounted_subtotal: (totals.discountedSubtotal || totals.subtotal).toFixed(2),
           items_count: items.length,
           backend_validated: 'true' // Security flag
         },

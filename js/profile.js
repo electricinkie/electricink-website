@@ -1,6 +1,6 @@
 import { initFirebase } from './firebase-config.js';
 import { initAuth, getCurrentUser, logout } from './auth.js';
-import { getUserOrdersByEmail } from './orders.js';
+import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
 
 function formatCurrency(v) {
   return `€${v.toFixed(2)}`;
@@ -56,7 +56,17 @@ async function loadProfile() {
 
   // Load orders
   try {
-    const orders = await getUserOrdersByEmail(user.email);
+    // Prefer UID-based lookup (more reliable). Fall back to email-based
+    // lookup for legacy/guest orders that predate UID association.
+    let orders = [];
+    try {
+      orders = await getUserOrdersByUid(user.uid, 100);
+    } catch (e) {
+      console.warn('UID lookup failed, falling back to email', e);
+    }
+    if (!orders || orders.length === 0) {
+      orders = await getUserOrdersByEmail(user.email, 100);
+    }
     await renderOrders(orders);
   } catch (err) {
     console.warn('Failed to load orders', err);
@@ -77,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 import { openAuthModal, logout as authLogout, onAuthChange, getCurrentUser } from './auth.js';
-import { getUserOrdersByEmail } from './orders.js';
+import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
 import { initFirebase } from './firebase-config.js';
 
 const PAGE_SIZE = 5;
@@ -152,7 +162,21 @@ async function loadOrders(email) {
     allOrders = [];
     visibleCount = PAGE_SIZE;
     // Attempt to fetch orders (if Firebase config missing, this will throw)
-    const orders = await getUserOrdersByEmail(email, 100);
+    let orders = [];
+    // If `email` contains an @ assume it's an email; otherwise assume it's a uid
+    if (typeof email === 'string' && email.indexOf('@') === -1) {
+      // uid
+      orders = await getUserOrdersByUid(email, 100);
+      if (!orders || orders.length === 0) {
+        // fallback: try email lookup using current user email
+        try {
+          const user = await getCurrentUser();
+          if (user && user.email) orders = await getUserOrdersByEmail(user.email, 100);
+        } catch (e) { /* ignore */ }
+      }
+    } else {
+      orders = await getUserOrdersByEmail(email, 100);
+    }
     allOrders = orders || [];
     renderOrders();
   } catch (err) {

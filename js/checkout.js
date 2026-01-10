@@ -1078,9 +1078,12 @@ import { getCurrentUser } from './auth.js';
       };
 
       // Send to backend for SECURE price calculation
+      // Attach authUid when available so backend can associate orders to UID
+      const currentUser = await getCurrentUser();
       const orderData = {
         cartItems: cartItems,
         shippingAddress: shippingAddress,
+        authUid: currentUser?.uid || null,
         metadata: {
           customer_email: elements.form.email.value,
           customer_name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
@@ -1110,25 +1113,19 @@ import { getCurrentUser } from './auth.js';
         throw new Error('Invalid response from payment server');
       }
 
-      // Verify backend calculations match frontend
+      // Verify backend calculations match frontend and always prefer backend
       if (data.calculatedTotals) {
         console.log('✅ Backend price validation:', data.calculatedTotals);
-        
-        // Check if totals differ significantly (allow 0.01 rounding)
-        const diff = Math.abs(data.calculatedTotals.total - totals.total);
-        if (diff > 0.02) {
-          console.warn('⚠️ Price mismatch detected:', {
-            frontend: totals.total,
-            backend: data.calculatedTotals.total
-          });
-          
-          // Update frontend totals with backend values (backend is source of truth)
-          totals.subtotal = data.calculatedTotals.subtotal;
-          totals.shipping = data.calculatedTotals.shipping;
-          totals.vat = data.calculatedTotals.vat;
-          totals.total = data.calculatedTotals.total;
-          renderOrderSummary();
-        }
+
+        // Update frontend totals with backend values (backend is source of truth)
+        totals.subtotal = Number(data.calculatedTotals.subtotal || totals.subtotal);
+        totals.shipping = Number(data.calculatedTotals.shipping || totals.shipping);
+        totals.vat = Number(data.calculatedTotals.vat || totals.vat);
+        totals.total = Number(data.calculatedTotals.total || totals.total);
+        totals.discountPercent = Number(data.calculatedTotals.discountPercent || 0);
+        totals.discount = Number(data.calculatedTotals.discount || 0);
+        // Re-render summary with authoritative values
+        renderOrderSummary();
       }
 
       return data.clientSecret;

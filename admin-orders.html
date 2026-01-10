@@ -37,5 +37,26 @@
 
       boot();
     </script>
+    <script type="module">
+      import { requireAdmin, setupAdminUI, initAdminRealtimeListener } from '/js/admin-check.js';
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        // Ensure only admins see this page and toggle admin/user UI
+        await requireAdmin();
+        await setupAdminUI();
+
+        // Listen for role changes and redirect if admin role is removed
+        initAdminRealtimeListener({
+          onChange: (isAdmin) => {
+            if (!isAdmin) {
+              alert('Seu acesso de administrador foi removido. Redirecionando.');
+              window.location.href = '/';
+              return;
+            }
+            setupAdminUI({ forceRefresh: true });
+          }
+        });
+      });
+    </script>
   </body>
 </html>
