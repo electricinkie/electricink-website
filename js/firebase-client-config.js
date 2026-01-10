@@ -22,5 +22,17 @@
     measurementId: "G-F7X261EJYH"
   };
 
-  console.warn('No injected FIREBASE_CONFIG found; using fallback config from js/firebase-client-config.js.\nConsider injecting config at deploy time and avoid committing API keys.');
+  // Only warn when running in a non-local environment to avoid noise during
+  // local development. Treat localhost, 127.0.0.1 and file:// as local.
+  try {
+    const host = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : '';
+    const isLocal = /^(localhost|127\.0\.0\.1|::1)$/.test(host) || (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:');
+    if (!isLocal) {
+      console.warn('No injected FIREBASE_CONFIG found; using fallback config from js/firebase-client-config.js.\nConsider injecting config at deploy time and avoid committing API keys.');
+    } else {
+      console.debug('No injected FIREBASE_CONFIG found; using local fallback (expected in dev).');
+    }
+  } catch (e) {
+    console.warn('No injected FIREBASE_CONFIG found; using fallback config (and failed to detect host).');
+  }
 })();
