@@ -1,4 +1,179 @@
 import { initFirebase } from './firebase-config.js';
+import { initAuth, getCurrentUser, logout, openAuthModal, onAuthChange } from './auth.js';
+import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
+
+const PAGE_SIZE = 5;
+let allOrders = [];
+let visibleCount = PAGE_SIZE;
+
+function el(id) { return document.getElementById(id); }
+
+function initials(name) {
+  if (!name) return 'U';
+  return name.split(' ').map(n => n[0] || '').slice(0,2).join('').toUpperCase();
+}
+
+function formatCurrency(v) {
+  return `€${(v != null ? (typeof v === 'number' ? v : v/100) : 0).toFixed(2)}`;
+}
+
+function formatDate(ts) {
+  try { const d = new Date(ts); return d.toLocaleDateString(); } catch (e) { return ts; }
+}
+
+function renderProfile(user) {
+  if (!user) return;
+  const card = el('profileCard'); if (!card) return;
+  card.style.display = 'flex';
+  el('profileName').textContent = user.displayName || 'Customer';
+  el('profileEmail').textContent = user.email || '';
+  const avatar = el('avatar'); if (avatar) avatar.textContent = initials(user.displayName || user.email);
+}
+
+function renderOrdersList() {
+  const list = el('ordersList'); if (!list) return;
+  list.innerHTML = '';
+  const slice = allOrders.slice(0, visibleCount);
+  if (!slice || slice.length === 0) {
+    list.innerHTML = '<div class="orders-empty">No orders found.</div>';
+    el('loadMoreBtn') && (el('loadMoreBtn').style.display = 'none');
+    return;
+  }
+
+  slice.forEach(o => {
+    const status = o.status || o.order_status || 'unknown';
+    const total = formatCurrency(o.total);
+    const created = o.createdAt ? (o.createdAt.seconds ? (new Date(o.createdAt.seconds*1000)).toISOString() : o.createdAt) : o.date || '';
+
+    const item = document.createElement('div');
+    item.className = 'order-card';
+    item.innerHTML = `
+      <div class="order-row">
+        <div class="order-id">${o.id || o.orderId || ''}</div>
+        <div class="order-meta">${formatDate(created)} · <strong>${total}</strong></div>
+      </div>
+      <div class="order-actions">
+        <button class="btn-link view-details" data-id="${o.id || o.orderId}">View details</button>
+        <span class="order-status ${status}">${status}</span>
+      </div>
+      <div class="order-details" id="details-${o.id || o.orderId}" style="display:none"></div>
+    `;
+    list.appendChild(item);
+  });
+
+  if (allOrders.length > visibleCount) el('loadMoreBtn') && (el('loadMoreBtn').style.display = 'inline-block');
+  else el('loadMoreBtn') && (el('loadMoreBtn').style.display = 'none');
+}
+
+async function loadOrders(identifier) {
+  try {
+    allOrders = [];
+    visibleCount = PAGE_SIZE;
+    let orders = [];
+    if (typeof identifier === 'string' && identifier.indexOf('@') === -1) {
+      // treat as uid
+      orders = await getUserOrdersByUid(identifier, 100);
+      if ((!orders || orders.length === 0)) {
+        const user = await getCurrentUser();
+        if (user && user.email) orders = await getUserOrdersByEmail(user.email, 100);
+      }
+    } else {
+      orders = await getUserOrdersByEmail(identifier, 100);
+    }
+    allOrders = orders || [];
+    renderOrdersList();
+  } catch (err) {
+    console.error('Orders load failed', err);
+    const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-error">Could not load orders.</div>';
+  }
+}
+
+async function loadUserProfile(uid) {
+  try {
+    const { db } = await initFirebase();
+    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+    const ref = doc(db, 'users', uid);
+    const snap = await getDoc(ref);
+    return snap.exists() ? snap.data() : null;
+  } catch (err) {
+    console.warn('Could not load user profile doc', err);
+    return null;
+  }
+}
+
+function attachEvents() {
+  const signInCta = el('signInCta');
+  signInCta?.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('login'); });
+
+  el('logoutBtn')?.addEventListener('click', async () => {
+    try { await logout(); window.location.href = '/'; } catch (e) { console.warn(e); }
+  });
+
+  el('editForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = el('editName').value.trim();
+    try {
+      try {
+        const { auth } = await initFirebase();
+        const { updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+        if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name });
+      } catch (inner) { console.warn('Could not update profile on Firebase', inner); }
+      el('profileName').textContent = name || 'Customer';
+      el('avatar').textContent = initials(name || el('profileEmail').textContent);
+      el('editMsg').textContent = 'Saved';
+      setTimeout(() => { el('editModal').style.display = 'none'; }, 700);
+    } catch (err) {
+      console.error('Save profile failed', err);
+      el('editMsg').textContent = 'Could not save profile.';
+    }
+  });
+
+  el('loadMoreBtn')?.addEventListener('click', () => { visibleCount += PAGE_SIZE; renderOrdersList(); });
+
+  el('ordersList')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.view-details'); if (!btn) return;
+    const id = btn.dataset.id; const detailsEl = el(`details-${id}`); if (!detailsEl) return;
+    if (detailsEl.style.display === 'none') {
+      const order = allOrders.find(o => (o.id || o.orderId) === id);
+      detailsEl.innerHTML = `<pre class="order-pre">${JSON.stringify(order, null, 2)}</pre>`;
+      detailsEl.style.display = 'block'; btn.textContent = 'Hide details';
+    } else { detailsEl.style.display = 'none'; btn.textContent = 'View details'; }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  attachEvents();
+  (async () => {
+    try { await initAuth().catch(() => {}); } catch (e) { /* ignore */ }
+    try {
+      await onAuthChange(async (user) => {
+        if (user) {
+          el('signInCta') && (el('signInCta').style.display = 'none');
+          renderProfile(user);
+          try {
+            const profileDoc = await loadUserProfile(user.uid);
+            if (profileDoc && typeof profileDoc.discount === 'number' && profileDoc.discount > 0) {
+              const badge = el('discount-badge') || el('profile-discount-badge');
+              const value = el('discount-value') || el('profile-discount-value');
+              if (badge && value) { value.textContent = `${profileDoc.discount}%`; badge.style.display = ''; }
+            }
+          } catch (inner) { /* ignore */ }
+          await loadOrders(user.uid || user.email);
+        } else {
+          el('signInCta') && (el('signInCta').style.display = 'inline-block');
+          const card = el('profileCard'); if (card) card.style.display = 'none';
+          const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
+        }
+      });
+    } catch (err) {
+      console.warn('Auth observer not available', err);
+      el('signInCta') && (el('signInCta').style.display = 'inline-block');
+      const card = el('profileCard'); if (card) card.style.display = 'none';
+      const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
+    }
+  })();
+});
+import { initFirebase } from './firebase-config.js';
 import { initAuth, getCurrentUser, logout } from './auth.js';
 import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
 
