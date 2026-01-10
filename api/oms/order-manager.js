@@ -49,7 +49,14 @@ class OrderManager {
     // 🎯 CORREÇÃO CRÍTICA:
     // Se userId já existe (setado pelo webhook via authUid), PRESERVA
     // Se não existe, usa email como fallback (guest checkout)
-    const userId = orderData.userId || orderData.customerEmail || 'guest';
+    const userId = (
+      orderData.userId ||
+      (orderData.metadata && (orderData.metadata.authUid || orderData.metadata.user_uid)) ||
+      orderData.user_uid ||
+      orderData.authUid ||
+      orderData.customerEmail ||
+      'guest'
+    );
     
     // Atualiza order com campos OMS
     await orderRef.update({

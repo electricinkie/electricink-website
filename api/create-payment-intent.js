@@ -380,21 +380,41 @@ module.exports = async function handler(req, res) {
     try {
       const crypto = require('crypto');
       const totalsRaw = validateAndCalculateTotal(items, shippingAddress);
+
+      // Verify ID token (if provided) to trust UID server-side.
+      // Accept token in Authorization header `Bearer <idToken>` or `req.body.idToken`.
+      let verifiedUid = null;
+      try {
+        const authHeader = req.headers.authorization || req.headers.Authorization || '';
+        const token = (authHeader && authHeader.startsWith('Bearer ')) ? authHeader.split(' ')[1] : (req.body && (req.body.idToken || req.body.token));
+        if (token && admin && admin.apps && admin.apps.length) {
+          const decoded = await admin.auth().verifyIdToken(token).catch(err => {
+            logger.warn('ID token verification failed', { err: err && err.message });
+            return null;
+          });
+          if (decoded && decoded.uid) {
+            verifiedUid = decoded.uid;
+            logger.info('Verified ID token for uid', { uid: verifiedUid });
+          }
+        }
+      } catch (err) {
+        logger.warn('Error while verifying ID token', err && err.message);
+      }
+
       // totalsRaw contains subtotal, shipping, vat, total (pre-discount)
       let discountPercent = 0;
       try {
-        // Attempt to read discount from Firestore (prefer uid, fallback to email)
+        // Attempt to read discount from Firestore (prefer verified uid, fallback to email)
         initFirestore();
         if (admin && admin.apps && admin.apps.length) {
           const db = admin.firestore();
-          const providedUidLocal = providedUid;
-          if (providedUidLocal) {
-            const userDoc = await db.collection('users').doc(String(providedUidLocal)).get();
+          if (verifiedUid) {
+            const userDoc = await db.collection('users').doc(String(verifiedUid)).get();
             if (userDoc.exists) {
               discountPercent = Number(userDoc.data()?.discount || 0) || 0;
             }
-          } else if (req.body.customer_email || req.body.email || incomingMetadata.customer_email) {
-            const emailToFind = req.body.customer_email || req.body.email || incomingMetadata.customer_email;
+          } else if (req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email)) {
+            const emailToFind = req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email);
             try {
               const q = await db.collection('users').where('email', '==', String(emailToFind)).limit(1).get();
               if (!q.empty) {
@@ -464,15 +484,18 @@ module.exports = async function handler(req, res) {
         discounted_subtotal_cents: String(Math.round((totals.discountedSubtotal || totals.subtotal) * 100)),
         backend_validated: 'true'
       };
-      // If client provides an authenticated UID, propagate it into Stripe metadata.
-      // This allows the webhook to associate the resulting Order with the correct
-      // Firebase `userId`. We accept `authUid` in the top-level body or inside
-      // `metadata` to remain backwards-compatible with existing clients.
-      const providedUid = req.body.authUid || incomingMetadata.authUid || incomingMetadata.user_uid || incomingMetadata.userId || incomingMetadata.user_id || null;
-      if (providedUid) {
-        metadataSanitized.user_uid = String(providedUid);
-        // Also include authUid for frontend/backoffice compatibility
-        metadataSanitized.authUid = String(providedUid);
+
+      // If we verified an ID token, prefer server-verified UID over any client-supplied value.
+      if (verifiedUid) {
+        metadataSanitized.user_uid = String(verifiedUid);
+        metadataSanitized.authUid = String(verifiedUid);
+      } else {
+        // Preserve client-provided authUid only when server did not verify a token
+        const providedUid = req.body.authUid || incomingMetadata.authUid || incomingMetadata.user_uid || incomingMetadata.userId || incomingMetadata.user_id || null;
+        if (providedUid) {
+          metadataSanitized.user_uid = String(providedUid);
+          metadataSanitized.authUid = String(providedUid);
+        }
       }
       metadata = metadataSanitized;
 
