@@ -217,10 +217,16 @@ import { isAdmin } from './admin-check.js';
 
     // Observe auth state
     try {
-      onAuthChange((user) => {
-        console.log('[DesktopHeader] onAuthChange callback fired. user=', user && user.email);
-        if (user) showSignedInState(user); else showSignedOutState();
-      });
+      // Singleton flag: evita múltiplos observers quando ambos headers carregam
+      if (window.__AUTH_OBSERVER_ATTACHED) {
+        console.log('[DesktopHeader] Auth observer already attached; skipping.');
+      } else {
+        onAuthChange((user) => {
+          console.log('[DesktopHeader] onAuthChange callback fired. user=', user && user.email);
+          if (user) showSignedInState(user); else showSignedOutState();
+        });
+        window.__AUTH_OBSERVER_ATTACHED = true;
+      }
     } catch (e) { console.warn('Auth observer not available', e); showSignedOutState(); }
   }
 
@@ -228,6 +234,22 @@ import { isAdmin } from './admin-check.js';
   (async () => {
     try {
       console.log('[DesktopHeader] immediate auth check start');
+      // Singleton flag: evita múltiplos observers quando ambos headers carregam
+      // Se outro header já fez o polling inicial, apenas obter o user uma vez.
+      if (window.__AUTH_POLL_DONE) {
+        try {
+          const m = await import('./auth.js');
+          const { getCurrentUser } = m;
+          const userOnce = await getCurrentUser();
+          if (userOnce) {
+            showSignedInState(userOnce);
+          } else {
+            showSignedOutState();
+          }
+        } catch (e) { /* ignore */ }
+        return;
+      }
+
       const m = await import('./auth.js');
       const { getCurrentUser } = m;
       let user = null;
@@ -242,6 +264,8 @@ import { isAdmin } from './admin-check.js';
       } else {
         console.log('[DesktopHeader] no immediate user; waiting for observer');
       }
+      // Marcar que o polling inicial já foi executado (singleton)
+      window.__AUTH_POLL_DONE = true;
     } catch (e) {
       console.warn('[DesktopHeader] immediate auth check failed:', e && e.message);
     }
