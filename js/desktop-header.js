@@ -3,8 +3,9 @@
 // Electric Ink IE
 // ========================================
 
-(function() {
-  'use strict';
+import { initAuthObserver, openLoginModal } from './auth.js';
+
+'use strict';
 
   // ────────── Header HTML Template ──────────
   const headerHTML = `
@@ -44,16 +45,22 @@
           </ul>
         </nav>
         
-        <!-- Cart Icon (Right) -->
-        <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
+        <!-- Auth / Cart (Right) -->
+        <div class="desktop-right-actions">
+          <button id="authButton" class="desktop-auth-button">Sign in</button>
+          <a id="profileButton" href="/profile.html" class="desktop-profile-link hidden" aria-label="Profile"><span>Profile</span></a>
+
+          <!-- Cart Icon (Right) -->
+          <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"/>
             <circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
           <span class="desktop-cart-count" data-cart-count>0</span>
-        </a>
-        
+          </a>
+        </div>
+
       </div>
     </header>
   `;
@@ -160,6 +167,15 @@
     setupDropdown();
     updateCartCount();
     setActiveMenuItem();
+
+    // Initialize auth observer (keeps sign-in/profile buttons in sync)
+    try { initAuthObserver(); } catch (e) { /* ignore if auth not available */ }
+
+    // Wire auth button to open modal
+    const authBtn = document.getElementById('authButton');
+    authBtn?.addEventListener('click', () => {
+      try { openLoginModal(); } catch (e) { /* ignore */ }
+    });
   }
 
   // ────────── Auto Initialize ──────────
@@ -171,5 +187,3 @@
 
   // ────────── Listen for cart updates ──────────
   window.addEventListener('cart-updated', updateCartCount);
-
-})();

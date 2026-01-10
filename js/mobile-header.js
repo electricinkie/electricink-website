@@ -3,8 +3,9 @@
 // Electric Ink IE
 // ========================================
 
-(function() {
-  'use strict';
+import { initAuthObserver, openLoginModal } from './auth.js';
+
+'use strict';
 
   // ────────── Header HTML Template ──────────
   const headerHTML = `
@@ -26,15 +27,21 @@
           <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland" style="height: 40px; width: auto;">
         </a>
         
-        <!-- Cart Icon (Right) -->
-        <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <!-- Cart and Auth (Right) -->
+            <div class="mobile-right-actions">
+              <button id="mobile-auth-button" class="mobile-auth-button">Sign in</button>
+              <a id="mobile-profile-button" href="/profile.html" class="mobile-profile-button hidden"><span>Profile</span></a>
+
+              <!-- Cart Icon (Right) -->
+              <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"/>
             <circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
-          <span class="cart-count" data-cart-count>0</span>
-        </a>
+            <span class="cart-count" data-cart-count>0</span>
+          </a>
+        </div>
         
       </div>
     </header>
@@ -216,10 +223,15 @@
 
   // ────────── Update Cart Count ──────────
   function updateCartCount() {
-    // Get cart from localStorage
-    const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
+    // Prefer global cart API when available
+    let totalItems = 0;
+    if (window.cart && typeof window.cart.getCartCount === 'function') {
+      totalItems = window.cart.getCartCount();
+    } else {
+      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
+      totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+
     // Update all cart count badges
     const cartBadges = document.querySelectorAll('[data-cart-count]');
     cartBadges.forEach(badge => {
@@ -260,10 +272,15 @@
     initMobileHeader();
   }
 
+  // init auth observer & wire mobile auth button
+  try { initAuthObserver(); } catch (e) { /* ignore */ }
+  const mobAuthBtn = document.getElementById('mobile-auth-button');
+  mobAuthBtn?.addEventListener('click', () => {
+    try { openLoginModal(); } catch (e) { /* ignore */ }
+  });
+
   // ────────── Export for manual init ──────────
   window.MobileHeader = {
     init: initMobileHeader,
     updateCartCount: updateCartCount
   };
-
-})();
