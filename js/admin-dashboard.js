@@ -363,55 +363,46 @@ document.getElementById('status-filter')?.addEventListener('change', (e) => {
 
 function formatDate(timestamp) {
   if (!timestamp) return 'N/A';
-  
+
   try {
-    // Se é Firestore Timestamp com método toDate()
-    if (timestamp.toDate && typeof timestamp.toDate === 'function') {
-      return timestamp.toDate().toLocaleString('pt-PT', { 
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit', 
-        minute: '2-digit' 
+    // Firestore Timestamp with toDate()
+    if (timestamp && typeof timestamp.toDate === 'function') {
+      return timestamp.toDate().toLocaleString('pt-PT', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
       });
     }
-    
-    // Se é plain object Firestore { seconds, nanoseconds } ou { _seconds, _nanoseconds }
-    const seconds = timestamp.seconds || timestamp._seconds;
-    if (seconds && typeof seconds === 'number') {
-      return new Date(seconds * 1000).toLocaleString('pt-PT', { 
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
+
+    // Try to normalize seconds from common shapes
+    const tryGetSeconds = (t) => {
+      if (t == null) return null;
+      if (typeof t === 'number') return t; // milliseconds or seconds depending on context
+      if (typeof t.seconds === 'number') return t.seconds;
+      if (typeof t._seconds === 'number') return t._seconds;
+      // nested or string numbers
+      if (t.seconds && typeof t.seconds === 'object') {
+        return t.seconds.seconds || t.seconds._seconds || null;
+      }
+      if (typeof t.seconds === 'string' && !isNaN(Number(t.seconds))) return Number(t.seconds);
+      if (typeof t === 'string' && !isNaN(Date.parse(t))) return Date.parse(t);
+      return null;
+    };
+
+    const sec = tryGetSeconds(timestamp);
+    if (sec != null) {
+      // If value looks like seconds (10-digit), convert to ms; if it's clearly ms (13+ digits), use directly
+      const asNumber = Number(sec);
+      const date = (asNumber > 1e12) ? new Date(asNumber) : new Date(asNumber * 1000);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
     }
-    
-    // Se é timestamp em milissegundos (number)
-    if (typeof timestamp === 'number') {
-      return new Date(timestamp).toLocaleString('pt-PT', { 
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
-    }
-    
-    // Se é string ISO ou Date
+
+    // Fallback: try Date constructor
     const date = new Date(timestamp);
     if (!isNaN(date.getTime())) {
-      return date.toLocaleString('pt-PT', { 
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
+      return date.toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
-    
-    // Fallback
+
     console.warn('Formato de timestamp não reconhecido:', timestamp);
     return 'Data inválida';
   } catch (e) {
