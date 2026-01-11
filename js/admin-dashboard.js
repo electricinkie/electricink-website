@@ -1,6 +1,5 @@
-import { initFirebase } from './firebase-config.js';
+import { initFirebase, authReady } from './firebase-config.js';
 import { requireAdmin } from './admin-check.js';
-import { logout } from './auth.js';
 
 const { auth, db } = await initFirebase();
 let currentOrderId = null;
@@ -25,7 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
 */
 
 export async function loadDashboard() {
-  const user = auth.currentUser;
+  let user = auth.currentUser;
+  if (!user) {
+    try {
+      // Wait briefly for auth restoration if transiently null
+      await Promise.race([authReady, new Promise(res => setTimeout(() => res(null), 5000))]);
+    } catch (e) {}
+    user = auth.currentUser;
+  }
   if (!user) return window.location.href = '/';
 
   document.getElementById('admin-name').textContent = user.displayName || user.email;
@@ -81,21 +87,54 @@ async function loadOrders(status = 'all') {
     snap.forEach(docSnap => {
       const order = docSnap.data();
       const row = document.createElement('tr');
+      row.classList.add('order-row');
+      row.dataset.orderId = docSnap.id;
+
       row.innerHTML = `
-      <td><strong>${docSnap.id}</strong></td>
-      <td>
+      <td data-label="Order ID"><strong>${docSnap.id}</strong></td>
+      <td data-label="Customer">
         ${order.customerName || order.customerEmail || ''}
         ${order.userId ? `<div class="small muted">UID: ${order.userId}</div>` : ''}
       </td>
-      <td>${formatDate(order.createdAt)}</td>
-      <td>€${Number(order.total || 0).toFixed(2)}</td>
-      <td><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
-      <td>
-        <button onclick="window.viewOrder('${docSnap.id}')" class="btn-sm">Ver</button>
-        ${order.status === 'pending' ? `<button onclick="window.quickShip('${docSnap.id}')" class="btn-sm btn-success">Enviar</button>` : ''}
+      <td data-label="Date">${formatDate(order.createdAt)}</td>
+      <td data-label="Total">€${Number(order.total || 0).toFixed(2)}</td>
+      <td data-label="Status"><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
+      <td data-label="Actions">
+        <button class="btn-sm btn-view" data-order-id="${docSnap.id}">Ver</button>
+        ${order.status === 'pending' ? `<button class="btn-sm btn-success btn-ship" data-order-id="${docSnap.id}">Enviar</button>` : ''}
       </td>
     `;
+
+      // (per-row listeners removed - handled by delegated tbody listener below)
+
       tbody.appendChild(row);
+    });
+
+    // Delegated handler for tbody: buttons (view/ship) and row header toggle on mobile
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      const row = e.target.closest('tr.order-row');
+      // Handle buttons first
+      if (btn) {
+        const orderId = btn.dataset.orderId;
+        if (!orderId) return;
+        // Prevent row toggle
+        e.stopPropagation();
+        if (btn.classList.contains('btn-view')) return window.viewOrder(orderId);
+        if (btn.classList.contains('btn-ship')) return window.quickShip(orderId);
+        return;
+      }
+
+      // If clicked on a row (not a button), handle accordion toggle on mobile only
+      if (!row) return;
+      if (window.innerWidth >= 768) return;
+
+      // Close other expanded rows
+      document.querySelectorAll('.order-row.expanded').forEach(r => {
+        if (r !== row) r.classList.remove('expanded');
+      });
+
+      row.classList.toggle('expanded');
     });
   } catch (err) {
     console.error('Erro ao carregar pedidos:', err);
@@ -117,7 +156,7 @@ window.viewOrder = async function(orderId) {
       <p><strong>UID:</strong> ${order.userId || 'guest'}</p>
       <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
       <p><strong>Data:</strong> ${formatDate(order.createdAt)}</p>
-      <p><strong>Status:</strong> ${translateStatus(order.status)}</p>
+      <p><strong>Status:</strong> <span class="order-status status-badge status-${order.status}">${translateStatus(order.status)}</span></p>
       <p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p>
     </div>
     <h3>Items:</h3>
@@ -130,6 +169,21 @@ window.viewOrder = async function(orderId) {
   `;
   document.getElementById('order-details').innerHTML = detailsHtml;
   document.getElementById('order-modal').style.display = 'flex';
+
+  // Attach click handler to modal's "Mark as Shipped" button so it opens the shipping form
+  // Use .onclick to replace any previous handlers and avoid accumulating listeners
+  const modalShowBtn = document.getElementById('show-shipping-form-btn');
+  if (modalShowBtn) {
+    modalShowBtn.onclick = (ev) => { ev.preventDefault(); try { window.markAsShipped(); } catch (e) { console.error('markAsShipped call failed', e); } };
+  }
+
+  // Ensure the modal close button reliably closes the modal (fix lost/removed inline handlers)
+  try {
+    const modalCloseBtn = document.querySelector('#order-modal .close');
+    if (modalCloseBtn) {
+      modalCloseBtn.onclick = (ev) => { ev.preventDefault(); try { window.closeModal(); } catch (e) { console.error('closeModal call failed', e); } };
+    }
+  } catch (e) { console.warn('Failed to attach close button handler', e); }
 };
 
 window.markAsShipped = async function() {
@@ -201,16 +255,59 @@ window.markAsShipped = async function() {
 
         // Call notification endpoint (best-effort)
         try {
-          await fetch('/api/send-shipping-notification', {
+          // Obter ID token do usuário logado e enviar com header Authorization
+          const idToken = await auth.currentUser.getIdToken();
+          const response = await fetch('/api/send-shipping-notification', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${idToken}`
+            },
             body: JSON.stringify(payload)
           });
-        } catch (err) { console.warn('Shipping notification failed (non-blocking):', err); }
 
-        alert('Pedido marcado como enviado!');
-        try { window.closeModal(); } catch (e) {}
-        await loadDashboard();
+          if (!response.ok) {
+            throw new Error('Failed to send shipping notification');
+          }
+
+          // Mostrar toast de sucesso
+          window.toast.success('✅ Order marked as shipped! Email sent to customer.');
+
+          // Recarregar lista em background (não fecha modal)
+          await loadDashboard();
+
+          // Limpar formulário e esconder
+          if (shippingFormContainer) shippingFormContainer.style.display = 'none';
+          if (showBtn) showBtn.style.display = '';
+          if (shippingActions) shippingActions.style.display = 'none';
+
+          // Atualizar dados do modal sem fechar: reobter pedido atualizado e atualizar status
+          const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+          const updatedOrderRef = doc(db, 'orders', currentOrderId);
+          const updatedSnap = await getDoc(updatedOrderRef);
+          if (updatedSnap.exists()) {
+            const updatedOrder = updatedSnap.data();
+            const statusElement = document.querySelector('.order-status');
+            if (statusElement) {
+              statusElement.textContent = 'shipped';
+              statusElement.className = 'order-status status-badge status-shipped';
+              statusElement.style.background = '#10b981';
+              statusElement.style.color = '#ffffff';
+              statusElement.style.padding = '4px 8px';
+              statusElement.style.borderRadius = '6px';
+            }
+          }
+
+        } catch (err) {
+          console.error('Shipping notification failed:', err);
+          window.toast.error('⚠️ Email failed to send, but order was updated');
+          // Ainda recarrega a lista em background
+          await loadDashboard();
+          // esconder formulário para manter consistência do UI
+          if (shippingFormContainer) shippingFormContainer.style.display = 'none';
+          if (showBtn) showBtn.style.display = '';
+          if (shippingActions) shippingActions.style.display = 'none';
+        }
 
       } catch (err) {
         console.error('Failed to mark as shipped:', err);
@@ -304,18 +401,26 @@ function translateStatus(status) {
 
 // Configure logout button to use async handler instead of relying on inline onclick
 document.addEventListener('DOMContentLoaded', () => {
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    try { logoutBtn.removeAttribute('onclick'); } catch (e) {}
-    logoutBtn.addEventListener('click', async (e) => {
+  const exitBtn = document.getElementById('exitDashboardBtn');
+  if (exitBtn) {
+    exitBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      try {
-        await logout();
-        window.location.href = '/';
-      } catch (err) {
-        console.error('Logout error:', err);
-        window.location.href = '/';
-      }
+      window.location.href = '/';
     });
   }
+
+  // Remove remaining inline onclick handlers safely and reattach needed behaviors
+  try {
+    document.querySelectorAll('[onclick]').forEach(el => {
+      const handler = el.getAttribute('onclick') || '';
+      // If it referenced closeModal, reattach equivalent listener
+      if (handler.includes('window.closeModal')) {
+        try { el.removeAttribute('onclick'); } catch (e) {}
+        el.addEventListener('click', (ev) => { ev.preventDefault(); try { window.closeModal(); } catch (e) {} });
+      } else {
+        // Remove other inline handlers to be CSP-safe
+        try { el.removeAttribute('onclick'); } catch (e) {}
+      }
+    });
+  } catch (e) { console.warn('Failed to sanitize inline handlers', e); }
 });
