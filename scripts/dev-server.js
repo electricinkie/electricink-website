@@ -4,11 +4,11 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
-// ✅ Importar TODOS os handlers da API
-const createPaymentIntentHandler = require('./api/create-payment-intent.js');
-const webhookStripeHandler = require('./api/webhooks-stripe.js');
+// ✅ Importar TODOS os handlers da API (ajustado para caminho relativo após mover)
+const createPaymentIntentHandler = require('../api/create-payment-intent.js');
+const webhookStripeHandler = require('../api/webhooks-stripe.js');
 // Local config handler (exposes publishable keys for local dev)
-const configHandler = require('./api/config.js');
+const configHandler = require('../api/config.js');
 
 const app = express();
 
@@ -37,7 +37,7 @@ app.all('/api/create-payment-intent', async (req, res) => {
 // 2. Send Order Email is handled by unified /api/emails router below
 
 // 2b. Local unified emails router (for testing consolidated endpoint)
-const emailsRouter = require('./api/emails.js');
+const emailsRouter = require('../api/emails.js');
 app.all('/api/emails', async (req, res) => {
   try {
     await emailsRouter(req, res);
@@ -48,7 +48,7 @@ app.all('/api/emails', async (req, res) => {
 });
 
 // 2c. Local admin router
-const adminRouter = require('./api/admin.js');
+const adminRouter = require('../api/admin.js');
 app.all('/api/admin', async (req, res) => {
   try {
     await adminRouter(req, res);
@@ -84,7 +84,7 @@ app.all('/api/config', async (req, res) => {
 // My Orders endpoint
 app.get('/api/my-orders', async (req, res) => {
   try {
-    const handler = require('./api/my-orders');
+    const handler = require('../api/my-orders');
     await handler(req, res);
   } catch (err) {
     console.error('[SERVER] /api/my-orders error:', err);
@@ -93,13 +93,13 @@ app.get('/api/my-orders', async (req, res) => {
 });
 // ADDED: /api/my-orders registered here
 
-// Serve static files (moved here to ensure API routes are mounted first)
-app.use(express.static(path.join(__dirname)));
+// Serve static files from project root (dev-server moved into scripts/)
+app.use(express.static(path.join(__dirname, '..')));
 
 
 
 // Initialize Firebase Admin
-const { getFirestore } = require('./api/lib/firebase-admin');
+const { getFirestore } = require('../api/lib/firebase-admin');
 try {
   getFirestore();
   console.log('✅ Firebase Admin initialized');
