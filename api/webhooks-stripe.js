@@ -150,6 +150,16 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
+  // Debug: surface signature header and masked secret for troubleshooting
+  try {
+    const maskedSig = sig ? `${sig.split(',')[0].slice(0,40)}...` : 'missing';
+    const maskedSecret = webhookSecret ? `${webhookSecret.slice(0,12)}...${webhookSecret.slice(-8)}` : 'missing';
+    console.log(`🔐 [${requestId}] stripe-signature header (sample): ${maskedSig}`);
+    console.log(`🔐 [${requestId}] STRIPE_WEBHOOK_SECRET (masked): ${maskedSecret}`);
+  } catch (e) {
+    console.log(`🔐 [${requestId}] Failed to log signature/secret:`, e && e.message);
+  }
+
   // Validate Resend (non-blocking)
   try {
     const configCheck = await validateResendConfig();
@@ -179,6 +189,12 @@ module.exports = async function handler(req, res) {
     }
     
     console.log('🔍 Raw body length:', rawBody.length);
+    try {
+      const sample = rawBody && rawBody.toString ? rawBody.toString('utf8', 0, 300) : '<binary>'; 
+      console.log(`📦 [${requestId}] Raw body sample (first 300 chars):\n${sample.replace(/\n/g, '\\n')}`);
+    } catch (e) {
+      console.log(`📦 [${requestId}] Could not stringify raw body sample:`, e && e.message);
+    }
 
     // Verify webhook signature
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
