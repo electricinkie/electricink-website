@@ -80,12 +80,12 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       // ignore URL APIs failures
     }
     // Check if Stripe.js loaded
-    if (typeof Stripe === 'undefined') {
+      if (typeof Stripe === 'undefined') {
       console.error('Stripe.js failed to load');
       if (window.toast) {
-        window.toast.error('Payment system unavailable. Please refresh the page.');
+        window.toast.error('Payment system unavailable.');
       } else {
-        showError('Payment system unavailable. Please refresh the page.');
+        showError('Payment system unavailable.');
       }
       return;
     }
@@ -96,9 +96,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
     } catch (error) {
       console.error('Stripe initialization error:', error);
       if (window.toast) {
-        window.toast.error('Payment system error. Please try again later.');
+        window.toast.error('Payment system error.');
       } else {
-        showError('Payment system error. Please try again later.');
+        showError('Payment system error.');
       }
       return;
     }
