@@ -65,7 +65,7 @@ async function loadStats() {
     todaySnap.forEach(d => { const o = d.data(); todaySales += Number(o.total || 0); });
     document.getElementById('today-sales').textContent = `€${todaySales.toFixed(2)}`;
   } catch (err) {
-    console.error('Erro ao carregar estatísticas:', err);
+    console.error('Error loading stats:', err);
     try { document.getElementById('total-orders').textContent = '—'; } catch (e) {}
     try { document.getElementById('pending-count').textContent = '—'; } catch (e) {}
     try { document.getElementById('today-sales').textContent = '—'; } catch (e) {}
@@ -81,7 +81,7 @@ async function loadOrders(status = 'all', reset = true) {
   const loadMoreBtn = document.getElementById('loadMoreOrdersBtn');
 
   if (reset) {
-    tbody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
     lastDocByStatus[status] = null;
     hasMoreByStatus[status] = true;
   }
@@ -115,7 +115,7 @@ async function loadOrders(status = 'all', reset = true) {
 
     if (snap.empty) {
       if (reset) {
-        tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6">No orders found</td></tr>';
       }
       hasMoreByStatus[status] = false;
       if (loadMoreBtn) loadMoreBtn.style.display = 'none';
@@ -138,8 +138,8 @@ async function loadOrders(status = 'all', reset = true) {
       <td data-label="Total">€${Number(order.total || 0).toFixed(2)}</td>
       <td data-label="Status"><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
       <td data-label="Actions">
-        <button class="btn-sm btn-view" data-order-id="${docSnap.id}">Ver</button>
-        ${order.status === 'pending' ? `<button class="btn-sm btn-success btn-ship" data-order-id="${docSnap.id}">Enviar</button>` : ''}
+        <button class="btn-sm btn-view" data-order-id="${docSnap.id}">View</button>
+        ${order.status === 'pending' ? `<button class="btn-sm btn-success btn-ship" data-order-id="${docSnap.id}">Ship</button>` : ''}
       </td>
     `;
 
@@ -155,8 +155,8 @@ async function loadOrders(status = 'all', reset = true) {
     }
 
   } catch (err) {
-    console.error('Erro ao carregar pedidos:', err);
-    tbody.innerHTML = `<tr><td colspan=\"6\">Erro ao carregar pedidos: ${err?.message || 'Ver console'}</td></tr>`;
+    console.error('Error loading orders:', err);
+    tbody.innerHTML = `<tr><td colspan=\"6\">Error loading orders: ${err?.message || 'See console'}</td></tr>`;
     if (loadMoreBtn) loadMoreBtn.style.display = 'none';
   }
 }
@@ -170,17 +170,17 @@ async function loadMoreOrders() {
 window.viewOrder = async function(orderId) {
   const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
   const snap = await getDoc(doc(db, 'orders', orderId));
-  if (!snap.exists()) return alert('Pedido não encontrado');
+  if (!snap.exists()) return alert('Order not found');
   const order = snap.data();
   currentOrderId = orderId;
 
     const detailsHtml = `
     <div class="order-info">
       <p><strong>Order ID:</strong> ${orderId}</p>
-      <p><strong>Cliente:</strong> ${order.customerName || ''}</p>
+      <p><strong>Customer:</strong> ${order.customerName || ''}</p>
       <p><strong>UID:</strong> ${order.userId || 'guest'}</p>
       <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
-      <p><strong>Data:</strong> ${formatDate(order.createdAt)}</p>
+      <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
       <p><strong>Status:</strong> <span class="order-status status-badge status-${order.status}">${translateStatus(order.status)}</span></p>
       <p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p>
     </div>
@@ -188,7 +188,7 @@ window.viewOrder = async function(orderId) {
     <ul class="order-items">
       ${(order.items || []).map(i => `<li>${i.name} x${i.quantity} - €${Number(i.price * i.quantity).toFixed(2)}</li>`).join('')}
     </ul>
-    <h3>Endereço de Envio:</h3>
+    <h3>Shipping Address:</h3>
     <p>${order.shippingAddress?.line1 || 'N/A'}</p>
     <p>${order.shippingAddress?.city || ''} ${order.shippingAddress?.postal_code || ''}</p>
   `;
@@ -251,8 +251,8 @@ window.markAsShipped = async function() {
         const sendEmail = form.elements['sendEmail']?.checked !== false;
 
         // Validation
-        if (!carrier) { alert('Por favor selecione a transportadora.'); return; }
-        if (!trackingNumber) { alert('Por favor insira o número de rastreio.'); return; }
+        if (!carrier) { alert('Please select a carrier.'); return; }
+        if (!trackingNumber) { alert('Please enter the tracking number.'); return; }
 
         const trackingUrl = buildTrackingUrl(carrier, trackingNumber);
 
@@ -336,13 +336,13 @@ window.markAsShipped = async function() {
 
       } catch (err) {
         console.error('Failed to mark as shipped:', err);
-        alert('Não foi possível atualizar o status do pedido: ' + (err.message || 'Erro desconhecido'));
+        alert('Could not update order status: ' + (err.message || 'Unknown error'));
       }
     };
 
   } catch (err) {
     console.error('markAsShipped error:', err);
-    alert('Erro ao abrir formulário de envio: ' + (err.message || 'Erro desconhecido'));
+    alert('Error opening shipping form: ' + (err.message || 'Unknown error'));
   }
 };
 
@@ -367,7 +367,7 @@ function formatDate(timestamp) {
   try {
     // Se é Firestore Timestamp com método toDate()
     if (timestamp.toDate && typeof timestamp.toDate === 'function') {
-      return timestamp.toDate().toLocaleString('pt-PT', { 
+      return timestamp.toDate().toLocaleString('en-GB', { 
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -379,7 +379,7 @@ function formatDate(timestamp) {
     // Se é plain object Firestore { seconds, nanoseconds } ou { _seconds, _nanoseconds }
     const seconds = timestamp.seconds || timestamp._seconds;
     if (seconds && typeof seconds === 'number') {
-      return new Date(seconds * 1000).toLocaleString('pt-PT', { 
+      return new Date(seconds * 1000).toLocaleString('en-GB', { 
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -390,7 +390,7 @@ function formatDate(timestamp) {
     
     // Se é timestamp em milissegundos (number)
     if (typeof timestamp === 'number') {
-      return new Date(timestamp).toLocaleString('pt-PT', { 
+      return new Date(timestamp).toLocaleString('en-GB', { 
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -402,7 +402,7 @@ function formatDate(timestamp) {
     // Se é string ISO ou Date
     const date = new Date(timestamp);
     if (!isNaN(date.getTime())) {
-      return date.toLocaleString('pt-PT', { 
+      return date.toLocaleString('en-GB', { 
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -412,16 +412,16 @@ function formatDate(timestamp) {
     }
     
     // Fallback
-    console.warn('Formato de timestamp não reconhecido:', timestamp);
-    return 'Data inválida';
+    console.warn('Unrecognized timestamp format:', timestamp);
+    return 'Invalid date';
   } catch (e) {
-    console.error('Erro ao formatar data:', e, timestamp);
+    console.error('Error formatting date:', e, timestamp);
     return 'N/A';
   }
 }
 
 function translateStatus(status) {
-  const t = { pending: 'Pendente', shipped: 'Enviado', delivered: 'Entregue' };
+  const t = { pending: 'Pending', shipped: 'Shipped', delivered: 'Delivered' };
   return t[status] || status;
 
 }
