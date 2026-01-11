@@ -4,6 +4,13 @@ const { getFirestore, admin } = require('./lib/firebase-admin');
 const logger = require('./lib/logger');
 
 module.exports = async function handler(req, res) {
+  // DEBUG: log incoming request metadata
+  console.log('🔐 [MY-ORDERS] Request recebida:', {
+    hasAuthHeader: !!req.headers.authorization,
+    authHeaderStart: req.headers.authorization?.substring(0, 30),
+    method: req.method,
+    timestamp: new Date().toISOString()
+  });
   // Allow only GET
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
@@ -23,6 +30,12 @@ module.exports = async function handler(req, res) {
     const decoded = await admin.auth().verifyIdToken(token);
     const uid = decoded && decoded.uid;
     const tokenEmail = decoded && decoded.email;
+    // NOVO LOG
+    console.log('🔍 [MY-ORDERS] Iniciando busca de pedidos:', {
+      uid,
+      tokenEmail,
+      timestamp: new Date().toISOString()
+    });
     if (!uid) return res.status(401).json({ error: 'Invalid token' });
 
     const db = getFirestore();
@@ -34,6 +47,8 @@ module.exports = async function handler(req, res) {
       .get();
 
     let orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // NOVO LOG
+    console.log('📊 [MY-ORDERS] Query por userId retornou:', orders.length, 'pedidos');
 
     // If none found, fall back to server-side email lookup (safe)
     if ((!orders || orders.length === 0) && tokenEmail) {
@@ -44,6 +59,8 @@ module.exports = async function handler(req, res) {
           .limit(50)
           .get();
         orders = snapByEmail.docs.map(d => ({ id: d.id, ...d.data() }));
+        // NOVO LOG
+        console.log('📊 [MY-ORDERS] Query por email retornou:', orders.length, 'pedidos');
       } catch (e) {
         // If this query requires an index not yet present, log and continue returning empty
         console.warn('my-orders: email lookup failed', e && e.message);
@@ -52,7 +69,28 @@ module.exports = async function handler(req, res) {
 
     return res.status(200).json({ orders });
   } catch (err) {
+    console.error('❌ [MY-ORDERS] Erro:', {
+      code: err && err.code,
+      message: err && err.message
+    });
+
+    // Token inválido ou expirado
+    if (err.code === 'auth/id-token-expired' || 
+        err.code === 'auth/argument-error') {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+
+    // Erro de índice do Firestore
+    if (err.code === 9) { // FAILED_PRECONDITION
+      console.warn('⚠️ [MY-ORDERS] Firestore index missing');
+      return res.status(500).json({ 
+        error: 'Database index required',
+        message: 'Please contact support' 
+      });
+    }
+
+    // Outros erros
     logger && logger.error && logger.error('my-orders error', err && err.message);
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };

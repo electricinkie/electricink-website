@@ -158,16 +158,47 @@ async function loadOrders(identifier) {
 
     // Determine if identifier is UID or email
     if (typeof identifier === 'string' && !identifier.includes('@')) {
-      // Treat as UID
-      console.log('[Profile] Using UID lookup');
-      orders = await getUserOrdersByUid(identifier, 100).catch(() => []);
-
-      // Fallback to email if UID returns nothing
-      if (!orders || orders.length === 0) {
-        console.log('[Profile] UID lookup empty, trying email fallback');
+      // Treat as UID: prefer secure server endpoint which verifies ID token
+      console.log('[Profile] Using UID lookup via /api/my-orders');
+      try {
         const user = await getCurrentUser();
-        if (user?.email) {
-          orders = await getUserOrdersByEmail(user.email, 100).catch(() => []);
+        if (user && typeof user.getIdToken === 'function') {
+          try {
+            const idToken = await user.getIdToken();
+            // DEBUG: log token metadata before sending to server
+            console.log('🔑 [DEBUG] Token obtido:', {
+              tokenLength: idToken?.length,
+              tokenStart: idToken?.substring(0, 20) + '...',
+              userUid: user.uid,
+              userEmail: user.email
+            });
+            if (idToken) {
+              const resp = await fetch('/api/my-orders', { headers: { Authorization: `Bearer ${idToken}` } });
+              if (resp.ok) {
+                const json = await resp.json();
+                orders = json.orders || [];
+              } else {
+                console.warn('[Profile] /api/my-orders failed:', resp.status);
+              }
+            }
+          } catch (e) {
+            console.warn('[Profile] Could not get idToken for server lookup:', e && e.message);
+          }
+        }
+      } catch (e) {
+        console.warn('[Profile] Server lookup failed:', e && e.message);
+      }
+
+      // Fallback: try direct UID query via client helper
+      if (!orders || orders.length === 0) {
+        console.log('[Profile] Fallback to client-side UID query');
+        orders = await getUserOrdersByUid(identifier, 100).catch(() => []);
+        if (!orders || orders.length === 0) {
+          console.log('[Profile] UID lookup empty, trying email fallback');
+          const user = await getCurrentUser();
+          if (user?.email) {
+            orders = await getUserOrdersByEmail(user.email, 100).catch(() => []);
+          }
         }
       }
     } else {

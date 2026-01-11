@@ -1263,10 +1263,22 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       console.log('🔒 Sending cart to backend for price validation...');
 
       // Call API function
+      // Include server-trusted ID token when available so backend can stamp user UID
+      let authHeader = {};
+      try {
+        if (currentUser && typeof currentUser.getIdToken === 'function') {
+          const idToken = await currentUser.getIdToken();
+          if (idToken) authHeader.Authorization = `Bearer ${idToken}`;
+        }
+      } catch (e) {
+        console.warn('Failed to obtain idToken for checkout:', e && e.message);
+      }
+
       const response = await fetch(PAYMENT_INTENT_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...authHeader
         },
         body: JSON.stringify(orderData)
       });

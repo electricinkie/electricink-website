@@ -18,7 +18,7 @@ app.use('/api/webhooks-stripe', express.raw({ type: '*/*' }));
 app.use(express.json({ limit: '1mb' }));
 
 // Servir arquivos estáticos
-app.use(express.static(path.join(__dirname)));
+// Static files middleware will be registered AFTER API routes (moved below)
 
 // ══════════════════════════════════════════════════════
 // MONTAR TODOS OS ENDPOINTS DA API
@@ -81,6 +81,21 @@ app.all('/api/config', async (req, res) => {
   }
 });
 
+// My Orders endpoint
+app.get('/api/my-orders', async (req, res) => {
+  try {
+    const handler = require('./api/my-orders');
+    await handler(req, res);
+  } catch (err) {
+    console.error('[SERVER] /api/my-orders error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+// ADDED: /api/my-orders registered here
+
+// Serve static files (moved here to ensure API routes are mounted first)
+app.use(express.static(path.join(__dirname)));
+
 
 
 // Initialize Firebase Admin
@@ -100,4 +115,13 @@ app.listen(port, () => {
   console.log(`💳 Payment endpoint: http://localhost:${port}/api/create-payment-intent`);
   console.log(`🔔 Webhook endpoint: http://localhost:${port}/api/webhooks-stripe`);
   console.log(`🔑 RESEND_API_KEY: ${process.env.RESEND_API_KEY ? '✅ Loaded' : '❌ Missing'}`);
+  // DEBUG: list registered routes to help diagnose missing handlers
+  try {
+    const routes = (app._router && app._router.stack)
+      ? app._router.stack.filter(r => r.route).map(r => r.route.path)
+      : [];
+    console.log('📍 [SERVER] Rotas registradas:', routes);
+  } catch (e) {
+    console.warn('📍 [SERVER] Could not list routes:', e && e.message);
+  }
 });

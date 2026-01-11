@@ -11,8 +11,23 @@ function initializeFirebaseAdmin() {
 
   try {
     const serviceAccountEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
-    if (!serviceAccountEnv) {
-      throw new Error('FIREBASE_SERVICE_ACCOUNT não encontrada no .env');
+    let serviceAccountRaw = serviceAccountEnv;
+
+    // Fallback: if env var not provided, try to load local serviceAccountKey.json (dev convenience)
+    if (!serviceAccountRaw) {
+      try {
+        const path = require('path');
+        const fs = require('fs');
+        const localPath = path.join(__dirname, '..', 'serviceAccountKey.json');
+        if (fs.existsSync(localPath)) {
+          console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT missing; loading local serviceAccountKey.json');
+          serviceAccountRaw = fs.readFileSync(localPath, 'utf8');
+        } else {
+          throw new Error('FIREBASE_SERVICE_ACCOUNT não encontrada no .env');
+        }
+      } catch (e) {
+        throw e;
+      }
     }
 
     // Minimal logging only — avoid printing secret contents
@@ -25,10 +40,10 @@ function initializeFirebaseAdmin() {
 
     let serviceAccount;
     try {
-      if (serviceAccountEnv.trim().startsWith('{')) {
-        serviceAccount = JSON.parse(serviceAccountEnv);
+      if (serviceAccountRaw.trim().startsWith('{')) {
+        serviceAccount = JSON.parse(serviceAccountRaw);
       } else {
-        const decoded = Buffer.from(serviceAccountEnv, 'base64').toString('utf8');
+        const decoded = Buffer.from(serviceAccountRaw, 'base64').toString('utf8');
         try {
           console.log('DEBUG: decoded service account present, length=', String(decoded.length));
         } catch (dbg) {
@@ -37,7 +52,7 @@ function initializeFirebaseAdmin() {
         serviceAccount = JSON.parse(decoded);
       }
     } catch (parseErr) {
-      console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT:', parseErr && parseErr.message);
+      console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT or local serviceAccountKey.json:', parseErr && parseErr.message);
       throw parseErr;
     }
 
