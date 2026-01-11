@@ -5,6 +5,18 @@ import { logout } from './auth.js';
 const { auth, db } = await initFirebase();
 let currentOrderId = null;
 
+function buildTrackingUrl(carrier, trackingNumber) {
+  const baseUrls = {
+    'anpost': 'https://track.anpost.com/TrackingResults.aspx?trackcode=',
+    'dpd': 'https://www.dpd.ie/tracking?parcelNumber=',
+    'fastway': 'https://www.fastway.ie/track-your-parcel?l=',
+    'ups': 'https://www.ups.com/track?tracknum=',
+    'dhl': 'https://www.dhl.com/ie-en/home/tracking.html?tracking-id=',
+    'custom': ''
+  };
+  return carrier === 'custom' ? trackingNumber : (baseUrls[carrier] || '') + trackingNumber;
+}
+
 // Load dashboard on DOM ready
 /*
 document.addEventListener('DOMContentLoaded', () => {
@@ -122,41 +134,93 @@ window.viewOrder = async function(orderId) {
 
 window.markAsShipped = async function() {
   if (!currentOrderId) return;
-  if (!confirm('Marcar pedido como enviado?')) return;
+
   try {
-    // Get Firebase ID token to authenticate to server endpoint
-    const token = await auth.currentUser.getIdToken();
+    const shippingFormContainer = document.getElementById('shipping-form-container');
+    const showBtn = document.getElementById('show-shipping-form-btn');
+    const shippingActions = document.getElementById('shipping-actions');
+    const cancelBtn = document.getElementById('cancel-shipping-btn');
+    const form = document.getElementById('shipping-form');
 
-    // Call serverless API which uses OrderManager.updateStatus and creates order-events
-    const resp = await fetch('/api/update-order-status', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ orderId: currentOrderId, status: 'shipped' })
-    });
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error || 'Failed to update order status');
+    if (!form || !shippingFormContainer) {
+      throw new Error('Shipping form not found in DOM');
     }
 
-    // trigger backend email (unchanged) — server will have recorded the event
-    try {
-      await fetch('/api/send-shipping-confirmation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: currentOrderId })
-      });
-    } catch (e) { console.warn('Email send failed', e); }
+    // Show form UI
+    if (showBtn) showBtn.style.display = 'none';
+    shippingFormContainer.style.display = 'block';
+    if (shippingActions) shippingActions.style.display = 'flex';
 
-    alert('Pedido marcado como enviado!');
-    window.closeModal();
-    await loadDashboard();
+    // Cancel handler to revert UI
+    const onCancel = () => {
+      if (shippingFormContainer) shippingFormContainer.style.display = 'none';
+      if (showBtn) showBtn.style.display = '';
+      if (shippingActions) shippingActions.style.display = 'none';
+      cancelBtn && cancelBtn.removeEventListener('click', onCancel);
+      form && (form.onsubmit = null);
+    };
+
+    cancelBtn && cancelBtn.addEventListener('click', onCancel, { once: true });
+
+    // Form submit handler
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      try {
+        const carrier = form.elements['carrier']?.value || '';
+        const trackingNumber = (form.elements['trackingNumber']?.value || '').trim();
+        const estimatedDelivery = form.elements['estimatedDelivery']?.value || null;
+        const sendEmail = form.elements['sendEmail']?.checked !== false;
+
+        // Validation
+        if (!carrier) { alert('Por favor selecione a transportadora.'); return; }
+        if (!trackingNumber) { alert('Por favor insira o número de rastreio.'); return; }
+
+        const trackingUrl = buildTrackingUrl(carrier, trackingNumber);
+
+        // Update Firestore
+        const { doc, updateDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+        const orderRef = doc(db, 'orders', currentOrderId);
+        await updateDoc(orderRef, {
+          status: 'shipped',
+          trackingNumber,
+          carrier,
+          estimatedDelivery: estimatedDelivery || null,
+          trackingUrl,
+          shippedAt: serverTimestamp()
+        });
+
+        // Prepare payload
+        const payload = {
+          orderId: currentOrderId,
+          carrier,
+          trackingNumber,
+          trackingUrl,
+          estimatedDelivery,
+          sendEmail
+        };
+
+        // Call notification endpoint (best-effort)
+        try {
+          await fetch('/api/send-shipping-notification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (err) { console.warn('Shipping notification failed (non-blocking):', err); }
+
+        alert('Pedido marcado como enviado!');
+        try { window.closeModal(); } catch (e) {}
+        await loadDashboard();
+
+      } catch (err) {
+        console.error('Failed to mark as shipped:', err);
+        alert('Não foi possível atualizar o status do pedido: ' + (err.message || 'Erro desconhecido'));
+      }
+    };
+
   } catch (err) {
-    console.error('Failed to mark as shipped', err);
-    alert('Não foi possível atualizar o status do pedido: ' + (err.message || 'Erro desconhecido'));
+    console.error('markAsShipped error:', err);
+    alert('Erro ao abrir formulário de envio: ' + (err.message || 'Erro desconhecido'));
   }
 };
 

@@ -72,7 +72,46 @@
       <h2>Detalhes do Pedido</h2>
       <div id="order-details"></div>
       <div class="modal-actions">
-        <button onclick="markAsShipped()" class="btn-primary">Marcar Enviado</button>
+        <div id="shipping-form-container" style="display:none;">
+          <form id="shipping-form">
+            <div class="form-row">
+              <label for="carrier">Transportadora *</label>
+              <select id="carrier" name="carrier" required>
+                <option value="anpost">An Post</option>
+                <option value="dpd">DPD Ireland</option>
+                <option value="fastway">Fastway Couriers</option>
+                <option value="ups">UPS</option>
+                <option value="dhl">DHL Express</option>
+                <option value="custom">Other / Custom</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="tracking-number">Número de Rastreio *</label>
+              <input id="tracking-number" name="trackingNumber" type="text" required autocomplete="off" />
+            </div>
+
+            <div class="form-row">
+              <label for="estimated-delivery">Entrega Estimada (opcional)</label>
+              <input id="estimated-delivery" name="estimatedDelivery" type="date" />
+            </div>
+
+            <div class="form-row">
+              <label>
+                <input id="send-email-checkbox" name="sendEmail" type="checkbox" checked />
+                Enviar email ao cliente
+              </label>
+            </div>
+          </form>
+        </div>
+
+        <button id="show-shipping-form-btn" class="btn-primary">Marcar Enviado</button>
+
+        <div id="shipping-actions" style="display:none;">
+          <button id="cancel-shipping-btn" type="button" class="btn-secondary">Cancelar</button>
+          <button type="submit" form="shipping-form" class="btn-primary">Confirmar Envio</button>
+        </div>
+
         <button onclick="closeModal()" class="btn-secondary">Fechar</button>
       </div>
     </div>
