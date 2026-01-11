@@ -417,6 +417,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     // Associate `userId` when PaymentIntent metadata contains an authenticated UID.
     // We accept a few possible metadata keys for compatibility with older clients.
     const userIdFromMetadata = paymentIntent.metadata?.user_uid || paymentIntent.metadata?.authUid || paymentIntent.metadata?.userId || paymentIntent.metadata?.user_id || null;
+    console.log('👤 [WEBHOOK] User ID from metadata:', userIdFromMetadata || 'GUEST');
+    console.log('👤 [WEBHOOK] All metadata keys:', Object.keys(paymentIntent.metadata || {}));
     if (userIdFromMetadata) {
       // Attach canonical `userId` field so Firestore reads/queries can use UID-first lookup.
       order.userId = String(userIdFromMetadata);

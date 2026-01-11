@@ -306,6 +306,15 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Incoming request diagnostic
+  try {
+    console.log('📥 [CREATE-PI] Received request');
+    console.log('📥 [CREATE-PI] Body authUid:', req.body && req.body.authUid);
+    console.log('📥 [CREATE-PI] Verified UID:', (typeof verifiedUid !== 'undefined' ? verifiedUid : 'NONE'));
+  } catch (e) {
+    console.log('📥 [CREATE-PI] Logging diagnostic failed', e && e.message);
+  }
+
   // Zod schema de validação
   const checkoutSchema = z.object({
     items: z.array(
@@ -498,6 +507,12 @@ module.exports = async function handler(req, res) {
         }
       }
       metadata = metadataSanitized;
+
+      console.log('📦 [CREATE-PI] Final metadata:', {
+        user_uid: metadataSanitized.user_uid,
+        authUid: metadataSanitized.authUid,
+        email: metadataSanitized.customer_email
+      });
 
       // Build a CHECKOUT payload using explicit `stripe_price_id` provided by the
       // frontend. Do NOT attempt to guess or infer Stripe price IDs server-side.

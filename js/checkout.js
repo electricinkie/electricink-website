@@ -1097,7 +1097,9 @@ import { getCurrentUser } from './auth.js';
       let currentUser = null;
       try {
         currentUser = await getCurrentUser();
+        console.log('🔐 [CHECKOUT] Current user:', currentUser ? currentUser.uid : 'GUEST');
       } catch (e) {
+        console.log('🔐 [CHECKOUT] No user (guest)');
         currentUser = null;
       }
       const orderData = {
@@ -1110,6 +1112,12 @@ import { getCurrentUser } from './auth.js';
           items_count: cart.length
         }
       };
+
+      console.log('📤 [CHECKOUT] Sending orderData:', {
+        hasUser: !!orderData.authUid,
+        authUid: orderData.authUid,
+        email: orderData.metadata.customer_email
+      });
 
       console.log('🔒 Sending cart to backend for price validation...');
 
