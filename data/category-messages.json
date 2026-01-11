@@ -3,7 +3,7 @@
     "availability_notice": true,
     "message": {
       "title": "Available on Request",
-      "text": "The products in this category are available to order. Message us on <a href=\"https://wa.me/353831473502\" target=\"_blank\" rel=\"noopener\">WhatsApp</a> and we'll arrange everything for you.",
+      "text": "Available to order. <a href='https://wa.me/353831473502'>Message us on WhatsApp</a> to arrange.",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }
@@ -12,7 +12,7 @@
     "availability_notice": true,
     "message": {
       "title": "Available on Request",
-      "text": "The products in this category are available to order. Message us on <a href=\"https://wa.me/353831473502\" target=\"_blank\" rel=\"noopener\">WhatsApp</a> and we'll arrange everything for you.",
+      "text": "Available to order. <a href='https://wa.me/353831473502'>Message us on WhatsApp</a> to arrange.",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }
@@ -21,7 +21,7 @@
     "availability_notice": true,
     "message": {
       "title": "Available on Request",
-      "text": "The products in this category are available to order. Message us on <a href=\"https://wa.me/353831473502\" target=\"_blank\" rel=\"noopener\">WhatsApp</a> and we'll arrange everything for you.",
+      "text": "Available to order. <a href='https://wa.me/353831473502'>Message us on WhatsApp</a> to arrange.",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }
@@ -29,8 +29,8 @@
   "Inks": {
     "availability_notice": true,
     "message": {
-      "title": "Limited Stock Available",
-      "text": "This product is available to order. We currently keep <strong>Raven Black</strong> and <strong>Ghost White</strong> in stock. Delivery times may be slightly longer for other colours — <a href=\"https://wa.me/353831473502\" target=\"_blank\" rel=\"noopener\">message us on WhatsApp</a> for details.",
+      "title": "Limited Stock",
+      "text": "Raven Black and Ghost White in stock. Other colours available — <a href='https://wa.me/353831473502'>WhatsApp us</a> for delivery time.",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }

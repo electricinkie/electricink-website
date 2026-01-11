@@ -4,7 +4,7 @@
     "name": "Tattoo Balm",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Balm for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.",
     "features": [
       "15 natural active ingredients",
       "Fast absorption",
@@ -52,7 +52,7 @@
     "name": "Teste Product (Sandbox)",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Teste Product (Sandbox) for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Produto de teste para sandbox Stripe. Não é para venda.",
     "features": [
       "Sandbox testing",
       "Use card 4242 4242 4242 4242",
@@ -80,11 +80,7 @@
     "seo": {
       "meta_title": "Teste Product (Sandbox) | Electric Ink",
       "meta_description": "Produto de teste para integração Stripe sandbox.",
-      "keywords": [
-        "teste",
-        "sandbox",
-        "stripe"
-      ]
+      "keywords": ["teste", "sandbox", "stripe"]
     },
     "inStock": true,
     "featured": false,
@@ -95,7 +91,7 @@
     "name": "Tattoo Cream Derma",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Cream Derma for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Lightweight moisturizer for healed tattoos. Plant-based oils and butters provide deep hydration with anti-aging antioxidants. Keep your ink bold and vibrant.",
     "features": [
       "For healed skin (10+ days)",
       "Antioxidant-rich formula",
@@ -141,7 +137,7 @@
     "name": "Slimer Tattoo Gel",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Slimer Tattoo Gel for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.",
     "features": [
       "Reduces redness in 5-10 min",
       "Refreshing mint essence",
@@ -208,7 +204,7 @@
     "name": "Tattoo Skin Scrub Out",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
-    "description": "Tattoo Skin Scrub Out for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Exfoliating gel removes dead cells and impurities. Softens skin, facilitates ink application, and makes the process safer. Essential for preparation.",
     "features": [
       "Removes dead cells",
       "Moisturizes & softens",
@@ -253,7 +249,7 @@
     "name": "Tattoo Prep",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
-    "description": "Tattoo Prep for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Shaving foam with Aloe Vera and Chamomile. Enhances razor glide during hair removal and cleanses skin. Calms and moisturizes. No rinsing needed.",
     "features": [
       "Aloe Vera & Chamomile",
       "Smooth razor glide",
@@ -298,7 +294,7 @@
     "name": "The Gloo Stencil Transfer",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "The Gloo Stencil Transfer for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing.",
     "features": [
       "Precise transfer accuracy",
       "Enhanced skin adhesion",
@@ -364,7 +360,7 @@
     "name": "Transfer It",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Transfer It for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage.",
     "features": [
       "Extra-long fixation",
       "Enhanced precision",
@@ -440,7 +436,7 @@
     "name": "Stencil Fix Spray",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Stencil Fix Spray for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Professional spray for extra stencil fixation. Removes excess carbon, prevents smudging, and keeps skin hydrated. Perfect for stencils and freehand work.",
     "features": [
       "Prevents smudging",
       "Removes excess carbon",
@@ -486,7 +482,7 @@
     "name": "Tattoo Clean Up",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Clean Up for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results.",
     "features": [
       "Optimizes pigment retention",
       "Reduces irritation",
@@ -555,7 +551,7 @@
     "name": "Tattoo Clean Up Refill",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Clean Up Refill for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "1L refill for foam bottle. Same pH-balanced formula that optimizes pigment retention and reduces irritation. Eco-friendly bulk option for busy studios.",
     "features": [
       "Eco-friendly refill",
       "1L bulk size",
@@ -598,7 +594,7 @@
     "name": "Cat Slobber Butter",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Cat Slobber Butter for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.",
     "features": [
       "Shea, Mango & Aloe",
       "Smooth needle glide",
@@ -712,7 +708,7 @@
     "name": "Vaseline Slip Premium",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Vaseline Slip Premium for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.",
     "features": [
       "Omega & antioxidants",
       "Revitalizing Clove Oil",
@@ -778,7 +774,7 @@
     "name": "Tattoo After All",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo After All for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.",
     "features": [
       "Antiseptic protection",
       "Reduces redness",
@@ -844,7 +840,7 @@
     "name": "Tattoo Barrier Film",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Barrier Film for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.",
     "features": [
       "Transparent barrier",
       "Breathable & flexible",
@@ -908,7 +904,7 @@
     "name": "Tattoo Dry Solidifier",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Dry Solidifier for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Solidifies liquid tattoo waste (blood, fluids, inks). Prevents leaks, reduces contamination risk, and ensures safe disposal. 10 individual units per box.",
     "features": [
       "Prevents leaks",
       "Safe disposal",

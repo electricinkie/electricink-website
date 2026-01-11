@@ -500,5 +500,11 @@
     border-radius: 12px !important;
     width: 100%;
     z-index: 0;
+    padding: 14px 22px;
+    font-size: 16px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    height: auto;
   }
 }

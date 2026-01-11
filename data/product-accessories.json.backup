@@ -1,94 +1,102 @@
 {
-  "tattoo-grips": {
-    "id": "tattoo-grips",
-    "name": "Tattoo Grips",
-    "category": "Accessories",
-    "subcategory": "Hygiene & Protection",
-    "description": "Tattoo Grips for professional use. Improves workflow and reliability.",
-    "features": [
-      "Self-adhesive elastic fabric",
-      "Non-slip surface",
-      "Reduces vibration",
-      "Moisture-resistant"
-    ],
-    "stripe": {
-      "productId": "prod_TkqYQhBAIqBCuj",
-      "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
+    "tattoo-grips": {
+      "id": "tattoo-grips",
+      "name": "Tattoo Grips",
+      "category": "Accessories",
+      "subcategory": "Hygiene & Protection",
+      "description": "Elastic cover wrap ideal to secure grips on tattoo machines. Self-adhesive elastic fabric reduces vibration, improves hold, and resists moisture.",
+      "features": [
+        "Self-adhesive elastic fabric",
+        "Non-slip surface",
+        "Reduces vibration",
+        "Moisture-resistant"
+      ],
+
+      "stripe": {
+        "productId": "prod_TkqYQhBAIqBCuj",
+        "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
+      },
+
+      "price": 3.25,
+      "size": "5cm x 4.50m",
+
+      "variants": [
+        {
+          "id": "turquoise",
+          "label": "Turquoise",
+          "colour": "Turquoise",
+          "image": "/images/products/accessories/turquoise-grip.webp"
+        },
+        {
+          "id": "black",
+          "label": "Black",
+          "colour": "Black",
+          "image": "/images/products/accessories/black-grip.webp"
+        },
+        {
+          "id": "purple",
+          "label": "Purple",
+          "colour": "Purple",
+          "image": "/images/products/accessories/purple-grip.webp"
+        },
+        {
+          "id": "red",
+          "label": "Red",
+          "colour": "Red",
+          "image": "/images/products/accessories/red-grip.webp"
+        },
+        {
+          "id": "blue",
+          "label": "Blue",
+          "colour": "Blue",
+          "image": "/images/products/accessories/blue-grip.webp"
+        },
+        {
+          "id": "beige",
+          "label": "Beige",
+          "colour": "Beige",
+          "image": "/images/products/accessories/beige-grip.webp"
+        }
+      ],
+
+      "image": "/images/products/accessories/all-grips.webp",
+
+      "images": [
+        "/images/products/accessories/all-grips.webp",
+        "/images/products/accessories/turquoise-grip.webp",
+        "/images/products/accessories/black-grip.webp",
+        "/images/products/accessories/purple-grip.webp",
+        "/images/products/accessories/red-grip.webp",
+        "/images/products/accessories/blue-grip.webp",
+        "/images/products/accessories/beige-grip.webp"
+      ],
+
+      "inventory": {
+        "stock_quantity": 0,
+        "stock_status": "available_on_request",
+        "low_stock_threshold": 5
+      },
+
+      "seo": {
+        "meta_title": "Tattoo Grips | Electric Ink Ireland",
+        "meta_description": "Elastic cover wrap ideal to secure grips on tattoo machines. Reduces vibration and improves hold.",
+        "keywords": [
+          "tattoo grips",
+          "elastic wrap",
+          "tattoo accessories"
+        ]
+      },
+
+      "inStock": true,
+      "featured": false,
+      "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
     },
-    "price": 3.25,
-    "size": "5cm x 4.50m",
-    "variants": [
-      {
-        "id": "turquoise",
-        "label": "Turquoise",
-        "colour": "Turquoise",
-        "image": "/images/products/accessories/turquoise-grip.webp"
-      },
-      {
-        "id": "black",
-        "label": "Black",
-        "colour": "Black",
-        "image": "/images/products/accessories/black-grip.webp"
-      },
-      {
-        "id": "purple",
-        "label": "Purple",
-        "colour": "Purple",
-        "image": "/images/products/accessories/purple-grip.webp"
-      },
-      {
-        "id": "red",
-        "label": "Red",
-        "colour": "Red",
-        "image": "/images/products/accessories/red-grip.webp"
-      },
-      {
-        "id": "blue",
-        "label": "Blue",
-        "colour": "Blue",
-        "image": "/images/products/accessories/blue-grip.webp"
-      },
-      {
-        "id": "beige",
-        "label": "Beige",
-        "colour": "Beige",
-        "image": "/images/products/accessories/beige-grip.webp"
-      }
-    ],
-    "image": "/images/products/accessories/all-grips.webp",
-    "images": [
-      "/images/products/accessories/all-grips.webp",
-      "/images/products/accessories/turquoise-grip.webp",
-      "/images/products/accessories/black-grip.webp",
-      "/images/products/accessories/purple-grip.webp",
-      "/images/products/accessories/red-grip.webp",
-      "/images/products/accessories/blue-grip.webp",
-      "/images/products/accessories/beige-grip.webp"
-    ],
-    "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
-    },
-    "seo": {
-      "meta_title": "Tattoo Grips | Electric Ink Ireland",
-      "meta_description": "Elastic cover wrap ideal to secure grips on tattoo machines. Reduces vibration and improves hold.",
-      "keywords": [
-        "tattoo grips",
-        "elastic wrap",
-        "tattoo accessories"
-      ]
-    },
-    "inStock": true,
-    "featured": false,
-    "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
-  },
   "silicone-ink-cups": {
     "id": "silicone-ink-cups",
     "name": "Silicone Ink Cups",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Silicone Ink Cups for professional use. Improves workflow and reliability.",
+    "description": "High-quality silicone ink cups with rubber base to protect needle tips. Durable, flexible and easy to sterilize for safe use.",
     "features": [
       "High-quality silicone",
       "Rubber base protection",
@@ -193,13 +201,15 @@
     "inStock": true,
     "featured": false,
     "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS"
-  },
-  "black-medical-bibs": {
+
+    },
+
+    "black-medical-bibs": {
     "id": "black-medical-bibs",
     "name": "Black Medical Bibs",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Black Medical Bibs for professional use. Improves workflow and reliability.",
+    "description": "Disposable black surgical drapes with absorbent tissue and waterproof polyethylene layer. Sterilized for safe professional use.",
     "features": [
       "Waterproof and absorbent",
       "Sterilized for professional use",
@@ -259,12 +269,13 @@
     "featured": false,
     "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW"
   },
+  
   "latex-gloves": {
     "id": "latex-gloves",
     "name": "Latex Gloves (Powder-Free)",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Latex Gloves (Powder-Free) for professional use. Improves workflow and reliability.",
+    "description": "Powder-free latex gloves available in Black and White. Comfortable, flexible and suitable for professional tattoo work.",
     "features": [
       "Powder-free latex",
       "Snug fit and flexibility",
@@ -407,12 +418,13 @@
     "featured": false,
     "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
   },
-  "black-nitrile-gloves": {
+
+    "black-nitrile-gloves": {
     "id": "black-nitrile-gloves",
     "name": "Black Nitrile Gloves (Powder-Free)",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Black Nitrile Gloves (Powder-Free) for professional use. Improves workflow and reliability.",
+    "description": "Professional-grade powder-free black nitrile gloves offering comfort, dexterity and tear resistance for precision work.",
     "features": [
       "Powder-free and latex-free",
       "High tear resistance",
@@ -485,12 +497,13 @@
     "featured": false,
     "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
   },
+
   "pen-machine-cover-25-units": {
     "id": "pen-machine-cover-25-units",
     "name": "Pen Machine Cover - 25 Units",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Pen Machine Cover - 25 Units for professional use. Improves workflow and reliability.",
+    "description": "Transparent pen machine protectors designed to fit Pen 3 and Ultra Pen 2. Pack of 25 protectors for hygienic use.",
     "features": [
       "Fits Pen 3 and Ultra Pen 2",
       "Transparent protection",
@@ -536,7 +549,7 @@
     "name": "Clip Cord Protector",
     "category": "Accessories",
     "subcategory": "Machine Accessories",
-    "description": "Clip Cord Protector for professional use. Improves workflow and reliability.",
+    "description": "Disposable plastic covers compatible with RCA, clip-cord and magnetic cables. Helps prevent contamination and keeps cables clean.",
     "features": [
       "Compatible with RCA, clip-cord and magnetic cables",
       "Durable, odourless and non-toxic plastic",
@@ -608,7 +621,7 @@
     "name": "Electric Ink Wash Bottle",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Electric Ink Wash Bottle for professional use. Improves workflow and reliability.",
+    "description": "Professional wash bottle available in 250mL and 500mL capacities. Durable and easy to clean for studio use.",
     "features": [
       "Available in 250mL and 500mL",
       "Durable construction",
@@ -673,7 +686,7 @@
     "name": "Foam Bottle",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Foam Bottle for professional use. Improves workflow and reliability.",
+    "description": "Foam dispenser bottle (210mL) for soap — converts liquid into rich foam for efficient cleaning in the studio.",
     "features": [
       "210mL capacity",
       "Transforms liquid into foam",
@@ -719,7 +732,7 @@
     "name": "Transparent Plastic Film",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
-    "description": "Transparent Plastic Film for professional use. Improves workflow and reliability.",
+    "description": "Durable transparent osmotic film coil for professional use. Ideal to cover stretchers, armrests, chairs and equipment for hygiene.",
     "features": [
       "Size: 30cm x 300m",
       "High durability",

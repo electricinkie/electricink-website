@@ -4,7 +4,7 @@
     "name": "Rechargeable Battery Plus for Power 3 SLIM - 24mm",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
-    "description": "Rechargeable Battery Plus for Power 3 SLIM - 24mm power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "High-capacity 1400mAh Li-Ion battery for Power 3 SLIM. Enhanced efficiency and extended autonomy for longer tattoo sessions.",
     "features": [
       "1400mAh capacity (enhanced)",
       "3.7V Li-Ion rechargeable",
@@ -63,7 +63,7 @@
     "name": "Rechargeable Battery LI-ION for Power 1",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
-    "description": "Rechargeable Battery LI-ION for Power 1 power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "1400mAh Li-Ion battery for Power 1 supply. Maximum efficiency and autonomy with high-quality system for safe operation.",
     "features": [
       "1400mAh capacity",
       "3.7V Li-Ion rechargeable",
@@ -122,7 +122,7 @@
     "name": "Rechargeable Battery for Power 3 SLIM",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
-    "description": "Rechargeable Battery for Power 3 SLIM power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "900mAh Li-Ion battery for Power 3 SLIM (24mm). Compact and reliable power for your wireless power supply.",
     "features": [
       "900mAh capacity",
       "3.7V Li-Ion rechargeable",
@@ -182,7 +182,7 @@
     "name": "Rechargeable Battery for Power 3 BOLD",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
-    "description": "Rechargeable Battery for Power 3 BOLD power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "High-capacity 2000mAh Li-Ion battery for Power 3 (31mm). Maximum autonomy for extended tattooing sessions.",
     "features": [
       "2000mAh high capacity",
       "3.7V Li-Ion rechargeable",
@@ -241,7 +241,7 @@
     "name": "Electric Ink Battery Charger",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
-    "description": "Electric Ink Battery Charger power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "Dual USB battery charger with fast charging (1A per channel). LED indicator, short-circuit protection, and overload safeguards.",
     "features": [
       "Dual USB ports for simultaneous charging",
       "Fast charging: 1.0A per channel, 4.2V",
@@ -303,7 +303,7 @@
     "name": "Wireless PS Power 1",
     "category": "Power Supplies",
     "subcategory": "Wireless Power Supplies",
-    "description": "Wireless PS Power 1 power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "Wireless power supply with Bluetooth connectivity. Compatible with Electra Pop, Pen 2, Ultra Pen, and Pen 3. App-enabled control.",
     "features": [
       "Automatic wireless connection",
       "Bluetooth technology",
@@ -363,7 +363,7 @@
     "name": "Power 3 SLIM - Wireless Power Supply",
     "category": "Power Supplies",
     "subcategory": "Wireless Power Supplies",
-    "description": "Power 3 SLIM - Wireless Power Supply power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "Compact wireless power supply with gesture control, MC2 coupling, and Bluetooth 5.3. Features Sensitivity Indicator and Kick Booster for extended motor life.",
     "features": [
       "Gesture control for on/off and speed adjustment",
       "MC2 Magnetic Coupling with RCA adapter",
@@ -433,7 +433,7 @@
     "name": "Power 3 - Wireless Tattoo Power Supply",
     "category": "Power Supplies",
     "subcategory": "Wireless Power Supplies",
-    "description": "Power 3 - Wireless Tattoo Power Supply power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "Advanced wireless power supply with gesture control, MC2 coupling, and Bluetooth 5.3. Features Sensitivity Indicator and Kick Booster.",
     "features": [
       "Gesture control for on/off and speed adjustment",
       "MC2 Magnetic Coupling with RCA adapter",
@@ -503,7 +503,7 @@
     "name": "Kit Power 3 SLIM - Wireless Power Supply",
     "category": "Power Supplies",
     "subcategory": "Complete Kits",
-    "description": "Kit Power 3 SLIM - Wireless Power Supply power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "Complete kit: Power 3 SLIM wireless supply + charger + 2x 18350 batteries (900mAh). Ready for up to 6 hours continuous work.",
     "features": [
       "Power 3 SLIM wireless supply included",
       "Electric Ink battery charger included",
@@ -568,7 +568,7 @@
     "name": "Kit Power 3 - Wireless Power Supply",
     "category": "Power Supplies",
     "subcategory": "Complete Kits",
-    "description": "Kit Power 3 - Wireless Power Supply power supply. Stable output and reliable performance. Compatible with cartridge machines.",
+    "description": "Complete kit: Power 3 wireless supply + charger + 2x 26350 batteries (2000mAh). Ready for up to 16 hours continuous work.",
     "features": [
       "Power 3 wireless supply included",
       "Electric Ink battery charger included",

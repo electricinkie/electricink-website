@@ -577,7 +577,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
             console.error('❌ Express checkout error:', error);
             ev.complete('fail');
             if (window.toast) {
-              window.toast.error('Payment failed. Retry.');
+              window.toast.error('Payment failed. Please try again.');
             }
           }
         });
@@ -828,14 +828,14 @@ import { getCurrentUser, onAuthChange } from './auth.js';
     const discountMessage = document.getElementById('discountMessage');
     
     if (!code) {
-      showDiscountMessage('Enter code', 'error');
+      showDiscountMessage('Please enter a discount code', 'error');
       return;
     }
     
     const discount = DISCOUNT_CODES[code];
     
     if (!discount) {
-      showDiscountMessage('Invalid code', 'error');
+      showDiscountMessage('Invalid discount code', 'error');
       discountInput.value = '';
       return;
     }
@@ -1074,9 +1074,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
     const email = form.email.value;
     if (!isValidEmail(email)) {
       if (window.toast) {
-        window.toast.error('Invalid email');
+        window.toast.error('Please enter a valid email address');
       }
-      showError('Invalid email');
+      showError('Please enter a valid email address');
       form.email.focus();
       return false;
     }
@@ -1141,9 +1141,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
             // 3DS completed but payment still failed (card declined after auth)
             console.error('Payment failed after 3D Secure authentication');
             if (window.toast) {
-              window.toast.error('Card declined. Try another.', 5000);
+              window.toast.error('Payment declined. Please try a different card.', 5000);
             }
-            showError('Card declined. Try another.');
+            showError('Payment declined. Please try a different card.');
             setLoading(false);
           } else {
             // Unexpected status after 3DS
@@ -1160,9 +1160,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
           // Payment failed, customer needs to try different payment method
           console.error('Payment requires different payment method');
           if (window.toast) {
-            window.toast.error('Card declined. Try another.', 5000);
+            window.toast.error('Payment declined. Please try a different card.', 5000);
           }
-          showError('Card declined. Try another.');
+          showError('Payment declined. Please try a different card.');
           setLoading(false);
           break;
 
@@ -1180,9 +1180,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
           // Payment was canceled
           console.error('Payment was canceled');
           if (window.toast) {
-            window.toast.error('Payment canceled.', 5000);
+            window.toast.error('Payment was canceled. Please try again.', 5000);
           }
-          showError('Payment canceled.');
+          showError('Payment was canceled. Please try again.');
           setLoading(false);
           break;
 

@@ -96,7 +96,7 @@
                   required
                   placeholder="your@email.com"
                 >
-                <span class="input-hint">Confirmation sent here</span>
+                <span class="input-hint">Order confirmation will be sent here</span>
               </div>
             </div>
             
@@ -171,7 +171,7 @@
                     name="postalCode" 
                     required
                   >
-                  <span class="input-hint">D01-D08: same-day if ordered by 2pm</span>
+                  <span class="input-hint">Required for same-day delivery (Dublin D01-D08)</span>
                 </div>
                 
                 <div class="form-group">
@@ -199,7 +199,7 @@
                   required
                   placeholder="+353 XX XXX XXXX"
                 >
-                <span class="input-hint">For delivery updates</span>
+                <span class="input-hint">For delivery updates and support</span>
               </div>
             </div>
             
@@ -231,7 +231,7 @@
                       <span class="shipping-option-name">Standard Shipping</span>
                       <span class="shipping-option-price">€11.50</span>
                     </div>
-                    <p class="shipping-option-desc">3-5 business days</p>
+                    <p class="shipping-option-desc">Delivery in 3-5 business days</p>
                   </div>
                 </label>
                 
@@ -246,10 +246,10 @@
                   >
                   <div class="shipping-option-content">
                     <div class="shipping-option-header">
-                      <span class="shipping-option-name">Same-Day Delivery (D01-D08)</span>
+                      <span class="shipping-option-name">Same-Day Delivery (Dublin Central)</span>
                       <span class="shipping-option-price">€7.50</span>
                     </div>
-                    <p class="shipping-option-desc">Order by 2pm — dispatch today</p>
+                    <p class="shipping-option-desc">Order before 2 PM for same-day delivery (D01-D08)</p>
                   </div>
                 </label>
                 
@@ -263,10 +263,10 @@
                   >
                   <div class="shipping-option-content">
                     <div class="shipping-option-header">
-                      <span class="shipping-option-name">Studio Pickup</span>
+                      <span class="shipping-option-name">Store Pickup</span>
                       <span class="shipping-option-price">FREE</span>
                     </div>
-                    <p class="shipping-option-desc">Appreciart Studio, Dublin</p>
+                    <p class="shipping-option-desc">Pick up at our Dublin store</p>
                   </div>
                 </label>
                 
@@ -285,7 +285,7 @@
               </h2>
               
               <div class="payment-methods-accepted">
-                <span class="payment-label">Payment methods:</span>
+                <span class="payment-label">We accept:</span>
                 <div class="payment-icons">
                   <img src="/images/payment-method-icons/Light-Color/1.png" alt="Visa" class="payment-icon">
                   <img src="/images/payment-method-icons/Light-Color/2.png" alt="Mastercard" class="payment-icon">
@@ -305,7 +305,7 @@
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display: inline; margin-right: 4px;">
                     <path d="M6 1l4 2v3c0 2.5-2 4-4 5-2-1-4-2.5-4-5V3l4-2z" fill="#10B981"/>
                   </svg>
-                  256-bit SSL encryption
+                  Secured by 256-bit SSL encryption
                 </span>
               </div>
             </div>
@@ -317,7 +317,7 @@
                   <path d="M10 2l6 2v5c0 4-3 7-6 8-3-1-6-4-6-8V4l6-2z" fill="#43BDAB"/>
                   <path d="M7 10l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>SSL Secured</span>
+                <span>Secure SSL Encryption</span>
               </div>
               <div class="trust-badge">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -337,7 +337,7 @@
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M2 5h16M2 10h16M2 15h10" stroke="#43BDAB" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
-                <span>Free Shipping €120+</span>
+                <span>Free Shipping Over €120</span>
               </div>
             </div>
             
@@ -351,7 +351,8 @@
                   required
                 >
                 <span class="checkbox-text">
-                  I agree to the <a href="/terms-conditions.html" target="_blank">Terms</a> and <a href="/privacy-policy.html" target="_blank">Privacy Policy</a>
+                  I agree to the <a href="/terms-conditions.html" target="_blank">Terms & Conditions</a> 
+                  and <a href="/privacy-policy.html" target="_blank">Privacy Policy</a>
                 </span>
               </label>
             </div>
@@ -362,7 +363,7 @@
               id="submitBtn" 
               class="btn-complete-order"
             >
-              <span id="button-text">Complete Order</span>
+              <span id="button-text">Place Order Securely</span>
               <span id="spinner" class="spinner" style="display:none;"></span>
             </button>
             
@@ -405,13 +406,13 @@
                 <path d="M14 6L8 2 2 6v5.5c0 3 2 5 6 6 4-1 6-3 6-6V6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M8 6v4M6 8h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
-              Discount code?
+              Have a discount code?
             </button>
             <div class="discount-input-wrapper" id="discountInputWrapper" style="display: none;">
               <input 
                 type="text" 
                 id="discountCode" 
-                placeholder="Code"
+                placeholder="Enter code"
                 class="discount-input"
               >
               <button 

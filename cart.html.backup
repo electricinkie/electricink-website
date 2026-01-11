@@ -41,11 +41,11 @@
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/" class="breadcrumb-link">Home</a>
         <span class="breadcrumb-separator">/</span>
-        <span class="breadcrumb-current">Cart</span>
+        <span class="breadcrumb-current">Shopping Cart</span>
       </nav>
       
       <!-- Page Title -->
-      <h1 class="cart-title">Cart</h1>
+      <h1 class="cart-title">Shopping Cart</h1>
       
       <!-- Cart Grid: Items + Summary -->
       <div class="cart-grid">
@@ -59,9 +59,9 @@
               <circle cx="60" cy="60" r="58" stroke="#e8e8e8" stroke-width="4"/>
               <path d="M40 50h40M45 60h30M50 70h20" stroke="#43BDAB" stroke-width="3" stroke-linecap="round"/>
             </svg>
-            <h2>Cart Empty</h2>
-            <p>Browse professional supplies — in stock, ready to ship</p>
-            <a href="/category.html?cat=all" class="btn-primary">Shop Supplies</a>
+            <h2>Your cart is empty</h2>
+            <p>Add some products to get started</p>
+            <a href="/category.html?cat=all" class="btn-primary">Shop Products</a>
           </div>
           
           <!-- Cart Items List -->
@@ -82,7 +82,7 @@
           
           <div class="summary-line">
             <span>Shipping</span>
-            <span id="summaryShipping">calculated at checkout</span>
+            <span id="summaryShipping">Calculated at checkout</span>
           </div>
           
           <div class="summary-line">
@@ -96,11 +96,11 @@
           </div>
           
           <button class="btn-checkout" id="checkoutBtn">
-            Proceed to Checkout
+            Checkout Securely
           </button>
           
           <a href="/category.html?cat=all" class="continue-shopping">
-            ← Browse Supplies
+            ← Continue Shopping
           </a>
           
           <!-- Trust Badges -->
@@ -109,13 +109,13 @@
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 2l2.5 5 5.5 1-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1z" fill="#43BDAB"/>
               </svg>
-              <span>Secure Checkout</span>
+              <span>SSL Secured</span>
             </div>
             <div class="trust-badge">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M3 8l7-5 7 5v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" fill="#43BDAB"/>
               </svg>
-              <span>Same-Day Available (D01-D08)</span>
+              <span>Fast Delivery</span>
             </div>
           </div>
           

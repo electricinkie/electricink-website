@@ -44,12 +44,12 @@
       </div>
       
       <!-- Title -->
-      <h1 class="success-title">Order Confirmed</h1>
-      <p class="success-subtitle">Your order is confirmed and will be processed shortly</p>
+      <h1 class="success-title">Order Confirmed!</h1>
+      <p class="success-subtitle">Thank you for your purchase</p>
       
       <!-- Order Number -->
       <div class="order-number">
-        <span class="order-number-label">Order #</span>
+        <span class="order-number-label">Order Number:</span>
         <span class="order-number-value" id="orderNumber">Loading...</span>
       </div>
       
@@ -112,7 +112,7 @@
           <div class="info-card">
             <h3>Confirmation Email</h3>
             <p class="confirmation-email">
-              Confirmation sent to:<br>
+              A confirmation email has been sent to:<br>
               <strong id="customerEmail">your@email.com</strong>
             </p>
           </div>
@@ -123,13 +123,15 @@
       
       <!-- Action Buttons -->
       <div class="success-actions">
-        <a href="/" class="btn-primary">Browse More Supplies</a>
-        <a href="/howtousecosmetics.html" class="btn-secondary">Product Guides</a>
+        <a href="/" class="btn-primary">Continue Shopping</a>
+        <a href="/howtousecosmetics.html" class="btn-secondary">Learn How to Use</a>
       </div>
       
       <!-- Support Notice -->
       <p class="support-notice">
-        Order questions? WhatsApp us: <a href="https://wa.link/kzetgg" target="_blank">+353 83 147 3502</a>
+        Questions about your order? 
+        <a href="/contact-us.html">Contact us</a> or WhatsApp 
+        <a href="https://wa.link/kzetgg" target="_blank">+353 83 147 3502</a>
       </p>
       
     </div>

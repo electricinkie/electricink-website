@@ -7,6 +7,8 @@ const path = require('path');
 // ✅ Importar TODOS os handlers da API
 const createPaymentIntentHandler = require('./api/create-payment-intent.js');
 const webhookStripeHandler = require('./api/webhooks-stripe.js');
+// Local config handler (exposes publishable keys for local dev)
+const configHandler = require('./api/config.js');
 
 const app = express();
 
@@ -68,6 +70,16 @@ app.all('/api/webhooks-stripe', async (req, res) => {
   }
 });
 console.log('✅ Rota do webhook registrada');
+
+// 4. Local config (exposes publishable keys to frontend during development)
+app.all('/api/config', async (req, res) => {
+  try {
+    await configHandler(req, res);
+  } catch (err) {
+    console.error('❌ [config] Error:', err);
+    res.status(500).json({ error: 'Handler error', details: err.message });
+  }
+});
 
 
 

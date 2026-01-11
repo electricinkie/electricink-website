@@ -379,7 +379,10 @@
         img.src = product.image;
         img.alt = product.name;
         img.loading = 'lazy';
-        img.onerror = () => { img.src = '/images/placeholder.jpg'; };
+        img.onerror = () => {
+          if (!img.src || img.src.endsWith('/images/placeholder.jpg')) return;
+          img.src = '/images/placeholder.jpg';
+        };
 
         // Info container
         const info = document.createElement('div');

@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shopping Cart | Electric Ink IE</title>
-  <meta name="description" content="Review your shopping cart and proceed to checkout.">
-  <meta name="robots" content="noindex, nofollow">
+  <title id="page-title">Product - Electric Ink IE</title>
+  <meta name="description" content="Professional tattoo supplies and equipment. High-quality products for professional artists.">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="Tattoo Products - Electric Ink IE">
+  <meta property="og:description" content="Professional tattoo supplies and equipment. High-quality products for professional artists.">
+  <meta property="og:image" content="https://electricink.ie/images/logos/logo-white.png">
+  <meta property="og:url" content="https://electricink.ie/products.html">
+  <meta property="og:type" content="product">
+  <meta name="twitter:card" content="summary_large_image">
   
   <!-- Favicons (Big Player Structure) -->
   <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
@@ -14,118 +21,124 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
   <link rel="manifest" href="/images/favicons/site.webmanifest">
   <meta name="theme-color" content="#43BDAB">
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- CSS -->
+    <!-- CSS -->
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/toast.css">
   <link rel="stylesheet" href="/css/mobile-header.css">
   <link rel="stylesheet" href="/css/desktop-header.css">
   <link rel="stylesheet" href="/css/footer.css">
-  <link rel="stylesheet" href="/css/cart.css">
+  <link rel="stylesheet" href="/css/product-page.css">
   <script src="/js/firebase-client-config.js" defer></script>
 </head>
 <body>
   
   <!-- Header será injetado pelo mobile-header.js -->
-  
-  <!-- Main -->
-  <main class="cart-main">
-    <div class="cart-container">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/" class="breadcrumb-link">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="#" id="breadcrumb-category-link" class="breadcrumb-link">Products</a>
+    <span class="breadcrumb-separator">/</span>
+    <span id="breadcrumb-product" class="breadcrumb-current">Loading...</span>
+  </nav>
+
+  <!-- Product Page -->
+  <main class="product-page">
+    <div class="product-container">
       
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="/" class="breadcrumb-link">Home</a>
-        <span class="breadcrumb-separator">/</span>
-        <span class="breadcrumb-current">Cart</span>
-      </nav>
-      
-      <!-- Page Title -->
-      <h1 class="cart-title">Cart</h1>
-      
-      <!-- Cart Grid: Items + Summary -->
-      <div class="cart-grid">
-        
-        <!-- Left: Cart Items -->
-        <div class="cart-items-section">
-          
-          <!-- Empty Cart State -->
-          <div class="cart-empty" id="cartEmpty" style="display: none;">
-            <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-              <circle cx="60" cy="60" r="58" stroke="#e8e8e8" stroke-width="4"/>
-              <path d="M40 50h40M45 60h30M50 70h20" stroke="#43BDAB" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-            <h2>Cart Empty</h2>
-            <p>Browse professional supplies — in stock, ready to ship</p>
-            <a href="/category.html?cat=all" class="btn-primary">Shop Supplies</a>
-          </div>
-          
-          <!-- Cart Items List -->
-          <div class="cart-items" id="cartItems">
-            <!-- Rendered by JS -->
-          </div>
-          
+      <!-- LEFT: Images -->
+      <div class="product-images">
+        <div class="main-image">
+          <img id="mainProductImage" src="" alt="" loading="lazy">
         </div>
-        
-        <!-- Right: Order Summary -->
-        <div class="cart-summary">
-          <h2>Order Summary</h2>
-          
-          <div class="summary-line">
-            <span>Subtotal</span>
-            <span id="summarySubtotal">€0.00</span>
-          </div>
-          
-          <div class="summary-line">
-            <span>Shipping</span>
-            <span id="summaryShipping">calculated at checkout</span>
-          </div>
-          
-          <div class="summary-line">
-            <span>VAT (23%)</span>
-            <span id="summaryVAT">€0.00</span>
-          </div>
-          
-          <div class="summary-line summary-total">
-            <span>Total</span>
-            <span id="summaryTotal">€0.00</span>
-          </div>
-          
-          <button class="btn-checkout" id="checkoutBtn">
-            Proceed to Checkout
-          </button>
-          
-          <a href="/category.html?cat=all" class="continue-shopping">
-            ← Browse Supplies
-          </a>
-          
-          <!-- Trust Badges -->
-          <div class="trust-badges">
-            <div class="trust-badge">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M10 2l2.5 5 5.5 1-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1z" fill="#43BDAB"/>
-              </svg>
-              <span>Secure Checkout</span>
-            </div>
-            <div class="trust-badge">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M3 8l7-5 7 5v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" fill="#43BDAB"/>
-              </svg>
-              <span>Same-Day Available (D01-D08)</span>
-            </div>
-          </div>
-          
+        <div class="product-thumbnails" id="thumbnails">
+          <!-- Rendered by JS -->
         </div>
-        
       </div>
-      
+
+      <!-- RIGHT: Info -->
+      <div class="product-info">
+        
+        <!-- Category badge -->
+        <div class="product-category" id="productCategory"></div>
+        
+        <!-- Title -->
+        <h1 id="productName" class="product-title"></h1>
+        
+        <!-- Price -->
+        <div class="product-price" id="productPrice"></div>
+        
+        <!-- Stock indicator -->
+        <div class="product-stock" id="productStock">
+          <span class="stock-dot"></span>
+          <span class="stock-text">In Stock</span>
+        </div>
+
+        <!-- Description -->
+        <div class="product-description" id="productDescription"></div>
+
+        <!-- Variants (se houver) -->
+        <div class="product-variants" id="variantsContainer" style="display: none;">
+          <label id="variantLabel">Select Option:</label>
+          <select id="variantSelect" class="variant-dropdown">
+            <!-- Options rendered by JS -->
+          </select>
+        </div>
+
+        <!-- Add to Cart -->
+        <button id="addToCartBtn" class="btn-add-to-cart">
+          Add to Cart
+        </button>
+
+        <!-- How to Use Accordion (se product.content.usage_instructions existir) -->
+        <div class="product-how-to-use" id="productHowToUse" style="display: none;">
+          <button class="how-to-toggle" id="howToToggle" aria-expanded="false">
+            <div class="how-to-toggle-left">
+              <span class="how-to-title">How to Use</span>
+            </div>
+            <span class="how-to-arrow">▼</span>
+          </button>
+
+          <div class="how-to-content" id="howToContent">
+            <ol id="howToSteps">
+              <!-- Steps rendered by JS -->
+            </ol>
+          </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="product-trust">
+          <div class="trust-item">
+            <span class="trust-check">✓</span>
+            <span>Certified Quality</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-check">✓</span>
+            <span>Fast Shipping</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-check">✓</span>
+            <span>Secure Payment</span>
+          </div>
+        </div>
+
+        <!-- Features (se houver) -->
+        <div class="product-features" id="productFeatures" style="display: none;">
+          <h3>Key Features</h3>
+          <ul id="featuresList"></ul>
+        </div>
+
+        <!-- Specifications (se houver) -->
+        <div class="product-specs" id="productSpecs" style="display: none;">
+          <h3>Specifications</h3>
+          <div id="specsList"></div>
+        </div>
+
+      </div>
     </div>
   </main>
-  
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">
@@ -194,26 +207,25 @@
 
     </div>
   </footer>
-  
+
   <!-- Styles -->
   <link rel="stylesheet" href="/css/modal.css">
   <link rel="stylesheet" href="/css/toast.css">
-  
-  <!-- Scripts -->
+
+  <!-- JavaScript -->
   <!-- Mobile Header (MUST be first) -->
-  <script type="module" src="/js/mobile-header.js"></script>
+    <script type="module" src="/js/mobile-header.js"></script>
   <!-- Desktop Header -->
-  <script type="module" src="/js/desktop-header.js"></script>
+    <script type="module" src="/js/desktop-header.js"></script>
   <!-- Modal System -->
-  <script type="module" src="/js/modal.js"></script>
+    <script type="module" src="/js/modal.js"></script>
   <!-- Toast System -->
-  <script type="module" src="/js/toast.js"></script>
+    <script type="module" src="/js/toast.js"></script>
   
   <!-- Global Cart System -->
-  <script type="module" src="/js/global-cart.js"></script>
+    <script type="module" src="/js/global-cart.js"></script>
   
   <!-- Page Scripts -->
-  <script type="module" src="/js/cart.js"></script>
-  
+    <script type="module" src="/js/product-page.js"></script>
 </body>
 </html>

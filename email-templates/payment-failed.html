@@ -34,14 +34,14 @@
             <td style="padding: 40px;">
               
               <!-- Title -->
-              <h1 style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; color: #000000;">Payment Unsuccessful</h1>
-              <p style="margin: 0 0 30px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; line-height: 1.6;">We could not process your payment. Your items are still reserved in your cart.</p>
+              <h1 style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; color: #000000;">Payment Failed</h1>
+              <p style="margin: 0 0 30px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; line-height: 1.6;">Payment failed. Your items are reserved in cart.</p>
               
               <!-- Error Card -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
                 <tr>
                   <td style="background-color: #fff5f5; padding: 24px; border-radius: 8px; border-left: 4px solid #ff4444;">
-                    <p style="margin: 0 0 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; color: #ff4444; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Payment Error</p>
+                    <p style="margin: 0 0 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; color: #ff4444; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Error</p>
                     <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">{{ERROR_MESSAGE}}</p>
                   </td>
                 </tr>
@@ -51,7 +51,7 @@
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
                 <tr>
                   <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px;">
-                    <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #666666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Your Items</p>
+                    <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #666666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Cart Items</p>
                     
                     {{CART_ITEMS_SIMPLE}}
                     
@@ -69,19 +69,19 @@
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 30px;">
                 <tr>
                   <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px;">
-                    <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">How to Resolve</p>
+                    <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">Next Steps</p>
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Check your card details are correct</td>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Check card details</td>
                       </tr>
                       <tr>
-                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Ensure you have sufficient funds</td>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Check funds</td>
                       </tr>
                       <tr>
-                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Try a different payment method</td>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Try different card</td>
                       </tr>
                       <tr>
-                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Contact your bank if the issue persists</td>
+                        <td style="padding: 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #666666; line-height: 1.6;">• Contact bank if needed</td>
                       </tr>
                     </table>
                   </td>
@@ -98,13 +98,13 @@
                 <tr>
                   <td style="background-color: #43BDAB; border-radius: 6px;">
                     <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie/checkout.html -->
-                    <a href="https://electricink-website.vercel.app/checkout.html" style="display: inline-block; padding: 16px 40px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 700; color: #FFFFFF; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Try Again</a>
+                    <a href="https://electricink-website.vercel.app/checkout.html" style="display: inline-block; padding: 16px 40px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 700; color: #FFFFFF; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Retry Payment</a>
                   </td>
                 </tr>
               </table>
               <p style="margin: 16px 0 0 0;">
                 <!-- ATENÇÃO: Para produção, troque o domínio abaixo para https://electricink.ie/cart.html -->
-                <a href="https://electricink-website.vercel.app/cart.html" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #43BDAB; text-decoration: underline;">Update Payment Method</a>
+                <a href="https://electricink-website.vercel.app/cart.html" style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #43BDAB; text-decoration: underline;">Change Card</a>
               </p>
             </td>
           </tr>
@@ -112,8 +112,8 @@
           <!-- Support Section -->
           <tr>
             <td style="background-color: #000000; padding: 30px 40px; text-align: center;">
-              <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #43BDAB;">Need Help?</p>
-              <p style="margin: 0 0 20px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #FFFFFF; line-height: 1.6;">Our team is available to assist you with your order.</p>
+              <p style="margin: 0 0 12px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #43BDAB;">Need help?</p>
+              <p style="margin: 0 0 20px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #FFFFFF; line-height: 1.6;">Contact us for support.</p>
               
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
                 <tr>

@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Official Electric Ink distributor in Ireland. Professional tattoo supplies, same-day delivery Dublin. REACH certified inks, machines, aftercare.">
-  <title>Electric Ink Ireland — Official Distributor</title>
+  <meta name="description" content="Electric Ink Ireland - Official Tattoo Products">
+  <title>Electric Ink Ireland</title>
   <!-- Sentry DSN (leave blank locally; inject in deployment) -->
   <meta name="sentry-dsn" content="https://8ba378b40aa46daacfe406ed387bd9dc@o4510652553166848.ingest.de.sentry.io/4510652596682832">
   
   <!-- Open Graph / Social Media -->
   <meta property="og:title" content="Electric Ink IE - Professional Tattoo Supplies">
-  <meta property="og:description" content="Official Electric Ink distributor. Professional supplies, same-day delivery Dublin D01-D08. Shop REACH certified inks and equipment.">
+  <meta property="og:description" content="Dublin's premier tattoo supply store. Same-day delivery, professional equipment, cosmetics.">
   <meta property="og:image" content="https://electricink.ie/images/logos/logo-white.png">
   <meta property="og:url" content="https://electricink.ie">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Electric Ink IE - Professional Tattoo Supplies">
-  <meta name="twitter:description" content="Official Electric Ink distributor. Professional supplies, same-day delivery Dublin D01-D08. Shop REACH certified inks and equipment.">
+  <meta name="twitter:description" content="Dublin's premier tattoo supply store. Same-day delivery, professional equipment, cosmetics.">
   <meta name="twitter:image" content="https://electricink.ie/images/logos/logo-white.png">
   
   <!-- Favicons (Big Player Structure) -->
