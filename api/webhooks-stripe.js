@@ -115,17 +115,22 @@ async function validateResendConfig() {
  */
 
 module.exports = async function handler(req, res) {
-  console.log('\n🟢 WEBHOOK INICIADO');
-  console.log('🟢 Method:', req.method);
-  console.log('🟢 URL:', req.url);
+  // Generate or reuse requestId early for correlated logs
+  const requestId = req.headers['x-request-id'] || Math.random().toString(36).substring(7);
+
+  console.log('='.repeat(80));
+  console.log(`🔔 [WEBHOOK ${requestId}] ===== INICIO =====`);
+  console.log(`🔔 [WEBHOOK ${requestId}] Method: ${req.method}`);
+  console.log(`🔔 [WEBHOOK ${requestId}] URL: ${req.url}`);
+  console.log(`🔔 [WEBHOOK ${requestId}] Time: ${new Date().toISOString()}`);
+  console.log('='.repeat(80));
 
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, stripe-signature, x-request-id');
 
-  // Gera requestId único
-  const requestId = req.headers['x-request-id'] || uuidv4();
+  // Expose requestId to the client
   res.setHeader('x-request-id', requestId);
 
   // Handle preflight
@@ -307,6 +312,9 @@ function validateMetadata(metadata) {
 }
 
 async function handlePaymentIntentSucceeded(event, requestId) {
+  console.log(`💳 [${requestId}] ===== PAYMENT SUCCESS =====`);
+  console.log(`💳 [${requestId}] Payment Intent ID: ${event.data.object.id}`);
+  console.log(`💳 [${requestId}] Amount: ${event.data.object.amount}`);
   const db = getFirestore();
   const paymentIntent = event.data.object;
   const validatedMetadata = validateMetadata(paymentIntent.metadata);
@@ -402,6 +410,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     }
     // Tentar criar document com ID específico (atomicidade)
     const orderRef = db.collection('orders').doc(orderId);
+    console.log(`💾 [${requestId}] ===== SAVING TO FIREBASE =====`);
+    console.log(`💾 [${requestId}] Order ID: ${orderId}`);
+    console.log(`💾 [${requestId}] Customer: ${order.customerEmail}`);
     console.log('🔍 Iniciando transaction para order:', orderId);
     console.log('🔍 Order ref path:', orderRef.path);
     await db.runTransaction(async (transaction) => {
@@ -420,7 +431,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       console.log('🧹 Order original fields:', Object.keys(order).length);
       console.log('🧹 Order limpa fields:', Object.keys(cleanOrder).length);
       transaction.set(orderRef, cleanOrder);
-      console.log('✅ Transaction.set executado');
+      console.log(`✅ [${requestId}] ===== ORDER SAVED =====`);
     });
     console.log('✅ Order criada com sucesso no Firestore');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
