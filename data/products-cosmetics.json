@@ -47,6 +47,45 @@
     "featured": true,
     "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
   },
+  "test-product-sandbox": {
+    "id": "test-product-sandbox",
+    "name": "Teste Product (Sandbox)",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Produto de teste para sandbox Stripe. Não é para venda.",
+    "features": [
+      "Sandbox testing",
+      "Use card 4242 4242 4242 4242",
+      "No real transactions"
+    ],
+    "stripe": {
+      "productId": "prod_Tlw3Y2Nb3ZEW8S",
+      "priceId": "price_1SoOBLALQaxEXnEzcZHjeW90"
+    },
+    "price": 0.61,
+    "variants": [],
+    "size": "Test",
+    "image": "/images/placeholder.jpg",
+    "images": [
+      "/images/placeholder.jpg"
+    ],
+    "content": {
+      "usage_instructions": "Este item é apenas para testes. Use os modos de teste do Stripe."
+    },
+    "inventory": {
+      "stock_quantity": 9999,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 1
+    },
+    "seo": {
+      "meta_title": "Teste Product (Sandbox) | Electric Ink",
+      "meta_description": "Produto de teste para integração Stripe sandbox.",
+      "keywords": ["teste", "sandbox", "stripe"]
+    },
+    "inStock": true,
+    "featured": false,
+    "stripe_price_id": "price_1SoOBLALQaxEXnEzcZHjeW90"
+  },
   "tattoo-cream-derma-30g": {
     "id": "tattoo-cream-derma-30g",
     "name": "Tattoo Cream Derma",
