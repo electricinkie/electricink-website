@@ -72,21 +72,56 @@ async function loadStats() {
   }
 }
 
-async function loadOrders(status = 'all') {
+const PAGE_SIZE = 25;
+const lastDocByStatus = {}; // store last doc per status for pagination
+const hasMoreByStatus = {};
+
+async function loadOrders(status = 'all', reset = true) {
   const tbody = document.getElementById('orders-tbody');
-  tbody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
+  const loadMoreBtn = document.getElementById('loadMoreOrdersBtn');
+
+  if (reset) {
+    tbody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
+    lastDocByStatus[status] = null;
+    hasMoreByStatus[status] = true;
+  }
+
+  if (!hasMoreByStatus[status]) {
+    // Nothing more to load
+    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+    return;
+  }
+
   try {
-    const { collection, getDocs, query, where, orderBy, limit: _limit } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-    let q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), _limit(50));
-    if (status !== 'all') q = query(collection(db, 'orders'), where('status', '==', status), orderBy('createdAt', 'desc'), _limit(50));
+    const { collection, getDocs, query, where, orderBy, limit: _limit, startAfter } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+    let q;
+    const col = collection(db, 'orders');
+    const pageLimit = _limit(PAGE_SIZE);
+
+    if (status !== 'all') {
+      q = query(col, where('status', '==', status), orderBy('createdAt', 'desc'), pageLimit);
+    } else {
+      q = query(col, orderBy('createdAt', 'desc'), pageLimit);
+    }
+
+    const last = lastDocByStatus[status];
+    if (last) {
+      q = query(q, startAfter(last));
+    }
 
     const snap = await getDocs(q);
+
+    if (reset) tbody.innerHTML = '';
+
     if (snap.empty) {
-      tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado</td></tr>';
+      if (reset) {
+        tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado</td></tr>';
+      }
+      hasMoreByStatus[status] = false;
+      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
       return;
     }
 
-    tbody.innerHTML = '';
     snap.forEach(docSnap => {
       const order = docSnap.data();
       const row = document.createElement('tr');
@@ -108,16 +143,28 @@ async function loadOrders(status = 'all') {
       </td>
     `;
 
-      // (per-row listeners removed - handled by delegated tbody listener below)
-
       tbody.appendChild(row);
     });
 
-    // Note: delegated click listener is attached globally once via initDashboardListeners()
+    // Update lastDoc and hasMore
+    lastDocByStatus[status] = snap.docs[snap.docs.length - 1];
+    hasMoreByStatus[status] = snap.docs.length === PAGE_SIZE;
+
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = hasMoreByStatus[status] ? 'inline-block' : 'none';
+    }
+
   } catch (err) {
     console.error('Erro ao carregar pedidos:', err);
     tbody.innerHTML = `<tr><td colspan=\"6\">Erro ao carregar pedidos: ${err?.message || 'Ver console'}</td></tr>`;
+    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
   }
+}
+
+// Handler to load next page
+async function loadMoreOrders() {
+  const status = document.getElementById('status-filter')?.value || 'all';
+  await loadOrders(status, false);
 }
 
 window.viewOrder = async function(orderId) {
@@ -310,7 +357,8 @@ window.closeModal = function() {
 };
 
 document.getElementById('status-filter')?.addEventListener('change', (e) => {
-  loadOrders(e.target.value).catch(err => console.error(err));
+  // When changing filter, reset pagination and load first page
+  loadOrders(e.target.value, true).catch(err => console.error(err));
 });
 
 function formatDate(timestamp) {
@@ -409,6 +457,12 @@ function handleOrderTableClick(e) {
     // Ensure we don't double-attach
     try { tbody.removeEventListener('click', handleOrderTableClick); } catch (e) { /* ignore */ }
     tbody.addEventListener('click', handleOrderTableClick);
+    // Load more button
+    const loadMoreBtn = document.getElementById('loadMoreOrdersBtn');
+    if (loadMoreBtn) {
+      try { loadMoreBtn.removeEventListener('click', loadMoreOrders); } catch (e) {}
+      loadMoreBtn.addEventListener('click', (e) => { e.preventDefault(); loadMoreOrders(); });
+    }
   }
 
 
