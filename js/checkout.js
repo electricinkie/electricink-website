@@ -8,6 +8,13 @@ import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
 import { initFirebase } from './firebase-config.js';
 import { getCurrentUser, onAuthChange } from './auth.js';
 
+// Debug flag - ativo apenas em localhost ou com ?debug=true
+const DEBUG = typeof window !== 'undefined' && (
+  window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  || (window.location && window.location.search && window.location.search.includes('debug=true'))
+);
+const debugLog = (...args) => { if (DEBUG) console.log(...args); };
+
 (function() {
   'use strict';
 
@@ -372,9 +379,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
   
   async function initExpressCheckout() {
     try {
-      console.log('🚀 Initializing Express Checkout...');
-      console.log('   Cart total:', totals.total);
-      console.log('   Cart subtotal:', totals.subtotal);
+      debugLog('🚀 Initializing Express Checkout...');
+      debugLog('   Cart total:', totals.total);
+      debugLog('   Cart subtotal:', totals.subtotal);
       
       // Determine initial shipping options based on subtotal
       const initialShippingOptions = getAvailableShippingOptions(totals.subtotal).map(opt => ({
@@ -393,9 +400,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       let initialShipping = initialShippingOptions.length ? initialShippingOptions[0].amount : (qualifiesForFreeShipping ? 0 : 1150);
       let initialTotal = Math.round((totals.subtotal - (totals.discount || 0) + (initialShipping / 100)) * 100);
       
-      console.log('   Free shipping?', qualifiesForFreeShipping);
-      console.log('   Initial shipping:', initialShipping / 100);
-      console.log('   Initial total:', initialTotal / 100);
+      debugLog('   Free shipping?', qualifiesForFreeShipping);
+      debugLog('   Initial shipping:', initialShipping / 100);
+      debugLog('   Initial total:', initialTotal / 100);
       
       // Create Payment Request with shipping support
       const paymentRequest = stripe.paymentRequest({
@@ -416,13 +423,13 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       // EVENT: Shipping Address Change (detect Dublin for Same-Day)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       paymentRequest.on('shippingaddresschange', async (ev) => {
-        console.log('📍 Shipping address changed:', ev.shippingAddress);
+        debugLog('📍 Shipping address changed:', ev.shippingAddress);
         
         const postalCode = ev.shippingAddress.postalCode;
         const isDublinCentral = postalCode && /^D0[1-8]/.test(postalCode.toUpperCase());
         
-        console.log('   Postal code:', postalCode);
-        console.log('   Dublin Central?', isDublinCentral);
+        debugLog('   Postal code:', postalCode);
+        debugLog('   Dublin Central?', isDublinCentral);
         
         // Build shipping options based on address, then filter by subtotal rules
         const baseOptions = getAvailableShippingOptions(totals.subtotal);
@@ -457,9 +464,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         
         const newTotal = Math.round((totals.subtotal - (totals.discount || 0) + (shippingAmount / 100)) * 100);
         
-        console.log('   Updated shipping options:', shippingOptions.length);
-        console.log('   Shipping amount:', shippingAmount / 100);
-        console.log('   New total:', newTotal / 100);
+        debugLog('   Updated shipping options:', shippingOptions.length);
+        debugLog('   Shipping amount:', shippingAmount / 100);
+        debugLog('   New total:', newTotal / 100);
         
         ev.updateWith({
           status: 'success',
@@ -475,7 +482,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       // EVENT: Shipping Option Change (recalculate total)
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       paymentRequest.on('shippingoptionchange', async (ev) => {
-        console.log('🚚 Shipping option changed:', ev.shippingOption);
+        debugLog('🚚 Shipping option changed:', ev.shippingOption);
         
         const selectedOption = ev.shippingOption;
         let shippingAmount = selectedOption.amount;
@@ -487,9 +494,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         
         const newTotal = Math.round((totals.subtotal - (totals.discount || 0) + (shippingAmount / 100)) * 100);
         
-        console.log('   Selected option:', selectedOption.id);
-        console.log('   Shipping amount:', shippingAmount / 100);
-        console.log('   New total:', newTotal / 100);
+        debugLog('   Selected option:', selectedOption.id);
+        debugLog('   Shipping amount:', shippingAmount / 100);
+        debugLog('   New total:', newTotal / 100);
         
         ev.updateWith({
           status: 'success',
@@ -513,35 +520,35 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         },
       });
 
-      console.log('✅ Payment Request created, checking availability...');
+      debugLog('✅ Payment Request created, checking availability...');
 
       // Check if Payment Request is available (Apple Pay / Google Pay)
       const canMakePayment = await paymentRequest.canMakePayment();
       
-      console.log('   Can make payment:', canMakePayment);
+      debugLog('   Can make payment:', canMakePayment);
       
       if (canMakePayment) {
-        console.log('✅ Express Checkout available! Showing buttons...');
+        debugLog('✅ Express Checkout available! Showing buttons...');
         
         // Show Express Checkout container
         const container = document.getElementById('expressCheckoutContainer');
         if (container) {
           container.style.display = 'block';
-          console.log('   Container displayed');
+          debugLog('   Container displayed');
         }
         
         // Mount Payment Request Button
         prButton.mount('#payment-request-button');
-        console.log('   Payment button mounted');
+        debugLog('   Payment button mounted');
         
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // EVENT: Payment Method (complete payment)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         paymentRequest.on('paymentmethod', async (ev) => {
-          console.log('💳 Express payment initiated...');
-          console.log('   Payer:', ev.payerName, ev.payerEmail);
-          console.log('   Shipping:', ev.shippingAddress);
-          console.log('   Shipping option:', ev.shippingOption);
+          debugLog('💳 Express payment initiated...');
+          debugLog('   Payer:', ev.payerName, ev.payerEmail);
+          debugLog('   Shipping:', ev.shippingAddress);
+          debugLog('   Shipping option:', ev.shippingOption);
           
           try {
             // Create payment intent
@@ -563,7 +570,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
               }
             } else {
               // Success
-              console.log('✅ Express payment succeeded!');
+              debugLog('✅ Express payment succeeded!');
               ev.complete('success');
               
               // Get payment intent ID from clientSecret
@@ -631,7 +638,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
           }
         });
       } else {
-        console.log('⚠️ Express Checkout NOT available (no Apple/Google Pay on this device/browser)');
+        debugLog('⚠️ Express Checkout NOT available (no Apple/Google Pay on this device/browser)');
         // Express checkout not available, hide container
         const container = document.getElementById('expressCheckoutContainer');
         if (container) {
@@ -711,7 +718,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
     }
     
     // 🔍 DEBUG: Log valores para troubleshooting
-    console.log('🔍 DEBUG Same-Day check:', {
+    debugLog('🔍 DEBUG Same-Day check:', {
       city: city,
       postal: postal,
       isDublin: isDublinCentral(postal),
@@ -996,7 +1003,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
       try {
         // 🔧 FIX: Force update shipping options before payment (safety check)
-        console.log('🔒 Final check before payment...');
+        debugLog('🔒 Final check before payment...');
         updateShippingOptions();
         
         // Create payment intent
@@ -1154,14 +1161,14 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       switch (paymentIntent.status) {
         case 'succeeded':
           // Payment succeeded immediately (no 3DS required)
-          console.log('Payment succeeded without additional authentication');
+          debugLog('Payment succeeded without additional authentication');
           handlePaymentSuccess(paymentIntent);
           break;
 
         case 'requires_action':
         case 'requires_source_action':
           // 3D Secure authentication required
-          console.log('3D Secure authentication required');
+          debugLog('3D Secure authentication required');
           
           // Show user-friendly message
           if (window.toast) {
@@ -1184,7 +1191,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
           
           // After 3DS, check final status
           if (confirmedIntent.status === 'succeeded') {
-            console.log('Payment succeeded after 3D Secure authentication');
+            debugLog('Payment succeeded after 3D Secure authentication');
             handlePaymentSuccess(confirmedIntent);
           } else if (confirmedIntent.status === 'requires_payment_method') {
             // 3DS completed but payment still failed (card declined after auth)
@@ -1217,7 +1224,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
         case 'processing':
           // Payment is processing (async payment methods like SEPA, bank transfers)
-          console.log('Payment is processing asynchronously');
+          debugLog('Payment is processing asynchronously');
           if (window.toast) {
             window.toast.info('Payment is processing. You will receive confirmation via email.', 5000);
           }
@@ -1265,7 +1272,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         ...(item.variant && { variant: item.variant })
       }));
       
-      console.log('🔍 Normalized cart items:', cartItems);
+      debugLog('🔍 Normalized cart items:', cartItems);
 
       // Prepare shipping address (COMPLETE)
       const shippingAddress = {
@@ -1287,9 +1294,9 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       let currentUser = null;
       try {
         currentUser = await getCurrentUser();
-        console.log('🔐 [CHECKOUT] Current user:', currentUser ? currentUser.uid : 'GUEST');
+        debugLog('🔐 [CHECKOUT] Current user:', currentUser ? currentUser.uid : 'GUEST');
       } catch (e) {
-        console.log('🔐 [CHECKOUT] No user (guest)');
+        debugLog('🔐 [CHECKOUT] No user (guest)');
         currentUser = null;
       }
       const orderData = {
@@ -1303,13 +1310,13 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         }
       };
 
-      console.log('📤 [CHECKOUT] Sending orderData:', {
+      debugLog('📤 [CHECKOUT] Sending orderData:', {
         hasUser: !!orderData.authUid,
         authUid: orderData.authUid,
         email: orderData.metadata.customer_email
       });
 
-      console.log('🔒 Sending cart to backend for price validation...');
+      debugLog('🔒 Sending cart to backend for price validation...');
 
       // Call API function
       // Include server-trusted ID token when available so backend can stamp user UID
@@ -1345,7 +1352,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
       // Verify backend calculations match frontend and always prefer backend
       if (data.calculatedTotals) {
-        console.log('✅ Backend price validation:', data.calculatedTotals);
+        debugLog('✅ Backend price validation:', data.calculatedTotals);
 
         // Update frontend totals with backend values (backend is source of truth)
         totals.subtotal = Number(data.calculatedTotals.subtotal || totals.subtotal);
@@ -1389,7 +1396,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       });
 
       // Email 2: Admin notification
-      console.log('🔵 Enviando para admin...', { orderNumber: emailData.orderNumber });
+      debugLog('🔵 Enviando para admin...', { orderNumber: emailData.orderNumber });
       const adminResponse = await fetch('/api/emails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1399,7 +1406,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         })
       });
       const adminResult = await adminResponse.json();
-      console.log('🔵 Response admin:', adminResponse.status, adminResult);
+      debugLog('🔵 Response admin:', adminResponse.status, adminResult);
     } catch (error) {
       console.error('Email sending failed (non-blocking):', error);
       // Don't block checkout flow if emails fail
@@ -1502,7 +1509,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
   // Re-run prefill when page is shown (including when restored from bfcache via back/forward)
   window.addEventListener('pageshow', async (event) => {
-    console.log('[CHECKOUT] Page shown, re-checking auth...', { persisted: !!event.persisted });
+    debugLog('[CHECKOUT] Page shown, re-checking auth...', { persisted: !!event.persisted });
     try {
       const currentUser = await getCurrentUser();
       if (currentUser) {
@@ -1512,7 +1519,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
         await prefillUserEmail(null);
       }
     } catch (e) {
-      console.log('[CHECKOUT] pageshow prefill error:', e && e.message ? e.message : e);
+      debugLog('[CHECKOUT] pageshow prefill error:', e && e.message ? e.message : e);
     }
   });
 
