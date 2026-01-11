@@ -142,6 +142,129 @@ function renderOrdersList() {
   console.log(`[Profile] ✅ Rendered ${slice.length} orders (${allOrders.length} total)`);
 }
 
+// ===== NEW: loadMyOrders + render helpers =====
+export async function loadMyOrders() {
+  const ordersContainer = document.getElementById('ordersList') || document.getElementById('my-orders-list');
+  if (!ordersContainer) return;
+
+  ordersContainer.innerHTML = `
+    <div class="loading-orders">
+      <div class="spinner"></div>
+      <p>Loading your orders...</p>
+    </div>
+  `;
+
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      ordersContainer.innerHTML = '<p>Please sign in to view orders.</p>';
+      return;
+    }
+
+    // Get a fresh ID token and call server endpoint to handle legacy data safely
+    let idToken = null;
+    try { idToken = await user.getIdToken(); } catch (e) { console.warn('Could not get ID token', e); }
+    if (!idToken) {
+      ordersContainer.innerHTML = '<p>Authentication required. Please refresh or sign in again.</p>';
+      return;
+    }
+
+    const url = '/api/my-orders?limit=100';
+    const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + idToken } });
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({}));
+      throw new Error(body && body.error ? body.error : `HTTP ${resp.status}`);
+    }
+    const payload = await resp.json();
+    const orders = (payload && payload.orders) ? payload.orders : [];
+
+    if (!orders || orders.length === 0) {
+      ordersContainer.innerHTML = `
+        <div class="empty-orders">
+          <h3>No orders yet</h3>
+          <p>Start shopping to see your orders here!</p>
+          <a href="/products.html" class="btn-primary">Browse Products</a>
+        </div>
+      `;
+      return;
+    }
+
+    // Server returns createdAt as milliseconds where available; renderOrderCard can handle numeric timestamps
+    const ordersHtml = orders.map(o => renderOrderCard(o.id || o.orderId || '', o)).join('');
+    ordersContainer.innerHTML = ordersHtml;
+  } catch (error) {
+    console.error('Error loading orders:', error && error.message ? error.message : error);
+    ordersContainer.innerHTML = `
+      <div class="error-orders">
+        <p>Failed to load orders. Please try again.</p>
+        <button id="retryOrdersBtn" class="btn-ghost">Retry</button>
+      </div>
+    `;
+    const retry = document.getElementById('retryOrdersBtn');
+    if (retry) retry.addEventListener('click', () => loadMyOrders());
+  }
+}
+
+function renderOrderCard(orderId, order) {
+  const date = formatOrderDate(order.createdAt || order.date || order.createdAt);
+  const status = (order.status || 'pending').toLowerCase();
+  const statusClass = `status-${status}`;
+  const statusText = {
+    pending: 'Processing',
+    paid: 'Paid',
+    shipped: 'Shipped',
+    delivered: 'Delivered'
+  }[status] || (order.status || 'Pending');
+
+  const items = (order.items || []).slice(0, 3).map(item => `
+    <div class="order-item">
+      <span class="item-name">${(item && item.name) ? escapeHtml(item.name) : 'Product'}</span>
+      <span class="item-qty">x${item.quantity || 1}</span>
+    </div>
+  `).join('');
+
+  const more = (order.items && order.items.length > 3) ? `<p class="more-items">+${order.items.length - 3} more items</p>` : '';
+  const total = (typeof order.total === 'number') ? (order.total / (order.total > 1000 ? 100 : 1)).toFixed(2) : (order.total || 0).toFixed ? order.total.toFixed(2) : String(order.total || '0.00');
+
+  return `
+    <div class="order-card" data-order-id="${orderId}">
+      <div class="order-header">
+        <div class="order-info">
+          <h3>Order #${String(orderId).slice(-8)}</h3>
+          <p class="order-date">${date}</p>
+        </div>
+        <span class="order-status ${statusClass}">${statusText}</span>
+      </div>
+
+      <div class="order-items">
+        ${items}
+        ${more}
+      </div>
+
+      <div class="order-footer">
+        <div class="order-total">
+          <span>Total:</span>
+          <strong>€${Number(order.total || 0).toFixed(2)}</strong>
+        </div>
+        <button class="btn-view-order btn-primary" data-order-id="${orderId}">View Details</button>
+      </div>
+    </div>
+  `;
+}
+
+function formatOrderDate(timestamp) {
+  if (!timestamp) return 'Unknown date';
+  let date;
+  if (timestamp.toDate) date = timestamp.toDate();
+  else if (timestamp.seconds) date = new Date(timestamp.seconds * 1000);
+  else date = new Date(timestamp);
+  return date.toLocaleDateString('en-IE', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (s) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s]);
+}
+
 // ────────── Load Orders ──────────
 async function loadOrders(identifier) {
   console.log('[Profile] 📦 Loading orders for:', identifier);
@@ -366,8 +489,8 @@ async function initProfilePage() {
       console.warn('[Profile] Could not load discount:', err);
     }
 
-    // Load orders
-    await loadOrders(user.uid || user.email);
+      // Load orders (use new loadMyOrders implementation)
+      await loadMyOrders();
 
   } else {
     console.log('[Profile] ℹ️ No user found, showing sign-in state');
@@ -394,7 +517,7 @@ async function initProfilePage() {
       
       if (user) {
         renderProfile(user);
-        await loadOrders(user.uid || user.email);
+          await loadMyOrders();
       } else {
         // User logged out
         window.location.href = '/';

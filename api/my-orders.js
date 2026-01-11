@@ -1,3 +1,88 @@
+// Serverless endpoint: Return authenticated user's orders with legacy fallbacks
+// Expects: Authorization: Bearer <Firebase ID token>
+// Query params: ?limit=number (default 50)
+
+const { getFirestore, admin } = require('./lib/firebase-admin');
+const logger = require('./lib/logger');
+const { captureException } = require('./lib/sentry');
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+
+  const authHeader = req.headers.authorization || req.headers.Authorization || '';
+  const match = String(authHeader || '').match(/^Bearer (.+)$/i);
+  if (!match) return res.status(401).json({ error: 'Missing Authorization Bearer token' });
+  const idToken = match[1];
+
+  try {
+    const db = getFirestore();
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    const uid = decoded && decoded.uid;
+    const email = decoded && decoded.email;
+    if (!uid) return res.status(401).json({ error: 'Invalid token' });
+
+    // Pagination params (simple): limit (max 200)
+    const q = req.query || {};
+    let limit = parseInt(q.limit, 10) || 50;
+    if (limit <= 0) limit = 50;
+    if (limit > 200) limit = 200;
+
+    // Build three queries (UID, legacy userId==email, customerEmail==email)
+    const ordersRef = db.collection('orders');
+
+    const results = [];
+    const seen = new Set();
+
+    // Helper to run a query and push docs to results (no ordering to avoid composite index requirements)
+    async function runWhere(field, op, value) {
+      try {
+        const snap = await ordersRef.where(field, op, value).limit(limit).get();
+        snap.forEach(d => {
+          if (seen.has(d.id)) return;
+          seen.add(d.id);
+          const data = d.data();
+          // Normalize createdAt to milliseconds for safe JSON transport
+          const ca = data && data.createdAt;
+          let createdAt = null;
+          try {
+            if (ca && typeof ca.toMillis === 'function') createdAt = ca.toMillis();
+            else if (ca && typeof ca.seconds === 'number') createdAt = ca.seconds * 1000;
+            else if (typeof ca === 'number') createdAt = ca;
+            else createdAt = ca ? Date.parse(String(ca)) : null;
+          } catch (e) {
+            createdAt = null;
+          }
+
+          results.push(Object.assign({ id: d.id, createdAt }, data));
+        });
+      } catch (err) {
+        logger && logger.warn && logger.warn('my-orders: query failed', { field, err: err && err.message });
+      }
+    }
+
+    // Run queries in series to avoid Firestore throttle in some environments
+    await runWhere('userId', '==', uid);
+    if (email) await runWhere('userId', '==', email);
+    if (email) await runWhere('customerEmail', '==', email);
+
+    // Sort results by createdAt desc (nulls at bottom)
+    results.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+    // Trim to requested limit
+    const payload = results.slice(0, limit);
+
+    return res.status(200).json({ success: true, orders: payload });
+  } catch (err) {
+    captureException && captureException(err, { endpoint: 'my-orders' });
+    logger && logger.error && logger.error('Error in my-orders', err && err.message);
+    return res.status(500).json({ error: 'Internal server error', details: err && err.message });
+  }
+};
 // Simple endpoint to return orders for authenticated user.
 // Verifies Firebase ID token server-side and queries Firestore for orders.userId == uid.
 const { getFirestore, admin } = require('./lib/firebase-admin');
