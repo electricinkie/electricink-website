@@ -37,7 +37,38 @@ Thumbs.db
 
 # Firebase Service Account Key (NUNCA versionar)
 serviceAccountKey.json
-api/serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+service-account-base64.txt
+dev-server.log
+.env*.local
+
 
 # Editor
 .vscode/
