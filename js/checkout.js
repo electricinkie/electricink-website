@@ -1318,7 +1318,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
     try {
       // Email 1: Customer confirmation
-      await fetch('/api/send-order-email', {
+      await fetch('/api/emails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1329,7 +1329,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
       // Email 2: Admin notification
       console.log('🔵 Enviando para admin...', { orderNumber: emailData.orderNumber });
-      const adminResponse = await fetch('/api/send-order-email', {
+      const adminResponse = await fetch('/api/emails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

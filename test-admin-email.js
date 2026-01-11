@@ -1,7 +1,11 @@
 require('dotenv').config();
 const { Resend } = require('resend');
+#!/usr/bin/env node
+require('dotenv').config();
+const { initResend, getResend } = require('./api/lib/resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+initResend();
+const resend = getResend();
 
 async function testAdminEmail() {
   console.log('🧪 === TESTE DE E-MAIL ADMIN ===');
@@ -9,6 +13,11 @@ async function testAdminEmail() {
   console.log('📧 Destinatário: electricink.ie@gmail.com');
   console.log('📤 Remetente: orders@electricink.ie');
   console.log('');
+
+  if (!resend) {
+    console.error('❌ RESEND_API_KEY not configured. Set RESEND_API_KEY in .env to run this test.');
+    process.exit(1);
+  }
 
   try {
     console.log('⏳ Enviando...');

@@ -6,7 +6,6 @@ const path = require('path');
 
 // ✅ Importar TODOS os handlers da API
 const createPaymentIntentHandler = require('./api/create-payment-intent.js');
-const sendOrderEmailHandler = require('./api/send-order-email.js');
 const webhookStripeHandler = require('./api/webhooks-stripe.js');
 
 const app = express();
@@ -33,12 +32,26 @@ app.all('/api/create-payment-intent', async (req, res) => {
   }
 });
 
-// 2. Send Order Email ✅ ADICIONAR ESTE!
-app.all('/api/send-order-email', async (req, res) => {
+// 2. Send Order Email is handled by unified /api/emails router below
+
+// 2b. Local unified emails router (for testing consolidated endpoint)
+const emailsRouter = require('./api/emails.js');
+app.all('/api/emails', async (req, res) => {
   try {
-    await sendOrderEmailHandler(req, res);
+    await emailsRouter(req, res);
   } catch (err) {
-    console.error('❌ [send-order-email] Error:', err);
+    console.error('❌ [emails] Error:', err);
+    res.status(500).json({ error: 'Handler error', details: err.message });
+  }
+});
+
+// 2c. Local admin router
+const adminRouter = require('./api/admin.js');
+app.all('/api/admin', async (req, res) => {
+  try {
+    await adminRouter(req, res);
+  } catch (err) {
+    console.error('❌ [admin] Error:', err);
     res.status(500).json({ error: 'Handler error', details: err.message });
   }
 });

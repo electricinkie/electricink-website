@@ -1,5 +1,5 @@
-const { getFirestore, admin } = require('./lib/firebase-admin');
-const { initResend, getResend, isResendConfigured } = require('./lib/resend');
+const { getFirestore, admin } = require('../lib/firebase-admin');
+const { initResend, getResend, isResendConfigured } = require('../lib/resend');
 
 initResend();
 let resend = getResend();

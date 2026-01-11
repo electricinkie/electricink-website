@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { captureException } = require('./lib/sentry');
-const { initResend, getResend, isResendConfigured } = require('./lib/resend');
+const { captureException } = require('../lib/sentry');
+const { initResend, getResend, isResendConfigured } = require('../lib/resend');
 
 // Initialize resend wrapper and get client (may be null)
 initResend();
@@ -177,7 +177,7 @@ module.exports = async function handler(req, res) {
 
   // Verify token and ensure requester is admin (either claim or admins/{uid})
   try {
-    const { getFirestore, admin } = require('./lib/firebase-admin');
+    const { getFirestore, admin } = require('../lib/firebase-admin');
     const db = getFirestore();
     const decoded = await admin.auth().verifyIdToken(idToken);
     const uid = decoded && decoded.uid;
@@ -202,7 +202,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Load order data from Firestore
-    const { getFirestore, admin } = require('./lib/firebase-admin');
+    const { getFirestore, admin } = require('../lib/firebase-admin');
     const db = getFirestore();
     const orderDoc = await db.collection('orders').doc(orderId).get();
 

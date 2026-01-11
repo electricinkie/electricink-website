@@ -54,19 +54,11 @@ const fs = require('fs');
 const path = require('path');
 const TEMPLATES_DIR = path.join(__dirname, '..', 'email-templates');
 
-// Initialize Resend for direct email sending (guarded: do not throw if API key missing)
-const { Resend } = require('resend');
-let resend = null;
-try {
-  if (process.env.RESEND_API_KEY) {
-    resend = new Resend(process.env.RESEND_API_KEY);
-    console.log('[RESEND-INIT] ✓ Resend initialized successfully');
-  } else {
-    console.error('[RESEND-INIT] ❌ RESEND_API_KEY not found');
-  }
-} catch (error) {
-  console.error('[RESEND-INIT] ❌ Failed to initialize:', error);
-}
+// Initialize Resend via centralized wrapper (safe when API key missing)
+const { initResend, getResend, isResendConfigured } = require('./lib/resend');
+
+initResend();
+const resend = getResend();
 
 
 

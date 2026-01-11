@@ -1,4 +1,4 @@
-const { initResend, getResend, isResendConfigured } = require('./lib/resend');
+const { initResend, getResend, isResendConfigured } = require('../lib/resend');
 
 // Initialize resend wrapper (safe no-op if not configured)
 initResend();
@@ -8,7 +8,7 @@ const path = require('path');
 const publicBaseUrl = process.env.PUBLIC_BASE_URL || 'https://electricink.ie';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
-const { captureException } = require('./lib/sentry');
+const { captureException } = require('../lib/sentry');
 
 // ❌ REMOVIDO DAQUI: const resend = new Resend(process.env.RESEND_API_KEY);
 // ✅ Agora será instanciado DENTRO do handler
