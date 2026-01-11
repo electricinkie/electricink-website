@@ -260,19 +260,50 @@ import { getCurrentUser, onAuthChange } from './auth.js';
   function renderOrderSummary() {
     // Render items with images
     if (elements.summaryItems) {
-      elements.summaryItems.innerHTML = cart.map(item => `
-        <div class="summary-item">
-          <div class="summary-item-image">
-            <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
-          </div>
-          <div class="summary-item-details">
-            <div class="summary-item-name">${item.name}</div>
-            ${item.variant ? `<div class="summary-item-variant">${item.variant}</div>` : ''}
-            <div class="summary-item-quantity">Qty: ${item.quantity}</div>
-          </div>
-          <div class="summary-item-price">€${(item.price * item.quantity).toFixed(2)}</div>
-        </div>
-      `).join('');
+      // Safe rendering using DOM APIs to prevent XSS (do not use innerHTML with user-controlled data)
+      elements.summaryItems.innerHTML = '';
+      cart.forEach(item => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'summary-item';
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'summary-item-image';
+        const img = document.createElement('img');
+        img.src = item.image || '/images/placeholder.jpg';
+        img.alt = item.name || 'Product';
+        imgWrap.appendChild(img);
+
+        const details = document.createElement('div');
+        details.className = 'summary-item-details';
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'summary-item-name';
+        nameDiv.textContent = item.name || 'Item';
+
+        if (item.variant) {
+          const variantDiv = document.createElement('div');
+          variantDiv.className = 'summary-item-variant';
+          variantDiv.textContent = item.variant;
+          details.appendChild(variantDiv);
+        }
+
+        const qtyDiv = document.createElement('div');
+        qtyDiv.className = 'summary-item-quantity';
+        qtyDiv.textContent = `Qty: ${item.quantity || 1}`;
+
+        details.appendChild(nameDiv);
+        details.appendChild(qtyDiv);
+
+        const priceDiv = document.createElement('div');
+        priceDiv.className = 'summary-item-price';
+        priceDiv.textContent = `€${((item.price || 0) * (item.quantity || 1)).toFixed(2)}`;
+
+        wrapper.appendChild(imgWrap);
+        wrapper.appendChild(details);
+        wrapper.appendChild(priceDiv);
+
+        elements.summaryItems.appendChild(wrapper);
+      });
     }
 
     // Show/hide free shipping notice
