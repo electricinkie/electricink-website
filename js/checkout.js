@@ -6,7 +6,7 @@
 
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
 import { initFirebase } from './firebase-config.js';
-import { getCurrentUser } from './auth.js';
+import { getCurrentUser, onAuthChange } from './auth.js';
 
 (function() {
   'use strict';
@@ -68,6 +68,17 @@ import { getCurrentUser } from './auth.js';
   // ============================================
   
   async function init() {
+    // Ensure init runs at least once per page load (helps with bfcache/back-button)
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('force-init') !== 'true') {
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('force-init', 'true');
+        window.history.replaceState({}, '', newUrl);
+      }
+    } catch (e) {
+      // ignore URL APIs failures
+    }
     // Check if Stripe.js loaded
     if (typeof Stripe === 'undefined') {
       console.error('Stripe.js failed to load');
@@ -139,6 +150,26 @@ import { getCurrentUser } from './auth.js';
     
     // Setup form handler
     setupFormHandler();
+    // Pré-preencher email do usuário logado (se houver) e bloquear edição
+    try {
+      // Attempt immediate fill (fast path)
+      await prefillUserEmail();
+      // Subscribe to auth state changes so the lock persists across refresh/navigation
+      try {
+        onAuthChange(async (user) => {
+          try {
+            await prefillUserEmail(user);
+          } catch (e) {
+            console.warn('onAuthChange -> prefillUserEmail failed:', e);
+          }
+        });
+      } catch (e) {
+        // ignore if onAuthChange not available
+      }
+    } catch (e) {
+      // Se falhar, não bloqueará o checkout (guest continua editável)
+      console.warn('prefillUserEmail failed:', e);
+    }
   }
 
   // ============================================
@@ -296,29 +327,21 @@ import { getCurrentUser } from './auth.js';
       console.log('   Cart total:', totals.total);
       console.log('   Cart subtotal:', totals.subtotal);
       
-      // Determine initial shipping options (show all by default)
-      const initialShippingOptions = [
-        {
-          id: 'standard',
-          label: 'Standard Delivery (3-5 business days)',
-          detail: 'Ireland-wide delivery',
-          amount: 1150, // €11.50 in cents
-        },
-        {
-          id: 'pickup',
-          label: 'Store Pickup',
-          detail: 'FREE - Collect from our Dublin location',
-          amount: 0,
-        },
-      ];
+      // Determine initial shipping options based on subtotal
+      const initialShippingOptions = getAvailableShippingOptions(totals.subtotal).map(opt => ({
+        id: opt.id,
+        label: opt.label,
+        detail: opt.detail,
+        amount: opt.amount
+      }));
       
       // Check if free shipping threshold met
       // Use canonical threshold from constants
       const freeShippingThreshold = FREE_SHIPPING_THRESHOLD;
       const qualifiesForFreeShipping = totals.subtotal >= freeShippingThreshold;
       
-      // Calculate initial shipping (default to standard unless free shipping)
-      let initialShipping = qualifiesForFreeShipping ? 0 : 1150;
+      // Calculate initial shipping using the first available option (or fallback)
+      let initialShipping = initialShippingOptions.length ? initialShippingOptions[0].amount : (qualifiesForFreeShipping ? 0 : 1150);
       let initialTotal = Math.round((totals.subtotal - (totals.discount || 0) + (initialShipping / 100)) * 100);
       
       console.log('   Free shipping?', qualifiesForFreeShipping);
@@ -352,50 +375,35 @@ import { getCurrentUser } from './auth.js';
         console.log('   Postal code:', postalCode);
         console.log('   Dublin Central?', isDublinCentral);
         
-        // Build shipping options based on address
-        let shippingOptions = [
-          {
-            id: 'standard',
-            label: 'Standard Delivery (3-5 business days)',
-            detail: 'Ireland-wide delivery',
-            amount: 1150,
-          },
-        ];
-        
-        // Add Same-Day if Dublin Central and before 2PM
-        if (isDublinCentral) {
+        // Build shipping options based on address, then filter by subtotal rules
+        const baseOptions = getAvailableShippingOptions(totals.subtotal);
+        let shippingOptions = [];
+
+        // Add standard if available
+        if (baseOptions.some(o => o.id === 'standard')) {
+          shippingOptions.push({ id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: 'Ireland-wide delivery', amount: 1150 });
+        }
+
+        // Add Same-Day only if baseOptions includes it and address qualifies
+        if (baseOptions.some(o => o.id === 'same-day') && isDublinCentral) {
           const now = new Date();
           const cutoffTime = new Date();
           cutoffTime.setHours(14, 0, 0, 0); // 2PM
-          
           if (now < cutoffTime) {
-            shippingOptions.unshift({
-              id: 'same-day',
-              label: 'Same-Day Delivery (Order by 2PM)',
-              detail: 'Dublin Central (D01-D08) - Today!',
-              amount: 750, // €7.50
-            });
+            shippingOptions.unshift({ id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08) - Today!', amount: 750 });
           }
         }
-        
-        // Add Pickup option
-        shippingOptions.push({
-          id: 'pickup',
-          label: 'Store Pickup',
-          detail: 'FREE - Collect from our Dublin location',
-          amount: 0,
-        });
-        
-        // Calculate shipping amount (check free shipping threshold)
-        let shippingAmount = shippingOptions[0].amount; // Default to first option
-        if (qualifiesForFreeShipping) {
+
+        // Add pickup if available
+        if (baseOptions.some(o => o.id === 'pickup')) {
+          shippingOptions.push({ id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 });
+        }
+
+        // If subtotal qualifies for free shipping (i.e., only pickup in UI), ensure amounts are zeroed
+        let shippingAmount = shippingOptions.length ? shippingOptions[0].amount : 0;
+        if (totals.subtotal >= FREE_SHIPPING_THRESHOLD) {
           shippingAmount = 0;
-          // Update labels to show FREE
-          shippingOptions = shippingOptions.map(opt => ({
-            ...opt,
-            amount: 0,
-            detail: opt.id === 'pickup' ? opt.detail : `FREE - Subtotal over €${FREE_SHIPPING_THRESHOLD}`,
-          }));
+          shippingOptions = shippingOptions.map(opt => ({ ...opt, amount: 0, detail: opt.id === 'pickup' ? opt.detail : `FREE - Subtotal over €${FREE_SHIPPING_THRESHOLD}` }));
         }
         
         const newTotal = Math.round((totals.subtotal - (totals.discount || 0) + (shippingAmount / 100)) * 100);
@@ -608,6 +616,20 @@ import { getCurrentUser } from './auth.js';
     const currentHour = now.getHours();
     return currentHour < SAMEDAY_CUTOFF_HOUR;
   }
+
+  /**
+   * Return available shipping options based on subtotal.
+   * Amounts are in cents (for Payment Request compatibility).
+   */
+  function getAvailableShippingOptions(subtotal) {
+    // Always return all shipping options; pricing and visibility rules are applied elsewhere
+    const allOptions = [
+      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: 'Ireland-wide delivery', amount: 1150 },
+      { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 750 },
+      { id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 }
+    ];
+    return allOptions;
+  }
   
   /**
    * Update shipping options based on address
@@ -622,6 +644,22 @@ import { getCurrentUser } from './auth.js';
     
     const city = cityInput ? cityInput.value : '';
     const postal = postalInput ? postalInput.value : '';
+    const subtotal = totals.subtotal || 0;
+
+    // Determine which options should be available based on subtotal
+    const available = getAvailableShippingOptions(subtotal).map(o => o.id);
+
+    // Free-shipping notice (reuse existing element to avoid duplicate badges)
+    const freeNotice = document.getElementById('freeShippingNotice');
+    if (freeNotice) {
+      const textSpan = freeNotice.querySelector('span');
+      if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+        if (textSpan) textSpan.textContent = 'Free shipping applied — pickup optional';
+        freeNotice.style.display = 'flex';
+      } else {
+        freeNotice.style.display = 'none';
+      }
+    }
     
     // 🔍 DEBUG: Log valores para troubleshooting
     console.log('🔍 DEBUG Same-Day check:', {
@@ -635,26 +673,69 @@ import { getCurrentUser } from './auth.js';
     // Check if Dublin Central and before cutoff
     const isDublin = isDublinCentral(postal);
     const beforeCutoff = isBeforeCutoff();
-    
-    if (isDublin && beforeCutoff) {
-      // Show and enable same-day option
-      sameDayOption.style.display = 'block';
-      sameDayRadio.disabled = false;
-    } else {
-      // Hide or disable same-day option
-      sameDayOption.style.display = 'none';
-      sameDayRadio.disabled = true;
-      
-      // If same-day was selected, switch to standard
-      if (sameDayRadio.checked) {
-        const standardRadio = document.getElementById('shipping-standard');
-        if (standardRadio) {
-          standardRadio.checked = true;
-          shippingMethod = 'standard';
-          calculateTotals();
-          renderOrderSummary();
+
+    // STANDARD
+    const standardLabel = document.getElementById('shipping-standard') ? document.getElementById('shipping-standard').closest('label') : null;
+    const standardInput = document.getElementById('shipping-standard');
+    if (standardLabel && standardInput) {
+      if (available.includes('standard')) {
+        standardLabel.style.display = '';
+        standardInput.disabled = false;
+      } else {
+        standardLabel.style.display = 'none';
+        standardInput.disabled = true;
+      }
+    }
+
+    // SAME-DAY
+    if (sameDayOption && sameDayRadio) {
+      if (available.includes('same-day') && isDublin && beforeCutoff) {
+        sameDayOption.style.display = 'block';
+        sameDayRadio.disabled = false;
+      } else {
+        sameDayOption.style.display = 'none';
+        sameDayRadio.disabled = true;
+        if (sameDayRadio.checked) {
+          const standardRadio = document.getElementById('shipping-standard');
+          if (standardRadio && !standardRadio.disabled) {
+            standardRadio.checked = true;
+            shippingMethod = 'standard';
+            calculateTotals();
+            renderOrderSummary();
+          }
         }
       }
+    }
+
+    // PICKUP
+    const pickupLabel = document.getElementById('shipping-pickup') ? document.getElementById('shipping-pickup').closest('label') : null;
+    const pickupInput = document.getElementById('shipping-pickup');
+    if (pickupLabel && pickupInput) {
+      if (available.includes('pickup')) {
+        pickupLabel.style.display = '';
+        pickupInput.disabled = false;
+      } else {
+        pickupLabel.style.display = 'none';
+        pickupInput.disabled = true;
+      }
+    }
+    // Update displayed prices to reflect free-shipping when applicable
+    const isFree = subtotal >= FREE_SHIPPING_THRESHOLD;
+    try {
+      if (standardLabel) {
+        const priceEl = standardLabel.querySelector('.shipping-option-price');
+        if (priceEl) priceEl.textContent = isFree ? 'FREE' : '€11.50';
+      }
+      if (sameDayOption) {
+        const priceEl = sameDayOption.querySelector('.shipping-option-price');
+        if (priceEl) priceEl.textContent = isFree ? 'FREE' : '€7.50';
+      }
+      if (pickupLabel) {
+        const priceEl = pickupLabel.querySelector('.shipping-option-price');
+        if (priceEl) priceEl.textContent = 'FREE';
+      }
+    } catch (e) {
+      console.warn('Failed to update shipping option prices:', e);
     }
   }
   
@@ -920,6 +1001,60 @@ import { getCurrentUser } from './auth.js';
         setLoading(false);
       }
     });
+  }
+
+  // ============================================
+  // PREFILL USER EMAIL
+  // ============================================
+  // Após renderizar o form, pré-preencher email se o usuário estiver logado
+  async function prefillUserEmail(userArg) {
+    try {
+      let user = userArg || null;
+      if (!user) {
+        try {
+          user = await getCurrentUser();
+        } catch (e) {
+          user = null;
+        }
+      }
+
+      const emailInput = document.querySelector('#email') || (elements.form && elements.form.email);
+      if (!emailInput) return;
+
+      if (user && user.email) {
+        emailInput.value = user.email;
+        emailInput.readOnly = true; // readOnly para enviar no form
+        emailInput.style.backgroundColor = '#f3f4f6';
+        emailInput.style.cursor = 'not-allowed';
+
+        // Evitar duplicar a nota
+        const parent = emailInput.parentElement || elements.form;
+        if (parent) {
+          const existingNote = parent.querySelector('.prefill-email-note');
+          if (!existingNote) {
+            const note = document.createElement('small');
+            note.className = 'prefill-email-note';
+            note.style.color = '#6b7280';
+            note.style.fontSize = '12px';
+            note.textContent = 'Account email';
+            parent.appendChild(note);
+          }
+        }
+      } else {
+        // User signed out / guest: ensure field is editable and note removed
+        emailInput.readOnly = false;
+        emailInput.style.backgroundColor = '';
+        emailInput.style.cursor = '';
+        const parent = emailInput.parentElement || elements.form;
+        if (parent) {
+          const existingNote = parent.querySelector('.prefill-email-note');
+          if (existingNote) existingNote.remove();
+        }
+      }
+    } catch (e) {
+      // Convidado: manter campo editável
+      console.warn('prefillUserEmail error:', e);
+    }
   }
 
   // ============================================
@@ -1297,5 +1432,21 @@ import { getCurrentUser } from './auth.js';
   } else {
     init();
   }
+
+  // Re-run prefill when page is shown (including when restored from bfcache via back/forward)
+  window.addEventListener('pageshow', async (event) => {
+    console.log('[CHECKOUT] Page shown, re-checking auth...', { persisted: !!event.persisted });
+    try {
+      const currentUser = await getCurrentUser();
+      if (currentUser) {
+        await prefillUserEmail(currentUser);
+      } else {
+        // Ensure field is unlocked for guests
+        await prefillUserEmail(null);
+      }
+    } catch (e) {
+      console.log('[CHECKOUT] pageshow prefill error:', e && e.message ? e.message : e);
+    }
+  });
 
 })();

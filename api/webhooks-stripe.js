@@ -50,6 +50,9 @@ const { captureException } = require('./lib/sentry');
 const { getFirestore, admin } = require('./lib/firebase-admin');
 const logger = require('./lib/logger');
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const path = require('path');
+const TEMPLATES_DIR = path.join(__dirname, '..', 'email-templates');
 
 // Initialize Resend for direct email sending (guarded: do not throw if API key missing)
 const { Resend } = require('resend');
@@ -504,117 +507,108 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
     setImmediate(() => {
       (async () => {
-        const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
-
-        // cliente email (não-bloqueante) - prevenir envios duplicados
         try {
           const orderRef = db.collection('orders').doc(orderId);
           const orderSnapCurrent = await orderRef.get();
           const orderDataCurrent = orderSnapCurrent.exists ? orderSnapCurrent.data() : {};
 
+          // Build simple items HTML for client and table rows for admin
+          const items = (orderDataCurrent.items || order.items || []).map(i => ({
+            name: i.name || i.id || 'Item',
+            quantity: i.quantity || 1,
+            price: (i.price != null ? Number(i.price) : (i.unit_price_cents ? i.unit_price_cents / 100 : 0))
+          }));
+
+          const itemsHtml = items.map(it => `<div style="padding:10px 0;border-bottom:1px solid #eee"><strong>${it.name}</strong> x${it.quantity} — €${(it.price * it.quantity).toFixed(2)}</div>`).join('');
+          const itemsTableHtml = items.map(it => `<tr><td style="padding:10px">${it.name}</td><td style="text-align:center;padding:10px">${it.quantity}</td><td style="text-align:right;padding:10px">€${it.price.toFixed(2)}</td><td style="text-align:right;padding:10px">€${(it.price * it.quantity).toFixed(2)}</td></tr>`).join('');
+
+          // Render client confirmation HTML
+          const clientHtml = await renderTemplateFile('order-confirmation.html', {
+            ORDER_NUMBER: orderId,
+            ORDER_ITEMS: itemsHtml,
+            SUBTOTAL: ((orderDataCurrent.subtotal != null) ? Number(orderDataCurrent.subtotal) : (order.subtotal || 0)).toFixed(2),
+            SHIPPING: ((orderDataCurrent.shippingCost != null) ? Number(orderDataCurrent.shippingCost) : (order.shippingCost || 0)).toFixed(2),
+            VAT: ((orderDataCurrent.vat != null) ? Number(orderDataCurrent.vat) : 0).toFixed(2),
+            TOTAL: ((orderDataCurrent.total != null) ? Number(orderDataCurrent.total) : (order.total || 0)).toFixed(2),
+            SHIPPING_ADDRESS: formatAddress(orderDataCurrent.shippingAddress || order.shippingAddress || {})
+          });
+
           if (!orderDataCurrent.clientEmailSent) {
-            await resend.emails.send({
-              from: `Electric Ink <${EMAIL_FROM}>`,
-              to: order.customerEmail,
-              subject: `Order Confirmation #${orderId}`,
-              html: `Order #${orderId} placed.`,
-            });
-
-            // marca como enviado para evitar duplicação
-            await orderRef.update({
-              clientEmailSent: true,
-              clientEmailSentAt: admin.firestore.Timestamp.now()
-            });
-
-            logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent', timestamp: new Date().toISOString() }));
+            try {
+              const sent = await resend.emails.send({
+                from: `Electric Ink <${EMAIL_FROM}>`,
+                to: order.customerEmail,
+                subject: `Order Confirmation #${orderId}`,
+                html: clientHtml
+              });
+              await orderRef.update({
+                clientEmailSent: true,
+                clientEmailSentAt: admin.firestore.Timestamp.now(),
+                clientEmailId: sent.id
+              });
+              logger.info(JSON.stringify({ orderId, requestId, status: 'client_email_sent' }));
+            } catch (clientErr) {
+              logger.error(JSON.stringify({ orderId, requestId, status: 'client_email_failed', error: clientErr && clientErr.message }));
+            }
           } else {
-            logger.info(JSON.stringify({ ...emailLog, status: 'client_email_skipped_already_sent', timestamp: new Date().toISOString() }));
+            logger.info(JSON.stringify({ orderId, requestId, status: 'client_email_skipped' }));
           }
-        } catch (clientErr) {
-          logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: clientErr && clientErr.message, timestamp: new Date().toISOString() }));
+
+          // Render admin notification
+          const adminHtml = await renderTemplateFile('order-notification-admin.html', {
+            ORDER_NUMBER: orderId,
+            CUSTOMER_NAME: orderDataCurrent.customerName || order.customerName || '',
+            CUSTOMER_EMAIL: orderDataCurrent.customerEmail || order.customerEmail || '',
+            CUSTOMER_PHONE: orderDataCurrent.customerPhone || order.customerPhone || '',
+            ORDER_DATE: (orderDataCurrent.createdAt && orderDataCurrent.createdAt.toDate) ? orderDataCurrent.createdAt.toDate().toLocaleString() : new Date().toLocaleString(),
+            ORDER_ITEMS_TABLE: itemsTableHtml,
+            SUBTOTAL: ((orderDataCurrent.subtotal != null) ? Number(orderDataCurrent.subtotal) : (order.subtotal || 0)).toFixed(2),
+            SHIPPING: ((orderDataCurrent.shippingCost != null) ? Number(orderDataCurrent.shippingCost) : (order.shippingCost || 0)).toFixed(2),
+            VAT: ((orderDataCurrent.vat != null) ? Number(orderDataCurrent.vat) : 0).toFixed(2),
+            TOTAL: ((orderDataCurrent.total != null) ? Number(orderDataCurrent.total) : (order.total || 0)).toFixed(2),
+            SHIPPING_ADDRESS: formatAddress(orderDataCurrent.shippingAddress || order.shippingAddress || {})
+          });
+
+          if (!orderDataCurrent.adminEmailSent) {
+            try {
+              const adminRes = await resend.emails.send({
+                from: `Electric Ink Orders <${EMAIL_FROM}>`,
+                to: [ADMIN_EMAIL],
+                subject: `New Order #${orderId}`,
+                html: adminHtml,
+                tags: [
+                  { name: 'type', value: 'admin-notification' },
+                  { name: 'orderId', value: orderId }
+                ]
+              });
+              await orderRef.update({
+                adminEmailSent: true,
+                adminEmailSentAt: admin.firestore.Timestamp.now(),
+                adminEmailId: adminRes.id
+              });
+              logger.info(JSON.stringify({ orderId, requestId, status: 'admin_email_sent' }));
+            } catch (adminErr) {
+              logger.error(JSON.stringify({ orderId, requestId, status: 'admin_email_failed', error: adminErr && adminErr.message }));
+              if (db) {
+                await db.collection('failed_emails').add(removeUndefined({
+                  type: 'admin',
+                  orderId,
+                  error: adminErr && adminErr.message,
+                  attemptedAt: admin.firestore.Timestamp.now(),
+                  retryCount: 0
+                }));
+              }
+            }
+          } else {
+            logger.info(JSON.stringify({ orderId, requestId, status: 'admin_email_skipped' }));
+          }
+
+        } catch (err) {
+          console.error('[ASYNC-EMAIL] Error sending emails for order', orderId, err && err.message);
+          try {
+            if (db) await db.collection('failed_emails').add(removeUndefined({ type: 'webhook', orderId, error: err && err.message, attemptedAt: admin.firestore.Timestamp.now() }));
+          } catch (e) { console.error('[ASYNC-EMAIL] Logging failed', e && e.message); }
         }
-
-        // ========== DEBUG EMAIL ADMIN - START ==========
-        const adminEmailHtml = `Order #${orderId} placed.`;
-        console.log('[EMAIL-DEBUG] Starting admin email send');
-        console.log('[EMAIL-DEBUG] Environment check:', {
-          resendConfigured: !!resend,
-          hasApiKey: !!process.env.RESEND_API_KEY,
-          nodeEnv: process.env.NODE_ENV
-        });
-
-        console.log('[EMAIL-DEBUG] Email payload:', {
-          from: EMAIL_FROM,
-          to: ADMIN_EMAIL,
-          subject: `New Order ${orderId}`,
-          hasHtml: !!adminEmailHtml,
-          htmlLength: adminEmailHtml?.length
-        });
-
-        try {
-          console.log('[EMAIL-DEBUG] Calling Resend API...');
-          const startTime = Date.now();
-
-          const adminEmailResult = await resend.emails.send({
-            from: `Electric Ink Orders <${EMAIL_FROM}>`,
-            to: [ADMIN_EMAIL],
-            subject: `New Order #${orderId}`,
-            html: adminEmailHtml,
-            tags: [
-              { name: 'type', value: 'admin-notification' },
-              { name: 'orderId', value: orderId }
-            ]
-          });
-
-          const duration = Date.now() - startTime;
-
-          console.log('[EMAIL-DEBUG] ✓ Admin email sent successfully', {
-            emailId: adminEmailResult.id,
-            duration: `${duration}ms`,
-            timestamp: new Date().toISOString()
-          });
-
-          if (db) {
-            const emailUpdate = removeUndefined({
-              adminEmailStatus: 'sent',
-              adminEmailId: adminEmailResult.id,
-              adminEmailSentAt: admin.firestore.Timestamp.now()
-            });
-            await db.collection('orders').doc(orderId).update(emailUpdate);
-          }
-
-        } catch (emailError) {
-          console.error('[EMAIL-DEBUG] ❌ Admin email FAILED', {
-            errorName: emailError.name,
-            errorMessage: emailError.message,
-            errorCode: emailError.statusCode,
-            errorDetails: JSON.stringify(emailError, null, 2)
-          });
-
-          if (db) {
-            const emailErrorUpdate = removeUndefined({
-              adminEmailStatus: 'failed',
-              adminEmailError: emailError.message,
-              adminEmailErrorCode: emailError.statusCode,
-              adminEmailFailedAt: admin.firestore.Timestamp.now()
-            });
-            await db.collection('orders').doc(orderId).update(emailErrorUpdate);
-
-            await db.collection('failed_emails').add(removeUndefined({
-              type: 'admin',
-              orderId: orderId,
-              orderData: { orderId },
-              error: emailError.message,
-              errorCode: emailError.statusCode,
-              attemptedAt: admin.firestore.Timestamp.now(),
-              retryCount: 0
-            }));
-          }
-
-          console.warn('[EMAIL-DEBUG] Webhook continuing despite email failure');
-        }
-        console.log('[EMAIL-DEBUG] Admin email send complete');
-        // ========== DEBUG EMAIL ADMIN - END ==========
       })();
     });
     logger.info(JSON.stringify({
@@ -732,4 +726,30 @@ async function getRawBody(req) {
     req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
   });
+}
+
+function formatAddress(addr = {}) {
+  if (!addr) return '';
+  const parts = [];
+  if (addr.line1) parts.push(addr.line1);
+  if (addr.line2) parts.push(addr.line2);
+  if (addr.city) parts.push(addr.city);
+  if (addr.postalCode || addr.postal_code) parts.push(addr.postalCode || addr.postal_code || '');
+  if (addr.country) parts.push(addr.country);
+  return parts.filter(Boolean).join('<br>');
+}
+
+async function renderTemplateFile(name, replacements = {}) {
+  try {
+    const p = path.join(TEMPLATES_DIR, name);
+    let tpl = await fs.promises.readFile(p, 'utf8');
+    Object.keys(replacements).forEach((k) => {
+      const re = new RegExp('{{\\s*' + k + '\\s*}}', 'g');
+      tpl = tpl.replace(re, replacements[k] != null ? replacements[k] : '');
+    });
+    return tpl;
+  } catch (err) {
+    console.error('[TEMPLATE] Failed to render', name, err && err.message);
+    return '';
+  }
 }
