@@ -1317,7 +1317,7 @@ body {
 }
 
 .discount-input:focus {
-  border-color: #43BDAB;
+  border-color: #FFA300;
 }
 
 .discount-input::placeholder {
@@ -1330,9 +1330,9 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 15px;
-  color: #43BDAB;
+  color: #FFA300;
   background: #FFFFFF;
-  border: 2px solid #43BDAB;
+  border: 2px solid #FFA300;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1340,7 +1340,7 @@ body {
 }
 
 .btn-apply-discount:hover {
-  background: #43BDAB;
+  background: #FFA300;
   color: #FFFFFF;
 }
 
@@ -1668,9 +1668,9 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #43BDAB;
-  background: rgba(67, 189, 171, 0.05);
-  border: 1px dashed #43BDAB;
+  color: #FFA300;
+  background: rgba(255, 163, 0, 0.06);
+  border: 1px dashed #FFA300;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1678,7 +1678,7 @@ body {
 }
 
 .discount-toggle:hover {
-  background: rgba(67, 189, 171, 0.1);
+  background: rgba(255, 163, 0, 0.12);
   border-style: solid;
 }
 
