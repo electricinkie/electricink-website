@@ -127,38 +127,56 @@
     const primaryBtnEl = modal.querySelector('[data-action="confirm"]');
     const secondaryBtnEl = modal.querySelector('[data-action="cancel"]');
 
-    primaryBtnEl.addEventListener('click', () => {
-      closeModal();
-      if (onConfirm) onConfirm();
-    });
+    if (primaryBtnEl) {
+      const primaryHandler = () => {
+        try { closeModal(); } catch (e) { /* ignore */ }
+        if (typeof onConfirm === 'function') {
+          try { onConfirm(); } catch (e) { console.error('modal:onConfirm handler failed', e); }
+        }
+      };
+      primaryBtnEl.addEventListener('click', primaryHandler);
+    }
 
     if (secondaryBtnEl) {
-      secondaryBtnEl.addEventListener('click', () => {
-        closeModal();
-        if (onCancel) onCancel();
-      });
+      const secondaryHandler = () => {
+        try { closeModal(); } catch (e) { /* ignore */ }
+        if (typeof onCancel === 'function') {
+          try { onCancel(); } catch (e) { console.error('modal:onCancel handler failed', e); }
+        }
+      };
+      secondaryBtnEl.addEventListener('click', secondaryHandler);
     }
 
     // Close on backdrop click
-    backdrop.addEventListener('click', (e) => {
-      if (e.target === backdrop) {
-        closeModal();
-        if (onCancel) onCancel();
-      }
-    });
+    if (backdrop) {
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) {
+          try { closeModal(); } catch (err) { /* ignore */ }
+          if (typeof onCancel === 'function') {
+            try { onCancel(); } catch (e) { console.error('modal:onCancel handler failed', e); }
+          }
+        }
+      });
+    }
 
     // Close on ESC key
     const escHandler = (e) => {
       if (e.key === 'Escape') {
-        closeModal();
-        if (onCancel) onCancel();
+        try { closeModal(); } catch (err) { /* ignore */ }
+        if (typeof onCancel === 'function') {
+          try { onCancel(); } catch (e) { console.error('modal:onCancel handler failed', e); }
+        }
         document.removeEventListener('keydown', escHandler);
       }
     };
     document.addEventListener('keydown', escHandler);
 
-    // Focus primary button
-    setTimeout(() => primaryBtnEl.focus(), 100);
+    // Focus primary button (if present)
+    setTimeout(() => {
+      try {
+        if (primaryBtnEl && typeof primaryBtnEl.focus === 'function') primaryBtnEl.focus();
+      } catch (e) { /* ignore focus errors */ }
+    }, 100);
 
     return backdrop;
   }

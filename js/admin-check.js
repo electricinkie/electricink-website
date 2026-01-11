@@ -20,8 +20,16 @@ export async function isAdmin({ user: providedUser = null, forceRefresh = false 
       return false;
     }
 
-    // First prefer token-based custom claim check (fast, secure)
+    // First prefer token-based custom claim check (fast, secure).
+    // If caller requested a refresh, force a token refresh before reading claims
     try {
+      if (forceRefresh) {
+        try {
+          await user.getIdToken(true);
+        } catch (refreshErr) {
+          console.warn('isAdmin: token refresh failed', refreshErr && refreshErr.message);
+        }
+      }
       const idRes = await user.getIdTokenResult();
       if (idRes && idRes.claims && idRes.claims.admin) {
         isAdminCache = true;

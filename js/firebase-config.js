@@ -34,12 +34,18 @@ export async function initFirebase(config) {
 
   const cfg = config || window.FIREBASE_CONFIG;
   if (!cfg) {
-    const msg = 'FIREBASE_CONFIG not provided. Set window.FIREBASE_CONFIG before loading firebase-config.js';
-    console.warn(msg);
-    window.__FIREBASE_READY = false;
-    window.__FIREBASE_ERROR = msg;
-    hideFirebaseDependentUI();
-    return { app: null, auth: null, db: null, ready: false, error: msg };
+    // Allow embedded fallback only on local development hosts or when explicitly enabled.
+    const hostname = (typeof location !== 'undefined' && location.hostname) ? location.hostname : '';
+    const allowEmbedded = hostname === 'localhost' || hostname === '127.0.0.1' || window.DEBUG_ALLOW_EMBEDDED_FIREBASE;
+    if (!allowEmbedded) {
+      const msg = 'FIREBASE_CONFIG not provided. Aborting Firebase init in production.';
+      console.error(msg);
+      window.__FIREBASE_READY = false;
+      window.__FIREBASE_ERROR = msg;
+      hideFirebaseDependentUI();
+      return { app: null, auth: null, db: null, ready: false, error: msg };
+    }
+    console.warn('FIREBASE_CONFIG missing; allowing embedded fallback on dev host.');
   }
 
   try {
@@ -66,9 +72,14 @@ export async function initFirebase(config) {
       await authMod.setPersistence(_auth, authMod.browserLocalPersistence);
       console.log('[Firebase] ✅ Persistence set to LOCAL (browserLocalPersistence)');
     } catch (persistErr) {
-      console.error('[Firebase] ❌ CRITICAL: Could not set persistence:', persistErr);
-      console.warn('[Firebase] ⚠️ User WILL be logged out on page reload!');
-      // Still proceed but warn loudly
+      console.warn('[Firebase] ⚠️ Could not set LOCAL persistence; attempting SESSION fallback', persistErr && persistErr.message);
+      try {
+        await authMod.setPersistence(_auth, authMod.browserSessionPersistence);
+        console.log('[Firebase] ✅ Persistence set to SESSION (browserSessionPersistence)');
+      } catch (sessErr) {
+        console.error('[Firebase] ❌ Could not set any persistence:', sessErr);
+        console.warn('[Firebase] ⚠️ User WILL be logged out on page reload!');
+      }
     }
 
     // Notify when auth state is restored by the SDK

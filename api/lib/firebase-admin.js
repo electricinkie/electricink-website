@@ -30,10 +30,10 @@ function initializeFirebaseAdmin() {
       }
     }
 
-    // Minimal logging only — avoid printing secret contents
+    // Minimal logging only — avoid printing secret contents or metadata that
+    // could help an attacker (lengths, previews). Only log presence.
     try {
-      console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT present, length=', String(serviceAccountEnv.length));
-      console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT appearsJSON=', serviceAccountEnv.trim().startsWith('{'));
+      console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT present');
     } catch (dbg) {
       console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT previewing failed');
     }
@@ -45,7 +45,7 @@ function initializeFirebaseAdmin() {
       } else {
         const decoded = Buffer.from(serviceAccountRaw, 'base64').toString('utf8');
         try {
-          console.log('DEBUG: decoded service account present, length=', String(decoded.length));
+          console.log('DEBUG: decoded service account present');
         } catch (dbg) {
           console.log('DEBUG: failed to inspect decoded content');
         }

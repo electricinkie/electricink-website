@@ -7,7 +7,7 @@
 // - Handles edit profile modal
 // ============================================
 
-import { initFirebase } from './firebase-config.js';
+import { initFirebase, authReady } from './firebase-config.js';
 import { getCurrentUser, onAuthChange, openAuthModal, logout } from './auth.js';
 import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
 
@@ -41,26 +41,21 @@ function formatDate(ts) {
 }
 
 // ────────── Poll for Restored Auth ──────────
-async function waitForAuthRestore({ timeout = 2500, interval = 150 } = {}) {
-  console.log('[Profile] 🔍 Polling for restored auth...');
-  const start = Date.now();
-  let attempts = 0;
-  
-  while ((Date.now() - start) < timeout) {
-    attempts++;
-    try {
-      const user = await getCurrentUser();
-      if (user) {
-        console.log(`[Profile] ✅ User found on attempt ${attempts}:`, user.email);
-        return user;
-      }
-    } catch (e) {
-      // Ignore transient errors
+async function waitForAuthRestore({ timeout = 2500 } = {}) {
+  console.log('[Profile] 🔍 Waiting for auth restoration via authReady...');
+  try {
+    await initFirebase();
+    // Wait for authReady but don't block forever — use timeout
+    await Promise.race([authReady, new Promise(res => setTimeout(res, timeout))]);
+    const user = await getCurrentUser();
+    if (user) {
+      console.log('[Profile] ✅ User restored via authReady:', user.email);
+      return user;
     }
-    await new Promise(r => setTimeout(r, interval));
+  } catch (e) {
+    console.warn('[Profile] authReady waiting failed:', e && e.message);
   }
-  
-  console.log('[Profile] ⚠️ No user found after polling');
+  console.log('[Profile] ⚠️ No user found after authReady timeout');
   return null;
 }
 
@@ -158,47 +153,16 @@ async function loadOrders(identifier) {
 
     // Determine if identifier is UID or email
     if (typeof identifier === 'string' && !identifier.includes('@')) {
-      // Treat as UID: prefer secure server endpoint which verifies ID token
-      console.log('[Profile] Using UID lookup via /api/my-orders');
-      try {
-        const user = await getCurrentUser();
-        if (user && typeof user.getIdToken === 'function') {
-          try {
-            const idToken = await user.getIdToken();
-            // DEBUG: log token metadata before sending to server
-            console.log('🔑 [DEBUG] Token obtido:', {
-              tokenLength: idToken?.length,
-              tokenStart: idToken?.substring(0, 20) + '...',
-              userUid: user.uid,
-              userEmail: user.email
-            });
-            if (idToken) {
-              const resp = await fetch('/api/my-orders', { headers: { Authorization: `Bearer ${idToken}` } });
-              if (resp.ok) {
-                const json = await resp.json();
-                orders = json.orders || [];
-              } else {
-                console.warn('[Profile] /api/my-orders failed:', resp.status);
-              }
-            }
-          } catch (e) {
-            console.warn('[Profile] Could not get idToken for server lookup:', e && e.message);
-          }
-        }
-      } catch (e) {
-        console.warn('[Profile] Server lookup failed:', e && e.message);
-      }
+      // Treat as UID
+      console.log('[Profile] Using UID lookup');
+      orders = await getUserOrdersByUid(identifier, 100).catch(() => []);
 
-      // Fallback: try direct UID query via client helper
+      // Fallback to email if UID returns nothing
       if (!orders || orders.length === 0) {
-        console.log('[Profile] Fallback to client-side UID query');
-        orders = await getUserOrdersByUid(identifier, 100).catch(() => []);
-        if (!orders || orders.length === 0) {
-          console.log('[Profile] UID lookup empty, trying email fallback');
-          const user = await getCurrentUser();
-          if (user?.email) {
-            orders = await getUserOrdersByEmail(user.email, 100).catch(() => []);
-          }
+        console.log('[Profile] UID lookup empty, trying email fallback');
+        const user = await getCurrentUser();
+        if (user?.email) {
+          orders = await getUserOrdersByEmail(user.email, 100).catch(() => []);
         }
       }
     } else {

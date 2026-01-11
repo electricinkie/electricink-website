@@ -1,5 +1,13 @@
 import { initFirebase } from './firebase-config.js';
 
+// Cache dynamic import of Firebase Auth to avoid repeated network/module overhead
+let _cachedAuthModule = null;
+async function getAuthModule() {
+  if (_cachedAuthModule) return _cachedAuthModule;
+  _cachedAuthModule = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+  return _cachedAuthModule;
+}
+
 // Auth helpers (uses Firebase modular SDK via CDN)
 export async function initAuth(config) {
   const { auth } = await initFirebase(config);
@@ -9,7 +17,7 @@ export async function initAuth(config) {
 export async function signUp(email, password) {
   try {
     const { auth } = await initFirebase();
-    const { createUserWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    const { createUserWithEmailAndPassword } = await getAuthModule();
     return await createUserWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.error('Auth signUp error:', { code: err?.code, message: err?.message, raw: err });
@@ -20,7 +28,7 @@ export async function signUp(email, password) {
 export async function signIn(email, password) {
   try {
     const { auth } = await initFirebase();
-    const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    const { signInWithEmailAndPassword } = await getAuthModule();
     return await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.error('Auth signIn error:', { code: err?.code, message: err?.message, raw: err });
@@ -30,7 +38,7 @@ export async function signIn(email, password) {
 
 export async function signOutUser() {
   const { auth } = await initFirebase();
-  const { signOut } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+  const { signOut } = await getAuthModule();
   return signOut(auth);
 }
 
@@ -41,7 +49,7 @@ export async function onAuthChange(cb) {
       console.warn('[Auth] Auth not initialized');
       return;
     }
-    const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    const { onAuthStateChanged } = await getAuthModule();
     return onAuthStateChanged(auth, (user) => {
       if (user) {
         try { console.log('[Auth] ✅ User signed in:', user.email); } catch (e) {}
@@ -340,7 +348,7 @@ function initAuthModal() {
     const password = document.getElementById('loginPassword').value;
     const errorEl = document.getElementById('loginError');
     try {
-      const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+        const { signInWithEmailAndPassword } = await getAuthModule();
       const { auth } = await initFirebase();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       try { console.log('[Auth] ✅ Login successful:', userCredential.user.email); } catch (e) {}
@@ -401,7 +409,7 @@ function initAuthModal() {
     const password = document.getElementById('signupPassword').value;
     const errorEl = document.getElementById('signupError');
     try {
-      const { createUserWithEmailAndPassword, updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+      const { createUserWithEmailAndPassword, updateProfile } = await getAuthModule();
       const { auth } = await initFirebase();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
@@ -569,7 +577,7 @@ export function openSignupModal() { openAuthModal('signup'); }
 // ===== LOGOUT =====
 export async function logout() {
   const { auth } = await initFirebase();
-  const { signOut } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+  const { signOut } = await getAuthModule();
   return signOut(auth);
 }
 
@@ -580,7 +588,7 @@ export async function initAuthObserver() {
   const profileButtons = Array.from(document.querySelectorAll('#profileButton, #mobile-profile-button'));
   try {
     const { auth } = await initFirebase();
-    const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+    const { onAuthStateChanged } = await getAuthModule();
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // Ensure user profile document exists (non-blocking)
