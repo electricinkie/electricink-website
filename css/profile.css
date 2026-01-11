@@ -1,18 +1,19 @@
 /* Minimal profile styles — mobile-first */
 body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; color:#111; background:#fff; }
 .profile-page { max-width:900px; margin:24px auto; padding:16px; }
-.profile-card { background: #f8fafb; border:1px solid #eee; padding:20px; border-radius:10px; text-align:center; }
+.profile-card { background: var(--card-bg, #f8fafb); border:1px solid var(--surface-border, #eee); padding:20px; border-radius:10px; text-align:center; }
 .avatar { font-size:48px; width:72px; height:72px; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
-h1 { margin:6px 0 0; font-size:20px; }
-.muted { color:#666; font-size:14px; }
+/* removed empty .h1 rule (avoids emptyRules lint warning) */
+h1 { margin:6px 0 0; font-size:20px; color:var(--color-text); }
+.muted { color:var(--color-muted, #666); font-size:14px; }
 .discount-badge { margin-top:10px; background:linear-gradient(90deg,#0ea5a4,#0284c7); color:#fff; display:inline-block; padding:8px 12px; border-radius:999px; font-weight:600; }
-.btn { display:inline-block; margin-top:12px; padding:8px 14px; border-radius:8px; background:#111; color:#fff; border:none; cursor:pointer; }
+.btn { display:inline-block; margin-top:12px; padding:8px 14px; border-radius:8px; background:var(--btn-bg, #111); color:#fff; border:none; cursor:pointer; }
 .orders-section { margin-top:18px; }
 .orders-list { display:flex; flex-direction:column; gap:10px; }
 .order-card { border:1px solid #eee; padding:12px; border-radius:8px; background:#fff; }
 .order-meta { font-size:13px; color:#555; }
 .order-items { margin-top:8px; font-size:14px; }
-:root{--teal:#43BDAB;--black:#000;--muted:#666}
+.profile-main{padding:20px}
 .profile-main{padding:20px}
 .profile-container{max-width:980px;margin:0 auto}
 .profile-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}

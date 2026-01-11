@@ -1,79 +1,132 @@
+// ============================================
+// Profile Page Script - CLEAN VERSION
+// ============================================
+// - Polls for auth state (like headers do)
+// - Renders profile card (avatar, name, email)
+// - Loads order history
+// - Handles edit profile modal
+// ============================================
+
 import { initFirebase } from './firebase-config.js';
-import { initAuth, getCurrentUser, logout, openAuthModal, onAuthChange } from './auth.js';
-// Protect profile page: redirect guest users away early without affecting checkout
-async function protectProfile() {
-  try {
-    // Init auth if available (non-fatal)
-    try { await initAuth().catch(() => {}); } catch (e) { /* ignore */ }
-    const user = await getCurrentUser();
-    if (!user) {
-      alert('Please sign in to view your profile');
-      window.location.href = '/';
-      return;
-    }
-    // If user exists, continue — other init code will run as normal
-  } catch (e) {
-    console.error('Profile init failed:', e);
-    window.location.href = '/';
-  }
-}
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', protectProfile);
-  } else {
-    protectProfile();
-  }
-}
+import { getCurrentUser, onAuthChange, openAuthModal, logout } from './auth.js';
 import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
 
 const PAGE_SIZE = 5;
 let allOrders = [];
 let visibleCount = PAGE_SIZE;
 
-function el(id) { return document.getElementById(id); }
+// ────────── Helper Functions ──────────
+function el(id) { 
+  return document.getElementById(id); 
+}
 
 function initials(name) {
   if (!name) return 'U';
-  return name.split(' ').map(n => n[0] || '').slice(0,2).join('').toUpperCase();
+  return name.split(' ').map(n => n[0] || '').slice(0, 2).join('').toUpperCase();
 }
 
 function formatCurrency(v) {
-  return `€${(v != null ? (typeof v === 'number' ? v : v/100) : 0).toFixed(2)}`;
+  if (v == null) return '€0.00';
+  if (typeof v === 'number') return `€${v.toFixed(2)}`;
+  return `€${(v / 100).toFixed(2)}`; // assume cents
 }
 
 function formatDate(ts) {
-  try { const d = new Date(ts); return d.toLocaleDateString(); } catch (e) { return ts; }
+  try {
+    const d = new Date(ts);
+    return d.toLocaleDateString();
+  } catch (e) {
+    return String(ts);
+  }
 }
 
+// ────────── Poll for Restored Auth ──────────
+async function waitForAuthRestore({ timeout = 2500, interval = 150 } = {}) {
+  console.log('[Profile] 🔍 Polling for restored auth...');
+  const start = Date.now();
+  let attempts = 0;
+  
+  while ((Date.now() - start) < timeout) {
+    attempts++;
+    try {
+      const user = await getCurrentUser();
+      if (user) {
+        console.log(`[Profile] ✅ User found on attempt ${attempts}:`, user.email);
+        return user;
+      }
+    } catch (e) {
+      // Ignore transient errors
+    }
+    await new Promise(r => setTimeout(r, interval));
+  }
+  
+  console.log('[Profile] ⚠️ No user found after polling');
+  return null;
+}
+
+// ────────── Render Profile Card ──────────
 function renderProfile(user) {
-  if (!user) return;
-  const card = el('profileCard'); if (!card) return;
+  console.log('[Profile] 📝 Rendering profile for:', user?.email || 'none');
+  
+  if (!user) {
+    console.warn('[Profile] ⚠️ renderProfile called with no user');
+    return;
+  }
+
+  // Show profile card
+  const card = el('profileCard');
+  if (!card) {
+    console.error('[Profile] ❌ profileCard element not found');
+    return;
+  }
   card.style.display = 'flex';
-  el('profileName').textContent = user.displayName || 'Customer';
-  el('profileEmail').textContent = user.email || '';
-  const avatar = el('avatar'); if (avatar) avatar.textContent = initials(user.displayName || user.email);
+
+  // Update name, email, avatar
+  const nameEl = el('profileName');
+  const emailEl = el('profileEmail');
+  const avatarEl = el('avatar');
+
+  if (nameEl) nameEl.textContent = user.displayName || 'Customer';
+  if (emailEl) emailEl.textContent = user.email || '';
+  if (avatarEl) avatarEl.textContent = initials(user.displayName || user.email);
+
+  // Hide sign-in CTA
+  const signInCta = el('signInCta');
+  if (signInCta) signInCta.style.display = 'none';
+
+  console.log('[Profile] ✅ Profile card rendered');
 }
 
+// ────────── Render Orders List ──────────
 function renderOrdersList() {
-  const list = el('ordersList'); if (!list) return;
+  const list = el('ordersList');
+  if (!list) {
+    console.error('[Profile] ❌ ordersList element not found');
+    return;
+  }
+
   list.innerHTML = '';
   const slice = allOrders.slice(0, visibleCount);
+
   if (!slice || slice.length === 0) {
     list.innerHTML = '<div class="orders-empty">No orders found.</div>';
-    el('loadMoreBtn') && (el('loadMoreBtn').style.display = 'none');
+    const loadMoreBtn = el('loadMoreBtn');
+    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
     return;
   }
 
   slice.forEach(o => {
-    const status = o.status || o.order_status || 'unknown';
+    const status = o.status || o.order_status || 'pending';
     const total = formatCurrency(o.total);
-    const created = o.createdAt ? (o.createdAt.seconds ? (new Date(o.createdAt.seconds*1000)).toISOString() : o.createdAt) : o.date || '';
+    const created = o.createdAt?.seconds 
+      ? new Date(o.createdAt.seconds * 1000).toISOString()
+      : (o.createdAt || o.date || '');
 
     const item = document.createElement('div');
     item.className = 'order-card';
     item.innerHTML = `
       <div class="order-row">
-        <div class="order-id">${o.id || o.orderId || ''}</div>
+        <div class="order-id">${o.id || o.orderId || 'N/A'}</div>
         <div class="order-meta">${formatDate(created)} · <strong>${total}</strong></div>
       </div>
       <div class="order-actions">
@@ -85,396 +138,198 @@ function renderOrdersList() {
     list.appendChild(item);
   });
 
-  if (allOrders.length > visibleCount) el('loadMoreBtn') && (el('loadMoreBtn').style.display = 'inline-block');
-  else el('loadMoreBtn') && (el('loadMoreBtn').style.display = 'none');
+  // Show/hide "Load more" button
+  const loadMoreBtn = el('loadMoreBtn');
+  if (loadMoreBtn) {
+    loadMoreBtn.style.display = allOrders.length > visibleCount ? 'inline-block' : 'none';
+  }
+
+  console.log(`[Profile] ✅ Rendered ${slice.length} orders (${allOrders.length} total)`);
 }
 
+// ────────── Load Orders ──────────
 async function loadOrders(identifier) {
+  console.log('[Profile] 📦 Loading orders for:', identifier);
+
   try {
     allOrders = [];
     visibleCount = PAGE_SIZE;
     let orders = [];
-    if (typeof identifier === 'string' && identifier.indexOf('@') === -1) {
-      // treat as uid
-      orders = await getUserOrdersByUid(identifier, 100);
-      if ((!orders || orders.length === 0)) {
-        const user = await getCurrentUser();
-        if (user && user.email) orders = await getUserOrdersByEmail(user.email, 100);
-      }
-    } else {
-      orders = await getUserOrdersByEmail(identifier, 100);
-    }
-    allOrders = orders || [];
-    renderOrdersList();
-  } catch (err) {
-    console.error('Orders load failed', err);
-    const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-error">Could not load orders.</div>';
-  }
-}
 
-async function loadUserProfile(uid) {
-  try {
-    const { db } = await initFirebase();
-    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-    const ref = doc(db, 'users', uid);
-    const snap = await getDoc(ref);
-    return snap.exists() ? snap.data() : null;
-  } catch (err) {
-    console.warn('Could not load user profile doc', err);
-    return null;
-  }
-}
+    // Determine if identifier is UID or email
+    if (typeof identifier === 'string' && !identifier.includes('@')) {
+      // Treat as UID
+      console.log('[Profile] Using UID lookup');
+      orders = await getUserOrdersByUid(identifier, 100).catch(() => []);
 
-function attachEvents() {
-  const signInCta = el('signInCta');
-  signInCta?.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('login'); });
-
-  el('logoutBtn')?.addEventListener('click', async () => {
-    try { await logout(); window.location.href = '/'; } catch (e) { console.warn(e); }
-  });
-
-  el('editForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = el('editName').value.trim();
-    try {
-      try {
-        const { auth } = await initFirebase();
-        const { updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
-        if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name });
-      } catch (inner) { console.warn('Could not update profile on Firebase', inner); }
-      el('profileName').textContent = name || 'Customer';
-      el('avatar').textContent = initials(name || el('profileEmail').textContent);
-      el('editMsg').textContent = 'Saved';
-      setTimeout(() => { el('editModal').style.display = 'none'; }, 700);
-    } catch (err) {
-      console.error('Save profile failed', err);
-      el('editMsg').textContent = 'Could not save profile.';
-    }
-  });
-
-  el('loadMoreBtn')?.addEventListener('click', () => { visibleCount += PAGE_SIZE; renderOrdersList(); });
-
-  el('ordersList')?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.view-details'); if (!btn) return;
-    const id = btn.dataset.id; const detailsEl = el(`details-${id}`); if (!detailsEl) return;
-    if (detailsEl.style.display === 'none') {
-      const order = allOrders.find(o => (o.id || o.orderId) === id);
-      detailsEl.innerHTML = `<pre class="order-pre">${JSON.stringify(order, null, 2)}</pre>`;
-      detailsEl.style.display = 'block'; btn.textContent = 'Hide details';
-    } else { detailsEl.style.display = 'none'; btn.textContent = 'View details'; }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  attachEvents();
-  (async () => {
-    try { await initAuth().catch(() => {}); } catch (e) { /* ignore */ }
-    try {
-      await onAuthChange(async (user) => {
-        if (user) {
-          el('signInCta') && (el('signInCta').style.display = 'none');
-          renderProfile(user);
-          try {
-            const profileDoc = await loadUserProfile(user.uid);
-            if (profileDoc && typeof profileDoc.discount === 'number' && profileDoc.discount > 0) {
-              const badge = el('discount-badge') || el('profile-discount-badge');
-              const value = el('discount-value') || el('profile-discount-value');
-              if (badge && value) { value.textContent = `${profileDoc.discount}%`; badge.style.display = ''; }
-            }
-          } catch (inner) { /* ignore */ }
-          await loadOrders(user.uid || user.email);
-        } else {
-          el('signInCta') && (el('signInCta').style.display = 'inline-block');
-          const card = el('profileCard'); if (card) card.style.display = 'none';
-          const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
-        }
-      });
-    } catch (err) {
-      console.warn('Auth observer not available', err);
-      el('signInCta') && (el('signInCta').style.display = 'inline-block');
-      const card = el('profileCard'); if (card) card.style.display = 'none';
-      const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
-    }
-  })();
-});
-import { initFirebase } from './firebase-config.js';
-import { initAuth, getCurrentUser, logout } from './auth.js';
-import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
-
-function formatCurrency(v) {
-  return `€${v.toFixed(2)}`;
-}
-
-async function renderOrders(orders) {
-  const el = document.getElementById('orders-list');
-  if (!el) return;
-  if (!orders || orders.length === 0) {
-    el.textContent = 'Nenhum pedido encontrado.';
-    return;
-  }
-  el.innerHTML = orders.map(o => {
-    const date = new Date(o.createdAt?.seconds ? o.createdAt.seconds * 1000 : o.createdAt || Date.now());
-    const items = (o.items || []).map(it => `${it.name} x${it.quantity}`).join(', ');
-    return `
-      <div class="order-card">
-        <div class="order-meta">Pedido: ${o.id || o.orderId} — ${date.toLocaleDateString()}</div>
-        <div class="order-items">${items}</div>
-        <div class="order-meta">Total: ${formatCurrency(o.total || 0)}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-async function loadProfile() {
-  const user = await getCurrentUser();
-  if (!user) {
-    window.location.href = '/';
-    return;
-  }
-
-  document.getElementById('user-name').textContent = user.displayName || 'User';
-  document.getElementById('user-email').textContent = user.email || '';
-
-  // Load Firestore user doc for discount
-  try {
-    const { db } = await initFirebase();
-    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-    const snap = await getDoc(doc(db, 'users', user.uid));
-    const data = snap?.data() || {};
-    if (data.discount && Number(data.discount) > 0) {
-      const badge = document.getElementById('discount-badge');
-      const val = document.getElementById('discount-value');
-      if (badge && val) {
-        val.textContent = `${Number(data.discount)}%`;
-        badge.style.display = 'inline-block';
-      }
-    }
-  } catch (err) {
-    console.warn('Could not load user discount', err);
-  }
-
-  // Load orders
-  try {
-    // Prefer UID-based lookup (more reliable). Fall back to email-based
-    // lookup for legacy/guest orders that predate UID association.
-    let orders = [];
-    try {
-      orders = await getUserOrdersByUid(user.uid, 100);
-    } catch (e) {
-      console.warn('UID lookup failed, falling back to email', e);
-    }
-    if (!orders || orders.length === 0) {
-      orders = await getUserOrdersByEmail(user.email, 100);
-    }
-    await renderOrders(orders);
-  } catch (err) {
-    console.warn('Failed to load orders', err);
-    const el = document.getElementById('orders-list');
-    if (el) el.textContent = 'Erro ao carregar pedidos.';
-  }
-}
-
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  initAuth().catch(() => {});
-  loadProfile();
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      try { await logout(); window.location.href = '/'; } catch (e) { console.warn(e); }
-    });
-  }
-});
-import { openAuthModal, logout as authLogout, onAuthChange, getCurrentUser } from './auth.js';
-import { getUserOrdersByEmail, getUserOrdersByUid } from './orders.js';
-import { initFirebase } from './firebase-config.js';
-
-const PAGE_SIZE = 5;
-let allOrders = [];
-let visibleCount = PAGE_SIZE;
-
-function el(id) { return document.getElementById(id); }
-
-function initials(name) {
-  if (!name) return 'U';
-  return name.split(' ').map(n => n[0] || '').slice(0,2).join('').toUpperCase();
-}
-
-function formatDate(ts) {
-  try {
-    const d = new Date(ts);
-    return d.toLocaleDateString();
-  } catch (e) { return ts; }
-}
-
-function renderProfile(user) {
-  if (!user) return;
-  const card = el('profileCard'); if (!card) return;
-  card.style.display = 'flex';
-  el('profileName').textContent = user.displayName || 'Customer';
-  el('profileEmail').textContent = user.email || '';
-  el('avatar').textContent = initials(user.displayName || user.email);
-}
-
-function renderOrders() {
-  const list = el('ordersList');
-  list.innerHTML = '';
-  const slice = allOrders.slice(0, visibleCount);
-  if (slice.length === 0) {
-    list.innerHTML = '<div class="orders-empty">No orders found.</div>';
-    el('loadMoreBtn').style.display = 'none';
-    return;
-  }
-
-  slice.forEach(o => {
-    const status = o.status || o.order_status || 'unknown';
-    const total = (o.total != null) ? (typeof o.total === 'number' ? `€${o.total.toFixed(2)}` : `€${(o.total/100).toFixed(2)}`) : '€0.00';
-    const created = o.createdAt ? (o.createdAt.seconds ? (new Date(o.createdAt.seconds*1000)).toISOString() : o.createdAt) : o.createdAt || o.date || '';
-
-    const item = document.createElement('div');
-    item.className = 'order-card';
-    item.innerHTML = `
-      <div class="order-row">
-        <div class="order-id">${o.id}</div>
-        <div class="order-meta">${formatDate(created)} · <strong>${total}</strong></div>
-      </div>
-      <div class="order-actions">
-        <button class="btn-link view-details" data-id="${o.id}">View details</button>
-        <span class="order-status ${status}">${status}</span>
-      </div>
-      <div class="order-details" id="details-${o.id}" style="display:none"></div>
-    `;
-
-    list.appendChild(item);
-  });
-
-  // Show load more if there are more
-  if (allOrders.length > visibleCount) {
-    el('loadMoreBtn').style.display = 'inline-block';
-  } else {
-    el('loadMoreBtn').style.display = 'none';
-  }
-}
-
-async function loadOrders(email) {
-  try {
-    allOrders = [];
-    visibleCount = PAGE_SIZE;
-    // Attempt to fetch orders (if Firebase config missing, this will throw)
-    let orders = [];
-    // If `email` contains an @ assume it's an email; otherwise assume it's a uid
-    if (typeof email === 'string' && email.indexOf('@') === -1) {
-      // uid
-      orders = await getUserOrdersByUid(email, 100);
+      // Fallback to email if UID returns nothing
       if (!orders || orders.length === 0) {
-        // fallback: try email lookup using current user email
-        try {
-          const user = await getCurrentUser();
-          if (user && user.email) orders = await getUserOrdersByEmail(user.email, 100);
-        } catch (e) { /* ignore */ }
+        console.log('[Profile] UID lookup empty, trying email fallback');
+        const user = await getCurrentUser();
+        if (user?.email) {
+          orders = await getUserOrdersByEmail(user.email, 100).catch(() => []);
+        }
       }
     } else {
-      orders = await getUserOrdersByEmail(email, 100);
+      // Treat as email
+      console.log('[Profile] Using email lookup');
+      orders = await getUserOrdersByEmail(identifier, 100).catch(() => []);
     }
+
     allOrders = orders || [];
-    renderOrders();
+    console.log(`[Profile] ✅ Loaded ${allOrders.length} orders`);
+    renderOrdersList();
+
   } catch (err) {
+    console.error('[Profile] ❌ Failed to load orders:', err);
     const list = el('ordersList');
-    if (list) list.innerHTML = '<div class="orders-error">Could not load orders. Please check your connection or permissions.</div>';
-    console.error('Orders load failed', err);
+    if (list) {
+      list.innerHTML = '<div class="orders-error">Could not load orders. Please try again.</div>';
+    }
   }
 }
 
+// ────────── Load User Profile from Firestore ──────────
 async function loadUserProfile(uid) {
   try {
     const { db } = await initFirebase();
     const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+    
     const ref = doc(db, 'users', uid);
     const snap = await getDoc(ref);
-    if (!snap.exists()) return null;
+    
+    if (!snap.exists()) {
+      console.log('[Profile] No Firestore user doc found');
+      return null;
+    }
+
+    console.log('[Profile] ✅ Loaded Firestore user doc');
     return snap.data();
   } catch (err) {
-    console.warn('Could not load user profile doc', err);
+    console.warn('[Profile] ⚠️ Could not load Firestore user doc:', err.message);
     return null;
   }
 }
 
+// ────────── Attach Event Listeners ──────────
 function attachEvents() {
+  console.log('[Profile] 🔗 Attaching event listeners');
+
   // Sign in CTA
   const signInCta = el('signInCta');
-  signInCta?.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('login'); });
+  signInCta?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openAuthModal('login');
+  });
 
-  // Logout
-  el('logoutBtn')?.addEventListener('click', async () => {
+  // Logout button
+  const logoutBtn = el('logoutBtn');
+  logoutBtn?.addEventListener('click', async () => {
     try {
-      await authLogout();
+      await logout();
       window.location.href = '/';
-    } catch (err) {
-      console.error('Logout failed', err);
-      alert('Logout failed. Please try again.');
+    } catch (e) {
+      console.error('[Profile] Logout failed:', e);
+      window.location.href = '/'; // Force redirect anyway
     }
   });
 
-  // Edit profile modal
-  el('editProfileBtn')?.addEventListener('click', async () => {
+  // Edit profile button
+  const editProfileBtn = el('editProfileBtn');
+  editProfileBtn?.addEventListener('click', async () => {
     try {
       const user = await getCurrentUser();
-      el('editName').value = user?.displayName || '';
+      const editName = el('editName');
+      if (editName) editName.value = user?.displayName || '';
     } catch (err) {
-      // Firebase not available — use displayed name as fallback
-      el('editName').value = el('profileName')?.textContent || '';
+      console.warn('[Profile] Could not get current user for edit:', err);
     }
-    el('editMsg').textContent = '';
-    el('editModal').style.display = 'block';
+    
+    const editMsg = el('editMsg');
+    if (editMsg) editMsg.textContent = '';
+    
+    const editModal = el('editModal');
+    if (editModal) editModal.style.display = 'block';
   });
 
-  el('closeEditModal')?.addEventListener('click', () => { el('editModal').style.display = 'none'; });
-  el('cancelEdit')?.addEventListener('click', () => { el('editModal').style.display = 'none'; });
+  // Close edit modal
+  const closeEditModal = el('closeEditModal');
+  closeEditModal?.addEventListener('click', () => {
+    const editModal = el('editModal');
+    if (editModal) editModal.style.display = 'none';
+  });
 
-  el('editForm')?.addEventListener('submit', async (e) => {
+  const cancelEdit = el('cancelEdit');
+  cancelEdit?.addEventListener('click', () => {
+    const editModal = el('editModal');
+    if (editModal) editModal.style.display = 'none';
+  });
+
+  // Edit form submit
+  const editForm = el('editForm');
+  editForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = el('editName').value.trim();
-    el('editMsg').textContent = 'Saving...';
+    
+    const editName = el('editName');
+    const editMsg = el('editMsg');
+    const name = editName?.value?.trim() || '';
+
+    if (editMsg) editMsg.textContent = 'Saving...';
+
     try {
-      // Try to update firebase profile if available
+      // Update Firebase profile
       try {
         const { auth } = await initFirebase();
         const { updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
+        
         if (auth.currentUser) {
           await updateProfile(auth.currentUser, { displayName: name });
+          console.log('[Profile] ✅ Firebase profile updated');
         }
       } catch (inner) {
-        // Firebase may not be configured; ignore
-        console.warn('Could not update profile on Firebase', inner);
+        console.warn('[Profile] Could not update Firebase profile:', inner);
       }
 
       // Update UI
-      el('profileName').textContent = name || 'Customer';
-      el('avatar').textContent = initials(name || el('profileEmail').textContent);
-      el('editMsg').textContent = 'Saved';
-      setTimeout(() => { el('editModal').style.display = 'none'; }, 700);
+      const profileName = el('profileName');
+      const avatar = el('avatar');
+      const profileEmail = el('profileEmail');
+
+      if (profileName) profileName.textContent = name || 'Customer';
+      if (avatar) avatar.textContent = initials(name || profileEmail?.textContent);
+      if (editMsg) editMsg.textContent = 'Saved!';
+
+      // Close modal after delay
+      setTimeout(() => {
+        const editModal = el('editModal');
+        if (editModal) editModal.style.display = 'none';
+      }, 700);
+
     } catch (err) {
-      console.error('Save profile failed', err);
-      el('editMsg').textContent = 'Could not save profile.';
+      console.error('[Profile] Save failed:', err);
+      if (editMsg) editMsg.textContent = 'Could not save. Please try again.';
     }
   });
 
-  // Load more
-  el('loadMoreBtn')?.addEventListener('click', () => {
+  // Load more orders
+  const loadMoreBtn = el('loadMoreBtn');
+  loadMoreBtn?.addEventListener('click', () => {
     visibleCount += PAGE_SIZE;
-    renderOrders();
+    renderOrdersList();
   });
 
-  // Delegate view details
-  el('ordersList')?.addEventListener('click', (e) => {
+  // View order details
+  const ordersList = el('ordersList');
+  ordersList?.addEventListener('click', (e) => {
     const btn = e.target.closest('.view-details');
     if (!btn) return;
+
     const id = btn.dataset.id;
     const detailsEl = el(`details-${id}`);
     if (!detailsEl) return;
+
     if (detailsEl.style.display === 'none') {
-      // find order
-      const order = allOrders.find(o => o.id === id);
+      const order = allOrders.find(o => (o.id || o.orderId) === id);
       detailsEl.innerHTML = `<pre class="order-pre">${JSON.stringify(order, null, 2)}</pre>`;
       detailsEl.style.display = 'block';
       btn.textContent = 'Hide details';
@@ -485,41 +340,79 @@ function attachEvents() {
   });
 }
 
-// Init when DOM ready: attach events and observe auth
-document.addEventListener('DOMContentLoaded', () => {
+// ────────── Initialize Profile Page ──────────
+async function initProfilePage() {
+  console.log('[Profile] 🚀 Initializing profile page');
+
+  // Attach all event listeners first
   attachEvents();
 
-  (async () => {
+  // Poll for restored auth (mirrors header behavior)
+  const user = await waitForAuthRestore({ timeout: 2500, interval: 150 });
+
+  if (user) {
+    console.log('[Profile] ✅ User authenticated:', user.email);
+    
+    // Render profile immediately
+    renderProfile(user);
+
+    // Load Firestore user doc (for discount, etc.)
     try {
-      await onAuthChange(async (user) => {
-        if (user) {
-          const signInEl = el('signInCta'); if (signInEl) signInEl.style.display = 'none';
-          renderProfile(user);
-          // Try to load Firestore user doc to get discount and other metadata
-          try {
-            const profileDoc = await loadUserProfile(user.uid);
-            if (profileDoc && typeof profileDoc.discount === 'number' && profileDoc.discount > 0) {
-              const badge = el('discount-badge') || el('profile-discount-badge');
-              const value = el('discount-value') || el('profile-discount-value');
-              if (badge && value) {
-                value.textContent = `${profileDoc.discount}%`;
-                badge.style.display = '';
-              }
-            }
-          } catch (inner) { /* ignore */ }
-          await loadOrders(user.email);
-        } else {
-          const signInEl = el('signInCta'); if (signInEl) signInEl.style.display = 'inline-block';
-          const card = el('profileCard'); if (card) card.style.display = 'none';
-          const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
+      const profileDoc = await loadUserProfile(user.uid);
+      if (profileDoc?.discount && profileDoc.discount > 0) {
+        const badge = el('discount-badge');
+        const value = el('discount-value');
+        if (badge && value) {
+          value.textContent = `${profileDoc.discount}%`;
+          badge.style.display = 'inline-block';
         }
-      });
+      }
     } catch (err) {
-      // Firebase not configured or init failed — show fallback UI
-      console.warn('Auth observer not available', err);
-      const signInEl = el('signInCta'); if (signInEl) signInEl.style.display = 'inline-block';
-      const card = el('profileCard'); if (card) card.style.display = 'none';
-      const list = el('ordersList'); if (list) list.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
+      console.warn('[Profile] Could not load discount:', err);
     }
-  })();
-});
+
+    // Load orders
+    await loadOrders(user.uid || user.email);
+
+  } else {
+    console.log('[Profile] ℹ️ No user found, showing sign-in state');
+    
+    // Show sign-in CTA
+    const signInCta = el('signInCta');
+    if (signInCta) signInCta.style.display = 'inline-block';
+
+    // Hide profile card
+    const profileCard = el('profileCard');
+    if (profileCard) profileCard.style.display = 'none';
+
+    // Show empty state in orders
+    const ordersList = el('ordersList');
+    if (ordersList) {
+      ordersList.innerHTML = '<div class="orders-empty">Sign in to view your orders.</div>';
+    }
+  }
+
+  // Set up auth observer for real-time updates
+  try {
+    onAuthChange(async (user) => {
+      console.log('[Profile] 📡 onAuthChange fired. User:', user?.email || 'none');
+      
+      if (user) {
+        renderProfile(user);
+        await loadOrders(user.uid || user.email);
+      } else {
+        // User logged out
+        window.location.href = '/';
+      }
+    });
+  } catch (err) {
+    console.warn('[Profile] ⚠️ Could not set up auth observer:', err);
+  }
+}
+
+// ────────── Auto-Initialize ──────────
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initProfilePage);
+} else {
+  initProfilePage();
+}

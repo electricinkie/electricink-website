@@ -9,6 +9,28 @@ html {
   height: 100%;
 }
 
+/* Design tokens (global) */
+:root{
+  --color-primary: #43BDAB;
+  --color-accent: #ffa300;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --bg: #ffffff;
+  --card-bg: #f8fafb;
+  --surface-border: #eeeeee;
+  --btn-bg: #111111;
+  --radius-md: 10px;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* Backwards-compatible aliases used in older CSS files */
+:root{
+  --teal: var(--color-primary);
+  --black: #000000;
+  --muted: var(--color-muted);
+  --shadow: var(--shadow-sm);
+}
+
 body {
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: #FFFFFF;

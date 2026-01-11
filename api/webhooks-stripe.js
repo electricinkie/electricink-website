@@ -385,8 +385,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       discount_percent: discount_percent,
       discounted_subtotal: ((subtotal_cents - discount_cents) / 100),
       total: (paymentIntent.amount / 100),
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      paidAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.Timestamp.now(),
+      paidAt: admin.firestore.Timestamp.now(),
       source: 'webhook',
       webhookEventId: event.id
     };
@@ -534,7 +534,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
             const emailUpdate = removeUndefined({
               adminEmailStatus: 'sent',
               adminEmailId: adminEmailResult.id,
-              adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
+              adminEmailSentAt: admin.firestore.Timestamp.now()
             });
             await db.collection('orders').doc(orderId).update(emailUpdate);
           }
@@ -552,7 +552,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
               adminEmailStatus: 'failed',
               adminEmailError: emailError.message,
               adminEmailErrorCode: emailError.statusCode,
-              adminEmailFailedAt: admin.firestore.FieldValue.serverTimestamp()
+              adminEmailFailedAt: admin.firestore.Timestamp.now()
             });
             await db.collection('orders').doc(orderId).update(emailErrorUpdate);
 
@@ -562,7 +562,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
               orderData: { orderId },
               error: emailError.message,
               errorCode: emailError.statusCode,
-              attemptedAt: admin.firestore.FieldValue.serverTimestamp(),
+              attemptedAt: admin.firestore.Timestamp.now(),
               retryCount: 0
             }));
           }
@@ -621,7 +621,7 @@ async function handlePaymentIntentFailed(paymentIntent, requestId) {
       customerEmail: paymentIntent.metadata?.customer_email || paymentIntent.receipt_email || 'unknown',
       failureReason: paymentIntent.last_payment_error?.message || 'Unknown error',
       failureCode: paymentIntent.last_payment_error?.code || null,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.Timestamp.now(),
       metadata: paymentIntent.metadata || {}
     });
 
@@ -663,10 +663,10 @@ async function handleChargeRefunded(charge, requestId) {
     await orderRef.update({
       status: 'refunded',
       paymentStatus: 'refunded',
-      refundedAt: admin.firestore.FieldValue.serverTimestamp(),
+      refundedAt: admin.firestore.Timestamp.now(),
       refundAmount: charge.amount_refunded,
       refundReason: (charge.refunds && charge.refunds.data && charge.refunds.data[0] && charge.refunds.data[0].reason) || 'Not specified',
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      updatedAt: admin.firestore.Timestamp.now()
     });
 
     logger.info('Order status updated to refunded', { orderId: charge.payment_intent, requestId });

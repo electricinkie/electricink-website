@@ -205,7 +205,8 @@ export function createAuthModal() {
             </div>
             <div>
               <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password</label>
-              <input type="password" id="loginPassword" required placeholder="Enter your password" 
+              <input type="password" id="loginPassword" required placeholder="Enter your password"
+                autocomplete="current-password" autocorrect="off" autocapitalize="off" spellcheck="false"
                 style="
                   width: 100%;
                   padding: 12px 14px;
@@ -274,7 +275,8 @@ export function createAuthModal() {
             </div>
             <div>
               <label style="display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password</label>
-              <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters" 
+              <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters"
+                autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"
                 style="
                   width: 100%;
                   padding: 12px 14px;
@@ -342,10 +344,27 @@ function initAuthModal() {
       const { auth } = await initFirebase();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       try { console.log('[Auth] ✅ Login successful:', userCredential.user.email); } catch (e) {}
-
       // Hide errors early
       try { errorEl.style.display = 'none'; } catch (e) {}
       errorEl.classList.add('hidden');
+
+      // Stronger post-login admin detection flow:
+      // 1) Force token refresh, 2) clear cache, 3) run immediate admin check + UI setup.
+      try {
+        const { clearAdminCache, isAdmin, setupAdminUI } = await import('./admin-check.js');
+        try { await userCredential.user.getIdToken(true); } catch (e) { console.warn('Token refresh failed', e); }
+        try { clearAdminCache(); } catch (e) { console.warn('clearAdminCache failed', e); }
+        try {
+          const admin = await isAdmin({ user: userCredential.user, forceRefresh: true });
+          if (admin) {
+            try { await setupAdminUI({ forceRefresh: true }); } catch (e) { console.warn('setupAdminUI failed', e); }
+          }
+        } catch (e) {
+          console.warn('Immediate admin check failed', e);
+        }
+      } catch (e) {
+        console.log('Admin post-login flow skipped', e);
+      }
 
       // Close modal before showing toast
       closeAuthModal();

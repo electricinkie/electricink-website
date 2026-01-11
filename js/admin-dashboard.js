@@ -2,18 +2,17 @@ import { initFirebase } from './firebase-config.js';
 import { requireAdmin } from './admin-check.js';
 import { logout } from './auth.js';
 
-// Protect page
-await requireAdmin();
-
 const { auth, db } = await initFirebase();
 let currentOrderId = null;
 
 // Load dashboard on DOM ready
+/*
 document.addEventListener('DOMContentLoaded', () => {
   loadDashboard().catch(err => console.error('Dashboard init error', err));
 });
+*/
 
-async function loadDashboard() {
+export async function loadDashboard() {
   const user = auth.currentUser;
   if (!user) return window.location.href = '/';
 
@@ -23,47 +22,54 @@ async function loadDashboard() {
 }
 
 async function loadStats() {
-  const { collection, getDocs, query, where, orderBy } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-  const { Timestamp } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+  try {
+    const { collection, getDocs, query, where, orderBy } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+    const { Timestamp } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
 
-  const ordersCol = collection(db, 'orders');
+    const ordersCol = collection(db, 'orders');
 
-  // total orders
-  const allSnap = await getDocs(query(ordersCol));
-  document.getElementById('total-orders').textContent = String(allSnap.size || 0);
+    // total orders
+    const allSnap = await getDocs(query(ordersCol));
+    document.getElementById('total-orders').textContent = String(allSnap.size || 0);
 
-  // pending
-  const pendingSnap = await getDocs(query(ordersCol, where('status', '==', 'pending')));
-  document.getElementById('pending-count').textContent = String(pendingSnap.size || 0);
+    // pending
+    const pendingSnap = await getDocs(query(ordersCol, where('status', '==', 'pending')));
+    document.getElementById('pending-count').textContent = String(pendingSnap.size || 0);
 
-  // todays sales
-  const today = new Date(); today.setHours(0,0,0,0);
-  const todayTs = Timestamp.fromDate(today);
-  const todaySnap = await getDocs(query(ordersCol, where('createdAt', '>=', todayTs)));
-  let todaySales = 0;
-  todaySnap.forEach(d => { const o = d.data(); todaySales += Number(o.total || 0); });
-  document.getElementById('today-sales').textContent = `€${todaySales.toFixed(2)}`;
+    // todays sales
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayTs = Timestamp.fromDate(today);
+    const todaySnap = await getDocs(query(ordersCol, where('createdAt', '>=', todayTs)));
+    let todaySales = 0;
+    todaySnap.forEach(d => { const o = d.data(); todaySales += Number(o.total || 0); });
+    document.getElementById('today-sales').textContent = `€${todaySales.toFixed(2)}`;
+  } catch (err) {
+    console.error('Erro ao carregar estatísticas:', err);
+    try { document.getElementById('total-orders').textContent = '—'; } catch (e) {}
+    try { document.getElementById('pending-count').textContent = '—'; } catch (e) {}
+    try { document.getElementById('today-sales').textContent = '—'; } catch (e) {}
+  }
 }
 
 async function loadOrders(status = 'all') {
   const tbody = document.getElementById('orders-tbody');
   tbody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
+  try {
+    const { collection, getDocs, query, where, orderBy, limit: _limit } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
+    let q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), _limit(50));
+    if (status !== 'all') q = query(collection(db, 'orders'), where('status', '==', status), orderBy('createdAt', 'desc'), _limit(50));
 
-  const { collection, getDocs, query, where, orderBy, limit: _limit } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-  let q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), _limit(50));
-  if (status !== 'all') q = query(collection(db, 'orders'), where('status', '==', status), orderBy('createdAt', 'desc'), _limit(50));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado</td></tr>';
+      return;
+    }
 
-  const snap = await getDocs(q);
-  if (snap.empty) {
-    tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = '';
-  snap.forEach(docSnap => {
-    const order = docSnap.data();
-    const row = document.createElement('tr');
-    row.innerHTML = `
+    tbody.innerHTML = '';
+    snap.forEach(docSnap => {
+      const order = docSnap.data();
+      const row = document.createElement('tr');
+      row.innerHTML = `
       <td><strong>${docSnap.id}</strong></td>
       <td>
         ${order.customerName || order.customerEmail || ''}
@@ -77,8 +83,12 @@ async function loadOrders(status = 'all') {
         ${order.status === 'pending' ? `<button onclick="window.quickShip('${docSnap.id}')" class="btn-sm btn-success">Enviar</button>` : ''}
       </td>
     `;
-    tbody.appendChild(row);
-  });
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error('Erro ao carregar pedidos:', err);
+    tbody.innerHTML = `<tr><td colspan=\"6\">Erro ao carregar pedidos: ${err?.message || 'Ver console'}</td></tr>`;
+  }
 }
 
 window.viewOrder = async function(orderId) {
@@ -166,8 +176,61 @@ document.getElementById('status-filter')?.addEventListener('change', (e) => {
 
 function formatDate(timestamp) {
   if (!timestamp) return 'N/A';
-  if (timestamp.toDate) return timestamp.toDate().toLocaleString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-  try { return new Date(timestamp).toLocaleString('pt-PT', { hour: '2-digit', minute: '2-digit' }); } catch(e) { return String(timestamp); }
+  
+  try {
+    // Se é Firestore Timestamp com método toDate()
+    if (timestamp.toDate && typeof timestamp.toDate === 'function') {
+      return timestamp.toDate().toLocaleString('pt-PT', { 
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    }
+    
+    // Se é plain object Firestore { seconds, nanoseconds } ou { _seconds, _nanoseconds }
+    const seconds = timestamp.seconds || timestamp._seconds;
+    if (seconds && typeof seconds === 'number') {
+      return new Date(seconds * 1000).toLocaleString('pt-PT', { 
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    }
+    
+    // Se é timestamp em milissegundos (number)
+    if (typeof timestamp === 'number') {
+      return new Date(timestamp).toLocaleString('pt-PT', { 
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    }
+    
+    // Se é string ISO ou Date
+    const date = new Date(timestamp);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleString('pt-PT', { 
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    }
+    
+    // Fallback
+    console.warn('Formato de timestamp não reconhecido:', timestamp);
+    return 'Data inválida';
+  } catch (e) {
+    console.error('Erro ao formatar data:', e, timestamp);
+    return 'N/A';
+  }
 }
 
 function translateStatus(status) {
@@ -175,4 +238,20 @@ function translateStatus(status) {
   return t[status] || status;
 }
 
-window.logout = logout;
+// Configure logout button to use async handler instead of relying on inline onclick
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    try { logoutBtn.removeAttribute('onclick'); } catch (e) {}
+    logoutBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await logout();
+        window.location.href = '/';
+      } catch (err) {
+        console.error('Logout error:', err);
+        window.location.href = '/';
+      }
+    });
+  }
+});

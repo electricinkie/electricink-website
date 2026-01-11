@@ -2,7 +2,7 @@ import { initFirebase } from './firebase-config.js';
 
 let isAdminCache = null;
 let isAdminCacheAt = 0; // epoch ms of last resolution
-const ADMIN_CACHE_TTL_MS = 60 * 1000; // 60s TTL
+const ADMIN_CACHE_TTL_MS = 5 * 1000; // 5s TTL (reduced to react faster to role changes)
 
 export async function isAdmin({ user: providedUser = null, forceRefresh = false } = {}) {
   // TTL check: reuse cache if valid and not forced
