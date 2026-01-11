@@ -25,7 +25,8 @@ service cloud.firestore {
     // server-side endpoint (/api/my-orders) which verifies ID tokens.
     match /orders/{orderId} {
       allow get: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
-      allow list: if false;
+      // Allow listing only for admins (dashboard); prevent client-side listing for non-admins
+      allow list: if isAdmin();
       // Only admin/server may create or modify orders
       allow create, update, delete: if isAdmin();
     }
