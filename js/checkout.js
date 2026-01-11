@@ -16,7 +16,7 @@ import { getCurrentUser, onAuthChange } from './auth.js';
   // ============================================
   
   // Stripe publishable key should be injected at build/runtime. Do NOT hardcode secrets here.
-  const STRIPE_PUBLISHABLE_KEY = window.STRIPE_PUBLISHABLE_KEY || '';
+  const STRIPE_PUBLISHABLE_KEY = window.STRIPE_PUBLISHABLE_KEY;
   const PAYMENT_INTENT_URL = '/api/create-payment-intent';
   
   // ============================================
@@ -92,6 +92,24 @@ import { getCurrentUser, onAuthChange } from './auth.js';
 
     // Initialize Stripe
     try {
+      if (!STRIPE_PUBLISHABLE_KEY) {
+        console.error('❌ [CHECKOUT] Missing STRIPE_PUBLISHABLE_KEY - payment system unavailable');
+        if (window.toast && typeof window.toast.error === 'function') {
+          window.toast.error('Payment system is currently unavailable. Please try again later or contact support.');
+        } else {
+          alert('Payment system is currently unavailable. Please contact support.');
+        }
+        // Disable the submit button if present
+        try {
+          const submitBtnLocal = document.getElementById('submitBtn');
+          if (submitBtnLocal) {
+            submitBtnLocal.disabled = true;
+            const btnText = document.getElementById('button-text');
+            if (btnText) btnText.textContent = 'Payment Unavailable';
+          }
+        } catch (e) { /* ignore */ }
+        return;
+      }
       stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
     } catch (error) {
       console.error('Stripe initialization error:', error);
