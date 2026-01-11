@@ -504,15 +504,30 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       (async () => {
         const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
-        // cliente email (não-bloqueante)
+        // cliente email (não-bloqueante) - prevenir envios duplicados
         try {
-          await resend.emails.send({
-            from: `Electric Ink <${EMAIL_FROM}>`,
-            to: order.customerEmail,
-            subject: `Order Confirmation #${orderId}`,
-            html: `Order #${orderId} placed.`,
-          });
-          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent', timestamp: new Date().toISOString() }));
+          const orderRef = db.collection('orders').doc(orderId);
+          const orderSnapCurrent = await orderRef.get();
+          const orderDataCurrent = orderSnapCurrent.exists ? orderSnapCurrent.data() : {};
+
+          if (!orderDataCurrent.clientEmailSent) {
+            await resend.emails.send({
+              from: `Electric Ink <${EMAIL_FROM}>`,
+              to: order.customerEmail,
+              subject: `Order Confirmation #${orderId}`,
+              html: `Order #${orderId} placed.`,
+            });
+
+            // marca como enviado para evitar duplicação
+            await orderRef.update({
+              clientEmailSent: true,
+              clientEmailSentAt: admin.firestore.Timestamp.now()
+            });
+
+            logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent', timestamp: new Date().toISOString() }));
+          } else {
+            logger.info(JSON.stringify({ ...emailLog, status: 'client_email_skipped_already_sent', timestamp: new Date().toISOString() }));
+          }
         } catch (clientErr) {
           logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: clientErr && clientErr.message, timestamp: new Date().toISOString() }));
         }
