@@ -7,27 +7,51 @@ service cloud.firestore {
       return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // Admins collection: only admins may read; no client-side writes.
+    // Helper: check if user is viewing their own order
+    function isOwnOrder() {
+      return request.auth != null && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.userId == request.auth.token.email ||
+        resource.data.customerEmail == request.auth.token.email
+      );
+    }
+
+    // Admins collection
     match /admins/{adminId} {
       allow read: if isAdmin();
       allow write: if false;
     }
 
-    // Users: user reads/writes own profile; admin may read all
+    // Users collection
     match /users/{userId} {
       allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
       allow write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Orders: only allow admins full access. Clients may only `get` a single
-    // order document when they are the owner (userId == request.auth.uid).
-    // Listing (`list`) is intentionally disabled so clients must use the
-    // server-side endpoint (/api/my-orders) which verifies ID tokens.
+    // Orders collection - CRITICAL CHANGE HERE
     match /orders/{orderId} {
-      allow get: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
-      // Allow listing only for admins (dashboard); prevent client-side listing for non-admins
-      allow list: if isAdmin();
-      // Only admin/server may create or modify orders
+      // Admin pode tudo (get e list)
+      allow read: if isAdmin();
+      
+      // User pode:
+      // - GET um pedido específico se for dele
+      allow get: if isOwnOrder();
+      
+      // - LIST/QUERY pedidos dele (CRÍTICO PARA MY ORDERS!)
+      allow list: if request.auth != null && (
+        // Query filtra por userId == UID
+        request.query.limit <= 100 &&
+        (
+          // Query where userId == uid
+          ('userId' in request.query.filters() && request.query.filters().userId == request.auth.uid) ||
+          // Query where userId == email  
+          ('userId' in request.query.filters() && request.query.filters().userId == request.auth.token.email) ||
+          // Query where customerEmail == email
+          ('customerEmail' in request.query.filters() && request.query.filters().customerEmail == request.auth.token.email)
+        )
+      );
+      
+      // Só admin/backend pode escrever
       allow create, update, delete: if isAdmin();
     }
 

@@ -4,8 +4,8 @@
   "description": "Electric Ink IE - Tattoo Supplies E-commerce",
   "main": "index.js",
   "scripts": {
-    "dev": "node dev-server.js",
-    "start": "node dev-server.js",
+    "dev": "node scripts/dev-server.js",
+    "start": "node scripts/dev-server.js",
     "inject-sentry": "node scripts/inject-sentry-dsn.js",
     "build": "echo 'Dependencies installed'",
     "vercel-build": "npm install --production=false",
