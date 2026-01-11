@@ -410,7 +410,7 @@ function handleOrderTableClick(e) {
     try { tbody.removeEventListener('click', handleOrderTableClick); } catch (e) { /* ignore */ }
     tbody.addEventListener('click', handleOrderTableClick);
   }
-}
+
 
 // Configure logout button to use async handler instead of relying on inline onclick
 document.addEventListener('DOMContentLoaded', () => {
