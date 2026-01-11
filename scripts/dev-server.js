@@ -94,39 +94,33 @@ app.get('/api/my-orders', async (req, res) => {
 // ADDED: /api/my-orders registered here
 
 // Serve static files from project root (dev-server moved into scripts/)
-// Intelligent cache headers middleware (placed before static middleware)
-app.use((req, res, next) => {
-  try {
-    const filePath = req.path || '';
-    let cacheControl;
-    if (filePath.endsWith('.html') || filePath === '/' || filePath.endsWith('.htm')) {
-      // HTML: always fetch fresh
-      cacheControl = 'no-cache, no-store, must-revalidate';
-    } else if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
-      // JS/CSS: short cache with revalidation
-      cacheControl = 'public, max-age=300, must-revalidate';
-    } else if (filePath.match(/\.(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf)$/)) {
-      // Static assets: long cache
-      cacheControl = 'public, max-age=86400';
-    } else {
-      cacheControl = 'no-cache';
-    }
-
-    res.setHeader('Cache-Control', cacheControl);
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-  } catch (e) {
-    // If anything goes wrong, fall back to no-cache
+// Serve static files with intelligent cache headers via `setHeaders`
+app.use(express.static(path.join(__dirname, '..'), {
+  setHeaders: (res, filePath) => {
     try {
-      res.setHeader('Cache-Control', 'no-cache');
+      let cacheControl;
+      if (filePath.endsWith('.html') || filePath.endsWith('.htm')) {
+        cacheControl = 'no-cache, no-store, must-revalidate';
+      } else if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
+        cacheControl = 'public, max-age=300, must-revalidate';
+      } else if (filePath.match(/\.(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf)$/)) {
+        cacheControl = 'public, max-age=86400';
+      } else {
+        cacheControl = 'no-cache';
+      }
+
+      res.setHeader('Cache-Control', cacheControl);
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
-    } catch (err) {}
+    } catch (e) {
+      try {
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+      } catch (err) {}
+    }
   }
-  next();
-});
-
-app.use(express.static(path.join(__dirname, '..')));
+}));
 
 
 
