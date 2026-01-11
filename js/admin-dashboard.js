@@ -235,13 +235,13 @@ window.markAsShipped = async function() {
         try {
           // Obter ID token do usuário logado e enviar com header Authorization
           const idToken = await auth.currentUser.getIdToken();
-          const response = await fetch('/api/send-shipping-notification', {
+          const response = await fetch('/api/emails', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${idToken}`
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(Object.assign({ type: 'shipping-notification' }, payload))
           });
 
           if (!response.ok) {
@@ -376,8 +376,10 @@ function translateStatus(status) {
   const t = { pending: 'Pendente', shipped: 'Enviado', delivered: 'Entregue' };
   return t[status] || status;
 
-  // ────────── Delegated table click handler (attach once) ──────────
-  function handleOrderTableClick(e) {
+}
+
+// ────────── Delegated table click handler (attach once) ──────────
+function handleOrderTableClick(e) {
     const btn = e.target.closest('button');
     const row = e.target.closest('tr.order-row');
 
