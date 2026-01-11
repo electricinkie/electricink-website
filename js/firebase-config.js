@@ -11,6 +11,9 @@ let _app = null;
 let _auth = null;
 let _db = null;
 
+// Promise that resolves when Firebase Auth restores the current user (onAuthStateChanged fires)
+let _authReadyResolve;
+export const authReady = new Promise((res) => { _authReadyResolve = res; });
 const FIREBASE_IMPORT_TIMEOUT = 5000;
 
 function importWithTimeout(src) {
@@ -66,6 +69,17 @@ export async function initFirebase(config) {
       console.error('[Firebase] ❌ CRITICAL: Could not set persistence:', persistErr);
       console.warn('[Firebase] ⚠️ User WILL be logged out on page reload!');
       // Still proceed but warn loudly
+    }
+
+    // Notify when auth state is restored by the SDK
+    try {
+      authMod.onAuthStateChanged(_auth, (user) => {
+        try { console.log('[Firebase] onAuthStateChanged:', !!user ? 'user present' : 'no user'); } catch (e) {}
+        try { _authReadyResolve && _authReadyResolve(user); } catch (e) { console.warn('authReady resolve failed', e); }
+      });
+    } catch (e) {
+      console.warn('[Firebase] onAuthStateChanged attach failed:', e && e.message);
+      try { _authReadyResolve && _authReadyResolve(null); } catch (e) {}
     }
 
     // ✅ PASSO 5: Verify storage availability (diagnostic)

@@ -1,55 +1,669 @@
-/* admin-dashboard.css */
+/* Admin Dashboard Styles */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #111; }
-.admin-header { background: #000; color: white; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.admin-header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-.admin-user { display:flex; gap:12px; align-items:center; }
-.admin-main { max-width:1400px; margin:40px auto; padding:0 20px; }
-.admin-stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap:20px; margin-bottom:40px; }
-.stat-card { background:#fff; padding:24px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.06); }
-.stat-card h3 { font-size:14px; color:#666; margin-bottom:8px; }
-.stat-number { font-size:32px; font-weight:700; color:#2dd4bf; }
-.admin-orders { background:#fff; padding:24px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.06); }
-.section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-.orders-table { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; }
-th { text-align:left; padding:12px; border-bottom:2px solid #e5e7eb; font-weight:600; color:#374151; }
-td { padding:12px; border-bottom:1px solid #e5e7eb; }
-.status-badge { padding:4px 12px; border-radius:12px; font-size:12px; font-weight:600; }
-.status-pending { background:#fef3c7; color:#92400e; }
-.status-shipped { background:#dbeafe; color:#1e40af; }
-.status-delivered { background:#d1fae5; color:#065f46; }
-button, select { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-weight:600; }
-.btn-primary { background:#2dd4bf; color:white; }
-.btn-primary:hover { background:#14b8a6; }
-.btn-secondary { background:transparent; color:#2dd4bf; border:2px solid #2dd4bf; }
-.btn-sm { padding:6px 12px; font-size:14px; background:#f3f4f6; color:#374151; border-radius:6px; }
-.btn-sm:hover { background:#e5e7eb; }
-.btn-success { background:#2dd4bf !important; color:#fff !important; }
-.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000; }
-.modal-content { background:white; padding:32px; border-radius:8px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto; }
-.close { float:right; font-size:28px; cursor:pointer; }
-.modal-actions { display:flex; gap:12px; margin-top:24px; }
-@media (max-width:768px) {
-  .admin-stats { grid-template-columns:1fr; }
-  table { font-size:14px; }
-  td, th { padding:8px; }
+
+:root {
+  --primary: #43BDAB;
+  --primary-hover: #38a897;
+  --dark: #000;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-600: #4b5563;
+  --gray-900: #111827;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
-/* Shipping form styles (added) */
-:root { --primary: #43BDAB; }
-.shipping-form { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-label { font-weight: 600; font-size: 13px; color: #333; }
-.form-input, .form-select { padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; width: 100%; }
-.form-input:focus, .form-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(67,189,171,0.08); border-color: var(--primary); }
-.form-input:invalid, .form-select:invalid { border-color: #ff4444; }
-.form-checkbox-group { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #333; }
-
-/* Ensure mobile friendliness */
-@media (max-width:480px) {
-  .shipping-form { gap: 12px; margin: 12px 0; }
-  .form-label { font-size: 13px; }
-  .form-input, .form-select { padding: 10px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.5;
 }
 
+/* Header */
+.admin-header {
+  background: var(--dark);
+  color: white;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.admin-user {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+#admin-name {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+#exitDashboardBtn {
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+#exitDashboardBtn:hover {
+  background: var(--primary-hover);
+}
+
+/* Main Content */
+.admin-main {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Stats Cards */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+  font-size: 14px;
+  color: var(--gray-600);
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Orders Section */
+.admin-orders {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#status-filter {
+  padding: 8px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Table */
+.orders-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid var(--gray-200);
+  font-weight: 600;
+  color: var(--gray-600);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 14px;
+}
+
+.small {
+  font-size: 12px;
+}
+
+.muted {
+  color: var(--gray-600);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-shipped {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* Buttons */
+button, select {
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  padding: 10px 20px;
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+  background: var(--gray-100);
+  color: var(--gray-900);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-sm:hover {
+  background: var(--gray-200);
+}
+
+.btn-success {
+  background: var(--success) !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background: #059669 !important;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--gray-600);
+  background: none;
+  border: none;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.order-info p {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.order-items {
+  list-style: none;
+  padding: 0;
+}
+
+.order-items li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 14px;
+}
+
+.modal h3 {
+  margin: 20px 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.modal-actions {
+  margin-top: 24px;
+}
+
+/* Shipping Form */
+.shipping-form {
+  background: var(--gray-50);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 189, 171, 0.1);
+}
+
+.form-input:invalid:not(:placeholder-shown),
+.form-select:invalid {
+  border-color: var(--danger);
+}
+
+.form-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--gray-900);
+  cursor: pointer;
+}
+
+.form-checkbox-group input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .admin-header-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  td, th {
+    padding: 8px;
+  }
+
+  .modal-content {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+/* Mobile accordion styles for orders (only active under 768px) */
+@media (max-width: 768px) {
+  /* Make table elements block so rows become cards */
+  .orders-table table,
+  .orders-table thead,
+  .orders-table tbody,
+  .orders-table tr,
+  .orders-table th,
+  .orders-table td {
+    display: block;
+  }
+
+  .orders-table thead {
+    display: none;
+  }
+
+  .order-row {
+    margin-bottom: 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    padding: 0;
+  }
+
+  .order-row td {
+    display: none;
+    padding: 12px 16px 12px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Compact header: show order id and status/total */
+  .order-row td:first-child,
+  .order-row td:nth-child(4),
+  .order-row td:nth-child(5) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: none;
+  }
+
+  .order-row .status-badge {
+    margin-left: 8px;
+  }
+
+  /* When expanded, show all cells */
+  .order-row.expanded td {
+    display: flex;
+  }
+
+  .order-row td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 600;
+    color: var(--gray-600);
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .order-row td:first-child::before { display: none; }
+
+  .order-row td:last-child {
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 12px;
+  }
+
+  .order-row td:last-child button {
+    width: 100%;
+  }
+
+  /* Prevent horizontal scroll */
+  .orders-table { overflow-x: hidden; }
+
+  /* Ensure the page doesn't shift horizontally when cards expand */
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-main {
+    box-sizing: border-box;
+    max-width: 100vw;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .orders-table table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .order-row {
+    width: 100%;
+  }
+  /* Prevent long content from forcing horizontal scroll */
+  .order-row,
+  .order-row td {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+  }
+}
+
+/* VIEW button specific styles */
+
+/* Preserve original VIEW button aesthetic (no emoji/icon injection) */
+.btn-view {
+  padding: 6px 12px;
+  font-size: 13px;
+  background: var(--gray-100);
+  color: var(--gray-900);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s ease, transform 0.06s ease;
+}
+
+.btn-view:hover {
+  background: var(--gray-200);
+}
+
+/* Slightly larger, full-width buttons on small screens for easier tapping */
+@media (max-width: 768px) {
+  .order-row td:last-child .btn-view {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header {
+    padding: 16px;
+  }
+
+  .admin-main {
+    margin: 20px auto;
+    padding: 0 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-number {
+    font-size: 24px;
+  }
+
+  .modal-content h2 {
+    font-size: 18px;
+  }
+
+  .shipping-form {
+    padding: 16px;
+  }
+}
+
+/* Modal visual improvements and responsiveness */
+.modal-content {
+  max-width: 720px;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(17,24,39,0.12);
+}
+
+.modal-content .close {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  color: var(--gray-600);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Hide redundant textual Close button on larger screens (icon is present). Keep visible on small devices for easier tap targets */
+.modal-actions > button:last-child {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .modal-actions > button:last-child {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .modal-content {
+    padding: 18px;
+    margin: 8px;
+  }
+}
+
+/* Make order details read nicely and avoid overflowing text */
+.order-info p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--gray-900);
+  word-break: break-word;
+}
+
+.order-items li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 14px;
+  word-break: break-word;
+}

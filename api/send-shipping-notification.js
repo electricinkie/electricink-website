@@ -1,84 +1,322 @@
 const { Resend } = require('resend');
-const { getFirestore, admin } = require('./lib/firebase-admin');
 const fs = require('fs');
 const path = require('path');
+const { captureException } = require('./lib/sentry');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
-const TEMPLATES_DIR = path.join(__dirname, '..', 'email-templates');
+// Initialize Resend (same pattern as send-order-email.js)
+let resend = null;
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('[SHIPPING-NOTIFICATION] ✓ Resend initialized');
+  } else {
+    console.error('[SHIPPING-NOTIFICATION] ❌ RESEND_API_KEY not found');
+  }
+} catch (error) {
+  console.error('[SHIPPING-NOTIFICATION] ❌ Failed to initialize:', error);
+}
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  const { orderId, trackingNumber, carrier, estimatedDelivery, trackingUrl } = req.body || {};
-  if (!orderId) return res.status(400).json({ error: 'Order ID required' });
+const EMAIL_FROM = process.env.EMAIL_FROM || 'Electric Ink <orders@electricink.ie>';
+const publicBaseUrl = process.env.PUBLIC_BASE_URL || 'https://electricink.ie';
 
-  const CARRIER_NAMES = {
-    'anpost': 'An Post',
-    'dpd': 'DPD Ireland',
-    'fastway': 'Fastway Couriers',
-    'ups': 'UPS',
-    'dhl': 'DHL Express',
-    'custom': 'Courier'
-  };
+const CARRIER_NAMES = {
+  'anpost': 'An Post',
+  'dpd': 'DPD Ireland',
+  'fastway': 'Fastway Couriers',
+  'ups': 'UPS',
+  'dhl': 'DHL Express',
+  'custom': 'Courier'
+};
+
+// ────────── Helper: Load Template ──────────
+function loadTemplate(templateName) {
+  try {
+    const templatePath = path.join(process.cwd(), 'email-templates', `${templateName}.html`);
+    return fs.readFileSync(templatePath, 'utf8');
+  } catch (error) {
+    console.error(`Error loading template ${templateName}:`, error);
+    throw new Error(`Template ${templateName} not found`);
+  }
+}
+
+// ────────── Helper: Format Address ──────────
+function formatShippingAddress(shipping) {
+  if (!shipping) return 'N/A';
+  
+  const parts = [];
+  if (shipping.firstName || shipping.lastName) {
+    parts.push(`${shipping.firstName || ''} ${shipping.lastName || ''}`.trim());
+  }
+  if (shipping.line1 || shipping.address) parts.push(shipping.line1 || shipping.address);
+  if (shipping.line2 || shipping.address2) parts.push(shipping.line2 || shipping.address2);
+  if (shipping.city) parts.push(shipping.city);
+  if (shipping.postalCode || shipping.postal_code) parts.push(shipping.postalCode || shipping.postal_code);
+  if (shipping.country) parts.push(shipping.country);
+  if (shipping.phone) parts.push(`Tel: ${shipping.phone}`);
+  
+  return parts.filter(Boolean).join('<br>') || 'N/A';
+}
+
+// ────────── Helper: Format Date ──────────
+function formatDate(dateInput) {
+  if (!dateInput) return 'TBD';
+  
+  try {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return 'TBD';
+    
+    return date.toLocaleDateString('en-IE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  } catch (e) {
+    console.warn('Date formatting error:', e);
+    return String(dateInput);
+  }
+}
+
+// ────────── Helper: Format Order Items Table ──────────
+function formatOrderItemsTable(items) {
+  if (!items || !items.length) return '<tr><td colspan="3">No items</td></tr>';
+  
+  return items.map(item => `
+    <tr style="border-bottom: 1px solid #e8e8e8;">
+      <td style="padding: 12px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #000000;">
+        ${item.name || item.id || 'Product'}
+      </td>
+      <td style="padding: 12px; text-align: center; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #000000;">
+        x${item.quantity || 1}
+      </td>
+      <td style="padding: 12px; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 14px; color: #000000;">
+        €${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ────────── Helper: Enrich Items (like send-order-email.js) ──────────
+function enrichItems(items) {
+  let products = {};
+  try {
+    const dataDir = path.join(process.cwd(), 'data');
+    const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
+    for (const file of files) {
+      try {
+        const obj = require(path.join(dataDir, file));
+        if (obj && typeof obj === 'object') products = { ...products, ...obj };
+      } catch (e) {
+        console.warn('Failed to load product data file', file);
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to read data directory for enrichItems:', e && e.message);
+  }
+  
+  return (items || []).map(item => {
+    const product = products[item.id] || {};
+    let variant = null;
+    if (item.variant && Array.isArray(product.variants)) {
+      variant = product.variants.find(v => 
+        v.id === item.variant || 
+        v.priceId === item.variant || 
+        v.stripe_price_id === item.variant
+      );
+    }
+    return {
+      id: item.id,
+      name: product.name || item.name || item.id,
+      variant: variant ? (variant.label || variant.size || variant.id) : (item.variant || null),
+      price: variant && typeof variant.price === 'number' ? variant.price : (typeof product.price === 'number' ? product.price : item.price || 0),
+      quantity: item.quantity || 1
+    };
+  });
+}
+
+// ────────── Helper: Replace Placeholders ──────────
+function replacePlaceholders(template, data) {
+  let result = template;
+  Object.keys(data).forEach(key => {
+    const placeholder = `{{${key}}}`;
+    const value = data[key] !== undefined && data[key] !== null ? String(data[key]) : '';
+    result = result.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), value);
+  });
+  return result;
+}
+
+// ────────── Main Handler ──────────
+module.exports = async function handler(req, res) {
+  // Check Resend initialization
+  if (!resend) {
+    console.error('[SHIPPING-NOTIFICATION] Resend not initialized');
+    return res.status(503).json({ 
+      error: 'Email service unavailable',
+      reason: 'RESEND_API_KEY not configured' 
+    });
+  }
+
+  // CORS (match send-order-email.js pattern)
+  const ALLOWED_ORIGINS = [
+    'https://electricink-website.vercel.app',
+    publicBaseUrl,
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ];
+  const origin = req.headers.origin;
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Require Authorization: Bearer <Firebase ID token>
+  const authHeader = req.headers.authorization || req.headers.Authorization || '';
+  const match = String(authHeader || '').match(/^Bearer (.+)$/i);
+  if (!match) return res.status(401).json({ error: 'Missing Authorization Bearer token' });
+  const idToken = match[1];
+
+  // Verify token and ensure requester is admin (either claim or admins/{uid})
+  try {
+    const { getFirestore, admin } = require('./lib/firebase-admin');
+    const db = getFirestore();
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    const uid = decoded && decoded.uid;
+    if (!uid) return res.status(401).json({ error: 'Invalid token' });
+
+    // Check admin claim first, fallback to admins collection
+    const isAdminClaim = !!decoded.admin;
+    if (!isAdminClaim) {
+      const adminSnap = await db.collection('admins').doc(uid).get();
+      if (!adminSnap.exists) return res.status(403).json({ error: 'Forbidden: admin required' });
+    }
+  } catch (err) {
+    console.error('[SHIPPING-NOTIFICATION] Auth verification failed:', err && err.message);
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
 
   try {
-    const db = getFirestore();
-    const doc = await db.collection('orders').doc(orderId).get();
-    if (!doc.exists) return res.status(404).json({ error: 'Order not found' });
-    const order = doc.data();
+    const { orderId, carrier, trackingNumber, trackingUrl, estimatedDelivery } = req.body || {};
 
-    // Merge incoming shipping fields with stored order data for template rendering
-    const merged = Object.assign({}, order, {
-      trackingNumber: trackingNumber || order.trackingNumber || '',
-      carrier: carrier || order.carrier || '',
-      estimatedDelivery: estimatedDelivery || order.estimatedDelivery || null,
-      trackingUrl: trackingUrl || order.trackingUrl || ''
-    });
-
-    // Read template
-    const tplPath = path.join(TEMPLATES_DIR, 'order-shipped.html');
-    let tpl = await fs.promises.readFile(tplPath, 'utf8');
-
-    const itemsHtml = (order.items || []).map(i => `<div style="padding:8px 0;border-bottom:1px solid #eee"><strong>${i.name || i.id}</strong> x${i.quantity || 1} — €${((i.price || 0) * (i.quantity || 1)).toFixed(2)}</div>`).join('');
-
-    tpl = tpl.replace(/{{\s*ORDER_NUMBER\s*}}/g, orderId || '');
-    tpl = tpl.replace(/{{\s*TRACKING_NUMBER\s*}}/g, merged.trackingNumber || '');
-    tpl = tpl.replace(/{{\s*CARRIER\s*}}/g, (CARRIER_NAMES[merged.carrier] || merged.carrier || '')); 
-    tpl = tpl.replace(/{{\s*ORDER_ITEMS\s*}}/g, itemsHtml);
-    tpl = tpl.replace(/{{\s*TOTAL\s*}}/g, ((order.total != null) ? Number(order.total) : (order.total_cents ? order.total_cents/100 : 0)).toFixed(2));
-    tpl = tpl.replace(/{{\s*SHIPPING_ADDRESS\s*}}/g, (order.shippingAddress && (order.shippingAddress.line1 || order.shippingAddress.city)) ? `${order.shippingAddress.line1 || ''}<br>${order.shippingAddress.city || ''} ${order.shippingAddress.postalCode || order.shippingAddress.postal_code || ''}` : '');
-    // Estimated delivery formatting
-    let estDeliveryText = 'TBD';
-    if (merged.estimatedDelivery) {
-      try {
-        const d = new Date(merged.estimatedDelivery);
-        if (!isNaN(d.getTime())) {
-          estDeliveryText = d.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-      } catch (e) { estDeliveryText = String(merged.estimatedDelivery); }
+    if (!orderId) {
+      return res.status(400).json({ error: 'Order ID required' });
     }
-    tpl = tpl.replace(/{{\s*ESTIMATED_DELIVERY\s*}}/g, estDeliveryText || 'TBD');
 
-    // Tracking URL replacement for CTA/button
-    tpl = tpl.replace(/{{\s*TRACKING_URL\s*}}/g, merged.trackingUrl || '');
+    // Load order data from Firestore
+    const { getFirestore, admin } = require('./lib/firebase-admin');
+    const db = getFirestore();
+    const orderDoc = await db.collection('orders').doc(orderId).get();
 
-    await resend.emails.send({
-      from: `Electric Ink <${EMAIL_FROM}>`,
+    if (!orderDoc.exists) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    const order = orderDoc.data();
+
+    // Merge request data with stored order (request data takes precedence)
+    const mergedData = {
+      carrier: carrier || order.carrier || '',
+      trackingNumber: trackingNumber || order.trackingNumber || '',
+      trackingUrl: trackingUrl || order.trackingUrl || '',
+      estimatedDelivery: estimatedDelivery || order.estimatedDelivery || null
+    };
+
+    // Load template
+    const template = loadTemplate('order-shipped');
+
+    // Enrich items (get product names, images, etc)
+    const enrichedItems = enrichItems(order.items || []);
+
+    // Format items as HTML table
+    const orderItemsTableHtml = `
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #e8e8e8; border-radius: 8px;">
+        <thead>
+          <tr style="background-color: #f8f8f8;">
+            <th style="padding: 12px; text-align: left; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #666666;">Product</th>
+            <th style="padding: 12px; text-align: center; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #666666;">Qty</th>
+            <th style="padding: 12px; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #666666;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${formatOrderItemsTable(enrichedItems)}
+        </tbody>
+      </table>
+    `;
+
+    // Calculate financials (VAT is 23% included in total)
+    const total = Number(order.total || 0);
+    const vat = total * 0.23 / 1.23;
+    const subtotal = total - vat;
+    const shippingCost = order.shippingCost || 0;
+
+    // Format shipping address
+    const shippingAddress = formatShippingAddress(order.shippingAddress || order.shipping);
+
+    // Build placeholder data
+    const placeholderData = {
+      ORDER_NUMBER: orderId,
+      CUSTOMER_NAME: order.customerName || order.customerEmail || 'Customer',
+      CARRIER: CARRIER_NAMES[mergedData.carrier] || mergedData.carrier || 'Courier',
+      TRACKING_NUMBER: mergedData.trackingNumber,
+      TRACKING_URL: mergedData.trackingUrl || '#',
+      ESTIMATED_DELIVERY: formatDate(mergedData.estimatedDelivery),
+      ORDER_ITEMS: orderItemsTableHtml,
+      SUBTOTAL: subtotal.toFixed(2),
+      SHIPPING: shippingCost === 0 || shippingCost === 'FREE' ? 'FREE' : shippingCost.toFixed(2),
+      VAT: vat.toFixed(2),
+      TOTAL: total.toFixed(2),
+      SHIPPING_ADDRESS: shippingAddress
+    };
+
+    // Replace all placeholders
+    const html = replacePlaceholders(template, placeholderData);
+
+    // Send email via Resend
+    const emailResult = await resend.emails.send({
+      from: EMAIL_FROM,
       to: order.customerEmail,
-      subject: `Your order has shipped — #${orderId}`,
-      html: tpl
+      subject: `Your Order #${orderId} Has Shipped!`,
+      html: html,
+      tags: [
+        { name: 'type', value: 'shipping-notification' },
+        { name: 'orderId', value: orderId }
+      ]
     });
 
+    // Update Firestore with email status
     await db.collection('orders').doc(orderId).update({
-      shippingNotificationSent: true,
-      shippingNotificationSentAt: admin.firestore.Timestamp.now(),
       shippedEmailSent: true,
-      shippedEmailSentAt: admin.firestore.Timestamp.now()
+      shippedEmailSentAt: admin.firestore.Timestamp.now(),
+      shippedEmailId: emailResult.id
     });
 
-    return res.json({ success: true });
+    console.log(`✅ [SHIPPING-NOTIFICATION] Sent for order ${orderId} to ${order.customerEmail}`, emailResult.id);
+
+    return res.status(200).json({ 
+      success: true, 
+      emailId: emailResult.id,
+      message: 'Shipping notification sent successfully'
+    });
+
   } catch (error) {
-    console.error('send-shipping-notification error', error);
-    return res.status(500).json({ error: 'Failed to send shipping notification' });
+    captureException(error, {
+      endpoint: 'send-shipping-notification',
+      context: { orderId: req.body?.orderId }
+    });
+
+    console.error('❌ [SHIPPING-NOTIFICATION] Error:', error.message);
+
+    return res.status(500).json({ 
+      error: 'Failed to send shipping notification',
+      message: error.message 
+    });
   }
 };

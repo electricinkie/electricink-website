@@ -1218,12 +1218,18 @@ import { getCurrentUser, onAuthChange } from './auth.js';
       
       console.log('🔍 Normalized cart items:', cartItems);
 
-      // Prepare shipping address
+      // Prepare shipping address (COMPLETE)
       const shippingAddress = {
         method: shippingMethod,
-        postalCode: elements.form.postalCode.value,
-        city: elements.form.city.value,
-        country: elements.form.country.value
+        line1: elements.form.address?.value || elements.form.street?.value || '',
+        line2: elements.form.address2?.value || elements.form.complement?.value || '',
+        city: elements.form.city?.value || '',
+        state: elements.form.state?.value || '',
+        postalCode: elements.form.postalCode?.value || '',
+        country: elements.form.country?.value || '',
+        phone: elements.form.phone?.value || '',
+        firstName: elements.form.firstName?.value || '',
+        lastName: elements.form.lastName?.value || ''
       };
 
       // Send to backend for SECURE price calculation

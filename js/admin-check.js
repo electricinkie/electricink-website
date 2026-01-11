@@ -1,4 +1,4 @@
-import { initFirebase } from './firebase-config.js';
+import { initFirebase, authReady } from './firebase-config.js';
 
 let isAdminCache = null;
 let isAdminCacheAt = 0; // epoch ms of last resolution
@@ -46,6 +46,14 @@ export async function isAdmin({ user: providedUser = null, forceRefresh = false 
 }
 
 export async function requireAdmin() {
+  // Ensure Firebase auth has had a chance to restore the user (avoid false negatives on hard refresh / bfcache)
+  try {
+    await initFirebase();
+    await Promise.race([authReady, new Promise(res => setTimeout(() => res(null), 5000))]);
+  } catch (e) {
+    console.warn('requireAdmin: auth init warning', e && e.message);
+  }
+
   const admin = await isAdmin();
   if (!admin) {
     alert('Acesso negado. Apenas administradores.');

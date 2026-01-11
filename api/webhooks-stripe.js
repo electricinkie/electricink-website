@@ -397,6 +397,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         city: validatedMetadata.city,
         state: validatedMetadata.state,
         postalCode: validatedMetadata.postalCode,
+        // Backwards-compatible snake_case alias used by some templates/admin UI
+        postal_code: validatedMetadata.postalCode || validatedMetadata.postal_code || '',
         country: validatedMetadata.country
       },
       items: enrichedItems,

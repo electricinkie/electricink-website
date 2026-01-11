@@ -494,6 +494,21 @@ module.exports = async function handler(req, res) {
         backend_validated: 'true'
       };
 
+      // Include shipping address fields from the frontend into metadata (whitelisted)
+      const incomingShipping = req.body.shippingAddress || {};
+      if (incomingShipping) {
+        metadataSanitized.addressLine1 = incomingShipping.line1 || incomingShipping.address || incomingShipping.street || '';
+        metadataSanitized.addressLine2 = incomingShipping.line2 || incomingShipping.address2 || incomingShipping.complement || '';
+        metadataSanitized.city = incomingShipping.city || '';
+        metadataSanitized.postalCode = incomingShipping.postalCode || incomingShipping.postal_code || '';
+        // keep snake_case alias for compatibility
+        metadataSanitized.postal_code = metadataSanitized.postalCode;
+        metadataSanitized.country = incomingShipping.country || '';
+        if (incomingShipping.phone) metadataSanitized.phone = String(incomingShipping.phone);
+        if (incomingShipping.firstName) metadataSanitized.firstName = String(incomingShipping.firstName);
+        if (incomingShipping.lastName) metadataSanitized.lastName = String(incomingShipping.lastName);
+      }
+
       // If we verified an ID token, prefer server-verified UID over any client-supplied value.
       if (verifiedUid) {
         metadataSanitized.user_uid = String(verifiedUid);
