@@ -36,6 +36,9 @@ export async function loadDashboard() {
 
   document.getElementById('admin-name').textContent = user.displayName || user.email;
   await loadStats();
+  // Attach dashboard listeners once (safe to call multiple times)
+  try { initDashboardListeners(); } catch (e) { console.warn('initDashboardListeners failed', e); }
+
   await loadOrders();
 }
 
@@ -110,32 +113,7 @@ async function loadOrders(status = 'all') {
       tbody.appendChild(row);
     });
 
-    // Delegated handler for tbody: buttons (view/ship) and row header toggle on mobile
-    tbody.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      const row = e.target.closest('tr.order-row');
-      // Handle buttons first
-      if (btn) {
-        const orderId = btn.dataset.orderId;
-        if (!orderId) return;
-        // Prevent row toggle
-        e.stopPropagation();
-        if (btn.classList.contains('btn-view')) return window.viewOrder(orderId);
-        if (btn.classList.contains('btn-ship')) return window.quickShip(orderId);
-        return;
-      }
-
-      // If clicked on a row (not a button), handle accordion toggle on mobile only
-      if (!row) return;
-      if (window.innerWidth >= 768) return;
-
-      // Close other expanded rows
-      document.querySelectorAll('.order-row.expanded').forEach(r => {
-        if (r !== row) r.classList.remove('expanded');
-      });
-
-      row.classList.toggle('expanded');
-    });
+    // Note: delegated click listener is attached globally once via initDashboardListeners()
   } catch (err) {
     console.error('Erro ao carregar pedidos:', err);
     tbody.innerHTML = `<tr><td colspan=\"6\">Erro ao carregar pedidos: ${err?.message || 'Ver console'}</td></tr>`;
@@ -397,6 +375,39 @@ function formatDate(timestamp) {
 function translateStatus(status) {
   const t = { pending: 'Pendente', shipped: 'Enviado', delivered: 'Entregue' };
   return t[status] || status;
+
+  // ────────── Delegated table click handler (attach once) ──────────
+  function handleOrderTableClick(e) {
+    const btn = e.target.closest('button');
+    const row = e.target.closest('tr.order-row');
+
+    if (btn) {
+      const orderId = btn.dataset.orderId;
+      if (!orderId) return;
+      e.stopPropagation();
+      if (btn.classList.contains('btn-view')) return window.viewOrder(orderId);
+      if (btn.classList.contains('btn-ship')) return window.quickShip(orderId);
+      return;
+    }
+
+    if (!row) return;
+    if (window.innerWidth >= 768) return;
+
+    // Close other expanded rows
+    document.querySelectorAll('.order-row.expanded').forEach(r => {
+      if (r !== row) r.classList.remove('expanded');
+    });
+
+    row.classList.toggle('expanded');
+  }
+
+  function initDashboardListeners() {
+    const tbody = document.getElementById('orders-tbody');
+    if (!tbody) return;
+    // Ensure we don't double-attach
+    try { tbody.removeEventListener('click', handleOrderTableClick); } catch (e) { /* ignore */ }
+    tbody.addEventListener('click', handleOrderTableClick);
+  }
 }
 
 // Configure logout button to use async handler instead of relying on inline onclick
