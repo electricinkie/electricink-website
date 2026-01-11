@@ -19,18 +19,15 @@ service cloud.firestore {
       allow write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Orders: user may read their own orders (by comparing email token) or admin may read all
+    // Orders: only allow admins full access. Clients may only `get` a single
+    // order document when they are the owner (userId == request.auth.uid).
+    // Listing (`list`) is intentionally disabled so clients must use the
+    // server-side endpoint (/api/my-orders) which verifies ID tokens.
     match /orders/{orderId} {
-      // Allow admins full access. Allow authenticated users to read orders
-      // when either their UID matches `userId` on the order (preferred) or
-      // when their authenticated email matches `customerEmail` (legacy guest fallback).
-      allow read: if isAdmin()
-                  || (request.auth != null && (
-                    (resource.data.userId != null && resource.data.userId == request.auth.uid) ||
-                    (resource.data.customerEmail != null && resource.data.customerEmail == request.auth.token.email)
-                  ));
+      allow get: if isAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      allow list: if false;
       // Only admin/server may create or modify orders
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
     }
 
     // Order events: admin-only
