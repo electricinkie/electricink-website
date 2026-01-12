@@ -25,7 +25,7 @@ import { isAdmin } from './admin-check.js';
         
         <!-- Logo (Centered) -->
         <a href="/" class="header-logo" aria-label="Electric Ink IE Home">
-          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland" style="height: 40px; width: auto;">
+          <img src="/images/logos/logo+typo-white.png" alt="Electric Ink Ireland">
         </a>
         
         <!-- Cart (Right) - sempre visível -->

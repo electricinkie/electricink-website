@@ -622,6 +622,21 @@
   }
 }
 
+@media (max-width: 768px) {
+  /* Variant link/text color fix on mobile */
+  .product-variants a,
+  .product-variants a:link,
+  .product-variants a:visited {
+    color: #000;
+    text-decoration: none;
+  }
+
+  .product-variants .variant-dropdown,
+  .product-variants select {
+    color: #000;
+  }
+}
+
 /* ========================================
    NEW CONTENT SECTIONS
    ======================================== */

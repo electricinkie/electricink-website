@@ -44,6 +44,12 @@ body {
   flex-direction: column;
 }
 
+/* Remove blue/orange tap highlight on mobile across the whole site.
+   This only affects the touch highlight on WebKit-based browsers. */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 main {
   flex: 1;
 }

@@ -60,11 +60,13 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
+  padding: 0 8px; /* small breathing space around logo on mobile */
 }
 
 .header-logo img {
-  height: 48px; /* increased ~20% from 40px */
+  height: 62px; /* increased ~30% from 48px */
   width: auto;
+  display: block;
 }
 
 /* ────────── Cart Icon (Right) ────────── */
@@ -382,7 +384,7 @@
   }
   
   .header-logo img {
-    height: 44px; /* increased ~20% from 36px for very small screens */
+    height: 57px; /* ~30% increase for very small screens (from 44px) */
   }
   
   .mobile-menu {

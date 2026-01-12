@@ -91,7 +91,12 @@
   color: #666;
   border-radius: 30px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* avoid transitioning color to prevent brief invisible text on mobile
+     (transition only background/border/transform/box-shadow) */
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative; /* enable z-index layering */
