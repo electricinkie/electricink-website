@@ -8,4 +8,20 @@ window.addEventListener('DOMContentLoaded', function() {
   if (window.showCookieConsentToast) {
     window.showCookieConsentToast();
   }
+  // Ensure hero video attempts to autoplay (muted + playsInline required by many browsers)
+  try {
+    const v = document.querySelector('.hero-video');
+    if (v) {
+      v.muted = true;
+      v.playsInline = true;
+      v.setAttribute('webkit-playsinline', 'true');
+      // Attempt to play; some browsers may still block and return a rejected promise
+      v.play().catch(err => {
+        // Autoplay blocked — do nothing (optional: show a small play button)
+        // console.log('Hero autoplay prevented:', err && err.message);
+      });
+    }
+  } catch (e) {
+    // ignore
+  }
 });

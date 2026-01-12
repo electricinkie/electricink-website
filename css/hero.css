@@ -24,32 +24,27 @@
 }
 
 @media (max-width: 768px) {
-  /* Use cover on mobile too, but bias the focal point upward so top/bottom
-     important content is less likely to be cropped. Also slightly increase
-     the hero height so more of the frame fits vertically. */
   .hero-section {
-    height: 56vh;
-    min-height: 360px;
+    height: auto; /* mobile: altura automática */
+    min-height: unset;
     margin: 0;
     padding: 0;
   }
 
   .hero-video-container {
-    height: 100%;
+    width: 100%;
+    aspect-ratio: 16 / 9; /* força proporção do vídeo para mostrar inteiro */
     margin: 0;
     padding: 0;
-    aspect-ratio: 16 / 9;        /* ajuste para o ratio real do vídeo */
-
   }
 
   .hero-video {
     width: 100%;
-    height: 100%;
-     /* On mobile prefer contain so the full frame is visible without cropping
-       and keep the video flush to edges (no extra background margins) */
-     object-fit: contain;
-     object-position: center center;
-     background: transparent;
+    height: auto; /* permite altura automática baseada em aspect-ratio do container */
+    object-fit: cover; /* preencher o container sem bordas */
+    object-position: center center;
+    background: transparent;
     display: block;
+    line-height: 0;
   }
 }
