@@ -6,7 +6,7 @@
   position: fixed;
   top: 100px;
   right: 20px;
-  background: #FFFFFF;
+  background: #FFFFFF; /* This line is already correct */
   padding: 16px 20px;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
@@ -103,4 +103,29 @@
 /* ────────── Animation Performance ────────── */
 .toast-notification {
   will-change: transform, opacity;
+}
+
+/* ────────── Cookie-specific toast (bottom-left on desktop, full-bottom on mobile) ────────── */
+.toast-cookie {
+  top: auto !important;
+  bottom: 20px !important;
+  right: auto !important;
+  left: 20px !important;
+  transform: translateY(200px);
+}
+
+.toast-cookie.show {
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .toast-cookie {
+    left: 15px !important;
+    right: 15px !important;
+    bottom: 20px !important;
+    transform: translateY(200px);
+  }
+  .toast-cookie.show {
+    transform: translateY(0);
+  }
 }
