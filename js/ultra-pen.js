@@ -51,11 +51,7 @@
   
   if (!accordionHeader || !accordionContent || !accordionIcon) return;
   
-  // Only activate on mobile
-  if (window.innerWidth <= 768) {
-    accordionContent.classList.add('open');
-    accordionIcon.classList.add('open');
-  }
+  // By default keep accordion closed on all viewports; user opens it via click
   
   accordionHeader.addEventListener('click', () => {
     accordionContent.classList.toggle('open');

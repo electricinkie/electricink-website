@@ -589,7 +589,22 @@ export async function initAuthObserver() {
   try {
     const { auth } = await initFirebase();
     const { onAuthStateChanged } = await getAuthModule();
+    // Track previous auth presence to avoid showing a sign-out toast on initial load
+    let _lastAuthUserExists = !!(auth && auth.currentUser);
+
     onAuthStateChanged(auth, (user) => {
+      try {
+        if (!user && _lastAuthUserExists) {
+          try {
+            if (window && window.toast && typeof window.toast.success === 'function') {
+              window.toast.success('You have been signed out');
+            }
+          } catch (e) { /* ignore toast errors */ }
+        }
+      } catch (e) { /* safeguard */ }
+      // update last-known presence flag
+      _lastAuthUserExists = !!user;
+
       if (user) {
         // Ensure user profile document exists (non-blocking)
         ensureUserProfile(user).catch(() => {});

@@ -30,18 +30,26 @@
   .hero-section {
     height: 56vh;
     min-height: 360px;
+    margin: 0;
+    padding: 0;
   }
 
   .hero-video-container {
     height: 100%;
+    margin: 0;
+    padding: 0;
+    aspect-ratio: 16 / 9;        /* ajuste para o ratio real do vídeo */
+
   }
 
   .hero-video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center 20%; /* shift focal point up to preserve top/bottom */
-    background: #000;
+     /* On mobile prefer contain so the full frame is visible without cropping
+       and keep the video flush to edges (no extra background margins) */
+     object-fit: contain;
+     object-position: center center;
+     background: transparent;
     display: block;
   }
 }
