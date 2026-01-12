@@ -111,6 +111,23 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     
     saveCart();
     renderCart();
+
+    // Directional toast feedback for quantity changes
+    if (window.toast) {
+      try {
+        if (change > 0) {
+          window.toast.success(`ADDED: ${item.name}`);
+        } else if (change < 0) {
+          if (typeof window.toast.removed === 'function') {
+            window.toast.removed(`REMOVED: ${item.name}`);
+          } else {
+            window.toast.info(`REMOVED: ${item.name}`);
+          }
+        }
+      } catch (e) {
+        console.warn('Toast failed for updateQuantity', e && e.message);
+      }
+    }
   }
 
   // ────────── Remove Item ──────────
