@@ -2,6 +2,15 @@ import { initFirebase, authReady } from './firebase-config.js';
 import { requireAdmin } from './admin-check.js';
 
 const { auth, db } = await initFirebase();
+
+// Show cached admin display name immediately for snappy UX (display-only)
+try {
+  const cachedAdminName = localStorage.getItem('ei_admin_name');
+  if (cachedAdminName) {
+    const nameEl = document.getElementById('admin-name');
+    if (nameEl) nameEl.textContent = cachedAdminName;
+  }
+} catch (e) { /* ignore storage errors */ }
 let currentOrderId = null;
 
 function buildTrackingUrl(carrier, trackingNumber) {
@@ -24,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 */
 
 export async function loadDashboard() {
+  try { performance.mark && performance.mark('auth-start'); } catch (e) {}
   let user = auth.currentUser;
   if (!user) {
     try {
@@ -34,7 +44,13 @@ export async function loadDashboard() {
   }
   if (!user) return window.location.href = '/';
 
-  document.getElementById('admin-name').textContent = user.displayName || user.email;
+  try { performance.mark && performance.mark('auth-restored'); } catch (e) {}
+  try { performance.measure && performance.measure('auth-restore', 'auth-start', 'auth-restored'); } catch (e) {}
+
+  const adminNameEl = document.getElementById('admin-name');
+  const finalName = user.displayName || user.email;
+  if (adminNameEl) adminNameEl.textContent = finalName;
+  try { localStorage.setItem('ei_admin_name', finalName); } catch (e) {}
   await loadStats();
   // Attach dashboard listeners once (safe to call multiple times)
   try { initDashboardListeners(); } catch (e) { console.warn('initDashboardListeners failed', e); }
@@ -72,11 +88,12 @@ async function loadStats() {
   }
 }
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 20;
 const lastDocByStatus = {}; // store last doc per status for pagination
 const hasMoreByStatus = {};
 
 async function loadOrders(status = 'all', reset = true) {
+  try { performance.mark && performance.mark('orders-fetch-start'); } catch (e) {}
   const tbody = document.getElementById('orders-tbody');
   const loadMoreBtn = document.getElementById('loadMoreOrdersBtn');
 
@@ -113,6 +130,9 @@ async function loadOrders(status = 'all', reset = true) {
     const snap = await getDocs(q);
 
     if (reset) tbody.innerHTML = '';
+
+    try { performance.mark && performance.mark('orders-fetch-end'); } catch (e) {}
+    try { performance.measure && performance.measure('orders-fetch', 'orders-fetch-start', 'orders-fetch-end'); } catch (e) {}
 
     if (snap.empty) {
       if (reset) {
@@ -519,6 +539,18 @@ function handleOrderTableClick(e) {
 
 // Configure logout button to use async handler instead of relying on inline onclick
 document.addEventListener('DOMContentLoaded', () => {
+  (async () => {
+    try {
+      // Ensure admin check happens early to avoid flashes of unauthorised UI
+      await requireAdmin();
+      // If this page contains the orders table, initialize dashboard
+      if (document.getElementById('orders-tbody')) {
+        loadDashboard().catch(err => console.error('Dashboard init error', err));
+      }
+    } catch (e) {
+      console.warn('Admin check failed or user not admin', e);
+    }
+  })();
   const exitBtn = document.getElementById('exitDashboardBtn');
   if (exitBtn) {
     exitBtn.addEventListener('click', (e) => {
