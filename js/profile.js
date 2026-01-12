@@ -345,7 +345,7 @@ function attachEvents() {
   logoutBtn?.addEventListener('click', async () => {
     try {
       await logout();
-      try { if (window && window.toast && typeof window.toast.success === 'function') window.toast.success('You have been signed out'); } catch(e) {}
+      try { if (window && window.toast && typeof window.toast.show === 'function') window.toast.show({ message: 'You have been signed out', type: 'removed' }); } catch(e) {}
       // Wait 1 second for toast to be visible before redirecting
       await new Promise(resolve => setTimeout(resolve, 1000));
       window.location.href = '/';
