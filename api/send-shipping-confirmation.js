@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
     await resend.emails.send({
       from: process.env.EMAIL_FROM || 'noreply@electricink.ie',
       to: order.customerEmail,
-      subject: `Seu pedido foi enviado! #${orderId}`,
+      subject: `Your order has shipped! #${orderId}`,
       html: shippingEmailTemplate(order, orderId)
     });
 
@@ -35,5 +35,5 @@ module.exports = async (req, res) => {
 };
 
 function shippingEmailTemplate(order, orderId) {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,Helvetica,sans-serif;color:#333} .container{max-width:600px;margin:0 auto;padding:20px}.header{background:#2dd4bf;color:#fff;padding:20px;text-align:center}.content{padding:20px;background:#f9f9f9}.order-info{background:#fff;padding:16px;border-radius:8px;margin:16px 0}.btn{display:inline-block;background:#2dd4bf;color:#fff;padding:12px 20px;border-radius:6px;text-decoration:none}</style></head><body><div class="container"><div class="header"><h1>📦 Pedido Enviado!</h1></div><div class="content"><p>Olá ${order.customerName || ''},</p><p>Ótimas notícias! Seu pedido foi enviado e está a caminho.</p><div class="order-info"><h3>Detalhes do Pedido</h3><p><strong>Order ID:</strong> ${orderId}</p><p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p><p><strong>Status:</strong> Enviado</p></div><p>Endereço de envio:</p><p>${order.shippingAddress?.line1 || ''}<br>${order.shippingAddress?.city || ''} ${order.shippingAddress?.postal_code || ''}</p><p>Obrigado por comprar na Electric Ink!</p><a href="https://electricink.ie" class="btn">Visitar Loja</a></div><div style="text-align:center;padding:16px;color:#666;font-size:13px">Electric Ink Ireland - Tattoo Supplies</div></div></body></html>`;
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,Helvetica,sans-serif;color:#333} .container{max-width:600px;margin:0 auto;padding:20px}.header{background:#2dd4bf;color:#fff;padding:20px;text-align:center}.content{padding:20px;background:#f9f9f9}.order-info{background:#fff;padding:16px;border-radius:8px;margin:16px 0}.btn{display:inline-block;background:#2dd4bf;color:#fff;padding:12px 20px;border-radius:6px;text-decoration:none}</style></head><body><div class="container"><div class="header"><h1>📦 Order Shipped!</h1></div><div class="content"><p>Hi ${order.customerName || ''},</p><p>Great news! Your order has shipped and is on its way.</p><div class="order-info"><h3>Order Details</h3><p><strong>Order ID:</strong> ${orderId}</p><p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p><p><strong>Status:</strong> Shipped</p></div><p>Shipping address:</p><p>${order.shippingAddress?.line1 || ''}<br>${order.shippingAddress?.city || ''} ${order.shippingAddress?.postal_code || ''}</p><p>Thank you for shopping at Electric Ink!</p><a href="https://electricink.ie" class="btn">Visit Store</a></div><div style="text-align:center;padding:16px;color:#666;font-size:13px">Electric Ink Ireland - Tattoo Supplies</div></div></body></html>`;
 }
