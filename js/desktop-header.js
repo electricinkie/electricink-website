@@ -216,7 +216,19 @@ import { isAdmin } from './admin-check.js';
     });
 
     document.querySelector('.logout-btn')?.addEventListener('click', async () => {
-      try { await logout(); window.location.reload(); } catch (err) { console.warn(err); }
+      try {
+        await logout();
+        try { if (window && window.toast && typeof window.toast.success === 'function') window.toast.success('You have been signed out'); } catch(e) {}
+        // Wait 1 second for toast to be visible before redirecting
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        window.location.reload();
+      } catch (err) {
+        console.warn(err);
+        try { if (window && window.toast && typeof window.toast.error === 'function') window.toast.error('Sign out failed'); } catch(e) {}
+        // Wait for error toast too
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Note: no reload in error case for desktop (preserves original behavior)
+      }
     });
 
     // Observe auth state

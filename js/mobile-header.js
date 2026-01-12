@@ -218,9 +218,15 @@ import { isAdmin } from './admin-check.js';
     document.getElementById('mobile-logout-btn')?.addEventListener('click', async () => {
       try {
         await logout();
+        try { if (window && window.toast && typeof window.toast.success === 'function') window.toast.success('You have been signed out'); } catch(e) {}
+        // Wait 1 second for toast to be visible before redirecting
+        await new Promise(resolve => setTimeout(resolve, 1000));
         window.location.reload();
       } catch (err) {
         console.warn('Logout failed:', err);
+        try { if (window && window.toast && typeof window.toast.error === 'function') window.toast.error('Sign out failed'); } catch(e) {}
+        // Wait for error toast too
+        await new Promise(resolve => setTimeout(resolve, 1000));
         window.location.reload(); // Force reload anyway
       }
     });
