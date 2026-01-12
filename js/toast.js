@@ -208,13 +208,14 @@
   window.showCookieConsentToast = function() {
     try {
       if (localStorage.getItem('cookieConsent')) return;
-      toast.show({
-        message: 'Este site utiliza cookies para melhorar sua experiência. Ao continuar navegando, você concorda com nossa <a href="/cookie-policy.html" target="_blank">Política de Cookies</a>.',
+      // show toast and keep a reference so we can style/position it as a cookie banner
+      const t = toast.show({
+        message: 'This site uses cookies to improve your experience. By continuing to browse you agree to our <a href="/cookie-policy.html" target="_blank">Cookie Policy</a>.',
         type: 'info',
         duration: 0,
         actions: [
           {
-            label: 'Aceitar',
+            label: 'Accept',
             onClick: function() {
               localStorage.setItem('cookieConsent', 'true');
               const current = document.querySelector('.toast-notification');
@@ -223,6 +224,11 @@
           }
         ]
       });
+
+      // Position cookie toast using a dedicated class so it appears bottom-left (standard pattern)
+      try {
+        if (t && t.classList) t.classList.add('toast-cookie');
+      } catch (e) { /* ignore */ }
     } catch (e) {
       console.warn('showCookieConsentToast failed', e && e.message);
     }
