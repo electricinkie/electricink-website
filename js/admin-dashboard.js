@@ -81,7 +81,8 @@ async function loadOrders(status = 'all', reset = true) {
   const loadMoreBtn = document.getElementById('loadMoreOrdersBtn');
 
   if (reset) {
-    tbody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+    try { tbody.setAttribute('aria-busy', 'true'); } catch (e) {}
     lastDocByStatus[status] = null;
     hasMoreByStatus[status] = true;
   }
@@ -115,7 +116,7 @@ async function loadOrders(status = 'all', reset = true) {
 
     if (snap.empty) {
       if (reset) {
-        tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6">No orders found</td></tr>';
       }
       hasMoreByStatus[status] = false;
       if (loadMoreBtn) loadMoreBtn.style.display = 'none';
@@ -138,8 +139,8 @@ async function loadOrders(status = 'all', reset = true) {
       <td data-label="Total">€${Number(order.total || 0).toFixed(2)}</td>
       <td data-label="Status"><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
       <td data-label="Actions">
-        <button class="btn-sm btn-view" data-order-id="${docSnap.id}">Ver</button>
-        ${order.status === 'pending' ? `<button class="btn-sm btn-success btn-ship" data-order-id="${docSnap.id}">Enviar</button>` : ''}
+        <button class="btn-sm btn-view" data-order-id="${docSnap.id}">View</button>
+        ${order.status === 'pending' ? `<button class="btn-sm btn-success btn-ship" data-order-id="${docSnap.id}">Mark as Shipped</button>` : ''}
       </td>
     `;
 
@@ -153,11 +154,13 @@ async function loadOrders(status = 'all', reset = true) {
     if (loadMoreBtn) {
       loadMoreBtn.style.display = hasMoreByStatus[status] ? 'inline-block' : 'none';
     }
+    try { tbody.removeAttribute('aria-busy'); } catch (e) {}
 
   } catch (err) {
     console.error('Erro ao carregar pedidos:', err);
-    tbody.innerHTML = `<tr><td colspan=\"6\">Erro ao carregar pedidos: ${err?.message || 'Ver console'}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6">Error loading orders: ${err?.message || 'See console'}</td></tr>`;
     if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+    try { tbody.removeAttribute('aria-busy'); } catch (e) {}
   }
 }
 
@@ -170,17 +173,17 @@ async function loadMoreOrders() {
 window.viewOrder = async function(orderId) {
   const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
   const snap = await getDoc(doc(db, 'orders', orderId));
-  if (!snap.exists()) return alert('Pedido não encontrado');
+  if (!snap.exists()) return alert('Order not found');
   const order = snap.data();
   currentOrderId = orderId;
 
     const detailsHtml = `
     <div class="order-info">
       <p><strong>Order ID:</strong> ${orderId}</p>
-      <p><strong>Cliente:</strong> ${order.customerName || ''}</p>
+      <p><strong>Customer:</strong> ${order.customerName || ''}</p>
       <p><strong>UID:</strong> ${order.userId || 'guest'}</p>
       <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
-      <p><strong>Data:</strong> ${formatDate(order.createdAt)}</p>
+      <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
       <p><strong>Status:</strong> <span class="order-status status-badge status-${order.status}">${translateStatus(order.status)}</span></p>
       <p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p>
     </div>
@@ -188,7 +191,7 @@ window.viewOrder = async function(orderId) {
     <ul class="order-items">
       ${(order.items || []).map(i => `<li>${i.name} x${i.quantity} - €${Number(i.price * i.quantity).toFixed(2)}</li>`).join('')}
     </ul>
-    <h3>Endereço de Envio:</h3>
+    <h3>Shipping address:</h3>
     <p>${order.shippingAddress?.line1 || 'N/A'}</p>
     <p>${order.shippingAddress?.city || ''} ${order.shippingAddress?.postal_code || ''}</p>
   `;
@@ -244,15 +247,28 @@ window.markAsShipped = async function() {
     // Form submit handler
     form.onsubmit = async function(e) {
       e.preventDefault();
+      let submitBtn = null;
+      let tableShipBtn = null;
       try {
+        submitBtn = form.querySelector('button[type="submit"]');
+        tableShipBtn = document.querySelector(`button.btn-ship[data-order-id="${currentOrderId}"]`);
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.origText = submitBtn.textContent; submitBtn.textContent = 'Processing...'; }
+        if (tableShipBtn) { tableShipBtn.disabled = true; tableShipBtn.dataset.origText = tableShipBtn.textContent; tableShipBtn.textContent = 'Processing...'; }
+
         const carrier = form.elements['carrier']?.value || '';
         const trackingNumber = (form.elements['trackingNumber']?.value || '').trim();
         const estimatedDelivery = form.elements['estimatedDelivery']?.value || null;
         const sendEmail = form.elements['sendEmail']?.checked !== false;
 
         // Validation
-        if (!carrier) { alert('Por favor selecione a transportadora.'); return; }
-        if (!trackingNumber) { alert('Por favor insira o número de rastreio.'); return; }
+        if (!carrier) { alert('Please select a carrier.');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText || submitBtn.textContent; }
+          if (tableShipBtn) { tableShipBtn.disabled = false; tableShipBtn.textContent = tableShipBtn.dataset.origText || tableShipBtn.textContent; }
+          return; }
+        if (!trackingNumber) { alert('Please enter the tracking number.');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText || submitBtn.textContent; }
+          if (tableShipBtn) { tableShipBtn.disabled = false; tableShipBtn.textContent = tableShipBtn.dataset.origText || tableShipBtn.textContent; }
+          return; }
 
         const trackingUrl = buildTrackingUrl(carrier, trackingNumber);
 
@@ -295,13 +311,16 @@ window.markAsShipped = async function() {
             throw new Error('Failed to send shipping notification');
           }
 
-          // Mostrar toast de sucesso
+          // Success: show toast
           window.toast.success('✅ Order marked as shipped! Email sent to customer.');
 
           // Recarregar lista em background (não fecha modal)
           await loadDashboard();
 
-          // Limpar formulário e esconder
+          // Update table button to final state if present
+          if (tableShipBtn) { tableShipBtn.textContent = 'Shipped'; tableShipBtn.disabled = true; }
+
+          // Clear form and hide
           if (shippingFormContainer) shippingFormContainer.style.display = 'none';
           if (showBtn) showBtn.style.display = '';
           if (shippingActions) shippingActions.style.display = 'none';
@@ -326,23 +345,28 @@ window.markAsShipped = async function() {
         } catch (err) {
           console.error('Shipping notification failed:', err);
           window.toast.error('⚠️ Email failed to send, but order was updated');
-          // Ainda recarrega a lista em background
+          // reload list to reflect update
           await loadDashboard();
-          // esconder formulário para manter consistência do UI
+          // hide form for consistency
           if (shippingFormContainer) shippingFormContainer.style.display = 'none';
           if (showBtn) showBtn.style.display = '';
           if (shippingActions) shippingActions.style.display = 'none';
+          // restore table button to allow retry if needed
+          if (tableShipBtn) { tableShipBtn.disabled = false; tableShipBtn.textContent = tableShipBtn.dataset.origText || 'Mark as Shipped'; }
         }
 
       } catch (err) {
         console.error('Failed to mark as shipped:', err);
-        alert('Não foi possível atualizar o status do pedido: ' + (err.message || 'Erro desconhecido'));
+        alert('Could not update order status: ' + (err.message || 'Unknown error'));
+        // restore buttons
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText || submitBtn.textContent; }
+        if (tableShipBtn) { tableShipBtn.disabled = false; tableShipBtn.textContent = tableShipBtn.dataset.origText || tableShipBtn.textContent; }
       }
     };
 
   } catch (err) {
     console.error('markAsShipped error:', err);
-    alert('Erro ao abrir formulário de envio: ' + (err.message || 'Erro desconhecido'));
+    alert('Error opening shipping form: ' + (err.message || 'Unknown error'));
   }
 };
 
@@ -367,7 +391,7 @@ function formatDate(timestamp) {
   try {
     // Firestore Timestamp com método toDate()
     if (timestamp && typeof timestamp.toDate === 'function') {
-      return timestamp.toDate().toLocaleString('pt-PT', {
+      return timestamp.toDate().toLocaleString('en-IE', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -405,7 +429,7 @@ function formatDate(timestamp) {
     // Tentar extrair segundos
     const seconds = tryGetSeconds(timestamp);
     if (seconds) {
-      return new Date(Number(seconds) * 1000).toLocaleString('pt-PT', {
+      return new Date(Number(seconds) * 1000).toLocaleString('en-IE', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -416,7 +440,7 @@ function formatDate(timestamp) {
     
     // Número em milissegundos (não segundos)
     if (typeof timestamp === 'number') {
-      return new Date(timestamp).toLocaleString('pt-PT', {
+      return new Date(timestamp).toLocaleString('en-IE', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -438,8 +462,8 @@ function formatDate(timestamp) {
     }
     
     // Se nenhum formato funcionou
-    console.warn('Formato de timestamp não reconhecido:', timestamp);
-    return 'Data inválida';
+    console.warn('Unrecognized timestamp format:', timestamp);
+    return 'Invalid date';
     
   } catch (e) {
     console.error('Erro ao formatar data:', e, timestamp);
@@ -448,7 +472,7 @@ function formatDate(timestamp) {
 }
 
 function translateStatus(status) {
-  const t = { pending: 'Pendente', shipped: 'Enviado', delivered: 'Entregue' };
+  const t = { pending: 'Pending', shipped: 'Shipped', delivered: 'Delivered' };
   return t[status] || status;
 
 }
