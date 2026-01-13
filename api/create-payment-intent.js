@@ -214,6 +214,47 @@ function resolveProductById(itemId) {
   return null;
 }
 
+// Attempt to resolve a Stripe Price ID for legacy frontend payloads that
+// don't include `stripe_price_id`. Uses the merged `stripeProducts` catalog
+// loaded from `data/*.json` and tries to find a matching variant or product
+// price identifier. Returns a string price id or null.
+function findStripePriceIdForItem(item) {
+  try {
+    if (!item || !item.id) return null;
+    const resolved = resolveProductById(item.id);
+    if (!resolved || !resolved.product) return null;
+
+    const product = resolved.product;
+
+    // If a specific variant was matched, prefer its priceId / stripe_price_id
+    if (resolved.variantId) {
+      const variant = (product.variants || []).find(v => v.id === resolved.variantId || v.priceId === resolved.variantId || v.stripe_price_id === resolved.variantId);
+      if (variant) return variant.priceId || variant.stripe_price_id || variant.id || null;
+    }
+
+    // Fallbacks: product.basic.priceId or product.basic.stripe_price_id
+    if (product.basic) {
+      if (product.basic.priceId) return product.basic.priceId;
+      if (product.basic.stripe_price_id) return product.basic.stripe_price_id;
+    }
+
+    // Top-level fields sometimes used in data files
+    if (product.priceId) return product.priceId;
+    if (product.stripe_price_id) return product.stripe_price_id;
+
+    // If nothing found, attempt to infer from first variant
+    if (product.variants && product.variants[0]) {
+      const v = product.variants[0];
+      return v.priceId || v.stripe_price_id || v.id || null;
+    }
+
+    return null;
+  } catch (err) {
+    logger.warn('findStripePriceIdForItem failed', { item: item && item.id, err: err && err.message });
+    return null;
+  }
+}
+
 function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
@@ -365,6 +406,23 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    // Backwards-compatibility: if frontend did not include `stripe_price_id`
+    // for each cart item, attempt to resolve it using the product catalog.
+    try {
+      for (const it of items) {
+        if (!it.stripe_price_id) {
+          const resolvedPriceId = findStripePriceIdForItem(it);
+          if (resolvedPriceId) {
+            it.stripe_price_id = resolvedPriceId;
+            logger.info('Resolved stripe_price_id for legacy item', { id: it.id, stripe_price_id: resolvedPriceId });
+          } else {
+            logger.info('No stripe_price_id found for item (legacy lookup failed)', { id: it.id });
+          }
+        }
+      }
+    } catch (e) {
+      logger.warn('Compatibility lookup failed', e && e.message);
+    }
     // Debug logging (sanitized)
     logger.info('Backend received', {
       items: items.map(item => ({ id: item.id, quantity: item.quantity })),
