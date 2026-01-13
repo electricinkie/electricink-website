@@ -14,6 +14,10 @@
   margin-bottom: 0;
 }
 
+.desktop-header {
+  margin-bottom: 0;
+}
+
 .desktop-header-container {
   display: flex;
   align-items: center;
@@ -22,6 +26,10 @@
   margin: 0 auto;
   padding: 0 40px;
   height: 80px;
+}
+
+.desktop-header-container {
+  margin-bottom: 0;
 }
 
 /* ────────── Logo ────────── */
