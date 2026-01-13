@@ -139,9 +139,10 @@ module.exports = async function handler(req, res) {
 
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecretAlt = process.env.STRIPE_WEBHOOK_SECRET_ALT; // optional alternate secret for testing
 
-  if (!webhookSecret) {
-    console.error('❌ STRIPE_WEBHOOK_SECRET não configurado');
+  if (!webhookSecret && !webhookSecretAlt) {
+    console.error('❌ STRIPE_WEBHOOK_SECRET não configurado (nem ALT)');
     return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
@@ -191,10 +192,33 @@ module.exports = async function handler(req, res) {
       console.log(`📦 [${requestId}] Could not stringify raw body sample:`, e && e.message);
     }
 
-    // Verify webhook signature
-    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
 
-    console.log('✅ Assinatura verificada!');
+    // Verify webhook signature. Try primary secret first, then fallback to
+    // optional alternate secret (useful for testing with Stripe CLI vs
+    // production secret obtained from Stripe dashboard).
+    let verifiedWith = null;
+    let lastVerificationError = null;
+
+    try {
+      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+      verifiedWith = 'primary';
+    } catch (e) {
+      lastVerificationError = e;
+      if (webhookSecretAlt) {
+        try {
+          event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecretAlt);
+          verifiedWith = 'alt';
+        } catch (e2) {
+          lastVerificationError = e2;
+        }
+      }
+    }
+
+    if (!verifiedWith) {
+      throw lastVerificationError || new Error('Webhook signature verification failed');
+    }
+
+    console.log('✅ Assinatura verificada!', { verifiedWith });
     console.log('✅ Event type:', event.type);
     console.log('✅ Event ID:', event.id);
 
