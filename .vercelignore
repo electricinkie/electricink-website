@@ -1,5 +1,4 @@
 # Ignore api subdirectories to prevent them from being counted as serverless functions
 # Only top-level api/*.js files should be deployed as functions
 api/handlers/**
-api/lib/**
 api/oms/**
