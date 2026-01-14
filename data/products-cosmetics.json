@@ -47,6 +47,8 @@
     "featured": true,
     "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
   },
+  
+  
   "test-product-sandbox": {
     "id": "test-product-sandbox",
     "name": "Teste Product (Sandbox)",
@@ -89,6 +91,8 @@
     "inStock": true,
     "featured": false,
     "stripe_price_id": "price_1SoOBLALQaxEXnEzcZHjeW90"
+  
+  
   },
   "tattoo-cream-derma-30g": {
     "id": "tattoo-cream-derma-30g",

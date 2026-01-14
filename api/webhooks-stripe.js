@@ -1,3 +1,14 @@
+// Prioriza .env.local sobre .env (para desenvolvimento local)
+const path = require('path');
+const fs = require('fs');
+const envLocalPath = path.resolve(process.cwd(), '.env.local');
+const envPath = path.resolve(process.cwd(), '.env');
+if (fs.existsSync(envLocalPath)) {
+  require('dotenv').config({ path: envLocalPath });
+} else {
+  require('dotenv').config({ path: envPath });
+}
+
 // Email configuration
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
@@ -442,105 +453,69 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       return;
     }
 
+    // Envia emails de forma não-bloqueante (NUNCA deve crashear o webhook)
     setImmediate(() => {
       (async () => {
         const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
-        // cliente email (não-bloqueante)
+        // Email cliente
         try {
+          if (!resend) {
+            throw new Error('Resend not configured');
+          }
           await resend.emails.send({
             from: `Electric Ink <${EMAIL_FROM}>`,
             to: order.customerEmail,
             subject: `Order Confirmation #${orderId}`,
             html: `Order #${orderId} placed.`,
           });
-          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent', timestamp: new Date().toISOString() }));
+          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent' }));
         } catch (clientErr) {
-          logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: clientErr && clientErr.message, timestamp: new Date().toISOString() }));
+          logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: clientErr?.message }));
+          // NÃO re-throw - continua pro email admin
         }
 
-        // ========== DEBUG EMAIL ADMIN - START ==========
-        const adminEmailHtml = `Order #${orderId} placed.`;
-        console.log('[EMAIL-DEBUG] Starting admin email send');
-        console.log('[EMAIL-DEBUG] Environment check:', {
-          resendConfigured: !!resend,
-          hasApiKey: !!process.env.RESEND_API_KEY,
-          nodeEnv: process.env.NODE_ENV
-        });
-
-        console.log('[EMAIL-DEBUG] Email payload:', {
-          from: EMAIL_FROM,
-          to: ADMIN_EMAIL,
-          subject: `New Order ${orderId}`,
-          hasHtml: !!adminEmailHtml,
-          htmlLength: adminEmailHtml?.length
-        });
-
+        // Email admin
         try {
-          console.log('[EMAIL-DEBUG] Calling Resend API...');
-          const startTime = Date.now();
-
+          if (!resend) {
+            throw new Error('Resend not configured');
+          }
           const adminEmailResult = await resend.emails.send({
             from: `Electric Ink Orders <${EMAIL_FROM}>`,
             to: [ADMIN_EMAIL],
             subject: `New Order #${orderId}`,
-            html: adminEmailHtml,
-            tags: [
-              { name: 'type', value: 'admin-notification' },
-              { name: 'orderId', value: orderId }
-            ]
+            html: `Order #${orderId} placed.`,
           });
-
-          const duration = Date.now() - startTime;
-
-          console.log('[EMAIL-DEBUG] ✓ Admin email sent successfully', {
-            emailId: adminEmailResult.id,
-            duration: `${duration}ms`,
-            timestamp: new Date().toISOString()
-          });
-
+          logger.info(JSON.stringify({ ...emailLog, status: 'admin_email_sent', emailId: adminEmailResult.id }));
+          
           if (db) {
-            const emailUpdate = removeUndefined({
+            await db.collection('orders').doc(orderId).update({
               adminEmailStatus: 'sent',
               adminEmailId: adminEmailResult.id,
               adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
-            });
-            await db.collection('orders').doc(orderId).update(emailUpdate);
+            }).catch(err => logger.error('Failed to update email status:', err));
           }
-
-        } catch (emailError) {
-          console.error('[EMAIL-DEBUG] ❌ Admin email FAILED', {
-            errorName: emailError.name,
-            errorMessage: emailError.message,
-            errorCode: emailError.statusCode,
-            errorDetails: JSON.stringify(emailError, null, 2)
-          });
-
+        } catch (adminErr) {
+          logger.error(JSON.stringify({ ...emailLog, status: 'admin_email_failed', error: adminErr?.message }));
+          
           if (db) {
-            const emailErrorUpdate = removeUndefined({
+            await db.collection('orders').doc(orderId).update({
               adminEmailStatus: 'failed',
-              adminEmailError: emailError.message,
-              adminEmailErrorCode: emailError.statusCode,
-              adminEmailFailedAt: admin.firestore.FieldValue.serverTimestamp()
-            });
-            await db.collection('orders').doc(orderId).update(emailErrorUpdate);
-
-            await db.collection('failed_emails').add(removeUndefined({
-              type: 'admin',
-              orderId: orderId,
-              orderData: { orderId },
-              error: emailError.message,
-              errorCode: emailError.statusCode,
-              attemptedAt: admin.firestore.FieldValue.serverTimestamp(),
-              retryCount: 0
-            }));
+              adminEmailError: adminErr?.message
+            }).catch(err => logger.error('Failed to update email error:', err));
           }
-
-          console.warn('[EMAIL-DEBUG] Webhook continuing despite email failure');
+          // NÃO re-throw - emails são não-críticos
         }
-        console.log('[EMAIL-DEBUG] Admin email send complete');
-        // ========== DEBUG EMAIL ADMIN - END ==========
-      })();
+      })().catch(fatalErr => {
+        // Última linha de defesa: captura QUALQUER erro não-tratado
+        logger.error(JSON.stringify({
+          msg: 'Fatal error in email sending',
+          error: fatalErr?.message,
+          orderId,
+          requestId,
+          timestamp: new Date().toISOString()
+        }));
+      });
     });
     logger.info(JSON.stringify({
       msg: 'Order saved, emails queued',

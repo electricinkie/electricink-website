@@ -1,4 +1,15 @@
-require('dotenv').config();
+// Prioriza .env.local sobre .env (para desenvolvimento local)
+const path = require('path');
+const fs = require('fs');
+
+const envLocalPath = path.resolve(process.cwd(), '.env.local');
+const envPath = path.resolve(process.cwd(), '.env');
+
+if (fs.existsSync(envLocalPath)) {
+  require('dotenv').config({ path: envLocalPath });
+} else {
+  require('dotenv').config({ path: envPath });
+}
 const fetch = require('node-fetch');
 
 (async () => {

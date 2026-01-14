@@ -1,8 +1,19 @@
 // ✅ Carregar variáveis de ambiente PRIMEIRO
-require('dotenv').config();
+// Prioriza .env.local sobre .env (para desenvolvimento local)
+const path = require('path');
+const fs = require('fs');
+
+const envLocalPath = path.resolve(process.cwd(), '.env.local');
+const envPath = path.resolve(process.cwd(), '.env');
+
+if (fs.existsSync(envLocalPath)) {
+  require('dotenv').config({ path: envLocalPath });
+} else {
+  require('dotenv').config({ path: envPath });
+}
 
 const express = require('express');
-const path = require('path');
+// `path` já foi declarado acima para priorizar .env.local
 
 // ✅ Importar TODOS os handlers da API (ajustado para caminho relativo após mover)
 const createPaymentIntentHandler = require('../api/create-payment-intent.js');
