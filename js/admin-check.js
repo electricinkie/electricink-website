@@ -13,7 +13,10 @@ export async function isAdmin({ user: providedUser = null, forceRefresh = false 
 
   try {
     const { auth, db } = await initFirebase();
-    const user = providedUser || auth.currentUser;
+    if (!auth) {
+      try { console.warn('[Auth] auth object missing in isAdmin() after initFirebase'); } catch (e) {}
+    }
+    const user = providedUser || (auth ? auth.currentUser : null);
     if (!user) {
       isAdminCache = false;
       isAdminCacheAt = now;

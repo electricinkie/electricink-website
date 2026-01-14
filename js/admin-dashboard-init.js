@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     if (auth && auth.currentUser) {
       try { await auth.currentUser.getIdToken(true); } catch (e) { console.warn('ID token refresh failed (non-blocking):', e); }
+    } else {
+      try { console.warn('[Auth] auth or currentUser missing during dashboard init token refresh'); } catch (e) {}
     }
   } catch (e) { console.warn('Token refresh error:', e); }
 

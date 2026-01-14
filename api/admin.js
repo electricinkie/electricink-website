@@ -20,6 +20,7 @@ async function requireAdmin(req) {
     }
     return null;
   } catch (e) {
+    try { console.warn('[Admin] verifyIdToken failed:', e && e.message); } catch (logErr) {}
     return null;
   }
 }

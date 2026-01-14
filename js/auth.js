@@ -66,7 +66,12 @@ export async function onAuthChange(cb) {
 
 export async function getCurrentUser() {
   const { auth } = await initFirebase();
-  return auth.currentUser;
+  try {
+    return auth ? auth.currentUser : null;
+  } catch (e) {
+    console.warn('[Auth] getCurrentUser failed to read currentUser:', e && e.message);
+    return null;
+  }
 }
 
 // Ensure a Firestore `users/{uid}` document exists for the authenticated user
@@ -642,7 +647,8 @@ export async function initAuthObserver() {
       }
     });
   } catch (err) {
-    // FIREBASE_CONFIG may be missing or init failed; silently skip observer
+    // FIREBASE_CONFIG may be missing or init failed; log reason and skip observer
+    try { console.warn('[Auth] initAuthObserver skipped or failed:', err && err.message); } catch (e) {}
     return;
   }
 }

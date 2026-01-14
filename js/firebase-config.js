@@ -32,20 +32,49 @@ export async function initFirebase(config) {
     return { app: _app, auth: _auth, db: _db, ready: true };
   }
 
-  const cfg = config || window.FIREBASE_CONFIG;
+  let cfg = config || window.FIREBASE_CONFIG;
   if (!cfg) {
     // Allow embedded fallback only on local development hosts or when explicitly enabled.
     const hostname = (typeof location !== 'undefined' && location.hostname) ? location.hostname : '';
     const allowEmbedded = hostname === 'localhost' || hostname === '127.0.0.1' || window.DEBUG_ALLOW_EMBEDDED_FIREBASE;
     if (!allowEmbedded) {
-      const msg = 'FIREBASE_CONFIG not provided. Aborting Firebase init in production.';
-      console.error(msg);
-      window.__FIREBASE_READY = false;
-      window.__FIREBASE_ERROR = msg;
-      hideFirebaseDependentUI();
-      return { app: null, auth: null, db: null, ready: false, error: msg };
+      // Short defensive wait: sometimes `/firebase-config.json` populates
+      // `window.FIREBASE_CONFIG` slightly after other scripts run. Poll
+      // briefly before aborting to reduce race-condition failures in prod.
+      const WAIT_MS = 1500;
+      const POLL_INTERVAL = 100;
+      console.log('[Firebase] Waiting up to', WAIT_MS, 'ms for window.FIREBASE_CONFIG');
+      const cfgReady = await new Promise((resolve) => {
+        const start = Date.now();
+        (function poll() {
+          try {
+            if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey) return resolve(true);
+          } catch (e) {}
+          if (Date.now() - start >= WAIT_MS) return resolve(false);
+          setTimeout(poll, POLL_INTERVAL);
+        })();
+      });
+
+      if (!cfgReady) {
+        const msg = 'FIREBASE_CONFIG not provided. Aborting Firebase init in production after brief wait.';
+        console.error('[Firebase] ' + msg);
+        window.__FIREBASE_READY = false;
+        window.__FIREBASE_ERROR = msg;
+        hideFirebaseDependentUI();
+        return { app: null, auth: null, db: null, ready: false, error: msg };
+      }
+      // If cfgReady, re-read cfg from global and continue
+      console.log('[Firebase] window.FIREBASE_CONFIG became available; continuing init');
+      try {
+        if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey) {
+          cfg = window.FIREBASE_CONFIG;
+        }
+      } catch (e) {
+        console.warn('[Firebase] Could not read window.FIREBASE_CONFIG after wait:', e && e.message);
+      }
+    } else {
+      console.warn('FIREBASE_CONFIG missing; allowing embedded fallback on dev host.');
     }
-    console.warn('FIREBASE_CONFIG missing; allowing embedded fallback on dev host.');
   }
 
   try {

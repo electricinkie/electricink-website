@@ -406,7 +406,11 @@ function attachEvents() {
         const { auth } = await initFirebase();
         const { updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
         
-        if (auth.currentUser) {
+        if (!auth) {
+          try { console.warn('[Auth] auth object missing in profile update flow'); } catch (e) {}
+        }
+
+        if (auth && auth.currentUser) {
           await updateProfile(auth.currentUser, { displayName: name });
           console.log('[Profile] ✅ Firebase profile updated');
         }

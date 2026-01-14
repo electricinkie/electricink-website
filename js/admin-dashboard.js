@@ -2,6 +2,9 @@ import { initFirebase, authReady } from './firebase-config.js';
 import { requireAdmin } from './admin-check.js';
 
 const { auth, db } = await initFirebase();
+if (!auth) {
+  try { console.warn('[Auth] auth object missing in admin-dashboard top-level init'); } catch (e) {}
+}
 
 // Show cached admin display name immediately for snappy UX (display-only)
 try {
@@ -34,13 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 export async function loadDashboard() {
   try { performance.mark && performance.mark('auth-start'); } catch (e) {}
-  let user = auth.currentUser;
+  let user = auth ? auth.currentUser : null;
   if (!user) {
     try {
       // Wait briefly for auth restoration if transiently null
       await Promise.race([authReady, new Promise(res => setTimeout(() => res(null), 5000))]);
     } catch (e) {}
-    user = auth.currentUser;
+    user = auth ? auth.currentUser : null;
   }
   if (!user) return window.location.href = '/';
 
@@ -317,13 +320,23 @@ window.markAsShipped = async function() {
         // Call notification endpoint (best-effort)
         try {
           // Obter ID token do usuário logado e enviar com header Authorization
-          const idToken = await auth.currentUser.getIdToken();
+          let idToken = null;
+          if (auth && auth.currentUser && typeof auth.currentUser.getIdToken === 'function') {
+            try {
+              idToken = await auth.currentUser.getIdToken();
+            } catch (e) {
+              console.warn('[Auth] getIdToken failed (non-blocking):', e && e.message);
+            }
+          } else {
+            try { console.warn('[Auth] getIdToken skipped; auth/currentUser missing in send notification'); } catch (e) {}
+          }
+
+          const headers = { 'Content-Type': 'application/json' };
+          if (idToken) headers.Authorization = `Bearer ${idToken}`;
+
           const response = await fetch('/api/emails', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${idToken}`
-            },
+            headers,
             body: JSON.stringify(Object.assign({ type: 'shipping-notification' }, payload))
           });
 

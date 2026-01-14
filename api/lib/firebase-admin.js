@@ -13,17 +13,26 @@ function initializeFirebaseAdmin() {
     const serviceAccountEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
     let serviceAccountRaw = serviceAccountEnv;
 
-    // Fallback: if env var not provided, try to load local serviceAccountKey.json (dev convenience)
+    // In production we require the environment-provided service account
+    // to avoid falling back to a local file that won't exist in serverless.
+    const isProd = String(process.env.NODE_ENV || '').toLowerCase() === 'production';
+
+    // Fallback for local/dev only: try to load serviceAccountKey.json
     if (!serviceAccountRaw) {
+      if (isProd) {
+        console.error('❌ FATAL: FIREBASE_SERVICE_ACCOUNT not set in production environment. Admin initialization aborted.');
+        throw new Error('FIREBASE_SERVICE_ACCOUNT missing in production environment');
+      }
       try {
         const path = require('path');
         const fs = require('fs');
         const localPath = path.join(__dirname, '..', 'serviceAccountKey.json');
         if (fs.existsSync(localPath)) {
-          console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT missing; loading local serviceAccountKey.json');
+          console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT missing; loading local serviceAccountKey.json (dev only)');
           serviceAccountRaw = fs.readFileSync(localPath, 'utf8');
         } else {
-          throw new Error('FIREBASE_SERVICE_ACCOUNT não encontrada no .env');
+          console.error('❌ FIREBASE_SERVICE_ACCOUNT not found in env and no local serviceAccountKey.json present');
+          throw new Error('FIREBASE_SERVICE_ACCOUNT not found');
         }
       } catch (e) {
         throw e;
@@ -43,21 +52,39 @@ function initializeFirebaseAdmin() {
       if (serviceAccountRaw.trim().startsWith('{')) {
         serviceAccount = JSON.parse(serviceAccountRaw);
       } else {
-        const decoded = Buffer.from(serviceAccountRaw, 'base64').toString('utf8');
+        // Assume base64-encoded JSON
+        let decoded;
         try {
-          console.log('DEBUG: decoded service account present');
-        } catch (dbg) {
-          console.log('DEBUG: failed to inspect decoded content');
+          decoded = Buffer.from(serviceAccountRaw, 'base64').toString('utf8');
+          console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT appears base64-encoded (preview suppressed)');
+        } catch (decErr) {
+          console.error('❌ Failed to base64-decode FIREBASE_SERVICE_ACCOUNT. Please verify environment variable encoding.');
+          throw decErr;
         }
-        serviceAccount = JSON.parse(decoded);
+        try {
+          serviceAccount = JSON.parse(decoded);
+        } catch (jsonErr) {
+          console.error('❌ Failed to JSON.parse decoded FIREBASE_SERVICE_ACCOUNT. Verify it is valid JSON.');
+          throw jsonErr;
+        }
       }
     } catch (parseErr) {
       console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT or local serviceAccountKey.json:', parseErr && parseErr.message);
+      // Fail fast so callers see an explicit initialization error
       throw parseErr;
     }
 
     // Inicializa Firebase Admin com try/catch para capturar erros em runtime
     try {
+      if (!serviceAccount || !serviceAccount.project_id) {
+        console.error('❌ Parsed service account is missing required field `project_id`. Aborting admin.init.');
+        throw new Error('service account missing project_id');
+      }
+      // Ensure minimal required fields exist to avoid silent runtime failures
+      if (!serviceAccount.client_email) {
+        console.error('❌ Parsed service account is missing required field `client_email`. Aborting admin.init.');
+        throw new Error('service account missing client_email');
+      }
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         projectId: serviceAccount.project_id

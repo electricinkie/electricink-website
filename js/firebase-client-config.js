@@ -47,10 +47,34 @@
   try {
     const bootScript = document.createElement('script');
     bootScript.type = 'module';
+    // Wait briefly for /firebase-config.json to populate window.FIREBASE_CONFIG
+    // to avoid a race where initFirebase aborts in production before config arrives.
     bootScript.textContent = `
       import { initFirebase } from '/js/firebase-config.js';
       (async () => {
+        function waitForConfig(timeout = 3000) {
+          const start = Date.now();
+          return new Promise((resolve) => {
+            (function poll() {
+              try {
+                if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey) return resolve(true);
+              } catch (e) {}
+              if (Date.now() - start >= timeout) return resolve(false);
+              setTimeout(poll, 100);
+            })();
+          });
+        }
+
         try {
+          const cfgReady = await waitForConfig(3000);
+          const hostname = (typeof location !== 'undefined' && location.hostname) ? location.hostname : '';
+          const allowEmbedded = hostname === 'localhost' || hostname === '127.0.0.1' || window.DEBUG_ALLOW_EMBEDDED_FIREBASE;
+          if (!cfgReady && !allowEmbedded) {
+            console.error('[FB-BOOT] FIREBASE_CONFIG not available after wait — aborting init in production.');
+            window.__FIREBASE_BOOT_ABORT = true;
+            return;
+          }
+
           const res = await initFirebase();
           if (res && res.ready) {
             console.info('[FB-BOOT] initFirebase ran early and set persistence');
