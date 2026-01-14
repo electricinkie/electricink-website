@@ -11,7 +11,6 @@ const { z } = require('zod');
 const logger = require('./lib/logger');
 const fs = require('fs');
 const path = require('path');
-const { FREE_SHIPPING_THRESHOLD } = require('./lib/constants');
 
 // Runtime environment diagnostic (do NOT log full secrets)
 logger.info('Environment check', {
@@ -125,6 +124,7 @@ async function checkRateLimit(key) {
  * @returns {number} Shipping cost in EUR
  */
 function calculateShipping(subtotal, address = {}) {
+  const FREE_SHIPPING_THRESHOLD = 120;
   const STANDARD_RATE = 11.50;
   const SAMEDAY_RATE = 7.50;
   const PICKUP_RATE = 0;
@@ -212,47 +212,6 @@ function resolveProductById(itemId) {
   }
 
   return null;
-}
-
-// Attempt to resolve a Stripe Price ID for legacy frontend payloads that
-// don't include `stripe_price_id`. Uses the merged `stripeProducts` catalog
-// loaded from `data/*.json` and tries to find a matching variant or product
-// price identifier. Returns a string price id or null.
-function findStripePriceIdForItem(item) {
-  try {
-    if (!item || !item.id) return null;
-    const resolved = resolveProductById(item.id);
-    if (!resolved || !resolved.product) return null;
-
-    const product = resolved.product;
-
-    // If a specific variant was matched, prefer its priceId / stripe_price_id
-    if (resolved.variantId) {
-      const variant = (product.variants || []).find(v => v.id === resolved.variantId || v.priceId === resolved.variantId || v.stripe_price_id === resolved.variantId);
-      if (variant) return variant.priceId || variant.stripe_price_id || variant.id || null;
-    }
-
-    // Fallbacks: product.basic.priceId or product.basic.stripe_price_id
-    if (product.basic) {
-      if (product.basic.priceId) return product.basic.priceId;
-      if (product.basic.stripe_price_id) return product.basic.stripe_price_id;
-    }
-
-    // Top-level fields sometimes used in data files
-    if (product.priceId) return product.priceId;
-    if (product.stripe_price_id) return product.stripe_price_id;
-
-    // If nothing found, attempt to infer from first variant
-    if (product.variants && product.variants[0]) {
-      const v = product.variants[0];
-      return v.priceId || v.stripe_price_id || v.id || null;
-    }
-
-    return null;
-  } catch (err) {
-    logger.warn('findStripePriceIdForItem failed', { item: item && item.id, err: err && err.message });
-    return null;
-  }
 }
 
 function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
@@ -347,15 +306,6 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Incoming request diagnostic
-  try {
-    console.log('📥 [CREATE-PI] Received request');
-    console.log('📥 [CREATE-PI] Body authUid:', req.body && req.body.authUid);
-    console.log('📥 [CREATE-PI] Verified UID:', (typeof verifiedUid !== 'undefined' ? verifiedUid : 'NONE'));
-  } catch (e) {
-    console.log('📥 [CREATE-PI] Logging diagnostic failed', e && e.message);
-  }
-
   // Zod schema de validação
   const checkoutSchema = z.object({
     items: z.array(
@@ -363,8 +313,8 @@ module.exports = async function handler(req, res) {
         id: z.string().min(1, 'Product ID required'),
         quantity: z.number().int().positive().max(100, 'Max 100 units per product'),
         variant: z.string().optional(),
-        // Preserve incoming Stripe price id supplied by frontend
-        stripe_price_id: z.string().optional()
+        // Require Stripe price id provided by frontend
+        stripe_price_id: z.string().min(1, 'Stripe price ID required')
       })
     ).min(1, 'Cart cannot be empty').max(50, 'Max 50 different products'),
     shippingMethod: z.enum(['standard', 'pickup', 'same-day'], {
@@ -392,10 +342,10 @@ module.exports = async function handler(req, res) {
     shippingAddress = req.body.shippingAddress || {};
   } catch (error) {
     if (error instanceof z.ZodError) {
-      logger.warn('Invalid request data', { errors: error.issues });
+      logger.warn('Invalid request data', { errors: error.errors });
       return res.status(400).json({
         error: 'Invalid request data',
-        details: error.issues.map(e => ({
+        details: error.errors.map(e => ({
           field: e.path.join('.'),
           message: e.message
         }))
@@ -406,23 +356,6 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // Backwards-compatibility: if frontend did not include `stripe_price_id`
-    // for each cart item, attempt to resolve it using the product catalog.
-    try {
-      for (const it of items) {
-        if (!it.stripe_price_id) {
-          const resolvedPriceId = findStripePriceIdForItem(it);
-          if (resolvedPriceId) {
-            it.stripe_price_id = resolvedPriceId;
-            logger.info('Resolved stripe_price_id for legacy item', { id: it.id, stripe_price_id: resolvedPriceId });
-          } else {
-            logger.info('No stripe_price_id found for item (legacy lookup failed)', { id: it.id });
-          }
-        }
-      }
-    } catch (e) {
-      logger.warn('Compatibility lookup failed', e && e.message);
-    }
     // Debug logging (sanitized)
     logger.info('Backend received', {
       items: items.map(item => ({ id: item.id, quantity: item.quantity })),
@@ -446,78 +379,9 @@ module.exports = async function handler(req, res) {
     // Improved error handling
     try {
       const crypto = require('crypto');
-      const totalsRaw = validateAndCalculateTotal(items, shippingAddress);
-
-      // Verify ID token (if provided) to trust UID server-side.
-      // Accept token in Authorization header `Bearer <idToken>` or `req.body.idToken`.
-      let verifiedUid = null;
-      try {
-        const authHeader = req.headers.authorization || req.headers.Authorization || '';
-        const token = (authHeader && authHeader.startsWith('Bearer ')) ? authHeader.split(' ')[1] : (req.body && (req.body.idToken || req.body.token));
-        if (token && admin && admin.apps && admin.apps.length) {
-          const decoded = await admin.auth().verifyIdToken(token).catch(err => {
-            logger.warn('ID token verification failed', { err: err && err.message });
-            return null;
-          });
-          if (decoded && decoded.uid) {
-            verifiedUid = decoded.uid;
-            logger.info('Verified ID token for uid', { uid: verifiedUid });
-          }
-        }
-      } catch (err) {
-        logger.warn('Error while verifying ID token', err && err.message);
-      }
-
-      // totalsRaw contains subtotal, shipping, vat, total (pre-discount)
-      let discountPercent = 0;
-      try {
-        // Attempt to read discount from Firestore (prefer verified uid, fallback to email)
-        initFirestore();
-        if (admin && admin.apps && admin.apps.length) {
-          const db = admin.firestore();
-          if (verifiedUid) {
-            const userDoc = await db.collection('users').doc(String(verifiedUid)).get();
-            if (userDoc.exists) {
-              discountPercent = Number(userDoc.data()?.discount || 0) || 0;
-            }
-          } else if (req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email)) {
-            const emailToFind = req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email);
-            try {
-              const q = await db.collection('users').where('email', '==', String(emailToFind)).limit(1).get();
-              if (!q.empty) {
-                discountPercent = Number(q.docs[0].data()?.discount || 0) || 0;
-              }
-            } catch (qe) {
-              logger.warn('User lookup by email failed', qe && qe.message);
-            }
-          }
-        }
-      } catch (e) {
-        logger.warn('Failed to read discount from Firestore', e && e.message);
-      }
-
-      // Apply discount server-side (ignore any client-supplied discount)
-      const subtotal = Number(totalsRaw.subtotal || 0);
-      const shipping = Number(totalsRaw.shipping || 0);
-      const discountAmount = parseFloat(((discountPercent / 100) * subtotal).toFixed(2));
-      const discountedSubtotal = Math.max(0, parseFloat((subtotal - discountAmount).toFixed(2)));
-      const VAT_RATE = 0.23;
-      const vat = parseFloat(((discountedSubtotal + shipping) * VAT_RATE).toFixed(2));
-      const total = parseFloat((discountedSubtotal + shipping + vat).toFixed(2));
-
-      const totals = {
-        subtotal: subtotal,
-        discountPercent: discountPercent,
-        discount: discountAmount,
-        discountedSubtotal: discountedSubtotal,
-        shipping: shipping,
-        vat: vat,
-        total: total
-      };
+      const totals = validateAndCalculateTotal(items, shippingAddress);
       logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
-        discountPercent: totals.discountPercent,
-        discount: totals.discount,
         shipping: totals.shipping,
         vat: totals.vat,
         total: totals.total
@@ -546,68 +410,9 @@ module.exports = async function handler(req, res) {
         items: JSON.stringify(items.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity }))),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
-        discount_percent: String(totals.discountPercent || 0),
-        discount_cents: String(Math.round((totals.discount || 0) * 100)),
-        discounted_subtotal_cents: String(Math.round((totals.discountedSubtotal || totals.subtotal) * 100)),
         backend_validated: 'true'
       };
-
-      // Include shipping address fields from the frontend into metadata (whitelisted)
-      const incomingShipping = req.body.shippingAddress || {};
-      if (incomingShipping) {
-        metadataSanitized.addressLine1 = incomingShipping.line1 || incomingShipping.address || incomingShipping.street || '';
-        metadataSanitized.addressLine2 = incomingShipping.line2 || incomingShipping.address2 || incomingShipping.complement || '';
-        metadataSanitized.city = incomingShipping.city || '';
-        metadataSanitized.postalCode = incomingShipping.postalCode || incomingShipping.postal_code || '';
-        // keep snake_case alias for compatibility
-        metadataSanitized.postal_code = metadataSanitized.postalCode;
-        metadataSanitized.country = incomingShipping.country || '';
-        if (incomingShipping.phone) metadataSanitized.phone = String(incomingShipping.phone);
-        if (incomingShipping.firstName) metadataSanitized.firstName = String(incomingShipping.firstName);
-        if (incomingShipping.lastName) metadataSanitized.lastName = String(incomingShipping.lastName);
-      }
-
-      // If we verified an ID token, prefer server-verified UID over any client-supplied value.
-      if (verifiedUid) {
-        metadataSanitized.user_uid = String(verifiedUid);
-        metadataSanitized.authUid = String(verifiedUid);
-      } else {
-        // Preserve client-provided authUid only when server did not verify a token
-        const providedUid = req.body.authUid || incomingMetadata.authUid || incomingMetadata.user_uid || incomingMetadata.userId || incomingMetadata.user_id || null;
-        if (providedUid) {
-          metadataSanitized.user_uid = String(providedUid);
-          metadataSanitized.authUid = String(providedUid);
-        }
-      }
       metadata = metadataSanitized;
-
-      console.log('📦 [CREATE-PI] Final metadata:', {
-        user_uid: metadataSanitized.user_uid,
-        authUid: metadataSanitized.authUid,
-        email: metadataSanitized.customer_email
-      });
-
-      // Build a CHECKOUT payload using explicit `stripe_price_id` provided by the
-      // frontend. Do NOT attempt to guess or infer Stripe price IDs server-side.
-      try {
-        // Mandatory blindagem: every incoming cart item must include `stripe_price_id`
-        items.forEach(item => {
-          if (!item.stripe_price_id) {
-            const nameOrId = item.name || item.id || 'unknown';
-            throw new Error(`Invalid cart item: missing stripe_price_id (${nameOrId})`);
-          }
-        });
-
-        const lineItems = items.map(item => ({
-          price: item.stripe_price_id,
-          quantity: item.quantity
-        }));
-
-        logger.info('CHECKOUT_PAYLOAD', { lineItems });
-      } catch (e) {
-        logger.error('Failed to build CHECKOUT_PAYLOAD for audit', e && e.message);
-        throw e; // propagate so the request fails fast when price IDs are missing
-      }
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
@@ -617,9 +422,6 @@ module.exports = async function handler(req, res) {
           subtotal: totals.subtotal.toFixed(2),
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),
-          discount_percent: String(totals.discountPercent || 0),
-          discount: totals.discount != null ? totals.discount.toFixed(2) : '0.00',
-          discounted_subtotal: (totals.discountedSubtotal || totals.subtotal).toFixed(2),
           items_count: items.length,
           backend_validated: 'true' // Security flag
         },
