@@ -522,12 +522,15 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
 
       debugLog('✅ Payment Request created, checking availability...');
 
+      console.log("🔍 Checking Payment Request availability...");
+
       // Check if Payment Request is available (Apple Pay / Google Pay)
       const canMakePayment = await paymentRequest.canMakePayment();
-      
-      debugLog('   Can make payment:', canMakePayment);
-      
+
+      console.log("✅ Payment Request result:", canMakePayment);
+
       if (canMakePayment) {
+        console.log("✅ Payment method disponível:", canMakePayment.applePay ? "Apple Pay" : canMakePayment.googlePay ? "Google Pay" : "Outro");
         debugLog('✅ Express Checkout available! Showing buttons...');
         
         // Show Express Checkout container
