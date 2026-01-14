@@ -397,6 +397,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       total: (paymentIntent.amount / 100),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       paidAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAtMillis: Date.now(),
+      paidAtMillis: Date.now(),
       source: 'webhook',
       webhookEventId: event.id
     };
@@ -475,25 +477,58 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           // NÃO re-throw - continua pro email admin
         }
 
-        // Email admin
+        // Email admin - usando template
         try {
           if (!resend) {
             throw new Error('Resend not configured');
           }
-          const adminEmailResult = await resend.emails.send({
-            from: `Electric Ink Orders <${EMAIL_FROM}>`,
-            to: [ADMIN_EMAIL],
-            subject: `New Order #${orderId}`,
-            html: `Order #${orderId} placed.`,
-          });
-          logger.info(JSON.stringify({ ...emailLog, status: 'admin_email_sent', emailId: adminEmailResult.id }));
           
-          if (db) {
-            await db.collection('orders').doc(orderId).update({
-              adminEmailStatus: 'sent',
-              adminEmailId: adminEmailResult.id,
-              adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
-            }).catch(err => logger.error('Failed to update email status:', err));
+          // Chamar handler de email unificado
+          const emailData = {
+            type: 'order-notification-admin',
+            data: {
+              orderNumber: orderId,
+              customer_email: order.customerEmail,
+              shipping: {
+                firstName: (order.customerName || '').split(' ')[0] || '',
+                lastName: (order.customerName || '').split(' ').slice(1).join(' ') || '',
+                phone: order.customerPhone || '',
+                line1: order.shippingAddress?.line1,
+                line2: order.shippingAddress?.line2,
+                city: order.shippingAddress?.city,
+                state: order.shippingAddress?.state,
+                postalCode: order.shippingAddress?.postalCode,
+                country: order.shippingAddress?.country
+              },
+              items: order.items,
+              totals: {
+                subtotal: order.subtotal,
+                shippingText: order.shippingCost > 0 ? `€${order.shippingCost.toFixed(2)}` : 'FREE',
+                vat: ((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)).toFixed(2),
+                total: order.total
+              }
+            }
+          };
+          
+          // Enviar via handler (que já tem o template)
+          const emailResponse = await fetch(`${process.env.PUBLIC_BASE_URL || 'http://localhost:3000'}/api/emails`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(emailData)
+          });
+          
+          if (emailResponse.ok) {
+            const result = await emailResponse.json().catch(() => ({}));
+            logger.info(JSON.stringify({ ...emailLog, status: 'admin_email_sent', emailId: result && result.id ? result.id : result.emailId || null }));
+            
+            if (db) {
+              await db.collection('orders').doc(orderId).update({
+                adminEmailStatus: 'sent',
+                adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
+              }).catch(err => logger.error('Failed to update email status:', err));
+            }
+          } else {
+            throw new Error(`Email API returned ${emailResponse.status}`);
           }
         } catch (adminErr) {
           logger.error(JSON.stringify({ ...emailLog, status: 'admin_email_failed', error: adminErr?.message }));
@@ -504,7 +539,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
               adminEmailError: adminErr?.message
             }).catch(err => logger.error('Failed to update email error:', err));
           }
-          // NÃO re-throw - emails são não-críticos
         }
       })().catch(fatalErr => {
         // Última linha de defesa: captura QUALQUER erro não-tratado

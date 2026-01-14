@@ -2,9 +2,6 @@ import { initFirebase, authReady } from './firebase-config.js';
 import { requireAdmin } from './admin-check.js';
 
 const { auth, db } = await initFirebase();
-if (!auth) {
-  try { console.warn('[Auth] auth object missing in admin-dashboard top-level init'); } catch (e) {}
-}
 
 // Show cached admin display name immediately for snappy UX (display-only)
 try {
@@ -37,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 export async function loadDashboard() {
   try { performance.mark && performance.mark('auth-start'); } catch (e) {}
-  let user = auth ? auth.currentUser : null;
+  let user = auth.currentUser;
   if (!user) {
     try {
       // Wait briefly for auth restoration if transiently null
       await Promise.race([authReady, new Promise(res => setTimeout(() => res(null), 5000))]);
     } catch (e) {}
-    user = auth ? auth.currentUser : null;
+    user = auth.currentUser;
   }
   if (!user) return window.location.href = '/';
 
@@ -76,12 +73,37 @@ async function loadStats() {
     const pendingSnap = await getDocs(query(ordersCol, where('status', '==', 'pending')));
     document.getElementById('pending-count').textContent = String(pendingSnap.size || 0);
 
-    // todays sales
-    const today = new Date(); today.setHours(0,0,0,0);
-    const todayTs = Timestamp.fromDate(today);
-    const todaySnap = await getDocs(query(ordersCol, where('createdAt', '>=', todayTs)));
+    // todays sales - buscar TODOS e filtrar manualmente
+    const today = new Date(); 
+    today.setHours(0,0,0,0);
+    const todayMillis = today.getTime();
+
+    const allOrdersSnap = await getDocs(query(ordersCol));
     let todaySales = 0;
-    todaySnap.forEach(d => { const o = d.data(); todaySales += Number(o.total || 0); });
+
+    allOrdersSnap.forEach(d => {
+      const o = d.data();
+      
+      // Pegar timestamp em millis (priorizar campo direto)
+      let orderMillis = o.paidAtMillis || o.createdAtMillis || 0;
+
+      // Fallback pra Timestamp object (se existir)
+      if (!orderMillis) {
+        const ts = o.paidAt || o.createdAt;
+        if (ts && typeof ts.toMillis === 'function') {
+          orderMillis = ts.toMillis();
+        } else if (ts && ts.seconds) {
+          orderMillis = ts.seconds * 1000;
+        }
+      }
+      
+      // Se é de hoje, somar
+      if (orderMillis >= todayMillis) {
+        const orderTotal = o.total || 0;
+        todaySales += orderTotal;
+      }
+    });
+
     document.getElementById('today-sales').textContent = `€${todaySales.toFixed(2)}`;
   } catch (err) {
     console.error('Erro ao carregar estatísticas:', err);
@@ -158,7 +180,7 @@ async function loadOrders(status = 'all', reset = true) {
         ${order.customerName || order.customerEmail || ''}
         ${order.userId ? `<div class="small muted">UID: ${order.userId}</div>` : ''}
       </td>
-      <td data-label="Date">${formatDate(order.createdAt)}</td>
+      <td data-label="Date">${formatDate(order.paidAt || order.createdAt)}</td>
       <td data-label="Total">€${Number(order.total || 0).toFixed(2)}</td>
       <td data-label="Status"><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
       <td data-label="Actions">
@@ -206,7 +228,7 @@ window.viewOrder = async function(orderId) {
       <p><strong>Customer:</strong> ${order.customerName || ''}</p>
       <p><strong>UID:</strong> ${order.userId || 'guest'}</p>
       <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
-      <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
+      <p><strong>Date:</strong> ${formatDate(order.paidAt || order.createdAt)}</p>
       <p><strong>Status:</strong> <span class="order-status status-badge status-${order.status}">${translateStatus(order.status)}</span></p>
       <p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p>
     </div>
@@ -320,23 +342,13 @@ window.markAsShipped = async function() {
         // Call notification endpoint (best-effort)
         try {
           // Obter ID token do usuário logado e enviar com header Authorization
-          let idToken = null;
-          if (auth && auth.currentUser && typeof auth.currentUser.getIdToken === 'function') {
-            try {
-              idToken = await auth.currentUser.getIdToken();
-            } catch (e) {
-              console.warn('[Auth] getIdToken failed (non-blocking):', e && e.message);
-            }
-          } else {
-            try { console.warn('[Auth] getIdToken skipped; auth/currentUser missing in send notification'); } catch (e) {}
-          }
-
-          const headers = { 'Content-Type': 'application/json' };
-          if (idToken) headers.Authorization = `Bearer ${idToken}`;
-
+          const idToken = await auth.currentUser.getIdToken();
           const response = await fetch('/api/emails', {
             method: 'POST',
-            headers,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${idToken}`
+            },
             body: JSON.stringify(Object.assign({ type: 'shipping-notification' }, payload))
           });
 
@@ -422,84 +434,36 @@ function formatDate(timestamp) {
   if (!timestamp) return 'N/A';
   
   try {
-    // Firestore Timestamp com método toDate()
+    let date;
+    
+    // Firestore Timestamp (tem toDate())
     if (timestamp && typeof timestamp.toDate === 'function') {
-      return timestamp.toDate().toLocaleString('en-IE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      date = timestamp.toDate();
+    } 
+    // Objeto com seconds (Firebase Admin ou plain object)
+    else if (timestamp && timestamp.seconds) {
+      date = new Date(timestamp.seconds * 1000);
+    }
+    // String ou número
+    else {
+      date = new Date(timestamp);
     }
     
-    // Função helper para extrair segundos de múltiplos formatos
-    const tryGetSeconds = (t) => {
-      if (!t) return null;
-      
-      // Número direto (Unix timestamp em segundos)
-      if (typeof t === 'number') return t;
-      
-      // Objeto Firestore padrão: { seconds: X, nanoseconds: Y }
-      if (typeof t.seconds === 'number') return t.seconds;
-      
-      // Objeto Firebase Admin SDK: { _seconds: X, _nanoseconds: Y }
-      if (typeof t._seconds === 'number') return t._seconds;
-      
-      // Timestamp aninhado (de exportação/importação)
-      if (t.seconds && typeof t.seconds === 'object') {
-        return t.seconds.seconds || t.seconds._seconds || null;
-      }
-      
-      // String que contém número
-      if (typeof t.seconds === 'string' && !isNaN(Number(t.seconds))) {
-        return Number(t.seconds);
-      }
-      
-      return null;
-    };
-    
-    // Tentar extrair segundos
-    const seconds = tryGetSeconds(timestamp);
-    if (seconds) {
-      return new Date(Number(seconds) * 1000).toLocaleString('en-IE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+    // Verifica validade
+    if (!date || isNaN(date.getTime())) {
+      return 'N/A';
     }
     
-    // Número em milissegundos (não segundos)
-    if (typeof timestamp === 'number') {
-      return new Date(timestamp).toLocaleString('en-IE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-    
-    // String ISO ou formato reconhecido por Date
-    const date = new Date(timestamp);
-    if (!isNaN(date.getTime())) {
-      return date.toLocaleString('pt-PT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-    
-    // Se nenhum formato funcionou
-    console.warn('Unrecognized timestamp format:', timestamp);
-    return 'Invalid date';
-    
+    // Formata para Irlanda
+    return date.toLocaleDateString('en-IE', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   } catch (e) {
-    console.error('Erro ao formatar data:', e, timestamp);
+    console.error('[formatDate] Error:', e);
     return 'N/A';
   }
 }
