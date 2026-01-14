@@ -3,8 +3,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // Helper: check if authenticated user has an admins/{uid} document
+    // Admin check: prefer token claim for speed, but fall back to admins/{uid} doc.
     function isAdmin() {
-      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+      return request.auth != null && (
+        // Fast path: custom claim set by admin SDK (scripts/set-admin.js, scripts/create-admin.js)
+        (request.auth.token.admin == true) ||
+        // Fallback: legacy admins collection document
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
     }
 
     // Helper: check if user is viewing their own order
@@ -30,27 +36,18 @@ service cloud.firestore {
 
     // Orders collection - CRITICAL CHANGE HERE
     match /orders/{orderId} {
-      // Admin pode tudo (get e list)
+      // Admin pode tudo (leitura completa)
       allow read: if isAdmin();
-      
-      // User pode:
-      // - GET um pedido específico se for dele
+
+      // Usuário pode obter (`get`) um pedido específico se for proprietário
       allow get: if isOwnOrder();
-      
-      // - LIST/QUERY pedidos dele (CRÍTICO PARA MY ORDERS!)
-      allow list: if request.auth != null && (
-        // Query filtra por userId == UID
-        request.query.limit <= 100 &&
-        (
-          // Query where userId == uid
-          ('userId' in request.query.filters() && request.query.filters().userId == request.auth.uid) ||
-          // Query where userId == email  
-          ('userId' in request.query.filters() && request.query.filters().userId == request.auth.token.email) ||
-          // Query where customerEmail == email
-          ('customerEmail' in request.query.filters() && request.query.filters().customerEmail == request.auth.token.email)
-        )
-      );
-      
+
+      // IMPORTANT: Disallow client-side LIST queries entirely to force use of
+      // server-side endpoint (/api/my-orders). Listing can leak large data and
+      // is error-prone with complex query restrictions. Clients must call the
+      // authenticated server endpoint which performs safe server-side queries.
+      allow list: if false;
+
       // Só admin/backend pode escrever
       allow create, update, delete: if isAdmin();
     }

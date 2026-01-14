@@ -2,6 +2,7 @@ import { initFirebase } from './firebase-config.js';
 
 // Firestore helpers for orders (requires appropriate Firestore rules)
 export async function getAllOrders(limit = 100) {
+  console.warn('getAllOrders() is deprecated on the client. Use the server endpoint `/api/my-orders` instead. Client-side listing may be blocked by Firestore rules.');
   const { db } = await initFirebase();
   const { collection, query, orderBy, limit: limitFn, getDocs } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
   const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limitFn(limit));
@@ -10,6 +11,7 @@ export async function getAllOrders(limit = 100) {
 }
 
 export async function getUserOrdersByEmail(email, limit = 50) {
+  console.warn('getUserOrdersByEmail() from client is discouraged. Prefer calling /api/my-orders which performs server-side filtering by authenticated user.');
   const { db } = await initFirebase();
   const { collection, query, where, orderBy, limit: limitFn, getDocs } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
   const q = query(collection(db, 'orders'), where('customerEmail', '==', email), orderBy('createdAt', 'desc'), limitFn(limit));
@@ -20,6 +22,7 @@ export async function getUserOrdersByEmail(email, limit = 50) {
 export async function getUserOrdersByUid(uid, limit = 50) {
   // Query orders by `userId` (preferred). This relies on server/webhook
   // persisting `userId` into the order document when available.
+  console.warn('getUserOrdersByUid() from client is discouraged. Prefer calling /api/my-orders which uses the authenticated token to return only the caller\'s orders.');
   const { db } = await initFirebase();
   const { collection, query, where, orderBy, limit: limitFn, getDocs } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
   const q = query(collection(db, 'orders'), where('userId', '==', uid), orderBy('createdAt', 'desc'), limitFn(limit));
@@ -69,7 +72,7 @@ export async function createOrder(orderData) {
       'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js'
     );
 
-    const user = auth.currentUser;
+    const user = auth ? auth.currentUser : null;
 
     const order = {
       userId: user?.uid || 'guest',
