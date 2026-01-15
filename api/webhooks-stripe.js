@@ -460,56 +460,20 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       (async () => {
         const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
-        // Email cliente: delegar ao handler unificado para usar templates do repositório
+        // Email cliente (inline, não-bloqueante para evitar dependência do handler em produção)
         try {
-          const clientEmailData = {
-            type: 'order-confirmation',
-            data: {
-              orderNumber: orderId,
-              email: order.customerEmail,
-              items: order.items,
-              shipping: {
-                firstName: (order.customerName || '').split(' ')[0] || '',
-                lastName: (order.customerName || '').split(' ').slice(1).join(' ') || '',
-                phone: order.customerPhone || '',
-                address: order.shippingAddress?.line1,
-                address2: order.shippingAddress?.line2,
-                city: order.shippingAddress?.city,
-                postalCode: order.shippingAddress?.postalCode,
-                country: order.shippingAddress?.country
-              },
-              totals: {
-                subtotal: order.subtotal || 0,
-                shippingText: order.shippingCost > 0 ? `€${(order.shippingCost).toFixed(2)}` : 'FREE',
-                vat: (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0),
-                total: order.total || 0
-              }
-            }
-          };
-
-          const sendOrderEmail = require('./handlers/send-order-email');
-          const fakeReq = {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: clientEmailData
-          };
-          const fakeRes = {
-            _status: 200,
-            status(code) { this._status = code; return this; },
-            json(obj) { return obj; },
-            setHeader() {},
-            end() {}
-          };
-
-          const clientResult = await sendOrderEmail(fakeReq, fakeRes);
-          const clientEmailId = clientResult && (clientResult.id || clientResult.emailId) ? (clientResult.id || clientResult.emailId) : null;
-          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent', emailId: clientEmailId }));
-
+          if (!resend) throw new Error('Resend not configured');
+          await resend.emails.send({
+            from: `Electric Ink <${EMAIL_FROM}>`,
+            to: order.customerEmail,
+            subject: `Order Confirmation #${orderId}`,
+            html: `Order #${orderId} placed.`,
+          });
+          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent' }));
           if (db) {
             await db.collection('orders').doc(orderId).update({
               emailStatus: 'sent',
-              emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
-              emailId: clientEmailId
+              emailSentAt: admin.firestore.FieldValue.serverTimestamp()
             }).catch(err => logger.error('Failed to update client email status:', err));
           }
         } catch (clientErr) {
@@ -520,7 +484,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
               emailError: clientErr?.message
             }).catch(err => logger.error('Failed to update client email error:', err));
           }
-          // Continue to admin email attempt
         }
 
         // Email admin - usando template
@@ -558,7 +521,27 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           
           // Call local handler directly to ensure it uses current `email-templates/order-notification-admin.html`
           try {
-            const sendOrderEmail = require('./handlers/send-order-email');
+            // Try to require the handler using robust paths (serverless environments may relocate files)
+            let sendOrderEmail = null;
+            const candidates = [
+              require('path').join(__dirname, 'handlers', 'send-order-email'),
+              require('path').join(process.cwd(), 'api', 'handlers', 'send-order-email'),
+              require('path').join(process.cwd(), 'api', 'handlers', 'send-order-email.js')
+            ];
+            for (const p of candidates) {
+              try {
+                sendOrderEmail = require(p);
+                break;
+              } catch (e) {
+                // continue
+              }
+            }
+
+            if (!sendOrderEmail) {
+              const msg = `[WEBHOOK] send-order-email handler not found. Tried: ${candidates.join(', ')}`;
+              logger.error(msg);
+              throw new Error('send-order-email handler not found');
+            }
 
             const fakeReq = {
               method: 'POST',
