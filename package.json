@@ -9,7 +9,7 @@
     "inject-sentry": "node scripts/inject-sentry-dsn.js",
     "prebuild": "node scripts/add-version-to-assets.js",
     "build": "echo 'Build complete with versioned assets'",
-    "vercel-build": "npm install --production=false",
+    "vercel-build": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
