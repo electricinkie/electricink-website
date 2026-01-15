@@ -49,7 +49,8 @@ import { isAdmin } from './admin-check.js';
         <div class="desktop-right-actions">
           <!-- Signed out -->
           <div class="header-auth" data-auth-signed-out style="display:flex;align-items:center;gap:8px;">
-            <button class="sign-in-btn" data-open-auth>Sign in</button>
+            <!-- 🚨 TEMPORARY: Hidden for guest-only checkout (remove when auth fixed) -->
+            <button class="sign-in-btn" data-open-auth style="display:none !important;">Sign in</button>
             <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/>

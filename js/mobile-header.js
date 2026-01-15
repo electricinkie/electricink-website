@@ -60,7 +60,8 @@ import { isAdmin } from './admin-check.js';
       <div class="mobile-auth-section" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
         <!-- Signed OUT state -->
         <div id="mobile-auth-signed-out" style="display:flex; justify-content:center;">
-          <button id="mobile-auth-button" class="mobile-auth-button">Sign in</button>
+          <!-- 🚨 TEMPORARY: Hidden for guest-only checkout (remove when auth fixed) -->
+          <button id="mobile-auth-button" class="mobile-auth-button" style="display:none !important;">Sign in</button>
         </div>
         
         <!-- Signed IN state -->
