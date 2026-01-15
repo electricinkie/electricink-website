@@ -78,6 +78,76 @@
             </div>
           </div>
           
+                      <!-- Shipping Method -->
+            <div class="form-section">
+              <h2>
+                <svg class="section-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M1 3h11v9H1V3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 8h3l2 3v4h-5V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="4.5" cy="15.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="14.5" cy="15.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                Shipping Method
+              </h2>
+              
+              <div class="shipping-options">
+                
+                <!-- Standard Shipping -->
+                <label class="shipping-option" for="shipping-standard">
+                  <input 
+                    type="radio" 
+                    id="shipping-standard" 
+                    name="shippingMethod" 
+                    value="standard" 
+                    checked
+                  >
+                  <div class="shipping-option-content">
+                    <div class="shipping-option-header">
+                      <span class="shipping-option-name">Standard Shipping</span>
+                      <span class="shipping-option-price">€11.50</span>
+                    </div>
+                    <p class="shipping-option-desc">3-5 business days</p>
+                  </div>
+                </label>
+                
+                <!-- Same-Day Dublin (conditionally shown) -->
+                <label class="shipping-option" for="shipping-same-day" id="sameDayOption" style="display: none;">
+                  <input 
+                    type="radio" 
+                    id="shipping-same-day" 
+                    name="shippingMethod" 
+                    value="same-day" 
+                    disabled
+                  >
+                  <div class="shipping-option-content">
+                    <div class="shipping-option-header">
+                      <span class="shipping-option-name">Same-Day Delivery (D01-D08)</span>
+                      <span class="shipping-option-price">€7.50</span>
+                    </div>
+                    <p class="shipping-option-desc">Order by 2pm — dispatch today</p>
+                  </div>
+                </label>
+                
+                <!-- Store Pickup -->
+                <label class="shipping-option" for="shipping-pickup">
+                  <input 
+                    type="radio" 
+                    id="shipping-pickup" 
+                    name="shippingMethod" 
+                    value="pickup"
+                  >
+                  <div class="shipping-option-content">
+                    <div class="shipping-option-header">
+                      <span class="shipping-option-name">Studio Pickup</span>
+                      <span class="shipping-option-price">FREE</span>
+                    </div>
+                    <p class="shipping-option-desc">Appreciart Studio, Dublin</p>
+                  </div>
+                </label>
+                
+              </div>
+            </div>
+            
           <form id="checkoutForm">
             
             <!-- Contact Information -->
@@ -203,76 +273,6 @@
                   placeholder="+353 XX XXX XXXX"
                 >
                 <span class="input-hint">For delivery updates</span>
-              </div>
-            </div>
-            
-            <!-- Shipping Method -->
-            <div class="form-section">
-              <h2>
-                <svg class="section-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M1 3h11v9H1V3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M12 8h3l2 3v4h-5V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="4.5" cy="15.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
-                  <circle cx="14.5" cy="15.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-                Shipping Method
-              </h2>
-              
-              <div class="shipping-options">
-                
-                <!-- Standard Shipping -->
-                <label class="shipping-option" for="shipping-standard">
-                  <input 
-                    type="radio" 
-                    id="shipping-standard" 
-                    name="shippingMethod" 
-                    value="standard" 
-                    checked
-                  >
-                  <div class="shipping-option-content">
-                    <div class="shipping-option-header">
-                      <span class="shipping-option-name">Standard Shipping</span>
-                      <span class="shipping-option-price">€11.50</span>
-                    </div>
-                    <p class="shipping-option-desc">3-5 business days</p>
-                  </div>
-                </label>
-                
-                <!-- Same-Day Dublin (conditionally shown) -->
-                <label class="shipping-option" for="shipping-same-day" id="sameDayOption" style="display: none;">
-                  <input 
-                    type="radio" 
-                    id="shipping-same-day" 
-                    name="shippingMethod" 
-                    value="same-day" 
-                    disabled
-                  >
-                  <div class="shipping-option-content">
-                    <div class="shipping-option-header">
-                      <span class="shipping-option-name">Same-Day Delivery (D01-D08)</span>
-                      <span class="shipping-option-price">€7.50</span>
-                    </div>
-                    <p class="shipping-option-desc">Order by 2pm — dispatch today</p>
-                  </div>
-                </label>
-                
-                <!-- Store Pickup -->
-                <label class="shipping-option" for="shipping-pickup">
-                  <input 
-                    type="radio" 
-                    id="shipping-pickup" 
-                    name="shippingMethod" 
-                    value="pickup"
-                  >
-                  <div class="shipping-option-content">
-                    <div class="shipping-option-header">
-                      <span class="shipping-option-name">Studio Pickup</span>
-                      <span class="shipping-option-price">FREE</span>
-                    </div>
-                    <p class="shipping-option-desc">Appreciart Studio, Dublin</p>
-                  </div>
-                </label>
-                
               </div>
             </div>
             

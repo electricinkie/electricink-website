@@ -9,13 +9,13 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
 
   // ────────── Constants ──────────
   const CART_KEY = 'electricink_cart';
-  const SHIPPING_COST = 8.50; // €8.50 frete normal
+  // 🔧 FIX: SHIPPING_COST movido para checkout.js (não usado no cart)
+  // const SHIPPING_COST = 8.50; // €8.50 frete normal
   
   // ────────── DOM Elements ──────────
   const cartEmpty = document.getElementById('cartEmpty');
   const cartItemsContainer = document.getElementById('cartItems');
   const summarySubtotal = document.getElementById('summarySubtotal');
-  const summaryShipping = document.getElementById('summaryShipping');
   const summaryVAT = document.getElementById('summaryVAT');
   const summaryTotal = document.getElementById('summaryTotal');
   const checkoutBtn = document.getElementById('checkoutBtn');
@@ -55,25 +55,14 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
   function calculateTotals() {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    // Calcula shipping
-    let shipping = 0;
-    let shippingText = 'FREE';
-    
-    if (subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD) {
-      shipping = SHIPPING_COST;
-      shippingText = `€${shipping.toFixed(2)}`;
-    }
-    
-    // Calcula VAT (23% do subtotal)
+    // 🔧 FIX: Shipping removido do cart - calculado apenas no checkout
+    // VAT calculado sobre subtotal (sem shipping)
     const vat = subtotal * 0.23;
-    
-    // Total = subtotal + shipping + VAT
-    const total = subtotal + shipping + vat;
+    // Total do cart = subtotal + VAT (shipping será adicionado no checkout)
+    const total = subtotal + vat;
     
     return {
       subtotal,
-      shipping,
-      shippingText,
       vat,
       total
     };
@@ -84,7 +73,7 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     const totals = calculateTotals();
     
     summarySubtotal.textContent = `€${totals.subtotal.toFixed(2)}`;
-    summaryShipping.textContent = totals.shippingText;
+    // 🔧 FIX: Shipping line removida - não existe mais no cart
     summaryVAT.textContent = `€${totals.vat.toFixed(2)}`;
     summaryTotal.textContent = `€${totals.total.toFixed(2)}`;
   }
