@@ -510,25 +510,39 @@ async function handlePaymentIntentSucceeded(event, requestId) {
             }
           };
           
-          // Enviar via handler (que já tem o template)
-          const emailResponse = await fetch(`${process.env.PUBLIC_BASE_URL || 'http://localhost:3000'}/api/emails`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(emailData)
-          });
-          
-          if (emailResponse.ok) {
-            const result = await emailResponse.json().catch(() => ({}));
-            logger.info(JSON.stringify({ ...emailLog, status: 'admin_email_sent', emailId: result && result.id ? result.id : result.emailId || null }));
-            
+          // Call local handler directly to ensure it uses current `email-templates/order-notification-admin.html`
+          try {
+            const sendOrderEmail = require('./handlers/send-order-email');
+
+            const fakeReq = {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: {
+                type: 'order-notification-admin',
+                data: emailData.data
+              }
+            };
+
+            const fakeRes = {
+              _status: 200,
+              status(code) { this._status = code; return this; },
+              json(obj) { return obj; },
+              setHeader() {},
+              end() {}
+            };
+
+            const result = await sendOrderEmail(fakeReq, fakeRes);
+            const emailId = result && (result.id || result.emailId) ? (result.id || result.emailId) : null;
+            logger.info(JSON.stringify({ ...emailLog, status: 'admin_email_sent', emailId }));
+
             if (db) {
               await db.collection('orders').doc(orderId).update({
                 adminEmailStatus: 'sent',
                 adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
               }).catch(err => logger.error('Failed to update email status:', err));
             }
-          } else {
-            throw new Error(`Email API returned ${emailResponse.status}`);
+          } catch (err) {
+            throw err;
           }
         } catch (adminErr) {
           logger.error(JSON.stringify({ ...emailLog, status: 'admin_email_failed', error: adminErr?.message }));
