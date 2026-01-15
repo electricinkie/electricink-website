@@ -1,8 +1,4 @@
-const { initResend, getResend, isResendConfigured } = require('../lib/resend');
-
-// Initialize resend wrapper (safe no-op if not configured)
-initResend();
-let resend = getResend();
+const { Resend } = require('resend');
 const fs = require('fs');
 const path = require('path');
 const publicBaseUrl = process.env.PUBLIC_BASE_URL || 'https://electricink.ie';
@@ -10,8 +6,18 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
 const { captureException } = require('../lib/sentry');
 
-// ❌ REMOVIDO DAQUI: const resend = new Resend(process.env.RESEND_API_KEY);
-// ✅ Agora será instanciado DENTRO do handler
+// Initialize Resend directly (same pattern used in webhook)
+let resend = null;
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('[HANDLER] ✅ Resend initialized successfully');
+  } else {
+    console.error('[HANDLER] ❌ RESEND_API_KEY not found');
+  }
+} catch (error) {
+  console.error('[HANDLER] ❌ Failed to initialize Resend:', error);
+}
 
 function loadTemplate(templateName) {
   try {
@@ -149,14 +155,7 @@ function enrichItems(items) {
 
 // ────────── Main Handler ──────────
 module.exports = async function handler(req, res) {
-  // Adicionar ESTA verificação no INÍCIO
-  if (!resend) {
-    console.error('Resend not initialized - cannot send email');
-    return res.status(503).json({ 
-      error: 'Email service unavailable',
-      reason: 'RESEND_API_KEY not configured' 
-    });
-  }
+  // No early return here; check `resend` per-email-type below (matches webhook behavior)
   
   // CORS headers
   const ALLOWED_ORIGINS = [
