@@ -460,21 +460,130 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       (async () => {
         const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
-        // Email cliente (inline, não-bloqueante para evitar dependência do handler em produção)
+        // Email cliente: prefer handler unificado (usa templates), com fallback inline
         try {
-          if (!resend) throw new Error('Resend not configured');
-          await resend.emails.send({
-            from: `Electric Ink <${EMAIL_FROM}>`,
-            to: order.customerEmail,
-            subject: `Order Confirmation #${orderId}`,
-            html: `Order #${orderId} placed.`,
-          });
-          logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent' }));
-          if (db) {
-            await db.collection('orders').doc(orderId).update({
-              emailStatus: 'sent',
-              emailSentAt: admin.firestore.FieldValue.serverTimestamp()
-            }).catch(err => logger.error('Failed to update client email status:', err));
+          // Try to require the unified handler using same robust candidate strategy
+          let sendOrderEmail = null;
+          const candidatesClient = [
+            require('path').join(__dirname, 'handlers', 'send-order-email'),
+            require('path').join(process.cwd(), 'api', 'handlers', 'send-order-email'),
+            require('path').join(process.cwd(), 'api', 'handlers', 'send-order-email.js')
+          ];
+          for (const p of candidatesClient) {
+            try {
+              sendOrderEmail = require(p);
+              break;
+            } catch (e) {
+              // continue
+            }
+          }
+
+          if (sendOrderEmail) {
+            const clientEmailData = {
+              type: 'order-confirmation',
+              data: {
+                orderNumber: orderId,
+                email: order.customerEmail,
+                items: order.items,
+                shipping: {
+                  firstName: (order.customerName || '').split(' ')[0] || '',
+                  lastName: (order.customerName || '').split(' ').slice(1).join(' ') || '',
+                  phone: order.customerPhone || '',
+                  address: order.shippingAddress?.line1,
+                  address2: order.shippingAddress?.line2,
+                  city: order.shippingAddress?.city,
+                  postalCode: order.shippingAddress?.postalCode,
+                  country: order.shippingAddress?.country
+                },
+                totals: {
+                  subtotal: order.subtotal || 0,
+                  shippingText: order.shippingCost > 0 ? `€${(order.shippingCost).toFixed(2)}` : 'FREE',
+                  vat: (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0),
+                  total: order.total || 0
+                }
+              }
+            };
+
+            const fakeReqC = {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: clientEmailData
+            };
+            const fakeResC = {
+              _status: 200,
+              status(code) { this._status = code; return this; },
+              json(obj) { return obj; },
+              setHeader() {},
+              end() {}
+            };
+
+            const clientResult = await sendOrderEmail(fakeReqC, fakeResC);
+            const clientEmailId = clientResult && (clientResult.id || clientResult.emailId) ? (clientResult.id || clientResult.emailId) : null;
+            logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent_via_handler', emailId: clientEmailId }));
+            if (db) {
+              await db.collection('orders').doc(orderId).update({
+                emailStatus: 'sent',
+                emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+                emailId: clientEmailId
+              }).catch(err => logger.error('Failed to update client email status:', err));
+            }
+          } else {
+            // Fallback inline send: render `email-templates/order-confirmation.html` locally
+            try {
+              if (!resend) throw new Error('Resend not configured');
+              const fs = require('fs');
+              const path = require('path');
+              const tplPath = path.join(process.cwd(), 'email-templates', 'order-confirmation.html');
+              let tpl = '';
+              try { tpl = fs.readFileSync(tplPath, 'utf8'); } catch (e) { tpl = '';} 
+
+              // Simple replacements used by template
+              const formatItemsHtml = (items) => {
+                if (!items || !Array.isArray(items) || items.length === 0) return '';
+                return items.map(it => `
+                  <tr>
+                    <td style="padding:8px 10px;">${it.name || it.id}</td>
+                    <td style="padding:8px 10px; text-align:center;">${it.quantity || 1}</td>
+                    <td style="padding:8px 10px; text-align:right;">€${(it.price||0).toFixed(2)}</td>
+                    <td style="padding:8px 10px; text-align:right;">€${((it.price||0)*(it.quantity||1)).toFixed(2)}</td>
+                  </tr>`).join('');
+              };
+
+              const shipping = order.shippingAddress || {};
+              const shippingAddress = `${shipping.line1 || shipping.street || ''}${shipping.line2 ? '<br/>' + shipping.line2 : ''}${shipping.city ? '<br/>' + shipping.city : ''}${shipping.postalCode ? ', ' + shipping.postalCode : ''}${shipping.country ? '<br/>' + shipping.country : ''}`;
+
+              const html = tpl ? tpl.replace(/{{ORDER_NUMBER}}/g, orderId)
+                .replace(/{{ORDER_ITEMS}}/g, formatItemsHtml(order.items || []))
+                .replace(/{{SUBTOTAL}}/g, ((order.subtotal||0)).toFixed(2))
+                .replace(/{{SHIPPING}}/g, order.shippingCost > 0 ? `€${(order.shippingCost).toFixed(2)}` : 'FREE')
+                .replace(/{{VAT}}/g, (((order.total||0)-(order.subtotal||0)-(order.shippingCost||0))||0).toFixed(2))
+                .replace(/{{TOTAL}}/g, ((order.total||0)).toFixed(2))
+                .replace(/{{SHIPPING_ADDRESS}}/g, shippingAddress)
+                : `Order #${orderId} placed.`;
+
+              await resend.emails.send({
+                from: `Electric Ink <${EMAIL_FROM}>`,
+                to: order.customerEmail,
+                subject: `Order Confirmation #${orderId}`,
+                html: html,
+              });
+
+              logger.info(JSON.stringify({ ...emailLog, status: 'client_email_sent_fallback_template' }));
+              if (db) {
+                await db.collection('orders').doc(orderId).update({
+                  emailStatus: 'sent',
+                  emailSentAt: admin.firestore.FieldValue.serverTimestamp()
+                }).catch(err => logger.error('Failed to update client email status:', err));
+              }
+            } catch (sendErr) {
+              logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: sendErr?.message }));
+              if (db) {
+                await db.collection('orders').doc(orderId).update({
+                  emailStatus: 'failed',
+                  emailError: sendErr?.message
+                }).catch(err => logger.error('Failed to update client email error:', err));
+              }
+            }
           }
         } catch (clientErr) {
           logger.error(JSON.stringify({ ...emailLog, status: 'client_email_failed', error: clientErr?.message }));
