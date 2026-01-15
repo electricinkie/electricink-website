@@ -1,6 +1,30 @@
 import { initFirebase, authReady } from './firebase-config.js';
 import { requireAdmin } from './admin-check.js';
 
+/**
+ * 🔧 FIX: Normaliza valores monetários para euros (decimal)
+ * Firebase pode armazenar como cents (int) ou euros (float)
+ * - Se > 1000 e inteiro → assume cents, divide por 100
+ * - Se decimal ou < 1000 → assume euros, retorna direto
+ */
+function normalizeToEuros(value) {
+  if (value == null || value === undefined) return 0;
+  const num = Number(value);
+  if (isNaN(num)) return 0;
+  if (Number.isInteger(num) && Math.abs(num) > 1000) {
+    return num / 100;
+  }
+  return num;
+}
+
+/**
+ * 🔧 FIX: Formata valor para exibição (sempre em euros)
+ */
+function formatCurrency(value) {
+  const euros = normalizeToEuros(value);
+  return `€${euros.toFixed(2)}`;
+}
+
 const { auth, db } = await initFirebase();
 
 // Show cached admin display name immediately for snappy UX (display-only)
@@ -73,38 +97,53 @@ async function loadStats() {
     const pendingSnap = await getDocs(query(ordersCol, where('status', '==', 'pending')));
     document.getElementById('pending-count').textContent = String(pendingSnap.size || 0);
 
-    // todays sales - buscar TODOS e filtrar manualmente
-    const today = new Date(); 
-    today.setHours(0,0,0,0);
-    const todayMillis = today.getTime();
+    // todays sales - buscar TODOS e filtrar manualmente (usar timezone Dublin)
+    const now = new Date();
+    const dublinTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Dublin' }));
+    const todayStart = new Date(dublinTime);
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date(dublinTime);
+    todayEnd.setHours(23, 59, 59, 999);
+
+    console.log('[Dashboard] 📅 Today range:', { start: todayStart.toISOString(), end: todayEnd.toISOString() });
 
     const allOrdersSnap = await getDocs(query(ordersCol));
     let todaySales = 0;
 
+    const rawValues = [];
+
     allOrdersSnap.forEach(d => {
       const o = d.data();
-      
-      // Pegar timestamp em millis (priorizar campo direto)
-      let orderMillis = o.paidAtMillis || o.createdAtMillis || 0;
 
-      // Fallback pra Timestamp object (se existir)
-      if (!orderMillis) {
+      // Obtain order date
+      let orderDate = null;
+      if (o.paidAtMillis) orderDate = new Date(o.paidAtMillis);
+      else if (o.createdAtMillis) orderDate = new Date(o.createdAtMillis);
+      else {
         const ts = o.paidAt || o.createdAt;
-        if (ts && typeof ts.toMillis === 'function') {
-          orderMillis = ts.toMillis();
-        } else if (ts && ts.seconds) {
-          orderMillis = ts.seconds * 1000;
-        }
+        if (ts && typeof ts.toDate === 'function') orderDate = ts.toDate();
+        else if (ts && ts.seconds) orderDate = new Date(ts.seconds * 1000);
+        else if (typeof ts === 'number' || typeof ts === 'string') orderDate = new Date(ts);
       }
-      
-      // Se é de hoje, somar
-      if (orderMillis >= todayMillis) {
-        const orderTotal = o.total || 0;
-        todaySales += orderTotal;
+
+      if (!orderDate || isNaN(orderDate.getTime())) return;
+
+      // Check if order falls within today (Dublin timezone)
+      if (orderDate >= todayStart && orderDate <= todayEnd) {
+        const raw = o.total || o.amount || o.total_cents || 0;
+        const normalized = normalizeToEuros(raw);
+        todaySales += normalized;
+        rawValues.push({ id: d.id, raw, normalized });
       }
     });
 
-    document.getElementById('today-sales').textContent = `€${todaySales.toFixed(2)}`;
+    console.log('[Dashboard] 📊 Today sales calculation:', {
+      ordersCount: rawValues.length,
+      totalEuros: todaySales.toFixed(2),
+      rawValues
+    });
+
+    document.getElementById('today-sales').textContent = formatCurrency(todaySales);
   } catch (err) {
     console.error('Erro ao carregar estatísticas:', err);
     try { document.getElementById('total-orders').textContent = '—'; } catch (e) {}
@@ -181,7 +220,7 @@ async function loadOrders(status = 'all', reset = true) {
         ${order.userId ? `<div class="small muted">UID: ${order.userId}</div>` : ''}
       </td>
       <td data-label="Date">${formatDate(order.paidAt || order.createdAt)}</td>
-      <td data-label="Total">€${Number(order.total || 0).toFixed(2)}</td>
+      <td data-label="Total">${formatCurrency(order.total || order.amount || order.total_cents)}</td>
       <td data-label="Status"><span class="status-badge status-${order.status}">${translateStatus(order.status)}</span></td>
       <td data-label="Actions">
         <button class="btn-sm btn-view" data-order-id="${docSnap.id}">View</button>
@@ -230,11 +269,14 @@ window.viewOrder = async function(orderId) {
       <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
       <p><strong>Date:</strong> ${formatDate(order.paidAt || order.createdAt)}</p>
       <p><strong>Status:</strong> <span class="order-status status-badge status-${order.status}">${translateStatus(order.status)}</span></p>
-      <p><strong>Total:</strong> €${Number(order.total || 0).toFixed(2)}</p>
+      <p><strong>Total:</strong> ${formatCurrency(order.total || order.amount || order.total_cents)}</p>
     </div>
     <h3>Items:</h3>
     <ul class="order-items">
-      ${(order.items || []).map(i => `<li>${i.name} x${i.quantity} - €${Number(i.price * i.quantity).toFixed(2)}</li>`).join('')}
+      ${(order.items || []).map(i => {
+        const itemTotal = normalizeToEuros(i.price) * (i.quantity || 1);
+        return `<li>${i.name} x${i.quantity} - ${formatCurrency(itemTotal)}</li>`;
+      }).join('')}
     </ul>
     <h3>Shipping address:</h3>
     <p>${order.shippingAddress?.line1 || 'N/A'}</p>
@@ -349,16 +391,49 @@ window.markAsShipped = async function() {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${idToken}`
             },
-            body: JSON.stringify(Object.assign({ type: 'shipping-notification' }, payload))
+            body: JSON.stringify(Object.assign({ type: 'order-shipped' }, payload))
           });
 
-          if (!response.ok) {
-            throw new Error('Failed to send shipping notification');
+          // Try to parse JSON safely
+          let emailResult = null;
+          try {
+            emailResult = await response.json();
+          } catch (parseErr) {
+            console.error('[Dashboard] Failed to parse /api/emails response as JSON:', parseErr);
+            emailResult = { error: 'Invalid server response' };
           }
 
-          // Success: show toast
-          window.toast.success('✅ Order marked as shipped! Email sent to customer.');
+          if (!response.ok) {
+            const errorMsg = emailResult?.error || `HTTP ${response.status}`;
+            const hint = emailResult?.hint || '';
+            console.error('[Dashboard] ❌ Email send failed:', { status: response.status, error: errorMsg, hint });
 
+            if (window.toast) {
+              window.toast.error(`Email failed: ${errorMsg}${hint ? '. ' + hint : ''}`);
+            } else {
+              alert(`Failed to send email: ${errorMsg}\n${hint}`);
+            }
+
+            console.warn('[Dashboard] ⚠️ Continuing despite email failure...');
+
+            const proceed = confirm(
+              'Email notification failed to send.\n\n' +
+              `Error: ${errorMsg}\n\n` +
+              'Do you still want to mark this order as shipped?'
+            );
+
+            if (!proceed) {
+              // restore buttons
+              if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText || submitBtn.textContent; }
+              if (tableShipBtn) { tableShipBtn.disabled = false; tableShipBtn.textContent = tableShipBtn.dataset.origText || tableShipBtn.textContent; }
+              return; // Cancela toda operação
+            }
+          } else {
+            console.log('[Dashboard] ✅ Email sent successfully', emailResult);
+            if (window.toast) window.toast.success('Shipping notification sent!');
+          }
+
+          // Continue: update UI and reload data
           // Recarregar lista em background (não fecha modal)
           await loadDashboard();
 
@@ -389,7 +464,7 @@ window.markAsShipped = async function() {
 
         } catch (err) {
           console.error('Shipping notification failed:', err);
-          window.toast.error('⚠️ Email failed to send, but order was updated');
+          try { if (window.toast) window.toast.error('⚠️ Email failed to send, but order was updated'); } catch(e) {}
           // reload list to reflect update
           await loadDashboard();
           // hide form for consistency

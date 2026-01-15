@@ -7,6 +7,7 @@ const sendShippingNotification = require('./handlers/send-shipping-notification'
 const sendShippingConfirmation = require('./handlers/send-shipping-confirmation');
 
 module.exports = async function handler(req, res) {
+  console.log('[API/EMAILS] Request:', { method: req.method, bodyKeys: req.body ? Object.keys(req.body) : 'no body' });
   // Basic CORS + method guard (mirror existing endpoints)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -37,6 +38,10 @@ module.exports = async function handler(req, res) {
       // shipping notification requires Authorization and expects orderId at top-level
       case 'shipping-notification':
         return await sendShippingNotification(mergedReq, res);
+
+      // route order-shipped to the unified send-order-email handler so it uses the same Resend flow
+      case 'order-shipped':
+        return await sendOrderEmail(req, res);
 
       // shipping confirmation expects orderId at top-level
       case 'shipping-confirmation':

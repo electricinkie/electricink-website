@@ -138,6 +138,13 @@ function replacePlaceholders(template, data) {
 
 // ────────── Main Handler ──────────
 module.exports = async function handler(req, res) {
+  // Debug: incoming request
+  console.log('[SHIPPING-NOTIFICATION] 📧 Request received:', {
+    method: req.method,
+    bodyKeys: req.body ? Object.keys(req.body) : 'no body',
+    hasResendKey: !!process.env.RESEND_API_KEY
+  });
+
   // Check Resend initialization
   if (!resend) {
     console.error('[SHIPPING-NOTIFICATION] Resend not initialized');
@@ -270,31 +277,88 @@ module.exports = async function handler(req, res) {
     // Replace all placeholders
     const html = replacePlaceholders(template, placeholderData);
 
-    // Send email via Resend
-    const emailResult = await resend.emails.send({
-      from: EMAIL_FROM,
-      to: order.customerEmail,
+    // 🔧 FIX: Validate customer email and template before sending
+    const customerEmail = order.customerEmail || order.userEmail || order.email;
+    if (!customerEmail) {
+      console.error('[SHIPPING-NOTIFICATION] ❌ No customer email found in order:', { orderId, orderKeys: Object.keys(order) });
+      return res.status(400).json({ error: 'Customer email not found in order', hint: 'Order document is missing customerEmail field' });
+    }
+
+    // Simple email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+      console.error('[SHIPPING-NOTIFICATION] ❌ Invalid customer email format:', customerEmail);
+      return res.status(400).json({ error: 'Invalid customer email format', email: customerEmail });
+    }
+
+    // Validate template HTML
+    if (!html || typeof html !== 'string' || html.trim().length === 0) {
+      console.error('[SHIPPING-NOTIFICATION] ❌ Email template is empty for order:', orderId);
+      return res.status(500).json({ error: 'Email template is empty' });
+    }
+
+    // Prepare safe email payload
+    const emailData = {
+      from: EMAIL_FROM || 'Electric Ink <orders@electricink.ie>',
+      to: customerEmail,
       subject: `Your Order #${orderId} Has Shipped!`,
       html: html,
       tags: [
         { name: 'type', value: 'shipping-notification' },
         { name: 'orderId', value: orderId }
       ]
-    });
+    };
+
+    console.log('[SHIPPING-NOTIFICATION] 📧 Prepared email data:', { from: emailData.from, to: emailData.to, subject: emailData.subject, htmlLength: emailData.html.length });
+
+    // Ensure mandatory fields exist
+    if (!emailData.from || !emailData.to || !emailData.subject || !emailData.html) {
+      console.error('[SHIPPING-NOTIFICATION] ❌ Missing required email fields', {
+        hasFrom: !!emailData.from,
+        hasTo: !!emailData.to,
+        hasSubject: !!emailData.subject,
+        hasHtml: !!emailData.html
+      });
+      return res.status(500).json({ error: 'Email data incomplete', missing: [ !emailData.from && 'from', !emailData.to && 'to', !emailData.subject && 'subject', !emailData.html && 'html' ].filter(Boolean) });
+    }
+
+    // Try sending via Resend with robust error handling
+    let result;
+    try {
+      console.log('[SHIPPING-NOTIFICATION] 📤 Calling resend.emails.send()...');
+      result = await resend.emails.send(emailData);
+      console.log('[SHIPPING-NOTIFICATION] ✅ Resend returned:', result && (result.id || result.data?.id || '(no id)'));
+    } catch (sendError) {
+      console.error('[SHIPPING-NOTIFICATION] ❌ Resend.send() failed:', {
+        message: sendError && sendError.message,
+        name: sendError && sendError.name,
+        stack: sendError && sendError.stack,
+        statusCode: sendError && sendError.statusCode
+      });
+
+      return res.status(500).json({
+        error: 'Resend API error: ' + (sendError && sendError.message),
+        hint: sendError && sendError.statusCode === 401 ? 'Invalid RESEND_API_KEY' : (sendError && sendError.statusCode === 422 ? 'Check from/to email addresses are valid' : 'Check server logs for full error details'),
+        debug: { name: sendError && sendError.name, statusCode: sendError && sendError.statusCode }
+      });
+    }
 
     // Update Firestore with email status
-    await db.collection('orders').doc(orderId).update({
-      shippedEmailSent: true,
-      shippedEmailSentAt: admin.firestore.Timestamp.now(),
-      shippedEmailId: emailResult.id
-    });
+    try {
+      await db.collection('orders').doc(orderId).update({
+        shippedEmailSent: true,
+        shippedEmailSentAt: admin.firestore.Timestamp.now(),
+        shippedEmailId: result && (result.id || result.data?.id || null)
+      });
+    } catch (e) {
+      console.warn('[SHIPPING-NOTIFICATION] ⚠️ Failed to update order email status:', e && e.message);
+    }
 
-    console.log(`✅ [SHIPPING-NOTIFICATION] Sent for order ${orderId} to ${order.customerEmail}`, emailResult.id);
+    console.log(`✅ [SHIPPING-NOTIFICATION] Sent for order ${orderId} to ${customerEmail}`, result && (result.id || result.data?.id));
 
-    return res.status(200).json({ 
-      success: true, 
-      emailId: emailResult.id,
-      message: 'Shipping notification sent successfully'
+    return res.status(200).json({
+      success: true,
+      messageId: result && (result.id || result.data?.id || null)
     });
 
   } catch (error) {

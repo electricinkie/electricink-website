@@ -128,6 +128,14 @@ import { isAdmin } from './admin-check.js';
     });
   }
 
+  // 🔧 FIX: Expor funções de atualização
+  if (typeof window !== 'undefined') {
+    window.forceUpdateDesktopAuthUI = (user) => {
+      if (user) showSignedInState(user);
+      else showSignedOutState();
+    };
+  }
+
   // ────────── Update Cart Count ──────────
   function updateCartCount() {
     // Prefer global cart API when available, otherwise fallback to localStorage
@@ -238,8 +246,22 @@ import { isAdmin } from './admin-check.js';
         console.log('[DesktopHeader] Auth observer already attached; skipping.');
       } else {
         onAuthChange((user) => {
-          console.log('[DesktopHeader] onAuthChange callback fired. user=', user && user.email);
-          if (user) showSignedInState(user); else showSignedOutState();
+          console.log('[DesktopHeader] 🔄 Auth state changed, user:', user?.email || 'none');
+          
+          if (user) {
+            showSignedInState(user);
+            
+            // 🔧 FIX: Força re-render após 100ms para garantir DOM atualizado
+            setTimeout(() => {
+              showSignedInState(user);
+            }, 100);
+          } else {
+            showSignedOutState();
+            
+            setTimeout(() => {
+              showSignedOutState();
+            }, 100);
+          }
         });
         window.__AUTH_OBSERVER_ATTACHED = true;
       }
@@ -299,6 +321,8 @@ import { isAdmin } from './admin-check.js';
 
   // Auth helpers
   function showSignedOutState() {
+    // 🔧 FIX: Log para debug
+    console.log('[DesktopHeader] showSignedOutState called');
     const out = document.querySelector('[data-auth-signed-out]');
     const inEl = document.querySelector('[data-auth-signed-in]');
     if (out) out.style.display = 'flex';
@@ -306,6 +330,8 @@ import { isAdmin } from './admin-check.js';
   }
 
   function showSignedInState(user) {
+    // 🔧 FIX: Log para debug
+    console.log('[DesktopHeader] showSignedInState called, user:', (user && user.email) ? user.email : 'none');
     const out = document.querySelector('[data-auth-signed-out]');
     const inEl = document.querySelector('[data-auth-signed-in]');
     if (out) out.style.display = 'none';

@@ -78,6 +78,19 @@ function formatCartItemsSimple(items) {
   `).join('');
 }
 
+// ────────── Helper: Tracking URL ──────────
+function getTrackingUrl(carrier, trackingNumber) {
+  if (!carrier || !trackingNumber) return '#';
+  const carriers = {
+    'anpost': `https://track.anpost.ie/TracknTrace.aspx?trackcode=${trackingNumber}`,
+    'dpd': `https://www.dpd.ie/tracking?parcelNumber=${trackingNumber}`,
+    'fastway': `https://www.fastway.ie/track-your-parcel/?trackNumber=${trackingNumber}`,
+    'ups': `https://www.ups.com/track?tracknum=${trackingNumber}`,
+    'dhl': `https://www.dhl.com/ie-en/home/tracking/tracking-parcel.html?submit=1&tracking-id=${trackingNumber}`
+  };
+  return carriers[(carrier || '').toLowerCase()] || `#${trackingNumber}`;
+}
+
 // ────────── Helper: Format Shipping Address ──────────
 function formatShippingAddress(shipping) {
   return `
@@ -219,7 +232,7 @@ module.exports = async function handler(req, res) {
       const orderItemsTable = formatOrderItemsTable(enrichedItems);
       const shippingAddress = formatShippingAddress(data.shipping || {});
       const phoneWhatsApp = (data.shipping?.phone || '').replace(/[^0-9+]/g, '');
-      
+
       const html = replacePlaceholders(template, {
         ORDER_NUMBER: orderNumber,
         CUSTOMER_NAME: `${data.shipping?.firstName || ''} ${data.shipping?.lastName || ''}`,
@@ -232,21 +245,33 @@ module.exports = async function handler(req, res) {
         SHIPPING: data.totals?.shippingText || 'FREE',
         VAT: data.totals?.vat?.toFixed(2) || '0.00',
         TOTAL: data.totals?.total?.toFixed(2) || '0.00',
-        ORDER_DATE: new Date().toLocaleString('en-IE', { 
-          dateStyle: 'full', 
+        ORDER_DATE: new Date().toLocaleString('en-IE', {
+          dateStyle: 'full',
           timeStyle: 'short',
           timeZone: 'Europe/Dublin'
         })
       });
 
-      emailResult = await resend.emails.send({
-        to: ADMIN_EMAIL,
-        from: `Electric Ink Orders <${EMAIL_FROM}>`,
-        subject: `🔔 New Order #${orderNumber}`,
-        html: html
-      });
+      // Validate admin recipient
+      const adminTo = ADMIN_EMAIL;
+      if (!adminTo) {
+        console.error('[ADMIN] ❌ ADMIN_EMAIL not configured');
+        return res.status(500).json({ error: 'ADMIN_EMAIL not configured' });
+      }
 
-      console.log('✅ [ADMIN] E-mail enviado:', emailResult.id);
+      // Send with robust handling
+      try {
+        emailResult = await resend.emails.send({
+          to: adminTo,
+          from: `Electric Ink Orders <${EMAIL_FROM}>`,
+          subject: `🔔 New Order #${orderNumber}`,
+          html: html
+        });
+        console.log('✅ [ADMIN] E-mail enviado:', emailResult && emailResult.id);
+      } catch (sendErr) {
+        console.error('[ADMIN] ❌ Failed to send admin notification:', sendErr && sendErr.message);
+        return res.status(500).json({ error: 'Failed to send admin notification', message: sendErr && sendErr.message });
+      }
     }
     
     // ═══════════════════════════════════════════════════════
@@ -256,7 +281,7 @@ module.exports = async function handler(req, res) {
       const template = loadTemplate('payment-failed');
       const enrichedItems = enrichItems(data.items || []);
       const cartItemsSimple = formatCartItemsSimple(enrichedItems);
-      
+
       const html = replacePlaceholders(template, {
         CUSTOMER_NAME: data.customerName || 'Customer',
         ERROR_MESSAGE: data.errorMessage || 'Your payment could not be processed.',
@@ -264,14 +289,97 @@ module.exports = async function handler(req, res) {
         TOTAL: data.total?.toFixed(2) || '0.00'
       });
 
-      emailResult = await resend.emails.send({
-        from: `Electric Ink <${EMAIL_FROM}>`,
-        to: data.email,
-        subject: 'Payment Issue - Electric Ink IE',
-        html: html
+      // Validate recipient
+      const toEmail = data.email || data.customer_email || null;
+      if (!toEmail) {
+        console.error('[PAYMENT-FAILED] ❌ No recipient email provided in payload');
+        return res.status(400).json({ error: 'Recipient email required' });
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(toEmail)) {
+        console.error('[PAYMENT-FAILED] ❌ Invalid recipient email:', toEmail);
+        return res.status(400).json({ error: 'Invalid recipient email' });
+      }
+
+      try {
+        emailResult = await resend.emails.send({
+          from: `Electric Ink <${EMAIL_FROM}>`,
+          to: toEmail,
+          subject: 'Payment Issue - Electric Ink IE',
+          html: html
+        });
+        console.log('✅ [PAYMENT-FAILED] E-mail enviado:', emailResult && emailResult.id);
+      } catch (sendErr) {
+        console.error('[PAYMENT-FAILED] ❌ Failed to send payment-failed email:', sendErr && sendErr.message);
+        return res.status(500).json({ error: 'Failed to send payment-failed email', message: sendErr && sendErr.message });
+      }
+    }
+    // ═══════════════════════════════════════════════════════
+    // ORDER SHIPPED (triggered by admin dashboard)
+    // ═══════════════════════════════════════════════════════
+    else if (type === 'order-shipped') {
+      // payload may be in data (legacy) or at top-level
+      const payload = data && Object.keys(data).length ? data : (req.body || {});
+      const orderId = payload.orderId || payload.order_id;
+      const shippingInfo = payload.shippingInfo || payload.shipping || {
+        carrier: payload.carrier,
+        trackingNumber: payload.trackingNumber,
+        trackingUrl: payload.trackingUrl,
+        estimatedDelivery: payload.estimatedDelivery
+      };
+
+      if (!orderId) return res.status(400).json({ error: 'orderId is required' });
+      if (!shippingInfo || !shippingInfo.trackingNumber) return res.status(400).json({ error: 'shippingInfo with trackingNumber required' });
+
+      // Fetch order from Firestore
+      const { getFirestore } = require('../lib/firebase-admin');
+      const db = getFirestore();
+      const orderDoc = await db.collection('orders').doc(orderId).get();
+      if (!orderDoc.exists) return res.status(404).json({ error: 'Order not found' });
+      const order = orderDoc.data();
+
+      const template = loadTemplate('order-shipped');
+      let emailHtml = template;
+      const customerName = order.customerName || order.userName || order.customer_email || 'Customer';
+      const trackingUrl = getTrackingUrl(shippingInfo.carrier, shippingInfo.trackingNumber);
+
+      emailHtml = replacePlaceholders(emailHtml, {
+        customerName,
+        orderId,
+        orderNumber: order.orderNumber || orderId,
+        carrier: shippingInfo.carrier || '',
+        trackingNumber: shippingInfo.trackingNumber || '',
+        trackingUrl: trackingUrl || '#',
+        estimatedDelivery: shippingInfo.estimatedDelivery || ''
       });
 
-      console.log('✅ [PAYMENT-FAILED] E-mail enviado:', emailResult.id);
+      // Send via resend (resend is initialized at top of this module)
+      let emailResult;
+      try {
+        emailResult = await resend.emails.send({
+          from: `Electric Ink <${EMAIL_FROM}>`,
+          to: order.customerEmail || order.customer_email || order.email,
+          subject: `Your Electric Ink order has shipped! 📦`,
+          html: emailHtml
+        });
+        console.log('[ORDER-SHIPPED] Email sent:', emailResult && emailResult.id);
+      } catch (err) {
+        console.error('[ORDER-SHIPPED] Failed to send email:', err && err.message);
+        throw err;
+      }
+
+      // Update order doc to record email status (best-effort)
+      try {
+        await db.collection('orders').doc(orderId).update({
+          shippedEmailSent: true,
+          shippedEmailSentAt: require('firebase-admin').firestore.Timestamp.now(),
+          shippedEmailId: emailResult && emailResult.id
+        });
+      } catch (e) {
+        console.warn('[ORDER-SHIPPED] Could not update order with email status:', e && e.message);
+      }
+
+      return res.status(200).json({ success: true, id: emailResult && emailResult.id });
     }
     else {
       return res.status(400).json({ error: 'Invalid email type' });

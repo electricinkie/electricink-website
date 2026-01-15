@@ -381,7 +381,30 @@ function initAuthModal() {
 
       // Close modal before showing toast
       closeAuthModal();
+      
+      // 🔧 FIX: Fecha menu mobile automaticamente após login
+      if (typeof window.closeMenu === 'function') {
+        try {
+          window.closeMenu();
+        } catch (e) {
+          console.warn('[Auth] Could not close mobile menu:', e);
+        }
+      }
+      
       await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // 🔧 FIX: Força atualização imediata dos headers
+      try {
+        const currentUser = await getCurrentUser();
+        if (window.forceUpdateMobileAuthUI) {
+          window.forceUpdateMobileAuthUI(currentUser);
+        }
+        if (window.forceUpdateDesktopAuthUI) {
+          window.forceUpdateDesktopAuthUI(currentUser);
+        }
+      } catch (e) {
+        console.warn('[Auth] Could not force header update:', e);
+      }
 
       if (window.toast && typeof window.toast.show === 'function') {
         window.toast.show('Welcome back!', 'success');
@@ -426,7 +449,30 @@ function initAuthModal() {
 
       // Close modal and wait for animation
       closeAuthModal();
+      
+      // 🔧 FIX: Fecha menu mobile automaticamente após signup
+      if (typeof window.closeMenu === 'function') {
+        try {
+          window.closeMenu();
+        } catch (e) {
+          console.warn('[Auth] Could not close mobile menu:', e);
+        }
+      }
+      
       await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // 🔧 FIX: Força atualização imediata dos headers
+      try {
+        const currentUser = await getCurrentUser();
+        if (window.forceUpdateMobileAuthUI) {
+          window.forceUpdateMobileAuthUI(currentUser);
+        }
+        if (window.forceUpdateDesktopAuthUI) {
+          window.forceUpdateDesktopAuthUI(currentUser);
+        }
+      } catch (e) {
+        console.warn('[Auth] Could not force header update:', e);
+      }
 
       if (window.toast && typeof window.toast.show === 'function') {
         window.toast.show('Account created successfully! Welcome to Electric Ink.', 'success');

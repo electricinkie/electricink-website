@@ -279,7 +279,9 @@ import { isAdmin } from './admin-check.js';
   }
 
   // ────────── Update Mobile Auth UI ──────────
-  function updateMobileAuthUI(user) {
+  export function updateMobileAuthUI(user) {
+    // 🔧 FIX: Log para debug
+    console.log('[MobileHeader] updateMobileAuthUI called, user:', (user && user.email) ? user.email : 'none');
     const signedOut = document.getElementById('mobile-auth-signed-out');
     const signedIn = document.getElementById('mobile-auth-signed-in');
     const userName = document.getElementById('mobile-user-name');
@@ -420,8 +422,13 @@ import { isAdmin } from './admin-check.js';
       console.log('[MobileHeader] Auth observer already attached; skipping.');
     } else {
       onAuthChange((user) => {
-        console.log('[MobileHeader] 📡 onAuthChange fired. User:', user?.email || 'none');
+        console.log('[MobileHeader] 🔄 Auth state changed, updating UI...');
         updateMobileAuthUI(user);
+        
+        // 🔧 FIX: Força re-render completo para garantir sincronização
+        setTimeout(() => {
+          updateMobileAuthUI(user);
+        }, 100);
       });
       window.__AUTH_OBSERVER_ATTACHED = true;
     }
@@ -434,3 +441,8 @@ import { isAdmin } from './admin-check.js';
     init: initMobileHeader,
     updateCartCount: updateCartCount
   };
+
+  // 🔧 FIX: Expor função de atualização para ser chamada após login
+  if (typeof window !== 'undefined') {
+    window.forceUpdateMobileAuthUI = updateMobileAuthUI;
+  }

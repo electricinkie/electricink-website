@@ -31,6 +31,17 @@ function formatCurrency(v) {
   return `€${(v / 100).toFixed(2)}`; // assume cents
 }
 
+/**
+ * 🔧 FIX: Normaliza valores monetários (igual ao admin dashboard)
+ */
+function normalizeToEuros(value) {
+  if (value == null || value === undefined) return 0;
+  const num = Number(value);
+  if (isNaN(num)) return 0;
+  if (Number.isInteger(num) && num > 1000) return num / 100;
+  return num;
+}
+
 function formatDate(ts) {
   try {
     const d = new Date(ts);
@@ -178,6 +189,17 @@ export async function loadMyOrders() {
     const payload = await resp.json();
     const orders = (payload && payload.orders) ? payload.orders : [];
 
+    // 🔧 FIX: Debug log
+    console.log('[Profile] 📊 Orders received from server:', {
+      count: orders.length,
+      sample: orders.slice(0, 3).map(o => ({
+        id: o.id,
+        total: o.total,
+        normalized: normalizeToEuros(o.total || o.amount || o.total_cents),
+        date: o.createdAt
+      }))
+    });
+
     if (!orders || orders.length === 0) {
       ordersContainer.innerHTML = `
         <div class="empty-orders">
@@ -206,7 +228,30 @@ export async function loadMyOrders() {
 }
 
 function renderOrderCard(orderId, order) {
-  const date = formatOrderDate(order.createdAt || order.date || order.createdAt);
+  // 🔧 FIX: Normalizar e logar timestamp
+  const rawTimestamp = order.createdAt || order.paidAt || order.date || order.paidAtMillis || order.createdAtMillis;
+  const date = formatOrderDate(rawTimestamp);
+  
+  // 🔧 FIX: Log detalhado apenas em dev
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    const timestampType = rawTimestamp?._seconds !== undefined ? 'admin-sdk' :
+                         rawTimestamp?.seconds !== undefined ? 'firestore' :
+                         typeof rawTimestamp === 'number' ? 'epoch' :
+                         'other';
+    
+    console.log('[Profile] 📅 Date normalized:', {
+      orderId: orderId.slice(-8),
+      type: timestampType,
+      formatted: date
+    });
+  }
+  
+  if (date === 'Date unavailable' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    console.warn('[Profile] ⚠️ No valid timestamp found for order:', {
+      orderId: orderId.slice(-8),
+      tried: ['createdAt', 'paidAt', 'date', 'paidAtMillis', 'createdAtMillis']
+    });
+  }
   const status = (order.status || 'pending').toLowerCase();
   const statusClass = `status-${status}`;
   const statusText = {
@@ -224,7 +269,10 @@ function renderOrderCard(orderId, order) {
   `).join('');
 
   const more = (order.items && order.items.length > 3) ? `<p class="more-items">+${order.items.length - 3} more items</p>` : '';
-  const total = (typeof order.total === 'number') ? (order.total / (order.total > 1000 ? 100 : 1)).toFixed(2) : (order.total || 0).toFixed ? order.total.toFixed(2) : String(order.total || '0.00');
+
+  // 🔧 FIX: Usar normalização consistente de valores
+  const totalValue = normalizeToEuros(order.total || order.amount || order.total_cents || 0);
+  const total = totalValue.toFixed(2);
 
   return `
     <div class="order-card" data-order-id="${orderId}">
@@ -244,7 +292,7 @@ function renderOrderCard(orderId, order) {
       <div class="order-footer">
         <div class="order-total">
           <span>Total:</span>
-          <strong>€${Number(order.total || 0).toFixed(2)}</strong>
+          <strong>€${total}</strong>
         </div>
         <button class="btn-view-order btn-primary" data-order-id="${orderId}">View Details</button>
       </div>
@@ -252,13 +300,88 @@ function renderOrderCard(orderId, order) {
   `;
 }
 
+/**
+ * 🔧 FIX: Normaliza timestamp para Date object
+ * Lida com múltiplos formatos: Firestore Timestamp, seconds, milliseconds, ISO string
+ */
+/**
+ * 🔧 FIX: Normaliza timestamp para Date object
+ * Lida com TODOS os formatos possíveis do Firestore
+ */
+function normalizeTimestamp(timestamp) {
+  if (!timestamp) return null;
+  
+  try {
+    // Formato Admin SDK: {_seconds: X, _nanoseconds: Y}
+    if (timestamp._seconds !== undefined && typeof timestamp._seconds === 'number') {
+      return new Date(timestamp._seconds * 1000);
+    }
+    
+    // Firestore Timestamp com método toDate()
+    if (timestamp.toDate && typeof timestamp.toDate === 'function') {
+      return timestamp.toDate();
+    }
+    
+    // Firestore Timestamp com seconds (sem underscore)
+    if (timestamp.seconds !== undefined && typeof timestamp.seconds === 'number') {
+      return new Date(timestamp.seconds * 1000);
+    }
+    
+    // Milliseconds desde epoch (número)
+    if (typeof timestamp === 'number') {
+      return new Date(timestamp);
+    }
+    
+    // ISO string ou outro formato
+    if (typeof timestamp === 'string') {
+      const parsed = new Date(timestamp);
+      if (!isNaN(parsed.getTime())) return parsed;
+    }
+    
+    // Fallback: tentar criar Date diretamente
+    const fallback = new Date(timestamp);
+    if (!isNaN(fallback.getTime())) return fallback;
+    
+    return null;
+  } catch (e) {
+    console.warn('[Profile] Failed to normalize timestamp:', timestamp, e);
+    return null;
+  }
+}
+
 function formatOrderDate(timestamp) {
-  if (!timestamp) return 'Unknown date';
-  let date;
-  if (timestamp.toDate) date = timestamp.toDate();
-  else if (timestamp.seconds) date = new Date(timestamp.seconds * 1000);
-  else date = new Date(timestamp);
-  return date.toLocaleDateString('en-IE', { year: 'numeric', month: 'short', day: 'numeric' });
+  const date = normalizeTimestamp(timestamp);
+  
+  if (!date) {
+    // Debug melhorado: mostrar tipo de timestamp recebido
+    const type = timestamp === null ? 'null' : 
+                 timestamp === undefined ? 'undefined' :
+                 timestamp._seconds !== undefined ? 'admin-sdk-timestamp' :
+                 timestamp.seconds !== undefined ? 'firestore-timestamp' :
+                 typeof timestamp === 'number' ? 'epoch-number' :
+                 typeof timestamp === 'string' ? 'string' :
+                 typeof timestamp === 'object' ? 'unknown-object' :
+                 typeof timestamp;
+    
+    console.warn('[Profile] ⚠️ Cannot normalize timestamp:', {
+      type,
+      value: timestamp,
+      keys: timestamp && typeof timestamp === 'object' ? Object.keys(timestamp) : 'N/A'
+    });
+    
+    return 'Date unavailable';
+  }
+  
+  try {
+    return date.toLocaleDateString('en-IE', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  } catch (e) {
+    console.warn('[Profile] toLocaleDateString failed:', e);
+    return date.toISOString().split('T')[0];
+  }
 }
 
 function escapeHtml(str) {
@@ -499,8 +622,23 @@ async function initProfilePage() {
       console.warn('[Profile] Could not load discount:', err);
     }
 
-      // Load orders (use new loadMyOrders implementation)
-      await loadMyOrders();
+      // 🔧 FIX: Carregar ordens do usuário
+      console.log('[Profile] 📦 Loading user orders...');
+      try {
+        await loadMyOrders();
+        console.log('[Profile] ✅ Orders loaded successfully');
+      } catch (err) {
+        console.error('[Profile] ❌ Failed to load orders:', err);
+        const ordersList = el('ordersList');
+        if (ordersList) {
+          ordersList.innerHTML = `
+            <div class="error-orders">
+              <p>Failed to load orders. Please try again.</p>
+              <button onclick="location.reload()" class="btn-ghost">Reload Page</button>
+            </div>
+          `;
+        }
+      }
 
   } else {
     console.log('[Profile] ℹ️ No user found, showing sign-in state');
@@ -527,7 +665,14 @@ async function initProfilePage() {
       
       if (user) {
         renderProfile(user);
+        
+        // 🔧 FIX: Recarregar ordens quando auth muda
+        console.log('[Profile] 🔄 Auth changed, reloading orders...');
+        try {
           await loadMyOrders();
+        } catch (err) {
+          console.error('[Profile] Failed to reload orders on auth change:', err);
+        }
       } else {
         // User logged out
         window.location.href = '/';
