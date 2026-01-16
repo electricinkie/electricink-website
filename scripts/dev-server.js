@@ -47,16 +47,16 @@ app.all('/api/create-payment-intent', async (req, res) => {
 
 // 2. Send Order Email is handled by unified /api/emails router below
 
-// 2b. Local unified emails router (for testing consolidated endpoint)
-const emailsRouter = require('../api/emails.js');
-app.all('/api/emails', async (req, res) => {
-  try {
-    await emailsRouter(req, res);
-  } catch (err) {
-    console.error('❌ [emails] Error:', err);
-    res.status(500).json({ error: 'Handler error', details: err.message });
-  }
-});
+// 2b. Local unified emails router removed (handler deleted)
+// const emailsRouter = require('../api/emails.js');
+// app.all('/api/emails', async (req, res) => {
+//   try {
+//     await emailsRouter(req, res);
+//   } catch (err) {
+//     console.error('❌ [emails] Error:', err);
+//     res.status(500).json({ error: 'Handler error', details: err.message });
+//   }
+// });
 
 // 2c. Local admin router
 const adminRouter = require('../api/admin.js');
