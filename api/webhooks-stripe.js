@@ -358,13 +358,16 @@ async function handlePaymentIntentSucceeded(event, requestId) {
   const validatedMetadata = validateMetadata(paymentIntent.metadata);
   try {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    // Prefer Stripe's provided shipping address (paymentIntent.shipping.address)
+    // Fall back to metadata fields if Stripe shipping is not present.
+    const stripeShipping = paymentIntent.shipping && paymentIntent.shipping.address ? paymentIntent.shipping.address : null;
     const shippingAddress = {
-      line1: validatedMetadata.addressLine1,
-      line2: validatedMetadata.addressLine2,
-      city: validatedMetadata.city,
-      state: validatedMetadata.state,
-      postalCode: validatedMetadata.postalCode,
-      country: validatedMetadata.country
+      line1: (stripeShipping && stripeShipping.line1) || validatedMetadata.addressLine1,
+      line2: (stripeShipping && (stripeShipping.line2 || stripeShipping.recipient)) || validatedMetadata.addressLine2,
+      city: (stripeShipping && (stripeShipping.city || stripeShipping.locality)) || validatedMetadata.city,
+      state: (stripeShipping && stripeShipping.state) || validatedMetadata.state,
+      postalCode: (stripeShipping && (stripeShipping.postal_code || stripeShipping.postalCode)) || validatedMetadata.postalCode,
+      country: (stripeShipping && stripeShipping.country) || validatedMetadata.country
     };
     const orderId = paymentIntent.id; // ID único do Stripe
     // Usar items direto do metadata (sem enrichment)
@@ -408,14 +411,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       customerEmail,
       customerName,
       customerPhone: validatedMetadata.phone,
-      shippingAddress: {
-        line1: validatedMetadata.addressLine1,
-        line2: validatedMetadata.addressLine2,
-        city: validatedMetadata.city,
-        state: validatedMetadata.state,
-        postalCode: validatedMetadata.postalCode,
-        country: validatedMetadata.country
-      },
+      shippingAddress: shippingAddress,
       items: enrichedItems,
       shippingMethod: paymentIntent.metadata.shippingMethod || null,
       shippingCost_cents: shipping_cents,
