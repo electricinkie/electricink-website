@@ -509,13 +509,18 @@ async function handlePaymentIntentSucceeded(event, requestId) {
                   <h2 style="border-bottom: 2px solid #000; padding-bottom: 10px;">Order Details</h2>
                   
                   <div class="items">
-                    ${order.items.map(item => `
+                    ${order.items.map(item => {
+                      const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null) ? (item.unit_amount / 100) : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
+                      const quantity = item.quantity || 1;
+                      const unit = Number(unitRaw || 0);
+                      const lineTotal = Number(quantity * unit);
+                      return `
                       <div class="item">
-                        <div class="item-name">${item.name}</div>
-                        <div>Quantity: ${item.quantity} × €${item.price.toFixed(2)}</div>
-                        <div style="font-weight: bold; margin-top: 5px;">€${(item.quantity * item.price).toFixed(2)}</div>
+                        <div class="item-name">${item.name || item.description || item.id || 'Item'}</div>
+                        <div>Quantity: ${quantity} × €${unit.toFixed(2)}</div>
+                        <div style="font-weight: bold; margin-top: 5px;">€${lineTotal.toFixed(2)}</div>
                       </div>
-                    `).join('')}
+                    `}).join('')}
                   </div>
                   
                   <div class="totals">
@@ -643,13 +648,18 @@ async function handlePaymentIntentSucceeded(event, requestId) {
                   
                   <div class="items">
                     <h3>Order Items</h3>
-                    ${order.items.map(item => `
+                    ${order.items.map(item => {
+                      const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null) ? (item.unit_amount / 100) : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
+                      const quantity = item.quantity || 1;
+                      const unit = Number(unitRaw || 0);
+                      const lineTotal = Number(quantity * unit);
+                      return `
                       <div class="item">
-                        <strong>${item.name}</strong><br>
-                        Quantity: ${item.quantity} × €${item.price.toFixed(2)}<br>
-                        Subtotal: €${(item.quantity * item.price).toFixed(2)}
+                        <strong>${item.name || item.description || item.id || 'Item'}</strong><br>
+                        Quantity: ${quantity} × €${unit.toFixed(2)}<br>
+                        Subtotal: €${lineTotal.toFixed(2)}
                       </div>
-                    `).join('')}
+                    `}).join('')}
                   </div>
                   
                   <div class="totals">
