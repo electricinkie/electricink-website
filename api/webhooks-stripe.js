@@ -9,6 +9,23 @@ if (fs.existsSync(envLocalPath)) {
   require('dotenv').config({ path: envPath });
 }
 
+// Load email templates once at startup (used for client/admin emails)
+let clientTemplateHtml = '';
+let adminTemplateHtml = '';
+try {
+  clientTemplateHtml = fs.readFileSync(
+    path.join(process.cwd(), 'email-templates', 'order-confirmation.html'),
+    'utf8'
+  );
+  adminTemplateHtml = fs.readFileSync(
+    path.join(process.cwd(), 'email-templates', 'order-notification-admin.html'),
+    'utf8'
+  );
+  console.log('✅ Email templates loaded');
+} catch (tplErr) {
+  console.warn('⚠️ Email templates could not be loaded:', tplErr && tplErr.message);
+}
+
 // Email configuration
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
@@ -473,99 +490,33 @@ async function handlePaymentIntentSucceeded(event, requestId) {
             throw new Error('Resend not configured');
           }
           
-          const clientEmailHtml = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-                .container { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                .header { background: linear-gradient(135deg, #000000 0%, #333333 100%); color: #ffffff; padding: 30px 20px; text-align: center; }
-                .header h1 { margin: 0; font-size: 28px; }
-                .content { padding: 30px 20px; }
-                .order-number { background: #f8f8f8; padding: 15px; border-radius: 5px; text-align: center; margin-bottom: 20px; }
-                .order-number strong { font-size: 24px; color: #000; }
-                .items { margin: 20px 0; }
-                .item { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #000; }
-                .item-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-                .totals { border-top: 2px solid #000; margin-top: 20px; padding-top: 15px; }
-                .total-row { display: flex; justify-content: space-between; padding: 5px 0; }
-                .total-row.final { font-size: 20px; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd; }
-                .footer { background: #f8f8f8; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>✅ Order Confirmed!</h1>
-                </div>
-                <div class="content">
-                  <div class="order-number">
-                    <p style="margin: 0; color: #666; font-size: 14px;">Order Number</p>
-                    <strong>#${orderId}</strong>
-                  </div>
-                  
-                  <p>Hi ${order.customerName || 'there'},</p>
-                  <p>Thank you for your order! We've received your payment and will process your order shortly.</p>
-                  
-                  <h2 style="border-bottom: 2px solid #000; padding-bottom: 10px;">Order Details</h2>
-                  
-                  <div class="items">
-                    ${order.items.map(item => {
-                      const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null) ? (item.unit_amount / 100) : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
-                      const quantity = item.quantity || 1;
-                      const unit = Number(unitRaw || 0);
-                      const lineTotal = Number(quantity * unit);
-                      return `
-                      <div class="item">
-                        <div class="item-name">${item.name || item.description || item.id || 'Item'}</div>
-                        <div>Quantity: ${quantity} × €${unit.toFixed(2)}</div>
-                        <div style="font-weight: bold; margin-top: 5px;">€${lineTotal.toFixed(2)}</div>
-                      </div>
-                    `}).join('')}
-                  </div>
-                  
-                  <div class="totals">
-                    <div class="total-row">
-                      <span>Subtotal:</span>
-                      <span>€${order.subtotal.toFixed(2)}</span>
-                    </div>
-                    <div class="total-row">
-                      <span>Shipping:</span>
-                      <span>${order.shippingCost > 0 ? '€' + order.shippingCost.toFixed(2) : 'FREE'}</span>
-                    </div>
-                    <div class="total-row">
-                      <span>VAT:</span>
-                      <span>€${((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)).toFixed(2)}</span>
-                    </div>
-                    <div class="total-row final">
-                      <span>Total Paid:</span>
-                      <span>€${order.total.toFixed(2)}</span>
-                    </div>
-                  </div>
-                  
-                  <h3 style="margin-top: 30px;">Shipping Address</h3>
-                  <p style="background: #f8f8f8; padding: 15px; border-radius: 5px;">
-                    ${order.customerName}<br>
-                    ${order.shippingAddress?.line1}<br>
-                    ${order.shippingAddress?.line2 ? order.shippingAddress.line2 + '<br>' : ''}
-                    ${order.shippingAddress?.city}, ${order.shippingAddress?.state || ''} ${order.shippingAddress?.postalCode}<br>
-                    ${order.shippingAddress?.country}
-                  </p>
-                  
-                  <p style="margin-top: 30px;">Questions? Reply to this email or contact us at electricink.ie@gmail.com</p>
-                </div>
-                
-                <div class="footer">
-                  <p><strong>Electric Ink Ireland</strong></p>
-                  <p>Official Irish Distributor | electricink.ie</p>
-                </div>
-              </div>
-            </body>
-            </html>
-          `;
+          // Build client email from template file (fall back to inline if template missing)
+          let clientEmailHtml = clientTemplateHtml || '';
+          if (!clientEmailHtml) {
+            // keep minimal inline fallback if template not available
+            clientEmailHtml = `<html><body><p>Order #${orderId}</p></body></html>`;
+          }
+
+          clientEmailHtml = clientEmailHtml
+            .replace(/{{orderNumber}}/g, orderId)
+            .replace(/{{customerName}}/g, order.customerName || '')
+            .replace(/{{customerEmail}}/g, order.customerEmail || '')
+            .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
+            .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
+            .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+            .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
+            .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
+
+          const itemsHtml = (order.items || []).map(item => {
+            const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
+              ? (item.unit_amount / 100)
+              : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
+            const price = Number(unitRaw || 0);
+            const quantity = item.quantity || 1;
+            return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong><br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
+          }).join('');
+
+          clientEmailHtml = clientEmailHtml.replace(/{{itemsList}}/g, itemsHtml);
           
           const clientResult = await resend.emails.send({
             from: EMAIL_FROM,
@@ -610,78 +561,33 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           }
           console.log('📧 [ADMIN-EMAIL] Resend configured, preparing email');
           
-          const adminEmailHtml = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="utf-8">
-              <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #000; color: #fff; padding: 20px; text-align: center; }
-                .content { background: #f9f9f9; padding: 20px; }
-                .order-info { background: #fff; padding: 15px; margin: 10px 0; border-left: 4px solid #000; }
-                .items { margin: 20px 0; }
-                .item { background: #fff; padding: 10px; margin: 5px 0; }
-                .totals { background: #fff; padding: 15px; margin: 10px 0; }
-                .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>🔔 New Order Received</h1>
-                </div>
-                <div class="content">
-                  <div class="order-info">
-                    <h2>Order #${orderId}</h2>
-                    <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-                    <p><strong>Customer:</strong> ${order.customerName}</p>
-                    <p><strong>Email:</strong> ${order.customerEmail}</p>
-                    <p><strong>Phone:</strong> ${order.customerPhone || 'N/A'}</p>
-                  </div>
-                  
-                  <div class="order-info">
-                    <h3>Shipping Address</h3>
-                    <p>
-                      ${order.shippingAddress?.line1 || ''}<br>
-                      ${order.shippingAddress?.line2 ? order.shippingAddress.line2 + '<br>' : ''}
-                      ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.state || ''} ${order.shippingAddress?.postalCode || ''}<br>
-                      ${order.shippingAddress?.country || ''}
-                    </p>
-                  </div>
-                  
-                  <div class="items">
-                    <h3>Order Items</h3>
-                    ${order.items.map(item => {
-                      const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null) ? (item.unit_amount / 100) : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
-                      const quantity = item.quantity || 1;
-                      const unit = Number(unitRaw || 0);
-                      const lineTotal = Number(quantity * unit);
-                      return `
-                      <div class="item">
-                        <strong>${item.name || item.description || item.id || 'Item'}</strong><br>
-                        Quantity: ${quantity} × €${unit.toFixed(2)}<br>
-                        Subtotal: €${lineTotal.toFixed(2)}
-                      </div>
-                    `}).join('')}
-                  </div>
-                  
-                  <div class="totals">
-                    <p><strong>Subtotal:</strong> €${order.subtotal?.toFixed(2) || '0.00'}</p>
-                    <p><strong>Shipping:</strong> ${order.shippingCost > 0 ? '€' + order.shippingCost.toFixed(2) : 'FREE'}</p>
-                    <p><strong>VAT:</strong> €${((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)).toFixed(2)}</p>
-                    <p style="font-size: 18px; font-weight: bold;"><strong>TOTAL:</strong> €${order.total?.toFixed(2) || '0.00'}</p>
-                  </div>
-                </div>
-                <div class="footer">
-                  <p>Electric Ink Ireland - Admin Notification</p>
-                  <p>This is an automated notification. Process this order in your admin dashboard.</p>
-                </div>
-              </div>
-            </body>
-            </html>
-          `;
+          // Build admin email from template file (fall back to minimal inline)
+          let adminEmailHtml = adminTemplateHtml || '';
+          if (!adminEmailHtml) {
+            adminEmailHtml = `<html><body><p>New order #${orderId}</p></body></html>`;
+          }
+
+          adminEmailHtml = adminEmailHtml
+            .replace(/{{orderNumber}}/g, orderId)
+            .replace(/{{customerName}}/g, order.customerName || '')
+            .replace(/{{customerEmail}}/g, order.customerEmail || '')
+            .replace(/{{customerPhone}}/g, order.customerPhone || 'N/A')
+            .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
+            .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
+            .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+            .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
+            .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
+
+          const adminItemsHtml = (order.items || []).map(item => {
+            const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
+              ? (item.unit_amount / 100)
+              : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
+            const price = Number(unitRaw || 0);
+            const quantity = item.quantity || 1;
+            return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong> (SKU: ${item.sku || 'N/A'})<br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
+          }).join('');
+
+          adminEmailHtml = adminEmailHtml.replace(/{{itemsList}}/g, adminItemsHtml);
           
           console.log('📧 [ADMIN-EMAIL] Sending to:', ADMIN_EMAIL);
           
