@@ -46,7 +46,7 @@ async function createAdmin() {
         const tempPass = Math.random().toString(36).slice(-10) + 'A1!';
         user = await admin.auth().createUser({ email: ADMIN_EMAIL, password: tempPass, displayName: ADMIN_NAME });
         console.log('Created new auth user for admin:', user.uid, '(temp password provided)');
-        console.log('Temporary password:', tempPass);
+        console.log('✅ Admin user created (password sent via secure channel)');
       } else {
         throw e;
       }

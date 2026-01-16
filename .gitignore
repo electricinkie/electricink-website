@@ -35,6 +35,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Vercel build outputs
+.vercel/output
+
 # Firebase Service Account Key (NUNCA versionar)
 serviceAccountKey.json
 **/serviceAccountKey.json

@@ -39,13 +39,8 @@ function initializeFirebaseAdmin() {
       }
     }
 
-    // Minimal logging only — avoid printing secret contents or metadata that
-    // could help an attacker (lengths, previews). Only log presence.
-    try {
-      console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT present');
-    } catch (dbg) {
-      console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT previewing failed');
-    }
+    // Minimal logging only — avoid printing secret contents or metadata.
+    // Presence of service account is noted; avoid further previews.
 
     let serviceAccount;
     try {

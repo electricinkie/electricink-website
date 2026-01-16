@@ -7,7 +7,17 @@ const logger = require('./lib/logger');
 const { captureException } = require('./lib/sentry');
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Secure CORS - only allow our domain
+  const allowedOrigins = [
+    'https://electricink.ie',
+    'https://www.electricink.ie'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'https://electricink.ie');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
@@ -30,7 +40,7 @@ module.exports = async function handler(req, res) {
     const uid = decoded && decoded.uid;
     const email = decoded && decoded.email;
     
-    console.log('✅ [MY-ORDERS] Token verified:', { uid, email });
+    console.log('🔐 User authenticated:', uid ? '✅' : '❌');
     
     if (!uid) return res.status(401).json({ error: 'Invalid token' });
 

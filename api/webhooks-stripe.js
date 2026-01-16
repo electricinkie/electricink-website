@@ -147,8 +147,17 @@ module.exports = async function handler(req, res) {
   console.log('🟢 Method:', req.method);
   console.log('🟢 URL:', req.url);
 
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Secure CORS - only allow our domain
+  const allowedOrigins = [
+    'https://electricink.ie',
+    'https://www.electricink.ie'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'https://electricink.ie');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, stripe-signature, x-request-id');
 
