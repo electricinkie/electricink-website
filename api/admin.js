@@ -1,5 +1,8 @@
 // api/admin.js - admin router (centralize auth then dispatch to handlers)
-const updateOrderStatusHandler = require('./handlers/update-order-status');
+// The update-order-status handler was deleted during cleanup — comment out
+// the require to avoid crashing the dev server. Admin functionality isn't
+// needed for local dev here.
+// const updateOrderStatusHandler = require('./handlers/update-order-status');
 const { getFirestore, admin } = require('./lib/firebase-admin');
 
 async function requireAdmin(req) {
@@ -49,11 +52,11 @@ module.exports = async function handler(req, res) {
   const auth = await requireAdmin(req);
   if (!auth) return res.status(401).json({ error: 'Unauthorized' });
 
-  try {
+    try {
     switch (action) {
-      case 'update-order-status':
-        // update-order-status handler itself performs auth checks as well (safe/defensive)
-        return await updateOrderStatusHandler(req, res);
+      // 'update-order-status' handler removed during cleanup — not available in dev
+      // case 'update-order-status':
+      //   return await updateOrderStatusHandler(req, res);
       default:
         return res.status(400).json({ error: 'Invalid admin action' });
     }
