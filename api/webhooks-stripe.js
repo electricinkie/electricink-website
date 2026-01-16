@@ -164,7 +164,11 @@ module.exports = async function handler(req, res) {
   // Validate Resend (non-blocking)
   try {
     const configCheck = await validateResendConfig();
-    console.log('[RESEND-CONFIG] Validation:', configCheck);
+    if (!configCheck?.valid) {
+      console.warn('[RESEND-CONFIG] Validation warning:', configCheck);
+    } else {
+      console.log('[RESEND-CONFIG] Validation:', configCheck);
+    }
   } catch (e) {
     console.error('[RESEND-CONFIG] Validation failed:', e && e.message);
   }
@@ -599,6 +603,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         // EMAIL ADMIN - INLINE (SAME PATTERN AS CLIENT)
         // ═══════════════════════════════════════════════════════════════
         console.log('📧 [ADMIN-EMAIL] Starting admin notification');
+        console.log('📧 [ADMIN] Sending notification to (alias):', ADMIN_EMAIL);
         try {
           if (!resend) {
             throw new Error('Resend not configured');
