@@ -2,7 +2,35 @@
 // Expects POST with JSON { type: string, data?: object, ... }
 // For legacy handlers that expect top-level fields, the router will merge `data` into req.body before calling.
 
-const sendOrderEmail = require('./handlers/send-order-email');
+const path = require('path');
+
+// Robust handler loading for serverless environment
+let sendOrderEmail;
+try {
+  // Try multiple path strategies
+  const handlerPaths = [
+    path.join(__dirname, 'handlers', 'send-order-email'),
+    path.join(process.cwd(), 'api', 'handlers', 'send-order-email'),
+    './handlers/send-order-email'
+  ];
+  
+  for (const handlerPath of handlerPaths) {
+    try {
+      sendOrderEmail = require(handlerPath);
+      console.log('[EMAILS] ✅ Loaded handler from:', handlerPath);
+      break;
+    } catch (e) {
+      console.log('[EMAILS] ⚠️ Failed to load from:', handlerPath);
+    }
+  }
+  
+  if (!sendOrderEmail) {
+    throw new Error('Could not load send-order-email handler from any path');
+  }
+} catch (error) {
+  console.error('[EMAILS] ❌ CRITICAL: Handler loading failed:', error);
+  throw error;
+}
 const sendShippingNotification = require('./handlers/send-shipping-notification');
 const sendShippingConfirmation = require('./handlers/send-shipping-confirmation');
 
