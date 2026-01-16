@@ -476,174 +476,147 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       return;
     }
 
-    // Envia emails de forma não-bloqueante (NUNCA deve crashear o webhook)
-    setImmediate(() => {
-      (async () => {
-        const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
+    // ═══════════════════════════════════════════════════════════════
+    // SEND EMAILS (AWAITED) — run inline so webhook waits for completion
+    // ═══════════════════════════════════════════════════════════════
+    const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
-        // ═══════════════════════════════════════════════════════════════
-        // SEND CLIENT EMAIL (INLINE ONLY)
-        // ═══════════════════════════════════════════════════════════════
-        console.log('📧 [CLIENT] Sending order confirmation to:', order.customerEmail);
-        try {
-          if (!resend) {
-            throw new Error('Resend not configured');
-          }
-          
-          // Build client email from template file (fall back to inline if template missing)
-          let clientEmailHtml = clientTemplateHtml || '';
-          if (!clientEmailHtml) {
-            // keep minimal inline fallback if template not available
-            clientEmailHtml = `<html><body><p>Order #${orderId}</p></body></html>`;
-          }
+    // CLIENT EMAIL
+    console.log('📧 [CLIENT] Sending order confirmation to:', order.customerEmail);
+    try {
+      if (!resend) throw new Error('Resend not configured');
 
-          clientEmailHtml = clientEmailHtml
-            .replace(/{{orderNumber}}/g, orderId)
-            .replace(/{{customerName}}/g, order.customerName || '')
-            .replace(/{{customerEmail}}/g, order.customerEmail || '')
-            .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
-            .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
-            .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
-            .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
-            .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
+      let clientEmailHtml = clientTemplateHtml || '';
+      if (!clientEmailHtml) {
+        clientEmailHtml = `<html><body><p>Order #${orderId}</p></body></html>`;
+      }
 
-          const itemsHtml = (order.items || []).map(item => {
-            const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
-              ? (item.unit_amount / 100)
-              : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
-            const price = Number(unitRaw || 0);
-            const quantity = item.quantity || 1;
-            return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong><br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
-          }).join('');
+      clientEmailHtml = clientEmailHtml
+        .replace(/{{orderNumber}}/g, orderId)
+        .replace(/{{customerName}}/g, order.customerName || '')
+        .replace(/{{customerEmail}}/g, order.customerEmail || '')
+        .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
+        .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
+        .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+        .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
+        .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
 
-          clientEmailHtml = clientEmailHtml.replace(/{{itemsList}}/g, itemsHtml);
-          
-          const clientResult = await resend.emails.send({
-            from: EMAIL_FROM,
-            to: order.customerEmail,
-            subject: `Order Confirmation #${orderId} - Electric Ink Ireland`,
-            html: clientEmailHtml
-          });
-          
-          console.log('✅ [CLIENT] Email sent successfully! ID:', clientResult.id);
-          
-          if (db) {
-            await db.collection('orders').doc(orderId).update({
-              emailStatus: 'sent',
-              emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
-              emailId: clientResult.id
-            }).catch(err => {
-              console.error('⚠️ [CLIENT] Failed to update Firestore:', err);
-            });
-          }
-          
-        } catch (clientErr) {
-          console.error('❌ [CLIENT] Email failed:', clientErr);
-          
-          if (db) {
-            await db.collection('orders').doc(orderId).update({
-              emailStatus: 'failed',
-              emailError: clientErr?.message
-            }).catch(err => {
-              console.error('⚠️ [CLIENT] Failed to update error in Firestore:', err);
-            });
-          }
-        }
+      const itemsHtml = (order.items || []).map(item => {
+        const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
+          ? (item.unit_amount / 100)
+          : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
+        const price = Number(unitRaw || 0);
+        const quantity = item.quantity || 1;
+        return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong><br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
+      }).join('');
 
-        // ═══════════════════════════════════════════════════════════════
-        // EMAIL ADMIN - INLINE (SAME PATTERN AS CLIENT)
-        // ═══════════════════════════════════════════════════════════════
-        console.log('📧 [ADMIN-EMAIL] Starting admin notification');
-        console.log('📧 [ADMIN] Sending notification to (alias):', ADMIN_EMAIL);
-        try {
-          if (!resend) {
-            throw new Error('Resend not configured');
-          }
-          console.log('📧 [ADMIN-EMAIL] Resend configured, preparing email');
-          
-          // Build admin email from template file (fall back to minimal inline)
-          let adminEmailHtml = adminTemplateHtml || '';
-          if (!adminEmailHtml) {
-            adminEmailHtml = `<html><body><p>New order #${orderId}</p></body></html>`;
-          }
+      const finalClientHtml = clientEmailHtml.replace(/{{itemsList}}/g, itemsHtml);
 
-          adminEmailHtml = adminEmailHtml
-            .replace(/{{orderNumber}}/g, orderId)
-            .replace(/{{customerName}}/g, order.customerName || '')
-            .replace(/{{customerEmail}}/g, order.customerEmail || '')
-            .replace(/{{customerPhone}}/g, order.customerPhone || 'N/A')
-            .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
-            .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
-            .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
-            .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
-            .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
-
-          const adminItemsHtml = (order.items || []).map(item => {
-            const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
-              ? (item.unit_amount / 100)
-              : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
-            const price = Number(unitRaw || 0);
-            const quantity = item.quantity || 1;
-            return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong> (SKU: ${item.sku || 'N/A'})<br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
-          }).join('');
-
-          adminEmailHtml = adminEmailHtml.replace(/{{itemsList}}/g, adminItemsHtml);
-          
-          console.log('📧 [ADMIN-EMAIL] Sending to:', ADMIN_EMAIL);
-          
-          const adminEmailResult = await resend.emails.send({
-            from: EMAIL_FROM,
-            to: ADMIN_EMAIL,
-            subject: `🔔 New Order #${orderId} - ${order.customerName}`,
-            html: adminEmailHtml
-          });
-          
-          console.log('✅ [ADMIN-EMAIL] Sent successfully! Email ID:', adminEmailResult.id);
-          
-          if (db) {
-            await db.collection('orders').doc(orderId).update({
-              adminEmailStatus: 'sent',
-              adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
-              adminEmailId: adminEmailResult.id
-            }).catch(err => {
-              console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore:', err);
-            });
-            console.log('✅ [ADMIN-EMAIL] Firestore updated');
-          }
-          
-        } catch (adminErr) {
-          console.error('❌ [ADMIN-EMAIL] Failed to send:', adminErr);
-          
-          if (db) {
-            await db.collection('orders').doc(orderId).update({
-              adminEmailStatus: 'failed',
-              adminEmailError: adminErr?.message,
-              adminEmailErrorAt: admin.firestore.FieldValue.serverTimestamp()
-            }).catch(err => {
-              console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore error:', err);
-            });
-          }
-        }
-        console.log('📧 [ADMIN-EMAIL] Complete\n');
-      })().catch(fatalErr => {
-        // Última linha de defesa: captura QUALQUER erro não-tratado
-        logger.error(JSON.stringify({
-          msg: 'Fatal error in email sending',
-          error: fatalErr?.message,
-          orderId,
-          requestId,
-          timestamp: new Date().toISOString()
-        }));
+      const clientResult = await resend.emails.send({
+        from: EMAIL_FROM,
+        to: order.customerEmail,
+        subject: `Order Confirmation #${orderId} - Electric Ink Ireland`,
+        html: finalClientHtml
       });
-    });
+
+      console.log('✅ [CLIENT] Email sent successfully! ID:', clientResult.id);
+
+      if (db) {
+        await db.collection('orders').doc(orderId).update({
+          emailStatus: 'sent',
+          emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+          emailId: clientResult.id
+        }).catch(err => {
+          console.error('⚠️ [CLIENT] Failed to update Firestore:', err);
+        });
+      }
+    } catch (clientErr) {
+      console.error('❌ [CLIENT] Email failed:', clientErr);
+      if (db) {
+        await db.collection('orders').doc(orderId).update({
+          emailStatus: 'failed',
+          emailError: clientErr?.message
+        }).catch(err => {
+          console.error('⚠️ [CLIENT] Failed to update error in Firestore:', err);
+        });
+      }
+    }
+
+    // ADMIN EMAIL
+    console.log('📧 [ADMIN-EMAIL] Starting admin notification');
+    console.log('📧 [ADMIN] Sending notification to (alias):', ADMIN_EMAIL);
+    try {
+      if (!resend) throw new Error('Resend not configured');
+
+      let adminEmailHtml = adminTemplateHtml || '';
+      if (!adminEmailHtml) {
+        adminEmailHtml = `<html><body><p>New order #${orderId}</p></body></html>`;
+      }
+
+      adminEmailHtml = adminEmailHtml
+        .replace(/{{orderNumber}}/g, orderId)
+        .replace(/{{customerName}}/g, order.customerName || '')
+        .replace(/{{customerEmail}}/g, order.customerEmail || '')
+        .replace(/{{customerPhone}}/g, order.customerPhone || 'N/A')
+        .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
+        .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
+        .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+        .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
+        .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
+
+      const adminItemsHtml = (order.items || []).map(item => {
+        const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
+          ? (item.unit_amount / 100)
+          : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
+        const price = Number(unitRaw || 0);
+        const quantity = item.quantity || 1;
+        return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong> (SKU: ${item.sku || 'N/A'})<br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
+      }).join('');
+
+      const finalAdminHtml = adminEmailHtml.replace(/{{itemsList}}/g, adminItemsHtml);
+
+      console.log('📧 [ADMIN-EMAIL] Sending to:', ADMIN_EMAIL);
+      const adminEmailResult = await resend.emails.send({
+        from: EMAIL_FROM,
+        to: ADMIN_EMAIL,
+        subject: `🔔 New Order #${orderId} - ${order.customerName}`,
+        html: finalAdminHtml
+      });
+
+      console.log('✅ [ADMIN-EMAIL] Sent successfully! Email ID:', adminEmailResult.id);
+
+      if (db) {
+        await db.collection('orders').doc(orderId).update({
+          adminEmailStatus: 'sent',
+          adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+          adminEmailId: adminEmailResult.id
+        }).catch(err => {
+          console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore:', err);
+        });
+      }
+    } catch (adminErr) {
+      console.error('❌ [ADMIN-EMAIL] Failed to send:', adminErr);
+      if (db) {
+        await db.collection('orders').doc(orderId).update({
+          adminEmailStatus: 'failed',
+          adminEmailError: adminErr?.message,
+          adminEmailErrorAt: admin.firestore.FieldValue.serverTimestamp()
+        }).catch(err => {
+          console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore error:', err);
+        });
+      }
+    }
+
+    console.log('📧 Both emails processed');
     logger.info(JSON.stringify({
-      msg: 'Order saved, emails queued',
+      msg: 'Order saved and emails processed',
       orderId,
       requestId,
       timestamp: new Date().toISOString(),
-      status: 'queued'
+      status: 'emails_processed'
     }));
-    return { success: true, orderId, emailStatus: 'queued', requestId };
+
+    return { success: true, orderId, emailStatus: 'processed', requestId };
 
   } catch (error) {
     logger.error(JSON.stringify({
