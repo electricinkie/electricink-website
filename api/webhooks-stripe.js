@@ -595,103 +595,120 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           }
         }
 
-        // Email admin - usando template
+        // ═══════════════════════════════════════════════════════════════
+        // EMAIL ADMIN - INLINE (SAME PATTERN AS CLIENT)
+        // ═══════════════════════════════════════════════════════════════
+        console.log('📧 [ADMIN-EMAIL] Starting admin notification');
         try {
           if (!resend) {
             throw new Error('Resend not configured');
           }
+          console.log('📧 [ADMIN-EMAIL] Resend configured, preparing email');
           
-          // Chamar handler de email unificado
-          const emailData = {
-            type: 'order-notification-admin',
-            data: {
-              orderNumber: orderId,
-              customer_email: order.customerEmail,
-              shipping: {
-                firstName: (order.customerName || '').split(' ')[0] || '',
-                lastName: (order.customerName || '').split(' ').slice(1).join(' ') || '',
-                phone: order.customerPhone || '',
-                line1: order.shippingAddress?.line1,
-                line2: order.shippingAddress?.line2,
-                city: order.shippingAddress?.city,
-                state: order.shippingAddress?.state,
-                postalCode: order.shippingAddress?.postalCode,
-                country: order.shippingAddress?.country
-              },
-              items: order.items,
-              totals: {
-                subtotal: order.subtotal,
-                shippingText: order.shippingCost > 0 ? `€${order.shippingCost.toFixed(2)}` : 'FREE',
-                vat: ((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)).toFixed(2),
-                total: order.total
-              }
-            }
-          };
+          const adminEmailHtml = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: #000; color: #fff; padding: 20px; text-align: center; }
+                .content { background: #f9f9f9; padding: 20px; }
+                .order-info { background: #fff; padding: 15px; margin: 10px 0; border-left: 4px solid #000; }
+                .items { margin: 20px 0; }
+                .item { background: #fff; padding: 10px; margin: 5px 0; }
+                .totals { background: #fff; padding: 15px; margin: 10px 0; }
+                .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>🔔 New Order Received</h1>
+                </div>
+                <div class="content">
+                  <div class="order-info">
+                    <h2>Order #${orderId}</h2>
+                    <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                    <p><strong>Customer:</strong> ${order.customerName}</p>
+                    <p><strong>Email:</strong> ${order.customerEmail}</p>
+                    <p><strong>Phone:</strong> ${order.customerPhone || 'N/A'}</p>
+                  </div>
+                  
+                  <div class="order-info">
+                    <h3>Shipping Address</h3>
+                    <p>
+                      ${order.shippingAddress?.line1 || ''}<br>
+                      ${order.shippingAddress?.line2 ? order.shippingAddress.line2 + '<br>' : ''}
+                      ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.state || ''} ${order.shippingAddress?.postalCode || ''}<br>
+                      ${order.shippingAddress?.country || ''}
+                    </p>
+                  </div>
+                  
+                  <div class="items">
+                    <h3>Order Items</h3>
+                    ${order.items.map(item => `
+                      <div class="item">
+                        <strong>${item.name}</strong><br>
+                        Quantity: ${item.quantity} × €${item.price.toFixed(2)}<br>
+                        Subtotal: €${(item.quantity * item.price).toFixed(2)}
+                      </div>
+                    `).join('')}
+                  </div>
+                  
+                  <div class="totals">
+                    <p><strong>Subtotal:</strong> €${order.subtotal?.toFixed(2) || '0.00'}</p>
+                    <p><strong>Shipping:</strong> ${order.shippingCost > 0 ? '€' + order.shippingCost.toFixed(2) : 'FREE'}</p>
+                    <p><strong>VAT:</strong> €${((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)).toFixed(2)}</p>
+                    <p style="font-size: 18px; font-weight: bold;"><strong>TOTAL:</strong> €${order.total?.toFixed(2) || '0.00'}</p>
+                  </div>
+                </div>
+                <div class="footer">
+                  <p>Electric Ink Ireland - Admin Notification</p>
+                  <p>This is an automated notification. Process this order in your admin dashboard.</p>
+                </div>
+              </div>
+            </body>
+            </html>
+          `;
           
-          // Call local handler directly to ensure it uses current `email-templates/order-notification-admin.html`
-          try {
-            // Try to require the handler using robust paths (serverless environments may relocate files)
-            let sendOrderEmail = null;
-            const candidates = [
-              require('path').join(__dirname, 'handlers', 'send-order-email'),
-              require('path').join(process.cwd(), 'api', 'handlers', 'send-order-email'),
-              require('path').join(process.cwd(), 'api', 'handlers', 'send-order-email.js')
-            ];
-            for (const p of candidates) {
-              try {
-                sendOrderEmail = require(p);
-                break;
-              } catch (e) {
-                // continue
-              }
-            }
-
-            if (!sendOrderEmail) {
-              const msg = `[WEBHOOK] send-order-email handler not found. Tried: ${candidates.join(', ')}`;
-              logger.error(msg);
-              throw new Error('send-order-email handler not found');
-            }
-
-            const fakeReq = {
-              method: 'POST',
-              headers: { 'content-type': 'application/json' },
-              body: {
-                type: 'order-notification-admin',
-                data: emailData.data
-              }
-            };
-
-            const fakeRes = {
-              _status: 200,
-              status(code) { this._status = code; return this; },
-              json(obj) { return obj; },
-              setHeader() {},
-              end() {}
-            };
-
-            const result = await sendOrderEmail(fakeReq, fakeRes);
-            const emailId = result && (result.id || result.emailId) ? (result.id || result.emailId) : null;
-            logger.info(JSON.stringify({ ...emailLog, status: 'admin_email_sent', emailId }));
-
-            if (db) {
-              await db.collection('orders').doc(orderId).update({
-                adminEmailStatus: 'sent',
-                adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
-              }).catch(err => logger.error('Failed to update email status:', err));
-            }
-          } catch (err) {
-            throw err;
+          console.log('📧 [ADMIN-EMAIL] Sending to:', ADMIN_EMAIL);
+          
+          const adminEmailResult = await resend.emails.send({
+            from: EMAIL_FROM,
+            to: ADMIN_EMAIL,
+            subject: `🔔 New Order #${orderId} - ${order.customerName}`,
+            html: adminEmailHtml
+          });
+          
+          console.log('✅ [ADMIN-EMAIL] Sent successfully! Email ID:', adminEmailResult.id);
+          
+          if (db) {
+            await db.collection('orders').doc(orderId).update({
+              adminEmailStatus: 'sent',
+              adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+              adminEmailId: adminEmailResult.id
+            }).catch(err => {
+              console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore:', err);
+            });
+            console.log('✅ [ADMIN-EMAIL] Firestore updated');
           }
+          
         } catch (adminErr) {
-          logger.error(JSON.stringify({ ...emailLog, status: 'admin_email_failed', error: adminErr?.message }));
+          console.error('❌ [ADMIN-EMAIL] Failed to send:', adminErr);
           
           if (db) {
             await db.collection('orders').doc(orderId).update({
               adminEmailStatus: 'failed',
-              adminEmailError: adminErr?.message
-            }).catch(err => logger.error('Failed to update email error:', err));
+              adminEmailError: adminErr?.message,
+              adminEmailErrorAt: admin.firestore.FieldValue.serverTimestamp()
+            }).catch(err => {
+              console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore error:', err);
+            });
           }
         }
+        console.log('📧 [ADMIN-EMAIL] Complete\n');
       })().catch(fatalErr => {
         // Última linha de defesa: captura QUALQUER erro não-tratado
         logger.error(JSON.stringify({
