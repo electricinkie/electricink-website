@@ -41,7 +41,7 @@
                 <tr>
                   <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px; border-left: 4px solid #43BDAB;">
                     <p style="margin: 0 0 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; color: #43BDAB; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Order Number</p>
-                    <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; color: #43BDAB;">{{ORDER_NUMBER}}</p>
+                    <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; color: #43BDAB;">{{orderNumber}}</p>
                   </td>
                 </tr>
               </table>
@@ -51,32 +51,32 @@
                 <tr>
                   <td style="background-color: #f8f8f8; padding: 24px; border-radius: 8px; border-left: 4px solid #43BDAB;">
                           <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; color: #43BDAB; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Customer</p>
-                    <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">{{CUSTOMER_NAME}}</p>
+                    <p style="margin: 0 0 16px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; color: #000000;">{{customerName}}</p>
                     
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
                         <td width="50%" style="padding: 12px; background-color: #FFFFFF; border-radius: 6px; vertical-align: top;">
                           <p style="margin: 0 0 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999; text-transform: uppercase; letter-spacing: 0.5px;">Email</p>
-                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000; word-break: break-word;">{{CUSTOMER_EMAIL}}</p>
+                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000; word-break: break-word;">{{customerEmail}}</p>
                         </td>
                         <td width="10"></td>
                         <td width="50%" style="padding: 12px; background-color: #FFFFFF; border-radius: 6px; vertical-align: top;">
                           <p style="margin: 0 0 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999; text-transform: uppercase; letter-spacing: 0.5px;">Phone</p>
-                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">{{CUSTOMER_PHONE}}</p>
+                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">{{customerPhone}}</p>
                         </td>
                       </tr>
                       <tr><td colspan="3" height="10"></td></tr>
                       <tr>
                         <td colspan="3" style="padding: 12px; background-color: #FFFFFF; border-radius: 6px;">
                           <p style="margin: 0 0 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999; text-transform: uppercase; letter-spacing: 0.5px;">Shipping Address</p>
-                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000; line-height: 1.6;">{{SHIPPING_ADDRESS}}</p>
+                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000; line-height: 1.6;">{{shippingAddress}}</p>
                         </td>
                       </tr>
                       <tr><td colspan="3" height="10"></td></tr>
                       <tr>
                         <td colspan="3" style="padding: 12px; background-color: #FFFFFF; border-radius: 6px;">
                           <p style="margin: 0 0 6px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999; text-transform: uppercase; letter-spacing: 0.5px;">Order Date</p>
-                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">{{ORDER_DATE}}</p>
+                          <p style="margin: 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">{{orderDate}}</p>
                         </td>
                       </tr>
                     </table>
@@ -98,7 +98,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {{ORDER_ITEMS_TABLE}}
+                  {{itemsList}}
                 </tbody>
               </table>
               
@@ -109,19 +109,19 @@
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
                         <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">Subtotal</td>
-                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">€{{SUBTOTAL}}</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">€{{subtotal}}</td>
                       </tr>
                       <tr>
                         <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">Shipping</td>
-                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #43BDAB; font-weight: 600;">{{SHIPPING}}</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #43BDAB; font-weight: 600;">{{shippingCost}}</td>
                       </tr>
                       <tr>
                         <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">VAT (23%)</td>
-                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">€{{VAT}}</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #000000;">€{{vat}}</td>
                       </tr>
                       <tr>
                         <td style="padding: 16px 0 0 0; border-top: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 20px; font-weight: 700; color: #000000;">Total</td>
-                        <td align="right" style="padding: 16px 0 0 0; border-top: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 24px; font-weight: 700; color: #43BDAB;">€{{TOTAL}}</td>
+                        <td align="right" style="padding: 16px 0 0 0; border-top: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 24px; font-weight: 700; color: #43BDAB;">€{{total}}</td>
                       </tr>
                     </table>
                   </td>
@@ -137,11 +137,11 @@
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td width="48%" style="background-color: #43BDAB; border-radius: 6px; text-align: center;">
-                    <a href="mailto:{{CUSTOMER_EMAIL}}" style="display: block; padding: 14px 20px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #000000; text-transform: uppercase; letter-spacing: 1px;">Email</a>
+                    <a href="mailto:{{customerEmail}}" style="display: block; padding: 14px 20px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #000000; text-transform: uppercase; letter-spacing: 1px;">Email</a>
                   </td>
                   <td width="4%"></td>
                   <td width="48%" style="background-color: #000000; border-radius: 6px; text-align: center;">
-                    <a href="https://wa.me/{{CUSTOMER_PHONE_WHATSAPP}}" style="display: block; padding: 14px 20px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 1px;">WhatsApp</a>
+                    <a href="https://wa.me/{{customerPhone}}" style="display: block; padding: 14px 20px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 1px;">WhatsApp</a>
                   </td>
                 </tr>
               </table>

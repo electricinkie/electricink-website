@@ -508,7 +508,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
-        .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
+        .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
+        .replace(/{{vat}}/g, (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2));
 
       const itemsHtml = (order.items || []).map(item => {
         const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
@@ -571,7 +572,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
-        .replace(/{{total}}/g, ((order.total || 0)).toFixed(2));
+        .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
+        .replace(/{{vat}}/g, (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2));
 
       const adminItemsHtml = (order.items || []).map(item => {
         const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
