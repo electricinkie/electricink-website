@@ -216,6 +216,17 @@
   text-decoration: underline;
 }
 
+/* Ensure emphasized labels inside the dark contact-info box are readable */
+.institutional-content .contact-info p strong {
+  color: #FFFFFF;
+}
+
+/* VAT number highlight inside contact box */
+.institutional-content .contact-info .vat-number {
+  color: #43BDAB;
+  font-weight: 700;
+}
+
 /* Last Updated */
 .institutional-content .last-updated {
   font-family: 'Montserrat', sans-serif;
@@ -802,9 +813,6 @@
 }
 
 /* Removed duplicate ::after content - text is in HTML */
-.final-message {
-  /* Styling moved to main class */
-}
 
 /* About Us Responsive */
 @media (max-width: 1024px) {

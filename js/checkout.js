@@ -554,8 +554,19 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
           debugLog('   Shipping option:', ev.shippingOption);
           
           try {
-            // Create payment intent
-            const clientSecret = await createPaymentIntent();
+            // Create payment intent — pass Apple Pay / Payment Request shipping data as override
+            const clientSecret = await createPaymentIntent({
+              method: ev.shippingOption && ev.shippingOption.id ? ev.shippingOption.id : shippingMethod,
+              line1: ev.shippingAddress && ev.shippingAddress.addressLine ? ev.shippingAddress.addressLine[0] || '' : '',
+              line2: ev.shippingAddress && ev.shippingAddress.addressLine ? ev.shippingAddress.addressLine[1] || '' : '',
+              city: ev.shippingAddress ? ev.shippingAddress.city || '' : '',
+              state: ev.shippingAddress ? ev.shippingAddress.region || '' : '',
+              postalCode: ev.shippingAddress ? ev.shippingAddress.postalCode || '' : '',
+              country: ev.shippingAddress ? ev.shippingAddress.country || '' : '',
+              phone: ev.payerPhone || '',
+              firstName: ev.payerName ? ev.payerName.split(' ')[0] : '',
+              lastName: ev.payerName ? ev.payerName.split(' ').slice(1).join(' ') : ''
+            });
             
             // Confirm payment
             const {error: confirmError} = await stripe.confirmCardPayment(
@@ -1264,7 +1275,7 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
     }
   }
   
-  async function createPaymentIntent() {
+  async function createPaymentIntent(shippingOverride) {
     try {
       // Prepare cart items for backend validation
       // 🔧 FIX: Normalize product IDs (underscore → hífen)
@@ -1278,7 +1289,7 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
       debugLog('🔍 Normalized cart items:', cartItems);
 
       // Prepare shipping address (COMPLETE)
-      const shippingAddress = {
+      let shippingAddress = {
         method: shippingMethod,
         line1: elements.form.address?.value || elements.form.street?.value || '',
         line2: elements.form.address2?.value || elements.form.complement?.value || '',
@@ -1290,6 +1301,11 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
         firstName: elements.form.firstName?.value || '',
         lastName: elements.form.lastName?.value || ''
       };
+
+      // If a shipping override is provided (e.g. from Payment Request / Apple Pay), merge it
+      if (shippingOverride && typeof shippingOverride === 'object') {
+        shippingAddress = { ...shippingAddress, ...shippingOverride };
+      }
 
       // Send to backend for SECURE price calculation
       // Attach authUid when available so backend can associate orders to UID

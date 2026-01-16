@@ -25,8 +25,12 @@
 
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* Use responsive column sizing so remaining columns stay centered
+     and evenly spaced when there are fewer columns than the original 5. */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 50px;
+  justify-content: center;
+  align-items: start;
   margin-bottom: 60px;
 }
 
@@ -193,8 +197,10 @@
   }
 
   .footer-grid {
-    grid-template-columns: repeat(3, 1fr);
+    /* tablet: allow up to three columns but keep them centered */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 40px 35px;
+    justify-content: center;
     margin-bottom: 50px;
   }
 
