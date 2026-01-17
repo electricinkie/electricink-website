@@ -103,6 +103,22 @@
   z-index: 1;
 }
 
+/* Normalize focus/active visuals to avoid persistent browser highlight on mobile
+   Keep the 'active' class styling as the visual selection, but remove default
+   focus outlines and tap highlights which appear as blue fills on some devices. */
+.subcategory-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.subcategory-btn:focus,
+.subcategory-btn:active,
+.subcategory-btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.subcategory-btn::-moz-focus-inner { border: 0; padding: 0; }
+
 .subcategory-btn:hover {
   border-color: #43BDAB;
   color: #43BDAB;
@@ -114,6 +130,14 @@
   background: #43BDAB;
   border-color: #43BDAB;
   color: white;
+}
+
+/* Ensure active buttons remain readable when focused (mobile UA can apply strange highlights) */
+.subcategory-btn.active:focus,
+.subcategory-btn.active:focus-visible,
+.subcategory-btn.active:active {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* Hover específico para filtros de cartridges - sem translateY */
@@ -467,5 +491,20 @@
   .filter-row-types {
     gap: 10px;
     justify-content: center;
+  }
+  /* Mobile: reduce availability badge size so it doesn't cover product content */
+  .product-availability-badge {
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    top: 8px;
+    right: 8px;
+    border-radius: 6px;
+  }
+  /* Specifically tighten 'Order on Request' badge on narrow screens */
+  .product-availability-badge.badge-order-request {
+    padding: 3px 6px;
+    font-size: 0.62rem;
+    top: 6px;
+    right: 6px;
   }
 }
