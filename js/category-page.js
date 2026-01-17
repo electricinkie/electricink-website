@@ -354,13 +354,37 @@ function getAvailabilityBadgeInfo(product) {
     };
   }
   
-  // ORDER ON REQUEST - Can purchase (takes longer to ship)
+  // ORDER ON REQUEST - Only for specific categories
+  // Show badge when product is marked as available_on_request
   if (stockStatus === 'available_on_request') {
-    return {
-      text: 'Order on Request',
-      class: 'badge-order-request',
-      canPurchase: true
-    };
+    const category = (product.category || '').toString().toLowerCase();
+    const productId = (product.id || '').toString().toLowerCase();
+    const productName = (product.name || '').toString().toLowerCase();
+    
+    // Check if it's a category that should show the badge
+    const isMachine = category.includes('machine') || category.includes('tattoo');
+    const isPowerSupply = category.includes('power');
+    const isAccessory = category === 'accessories' || category === 'accessory';
+    
+    // Exclude specific products that have stock
+    const excludedProducts = [
+      'tattoo-grips', 'tattoo-grip', 'grip',
+      'silicone-ink-cups', 'silicone-ink-cup', 'ink-cups', 'ink-cup',
+      'silicone ink cups', 'silicone ink cup'
+    ];
+    
+    const isExcluded = excludedProducts.some(excluded => 
+      productId.includes(excluded) || productName.includes(excluded)
+    );
+    
+    // Show badge only for applicable categories and not excluded products
+    if ((isMachine || isPowerSupply || isAccessory) && !isExcluded) {
+      return {
+        text: 'Order on Request',
+        class: 'badge-order-request',
+        canPurchase: true
+      };
+    }
   }
   
   // IN STOCK - No badge (default clean look)

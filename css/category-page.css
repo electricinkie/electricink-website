@@ -249,6 +249,7 @@
   display: flex;
   flex-direction: column;
   background: #fff;
+  position: relative;
   border: 2px solid #e8e8e8;
   border-radius: 12px;
   overflow: hidden;
@@ -293,6 +294,7 @@
 }
 
 /* Base badge style */
+/* Base badge style - ALWAYS VISIBLE */
 .product-availability-badge {
   position: absolute;
   top: 12px;
@@ -305,8 +307,12 @@
   z-index: 2;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
 }
 
+/* ORDER ON REQUEST - Dark teal/gray-green */
 /* ORDER ON REQUEST - Dark teal/gray-green */
 .badge-order-request {
   background-color: #2E4A51;
