@@ -354,31 +354,80 @@ function getAvailabilityBadgeInfo(product) {
     };
   }
   
-  // ORDER ON REQUEST - Only for specific categories
-  // Show badge when product is marked as available_on_request
+  // ORDER ON REQUEST - Only for specific products/categories
   if (stockStatus === 'available_on_request') {
     const category = (product.category || '').toString().toLowerCase();
     const productId = (product.id || '').toString().toLowerCase();
     const productName = (product.name || '').toString().toLowerCase();
+
+    // Debug logging to inspect which products trigger this path
+    console.log('[BADGE DEBUG]', { name: productName, category, id: productId, stockStatus });
+
+    // 1) TATTOO MACHINES - all should show badge
+    const isMachine = category.includes('machine') || 
+                      category.includes('tattoo machine') ||
+                      category === 'machines' ||
+                      productName.includes('machine') ||
+                      productId.includes('machine');
     
-    // Check if it's a category that should show the badge
-    const isMachine = category.includes('machine') || category.includes('tattoo');
-    const isPowerSupply = category.includes('power');
-    const isAccessory = category === 'accessories' || category === 'accessory';
+    // 2) POWER SUPPLIES - all should show badge
+    const isPowerSupply = category.includes('power') || 
+                          productName.includes('power supply') ||
+                          productId.includes('power');
     
-    // Exclude specific products that have stock
-    const excludedProducts = [
+    // 3) ACCESSORIES - show badge except specific products with stock
+    const isAccessory = category === 'accessories' || 
+                        category === 'accessory' ||
+                        category.includes('accessories');
+
+    const accessoryExclusions = [
       'tattoo-grips', 'tattoo-grip', 'grip',
       'silicone-ink-cups', 'silicone-ink-cup', 'ink-cups', 'ink-cup',
       'silicone ink cups', 'silicone ink cup'
     ];
     
-    const isExcluded = excludedProducts.some(excluded => 
+    const isExcludedAccessory = accessoryExclusions.some(excluded => 
       productId.includes(excluded) || productName.includes(excluded)
     );
+
+    // 4) INKS - show badge for ALL colors except Raven Black and Ghost White
+    const isInk = category === 'inks' || 
+                  category === 'ink' || 
+                  category.includes('artistic') ||
+                  category.includes('artistic inks') ||
+                  category.includes('inks');
+
+    const inStockInks = [
+      'raven-black', 'raven black',
+      'ghost-white', 'ghost white'
+    ];
     
-    // Show badge only for applicable categories and not excluded products
-    if ((isMachine || isPowerSupply || isAccessory) && !isExcluded) {
+    const isInStockInk = inStockInks.some(stockInk => 
+      productId.includes(stockInk) || productName.includes(stockInk)
+    );
+
+    // 5) DILUENT - always show badge
+    const isDiluent = productId.includes('diluent') || 
+                      productName.includes('diluent');
+
+    // DECISION LOGIC:
+    if (isMachine || isPowerSupply || isDiluent) {
+      return {
+        text: 'Order on Request',
+        class: 'badge-order-request',
+        canPurchase: true
+      };
+    }
+
+    if (isAccessory && !isExcludedAccessory) {
+      return {
+        text: 'Order on Request',
+        class: 'badge-order-request',
+        canPurchase: true
+      };
+    }
+
+    if (isInk && !isInStockInk) {
       return {
         text: 'Order on Request',
         class: 'badge-order-request',
