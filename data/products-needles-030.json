@@ -92,9 +92,9 @@
       "/images/products/cartridges/rl-0.30/box-rl-10unt.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
+      "stock_quantity": 3,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Pro Cartridge Round Liner ×0.30 (10un) | Electric Ink Ireland",
@@ -204,9 +204,9 @@
       "/images/products/cartridges/rl-0.30/box-rl-20unt.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
+      "stock_quantity": 3,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Pro Cartridge Round Liner Ø0.30 (20un) | Electric Ink Ireland",
@@ -297,9 +297,9 @@
       "/images/products/cartridges/rs-0.30/box-rs-10un.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
+      "stock_quantity": 3,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Pro Cartridge Round Shader Ø0.30 (10un) | Electric Ink Ireland",

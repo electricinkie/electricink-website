@@ -66,9 +66,9 @@
       "/images/products/accessories/beige-grip.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
+      "stock_quantity": 3,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Tattoo Grips | Electric Ink Ireland",
@@ -175,9 +175,9 @@
       "key_features": "Durable silicone with rubber base for needle protection. Sterilize with 70% alcohol before use. Dispose in sanitary waste after use."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
-      "low_stock_threshold": 5
+      "stock_quantity": 3,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Silicone Ink Cups | Electric Ink Ireland",

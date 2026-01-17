@@ -127,9 +127,9 @@
       "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
     },
     "inventory": {
-      "stock_quantity": 20,
+      "stock_quantity": 3,
       "stock_status": "in_stock",
-      "low_stock_threshold": 5
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Raven Black | Electric Ink Ireland",
@@ -207,9 +207,9 @@
       "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
     },
     "inventory": {
-      "stock_quantity": 15,
+      "stock_quantity": 3,
       "stock_status": "in_stock",
-      "low_stock_threshold": 5
+      "low_stock_threshold": 2
     },
     "seo": {
       "meta_title": "Ghost White | Electric Ink Ireland",
