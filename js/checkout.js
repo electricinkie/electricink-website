@@ -850,10 +850,14 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
   // DISCOUNT CODE
   // ============================================
   
-  // Valid discount codes (you can expand this)
+  // ════════════════════════════════════════════════════════════════
+  // NOTE: Discount validation moved to server-side (api/validate-coupon.js)
+  // This object kept for reference but not used - validation now in backend
+  // ════════════════════════════════════════════════════════════════
   const DISCOUNT_CODES = {
-    'FIRSTORDER': { type: 'fixed', value: 15, description: '€15 off' },
-    'FREECAT': { type: 'shipping', value: 0, description: 'Free shipping' }
+    // 'FIRSTORDER': { type: 'fixed', value: 15, description: '€15 off' },
+    // 'FREECAT': { type: 'shipping', value: 0, description: 'Free shipping' }
+    // Add new codes in Stripe Dashboard instead
   };
   
   function setupDiscountCode() {
