@@ -316,40 +316,7 @@
 
   console.log('Filtered products:', filteredProducts);
 
-  // RENDER function
-  // Determine whether a product should show the "Available to Order" badge
-  function isAvailableToOrder(product) {
-    if (!product) return false;
-    const cat = (product.category || '').toString().toLowerCase();
-
-    // 1) All machines and power supplies are available to order
-    if (cat.includes('machine') || cat.includes('tattoo') || cat.includes('power')) return true;
-
-    // 2) Accessories: most are available to order except specific exceptions
-    if (cat === 'accessories' || cat === 'accessory') {
-      const exceptions = ['tattoo-grips', 'silicone-ink-cups', 'wrap-grips', 'silicone ink cups'];
-      const pid = (product.id || '').toString().toLowerCase();
-      const pname = (product.name || '').toString().toLowerCase();
-      // if product id or name matches an exception, consider it in stock (no badge)
-      if (exceptions.some(e => pid.includes(e) || pname.includes(e))) return false;
-      return true;
-    }
-
-    // 3) Inks: show badge for inks that are marked available_on_request or not inStock,
-    //    except explicit in-stock colours Raven Black and Ghost White (ids/names match these)
-    if (cat === 'inks' || cat === 'ink' || cat === 'artistic inks') {
-      const inStockExceptions = ['raven-black', 'ghost-white', 'raven black', 'ghost white'];
-      const pid = (product.id || '').toString().toLowerCase();
-      const pname = (product.name || '').toString().toLowerCase();
-      if (inStockExceptions.some(e => pid.includes(e) || pname.includes(e))) return false;
-
-      const stockStatus = (product.inventory && product.inventory.stock_status) || '';
-      if (stockStatus === 'available_on_request' || product.inStock === false) return true;
-      return false;
-    }
-
-    return false;
-  }
+  
 
 /**
  * Get availability badge info for a product
