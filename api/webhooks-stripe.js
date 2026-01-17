@@ -508,6 +508,13 @@ async function handlePaymentIntentSucceeded(event, requestId) {
   const db = getFirestore();
   const paymentIntent = event.data.object;
   const validatedMetadata = validateMetadata(paymentIntent.metadata);
+  // Prefer structured shipping phone when available (Stripe paymentIntent.shipping.phone)
+  try {
+    validatedMetadata.phone = (paymentIntent.shipping && paymentIntent.shipping.phone) || paymentIntent.metadata && paymentIntent.metadata.phone || validatedMetadata.phone || '';
+  } catch (e) {
+    // Safety: keep whatever validatedMetadata already had
+    validatedMetadata.phone = validatedMetadata.phone || '';
+  }
   try {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     // Prefer Stripe's provided shipping address (paymentIntent.shipping.address)

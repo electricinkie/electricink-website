@@ -484,6 +484,8 @@ module.exports = async function handler(req, res) {
         items: JSON.stringify(items.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity }))),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
+        // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
+        phone: (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || incomingMetadata.phone || '',
         backend_validated: 'true'
       };
       metadata = metadataSanitized;
