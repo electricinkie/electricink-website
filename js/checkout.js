@@ -15,6 +15,11 @@ const DEBUG = typeof window !== 'undefined' && (
 );
 const debugLog = (...args) => { if (DEBUG) console.log(...args); };
 
+// ═══════════════════════════════════════════════════════════════
+// COUPON STATE (global)
+// ═══════════════════════════════════════════════════════════════
+window.appliedCoupon = null;
+window.appliedDiscount = 0;
 (function() {
   'use strict';
 
@@ -217,9 +222,13 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
       return sum + (item.price * item.quantity);
     }, 0);
 
-    // Calculate discount amount from percent (if any)
+    // Calculate discount: prefer server-validated coupon, fall back to account percent
     try {
-      totals.discount = totals.subtotal * ((totals.discountPercent || 0) / 100);
+      const accountPercent = Number(totals.discountPercent || 0);
+      const accountDiscount = totals.subtotal * (accountPercent / 100);
+      const couponDiscount = Number(window.appliedDiscount || 0);
+      // Combine discounts but never exceed subtotal
+      totals.discount = Math.min(accountDiscount + couponDiscount, totals.subtotal);
     } catch (e) {
       totals.discount = 0;
     }
@@ -897,53 +906,78 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
     });
   }
   
-  function applyDiscountCode(code) {
+  function calculateSubtotal() {
+    return cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
+  }
+
+  async function applyDiscountCode(codeArg) {
     const discountInput = document.getElementById('discountCode');
     const discountMessage = document.getElementById('discountMessage');
-    
+    const applyBtn = document.getElementById('applyDiscountBtn');
+    const originalBtnText = applyBtn ? applyBtn.textContent : '';
+
+    const code = (codeArg && String(codeArg).trim()) || (discountInput && discountInput.value.trim());
+
     if (!code) {
-      showDiscountMessage('Enter code', 'error');
+      showDiscountMessage('Digite um código de desconto', 'error');
       return;
     }
-    
-    const discount = DISCOUNT_CODES[code];
-    
-    if (!discount) {
-      showDiscountMessage('Invalid code', 'error');
-      discountInput.value = '';
+
+    const email = document.getElementById('email') ? document.getElementById('email').value : '';
+    if (!email) {
+      showDiscountMessage('Preencha seu email primeiro', 'error');
       return;
     }
-    
-    // Calculate discount amount
-    if (discount.type === 'percentage') {
-      totals.discount = totals.subtotal * (discount.value / 100);
-    } else if (discount.type === 'fixed') {
-      totals.discount = Math.min(discount.value, totals.subtotal);
-    } else if (discount.type === 'shipping') {
-      // For shipping discount, we'll make shipping free
-      // This will be handled in calculateTotals
-      totals.discount = 0;
-      showDiscountMessage(`Discount applied: ${discount.description}`, 'success');
-      calculateTotals();
-      // Override shipping to 0
-      totals.shipping = 0;
-      renderOrderSummary();
-      return;
+
+    // Get current subtotal
+    const currentSubtotal = calculateSubtotal();
+
+    // Show loading state
+    if (applyBtn) {
+      applyBtn.disabled = true;
+      applyBtn.textContent = 'Validando...';
     }
-    
-    // Recalculate totals
-    calculateTotals();
-    renderOrderSummary();
-    
-    // Show success message
-    showDiscountMessage(`Discount applied: ${discount.description}`, 'success');
-    
-    // Disable input and button
-    discountInput.disabled = true;
-    const applyButton = document.getElementById('applyDiscountBtn');
-    if (applyButton) {
-      applyButton.disabled = true;
-      applyButton.textContent = 'Applied';
+
+    try {
+      const response = await fetch('/api/validate-coupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, email: email, subtotal: currentSubtotal })
+      });
+
+      const result = await response.json();
+
+      if (result && result.valid) {
+        window.appliedCoupon = result.coupon || { code };
+        window.appliedDiscount = Number(result.discount || 0);
+
+        showDiscountMessage(result.message || 'Cupom aplicado', 'success');
+        calculateTotals();
+        renderOrderSummary();
+
+        // Disable input after successful application
+        if (discountInput) discountInput.disabled = true;
+        if (applyBtn) applyBtn.textContent = '✓ Aplicado';
+
+        console.log('[COUPON] Applied:', result.coupon && result.coupon.code, '- Discount:', result.discount);
+      } else {
+        showDiscountMessage((result && result.message) || 'Cupom inválido', 'error');
+        window.appliedCoupon = null;
+        window.appliedDiscount = 0;
+        if (applyBtn) {
+          applyBtn.disabled = false;
+          applyBtn.textContent = originalBtnText;
+        }
+      }
+    } catch (error) {
+      console.error('[COUPON] Validation error:', error);
+      showDiscountMessage('Erro ao validar cupom. Tente novamente.', 'error');
+      if (applyBtn) {
+        applyBtn.disabled = false;
+        applyBtn.textContent = originalBtnText;
+      }
+      window.appliedCoupon = null;
+      window.appliedDiscount = 0;
     }
   }
   
@@ -1332,6 +1366,14 @@ const debugLog = (...args) => { if (DEBUG) console.log(...args); };
           items_count: cart.length
         }
       };
+      // Attach coupon info if present (frontend sends validated coupon data)
+      if (window.appliedCoupon) {
+        orderData.couponCode = window.appliedCoupon.code || null;
+        orderData.discount = Number(window.appliedDiscount || 0);
+      } else {
+        orderData.couponCode = null;
+        orderData.discount = 0;
+      }
 
       debugLog('📤 [CHECKOUT] Sending orderData:', {
         hasUser: !!orderData.authUid,

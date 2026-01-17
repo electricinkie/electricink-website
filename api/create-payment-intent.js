@@ -214,7 +214,7 @@ function resolveProductById(itemId) {
   return null;
 }
 
-function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
+async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
   }
@@ -266,16 +266,84 @@ function validateAndCalculateTotal(cartItems, shippingAddress = {}) {
   // Calculate shipping from backend
   const shipping = calculateShipping(subtotal, shippingAddress);
 
-  // Calculate VAT (23%)
+  // ═══════════════════════════════════════════════════════════════
+  // VALIDATE AND APPLY DISCOUNT (server-side verification)
+  // ═══════════════════════════════════════════════════════════════
+  let discount = 0;
+
+  if (couponCode && Number(clientDiscount) > 0) {
+    try {
+      // Try promotion code first
+      const promotions = await stripe.promotionCodes.list({
+        code: String(couponCode).toUpperCase(),
+        active: true,
+        limit: 1
+      });
+
+      let coupon = null;
+      if (promotions && promotions.data && promotions.data.length > 0) {
+        coupon = promotions.data[0].coupon;
+      } else {
+        try {
+          coupon = await stripe.coupons.retrieve(couponCode);
+        } catch (err) {
+          // coupon not found
+          coupon = null;
+        }
+      }
+
+      if (coupon) {
+        // Optional first-order check via coupon metadata
+        const firstOrderOnly = coupon.metadata && coupon.metadata.first_order_only === 'true';
+        if (firstOrderOnly && customerEmail) {
+          try {
+            initFirestore();
+            const db = admin.firestore();
+            const ordersSnap = await db.collection('orders')
+              .where('email', '==', customerEmail)
+              .where('status', '==', 'paid')
+              .limit(1)
+              .get();
+            if (!ordersSnap.empty) {
+              // Customer already has orders; ignore coupon
+              discount = 0;
+            }
+          } catch (err) {
+            // Firestore check failed; fail-safe: ignore first-order restriction and continue
+            logger.warn('First-order check failed', err && err.message);
+          }
+        }
+
+        // Calculate discount amount based on coupon
+        if (!discount) {
+          if (coupon.percent_off) {
+            discount = subtotal * (coupon.percent_off / 100);
+          } else if (coupon.amount_off) {
+            discount = (coupon.amount_off || 0) / 100; // amount_off in cents
+          }
+          // Clamp
+          discount = Math.min(Number(discount || 0), subtotal);
+        }
+      }
+    } catch (err) {
+      logger.warn('Coupon validation error', err && err.message);
+      discount = 0;
+    }
+  }
+
+  // Fallback: do not trust clientDiscount unless coupon validated; discount already calculated
+  // Calculate VAT (23%) on subtotal after discount
+  const subtotalAfterDiscount = subtotal - discount;
   const VAT_RATE = 0.23;
-  const vat = (subtotal + shipping) * VAT_RATE;
+  const vat = (subtotalAfterDiscount + shipping) * VAT_RATE;
 
   // Calculate final total
-  const total = subtotal + shipping + vat;
+  const total = subtotalAfterDiscount + shipping + vat;
 
   return {
     subtotal: parseFloat(subtotal.toFixed(2)),
     shipping: parseFloat(shipping.toFixed(2)),
+    discount: parseFloat((discount || 0).toFixed(2)),
     vat: parseFloat(vat.toFixed(2)),
     total: parseFloat(total.toFixed(2))
   };
@@ -379,7 +447,13 @@ module.exports = async function handler(req, res) {
     // Improved error handling
     try {
       const crypto = require('crypto');
-      const totals = validateAndCalculateTotal(items, shippingAddress);
+      const totals = await validateAndCalculateTotal(
+        items,
+        shippingAddress,
+        req.body.couponCode || req.body.coupon || null,
+        Number(req.body.discount || 0),
+        req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email) || ''
+      );
       logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
         shipping: totals.shipping,
@@ -423,7 +497,9 @@ module.exports = async function handler(req, res) {
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),
           items_count: items.length,
-          backend_validated: 'true' // Security flag
+          backend_validated: 'true', // Security flag
+          coupon_code: (req.body.couponCode || ''),
+          discount_amount: String(Number(totals.discount || 0).toFixed(2))
         },
         automatic_payment_methods: {
           enabled: true,
