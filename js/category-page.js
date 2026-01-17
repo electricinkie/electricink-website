@@ -354,63 +354,63 @@ function getAvailabilityBadgeInfo(product) {
     };
   }
   
-  // ORDER ON REQUEST - Only for specific products/categories
+  // ORDER ON REQUEST - Specific categories and products
   if (stockStatus === 'available_on_request') {
     const category = (product.category || '').toString().toLowerCase();
     const productId = (product.id || '').toString().toLowerCase();
     const productName = (product.name || '').toString().toLowerCase();
-
-    // Debug logging to inspect which products trigger this path
-    console.log('[BADGE DEBUG]', { name: productName, category, id: productId, stockStatus });
-
-    // 1) TATTOO MACHINES - all should show badge
-    const isMachine = category.includes('machine') || 
-                      category.includes('tattoo machine') ||
-                      category === 'machines' ||
-                      productName.includes('machine') ||
-                      productId.includes('machine');
     
-    // 2) POWER SUPPLIES - all should show badge
-    const isPowerSupply = category.includes('power') || 
-                          productName.includes('power supply') ||
-                          productId.includes('power');
+    // TEMPORARY DEBUG - Remove after testing
+    if (stockStatus === 'available_on_request') {
+      console.log('[BADGE]', product.name, '| Category:', product.category, '| ID:', product.id);
+    }
     
-    // 3) ACCESSORIES - show badge except specific products with stock
+    // 1) MACHINES - category is exactly "machines"
+    const isMachine = category === 'machines' || 
+                      category === 'machine' ||
+                      category.includes('tattoo machine');
+    
+    // 2) POWER SUPPLIES
+    const isPowerSupply = category === 'power supplies' ||
+                          category === 'power supply' ||
+                          category === 'power' ||
+                          category.includes('power');
+    
+    // 3) ACCESSORIES - except specific products with stock
     const isAccessory = category === 'accessories' || 
-                        category === 'accessory' ||
-                        category.includes('accessories');
-
-    const accessoryExclusions = [
+                        category === 'accessory';
+    
+    const excludedAccessories = [
       'tattoo-grips', 'tattoo-grip', 'grip',
       'silicone-ink-cups', 'silicone-ink-cup', 'ink-cups', 'ink-cup',
-      'silicone ink cups', 'silicone ink cup'
+      'silicone ink cups', 'silicone ink cup', 'wrap-grips', 'wrap grips'
     ];
     
-    const isExcludedAccessory = accessoryExclusions.some(excluded => 
+    const isExcludedAccessory = excludedAccessories.some(excluded => 
       productId.includes(excluded) || productName.includes(excluded)
     );
-
-    // 4) INKS - show badge for ALL colors except Raven Black and Ghost White
+    
+    // 4) INKS - all colors except Raven Black and Ghost White
     const isInk = category === 'inks' || 
                   category === 'ink' || 
-                  category.includes('artistic') ||
-                  category.includes('artistic inks') ||
+                  category === 'artistic inks' ||
                   category.includes('inks');
-
+    
     const inStockInks = [
-      'raven-black', 'raven black',
-      'ghost-white', 'ghost white'
+      'raven-black', 'ravenblack', 'raven black',
+      'ghost-white', 'ghostwhite', 'ghost white'
     ];
     
     const isInStockInk = inStockInks.some(stockInk => 
-      productId.includes(stockInk) || productName.includes(stockInk)
+      productId.includes(stockInk) || productName.toLowerCase().includes(stockInk)
     );
-
+    
     // 5) DILUENT - always show badge
     const isDiluent = productId.includes('diluent') || 
-                      productName.includes('diluent');
-
-    // DECISION LOGIC:
+                      productName.toLowerCase().includes('diluent') ||
+                      productId === 'diluent';
+    
+    // DECISION LOGIC - Show badge if:
     if (isMachine || isPowerSupply || isDiluent) {
       return {
         text: 'Order on Request',
@@ -418,7 +418,7 @@ function getAvailabilityBadgeInfo(product) {
         canPurchase: true
       };
     }
-
+    
     if (isAccessory && !isExcludedAccessory) {
       return {
         text: 'Order on Request',
@@ -426,7 +426,7 @@ function getAvailabilityBadgeInfo(product) {
         canPurchase: true
       };
     }
-
+    
     if (isInk && !isInStockInk) {
       return {
         text: 'Order on Request',
