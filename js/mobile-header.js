@@ -109,11 +109,11 @@ import { isAdmin } from './admin-check.js';
             </svg>
           </button>
           <ul class="mobile-submenu">
+            <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>          
             <li><a href="/category.html?cat=cartridges">Cartridges</a></li>
             <li><a href="/category.html?cat=inks">Inks</a></li>
-            <li><a href="/category.html?cat=cosmetics">Cosmetics</a></li>
-            <li><a href="/category.html?cat=machines">Machines</a></li>
             <li><a href="/category.html?cat=accessories">Accessories</a></li>
+            <li><a href="/category.html?cat=machines">Machines</a></li>
           </ul>
         </li>
         
