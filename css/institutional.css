@@ -240,6 +240,45 @@
   font-style: italic;
 }
 
+/* Slogan styling for institutional pages (global) */
+.institutional-content .slogan {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #43BDAB;
+  text-align: center;
+  margin-top: 18px;
+  line-height: 1.2;
+}
+
+.institutional-content .slogan-sub {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2e4a51;
+  text-transform: none;
+  margin-top: 4px;
+}
+
+/* Small separated slogan (for placement below contact blocks) */
+.institutional-content .slogan-small {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #43BDAB;
+  text-align: center;
+  margin: 8px 0 24px 0;
+  line-height: 1.15;
+  opacity: 0.95;
+}
+.institutional-content .slogan-small .slogan-sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #2e4a51;
+  margin-top: 3px;
+}
+
 /* Tablet */
 @media (max-width: 1024px) {
   .institutional-page {
@@ -396,6 +435,97 @@
 
   .contact-methods {
     gap: 20px;
+  }
+
+  /* Additional shipping information styles (non-destructive) */
+  .institutional-content .shipping-table .small {
+    font-size: 13px;
+    color: #666666;
+    margin-top: 6px;
+  }
+
+  .institutional-content .shipping-option,
+  .institutional-content .pickup-details {
+    margin-bottom: 20px;
+  }
+
+  .institutional-content .option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .institutional-content .option-header h3 {
+    margin: 0;
+    color: #000000;
+    font-size: 18px;
+  }
+
+  .institutional-content .option-header .price,
+  .institutional-content .data-table tbody td strong {
+    color: #43BDAB;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .institutional-content .pickup-details {
+    padding: 15px 18px;
+    background: #FFFFFF;
+    border-radius: 6px;
+    border: 1px solid #EFF8F6;
+    margin-top: 12px;
+  }
+
+  .institutional-content .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .institutional-content .step h4 {
+    margin: 0 0 8px 0;
+    color: #000000;
+  }
+
+  .institutional-content .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .institutional-content .faq-item h4 {
+    margin: 0 0 8px 0;
+    color: #43BDAB;
+  }
+
+  .institutional-content .contact-cta {
+    margin-top: 30px;
+    padding: 18px 20px;
+    background: #F7F9F8;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  /* Ensure slogan is visible when placed inside dark .contact-info box */
+  .institutional-content .contact-info .slogan {
+    color: #43BDAB;
+  }
+
+  .institutional-content .contact-info .slogan-sub {
+    color: #2e4a51;
+  }
+
+  @media (max-width: 768px) {
+    .institutional-content .steps {
+      grid-template-columns: 1fr;
+    }
+
+    .institutional-content .faq-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .contact-method {

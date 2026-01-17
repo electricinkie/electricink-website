@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Stripe publishable key is injected from the server-side endpoint `/api/config` -->
-  <script src="/api/config"></script>
+  <script>
+    window.STRIPE_PUBLISHABLE_KEY = 'pk_live_51QUXk3Aiq7NBxfpwzrhKBxn80BdmyuVKc45aGmaMJUxhJJdcxvzLI9Sw93XFWkGTu7qBKoTnfm3bqWcJdpD2MZgF00A7Kt7uCy';
+  </script>
+    <script src="/api/config"></script>
     <script type="module" src="/js/stripe-pk.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

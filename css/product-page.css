@@ -799,31 +799,64 @@
   display: flex;
   gap: 16px;
   padding: 16px;
-  background: #FFF3CD;
-  border: 2px solid #FFA300;
+  background: rgba(67,189,171,0.06);
+  border: 2px solid rgba(67,189,171,0.16);
   border-radius: 8px;
   margin-top: 24px;
+  align-items: center;
 }
 
 .warning-icon {
   font-size: 24px;
   flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .warning-content strong {
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #000;
-  display: block;
-  margin-bottom: 4px;
-}
-
 .warning-content p {
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   color: #666;
   margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Important badge inside warning paragraph */
+.product-warning .important-note {
+  display: inline-block;
+  background: #43BDAB;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-right: 10px;
+}
+}
+
+/* Important badge inside warning paragraph */
+.product-warning .important-note {
+  display: inline-block;
+  background: #fff1f0;
+  color: #7a1f1f;
+  border: 1px solid rgba(122,31,31,0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 6px;
+  margin-right: 8px;
+}
+
+.product-warning .warning-content p {
+  margin-top: 8px;
 }
 
 /* Applications */
