@@ -308,12 +308,18 @@
   // RENDER warnings (if exists) — support both `warnings` and legacy `warning` keys
   const rawWarningText = productData.content?.warnings || productData.content?.warning || '';
   if (rawWarningText) {
-    // If the text begins with 'IMPORTANT:' (case-insensitive), wrap it with a styled element
-    const formatted = rawWarningText.replace(/^\s*IMPORTANT:\s*/i, '<strong class="important-note">IMPORTANT:</strong> ');
+    // Extract leading IMPORTANT: (case-insensitive) and split into badge + body
+    let importantHTML = '';
+    let bodyText = rawWarningText.trim();
+    const m = bodyText.match(/^\s*IMPORTANT:\s*(.*)$/i);
+    if (m) {
+      importantHTML = '<span class="important-note">IMPORTANT</span>';
+      bodyText = m[1] || '';
+    }
 
     const warningBox = document.createElement('div');
     warningBox.className = 'product-warning';
-    // Lucide-style inline SVG (info) used as visual icon — purely presentational
+    // Lucide-style inline SVG (alert-triangle) used as visual icon — purely presentational
     const lucideInfo = `
       <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle" aria-hidden="true" focusable="false">
         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
@@ -321,10 +327,13 @@
         <line x1="12" y1="17" x2="12.01" y2="17"></line>
       </svg>`;
 
+    // Build simple vertical content: IMPORTANT badge above the message (no icon)
     warningBox.innerHTML = `
-      <div class="warning-icon">${lucideInfo}</div>
       <div class="warning-content">
-        <p>${formatted}</p>
+        <div class="warning-top">
+          ${importantHTML}
+        </div>
+        <p class="warning-text">${bodyText}</p>
       </div>
     `;
 
