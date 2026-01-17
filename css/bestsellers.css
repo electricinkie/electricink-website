@@ -99,8 +99,8 @@
 }
 
 .badge-bestseller {
-  background-color: #FFD700;
-  color: #000000;
+  background-color: #AA0000;
+  color: #FFFFFF;
 }
 
 .badge-top {
@@ -109,7 +109,13 @@
 }
 
 .badge-trending {
-  background-color: #AA0000;
+  background-color: #FFA300;
+  color: #FFFFFF;
+}
+
+/* NEW: Pro Choice badge */
+.badge-pro-choice {
+  background-color: #2E4A51;
   color: #FFFFFF;
 }
 
