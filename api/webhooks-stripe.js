@@ -29,6 +29,15 @@ try {
 // Email configuration
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
+// ═══════════════════════════════════════════════════════════
+// INVENTORY CONFIGURATION
+// ═══════════════════════════════════════════════════════════
+
+const INVENTORY_CONFIG = {
+  OBSERVATION_MODE: true, // Set false to enable blocking behavior
+  ENABLE_INVENTORY_CHECK: true, // Toggle inventory checks entirely
+  SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
+};
 function validateMetadata(metadata = {}) {
   const validated = {
     email: metadata.customer_email || 'no-email@electricink.ie',
@@ -322,6 +331,149 @@ function removeUndefined(obj) {
 /**
  * Handle successful payment
  */
+// ═══════════════════════════════════════════════════════════
+// INVENTORY MANAGEMENT FUNCTIONS
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * Get inventory doc ID from cart item
+ * Prefers variant ID, falls back to product ID
+ */
+function getInventoryDocId(item) {
+  // item structure: { id: productId, v: variantId, q: quantity }
+  // Variant ID takes priority (for products with variants)
+  const docId = item.v || item.id;
+  return docId;
+}
+
+/**
+ * Check if sufficient inventory exists for all items
+ * DOES NOT MODIFY - read-only check
+ */
+async function checkInventoryAvailability(items, transaction) {
+  const results = [];
+  for (const item of items) {
+    const docId = getInventoryDocId(item);
+    const quantity = item.q || item.quantity || 1;
+    try {
+      const inventoryRef = admin.firestore().collection('inventory').doc(docId);
+      const inventoryDoc = await transaction.get(inventoryRef);
+      if (!inventoryDoc.exists) {
+        console.warn(`⚠️  Inventory doc not found: ${docId}`);
+        results.push({
+          docId,
+          requested: quantity,
+          available: null,
+          sufficient: false,
+          reason: 'inventory_doc_not_found'
+        });
+        continue;
+      }
+      const inventoryData = inventoryDoc.data();
+      const available = inventoryData.quantity || 0;
+      const sufficient = available >= quantity;
+      results.push({
+        docId,
+        productName: inventoryData.productName,
+        variantLabel: inventoryData.variantLabel,
+        requested: quantity,
+        available,
+        sufficient,
+        reason: sufficient ? 'ok' : 'insufficient_stock'
+      });
+    } catch (error) {
+      console.error(`❌ Error checking inventory for ${docId}:`, error);
+      results.push({
+        docId,
+        requested: quantity,
+        available: null,
+        sufficient: false,
+        reason: 'error_checking_inventory'
+      });
+    }
+  }
+  return results;
+}
+
+/**
+ * Decrement inventory for all items
+ * Uses Firestore transaction for atomicity
+ */
+async function decrementInventory(items, transaction) {
+  const results = [];
+  for (const item of items) {
+    const docId = getInventoryDocId(item);
+    const quantity = item.q || item.quantity || 1;
+    try {
+      const inventoryRef = admin.firestore().collection('inventory').doc(docId);
+      const inventoryDoc = await transaction.get(inventoryRef);
+      if (!inventoryDoc.exists) {
+        console.warn(`⚠️  Cannot decrement - doc not found: ${docId}`);
+        results.push({
+          docId,
+          success: false,
+          reason: 'doc_not_found'
+        });
+        continue;
+      }
+      const inventoryData = inventoryDoc.data();
+      const currentQty = inventoryData.quantity || 0;
+      const newQty = Math.max(0, currentQty - quantity);
+      // Update quantity
+      transaction.update(inventoryRef, {
+        quantity: newQty,
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+        lastDecrementedAt: admin.firestore.FieldValue.serverTimestamp(),
+        lastDecrementedBy: 'webhook_payment_success'
+      });
+      results.push({
+        docId,
+        productName: inventoryData.productName,
+        previousQty: currentQty,
+        decremented: quantity,
+        newQty,
+        success: true
+      });
+      console.log(`✅ Decremented ${docId}: ${currentQty} → ${newQty}`);
+    } catch (error) {
+      console.error(`❌ Error decrementing inventory for ${docId}:`, error);
+      results.push({
+        docId,
+        success: false,
+        reason: 'error_during_decrement',
+        error: error.message
+      });
+    }
+  }
+  return results;
+}
+
+/**
+ * Send email/log notification when stock insufficient
+ * OBSERVATION MODE: Alerts admin without blocking order
+ */
+async function sendLowStockAlert(checkResults, orderData) {
+  const insufficientItems = checkResults.filter(r => !r.sufficient);
+  if (insufficientItems.length === 0) return;
+  console.warn('⚠️  LOW STOCK ALERT - Order would be blocked in production:');
+  console.warn(JSON.stringify(insufficientItems, null, 2));
+  const alertMessage = `\n🚨 LOW STOCK ALERT - OBSERVATION MODE\n\nOrder ID: ${orderData.orderId || 'unknown'}\nCustomer: ${orderData.customerEmail || 'unknown'}\n\nItems with insufficient stock:\n${insufficientItems.map(item => `- ${item.productName || item.docId}${item.variantLabel ? ' (' + item.variantLabel + ')' : ''}\n   Requested: ${item.requested}, Available: ${item.available}, Reason: ${item.reason}`).join('\n')}\n\n⚠️  NOTE: Order was ACCEPTED in observation mode.\nIn production mode, this order would be BLOCKED.\n\nAction required: Restock or manually handle order.\n  `;
+  console.log(alertMessage);
+  // TODO: hook into email service when ready (Resend)
+  if (INVENTORY_CONFIG.SEND_LOW_STOCK_ALERTS && resend) {
+    try {
+      await resend.emails.send({
+        from: EMAIL_FROM,
+        to: ADMIN_EMAIL,
+        subject: `🚨 LOW STOCK ALERT - Order ${orderData.orderId || 'unknown'}`,
+        html: `<pre>${alertMessage}</pre>`
+      });
+      console.log('✅ Low stock alert email sent');
+    } catch (err) {
+      console.error('⚠️ Failed to send low stock alert email:', err && err.message);
+    }
+  }
+}
 // Validate and fill defaults for possibly-truncated Stripe metadata
 function validateMetadata(metadata) {
   const validated = {
@@ -430,35 +582,120 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     };
     // Tentar criar document com ID específico (atomicidade)
     const orderRef = db.collection('orders').doc(orderId);
-    console.log('🔍 Iniciando transaction para order:', orderId);
+    console.log('🔍 Iniciando inventory-aware transaction para order:', orderId);
     console.log('🔍 Order ref path:', orderRef.path);
-    await db.runTransaction(async (transaction) => {
-      const orderDoc = await transaction.get(orderRef);
-      if (orderDoc.exists) {
+
+    if (!INVENTORY_CONFIG.ENABLE_INVENTORY_CHECK) {
+      // Fast path: no inventory checks, preserve previous behavior
+      await db.runTransaction(async (transaction) => {
+        const orderDoc = await transaction.get(orderRef);
+        if (orderDoc.exists) {
+          logger.info(JSON.stringify({
+            msg: 'Order already processed (idempotent)',
+            orderId,
+            requestId,
+            timestamp: new Date().toISOString(),
+            status: 'idempotent'
+          }));
+          return;
+        }
+        const cleanOrder = removeUndefined(order);
+        transaction.set(orderRef, cleanOrder);
+      });
+      console.log('✅ Order criada com sucesso no Firestore (inventory checks disabled)');
+    } else {
+      // Inventory-checking path (observation-mode safe rollout)
+      try {
+        await db.runTransaction(async (transaction) => {
+          const orderDoc = await transaction.get(orderRef);
+          if (orderDoc.exists) {
+            logger.info(JSON.stringify({
+              msg: 'Order already processed (idempotent)',
+              orderId,
+              requestId,
+              timestamp: new Date().toISOString(),
+              status: 'idempotent'
+            }));
+            return;
+          }
+
+          // If no items metadata, behave as before
+          if (!items || items.length === 0) {
+            const cleanOrder = removeUndefined(order);
+            transaction.set(orderRef, cleanOrder);
+            return;
+          }
+
+          // STEP 1: Check inventory availability (read-only checks within transaction)
+          const checkResults = await checkInventoryAvailability(items, transaction);
+          const allSufficient = checkResults.every(r => r.sufficient);
+
+          if (!allSufficient && !INVENTORY_CONFIG.OBSERVATION_MODE) {
+            console.error('❌ INSUFFICIENT STOCK - Order blocked (blocking mode)');
+            // Throw to abort transaction
+            throw new Error('Insufficient stock for one or more items');
+          }
+
+          if (!allSufficient && INVENTORY_CONFIG.OBSERVATION_MODE) {
+            console.warn('⚠️  OBSERVATION: Stock insufficient but order will be accepted');
+            if (INVENTORY_CONFIG.SEND_LOW_STOCK_ALERTS) {
+              // Send alert (best-effort) - do not throw
+              try {
+                await sendLowStockAlert(checkResults, order);
+              } catch (alertErr) {
+                console.error('⚠️ Failed to send low stock alert:', alertErr && alertErr.message);
+              }
+            }
+          }
+
+          // STEP 2: Decrement inventory for items (still within transaction)
+          const decrementResults = await decrementInventory(items, transaction);
+
+          // STEP 3: Save order with inventory audit fields
+          const cleanOrder = removeUndefined(order);
+          transaction.set(orderRef, {
+            ...cleanOrder,
+            inventoryChecked: true,
+            inventoryCheckResults: checkResults,
+            inventoryDecrementResults: decrementResults,
+            observationMode: INVENTORY_CONFIG.OBSERVATION_MODE,
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+        });
+
+        console.log('✅ Order criada com sucesso no Firestore (inventory checked)');
         logger.info(JSON.stringify({
-          msg: 'Order already processed (idempotent)',
+          msg: 'Order created with inventory audit',
           orderId,
           requestId,
           timestamp: new Date().toISOString(),
-          status: 'idempotent'
+          status: 'created_with_inventory'
         }));
-        return;
+
+      } catch (txErr) {
+        console.error('❌ Transaction error while processing inventory-aware order:', txErr && txErr.message);
+        // In observation mode, accept order even if inventory transaction fails
+        if (INVENTORY_CONFIG.OBSERVATION_MODE) {
+          console.warn('⚠️ Transaction failed but accepting order (observation mode)');
+          try {
+            await db.collection('orders').doc(orderId).set(removeUndefined(order));
+            logger.info(JSON.stringify({
+              msg: 'Order created after transaction failure (observation)',
+              orderId,
+              requestId,
+              timestamp: new Date().toISOString(),
+              status: 'created_after_tx_failure'
+            }));
+          } catch (setErr) {
+            console.error('❌ Failed to persist order after transaction failure:', setErr && setErr.message);
+            throw setErr;
+          }
+        } else {
+          // Blocking mode - rethrow to make Stripe retry
+          throw txErr;
+        }
       }
-      const cleanOrder = removeUndefined(order);
-      console.log('🧹 Order original fields:', Object.keys(order).length);
-      console.log('🧹 Order limpa fields:', Object.keys(cleanOrder).length);
-      transaction.set(orderRef, cleanOrder);
-      console.log('✅ Transaction.set executado');
-    });
-    console.log('✅ Order criada com sucesso no Firestore');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    logger.info(JSON.stringify({
-      msg: 'Order created successfully',
-      orderId,
-      requestId,
-      timestamp: new Date().toISOString(),
-      status: 'created'
-    }));
+    }
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
     if (!resend) {
