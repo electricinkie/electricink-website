@@ -92,7 +92,7 @@
     ],
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "available_soon",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -106,8 +106,9 @@
         "tattoo cartridge"
       ]
     },
-    "inStock": true,
+    "inStock": false,
     "featured": true,
-    "stripe_price_id": "price_1Sm3heAiq7NBxfpwKkRuPLEv"
+    "stripe_price_id": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
+    "availableDate": "2026-02-15"
   }
 }

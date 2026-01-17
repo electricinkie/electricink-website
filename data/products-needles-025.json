@@ -92,7 +92,7 @@
     ],
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "available_soon",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -106,9 +106,10 @@
         "tattoo cartridge"
       ]
     },
-    "inStock": true,
+    "inStock": false,
     "featured": true,
-    "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUKq5DWPn"
+    "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUKq5DWPn",
+    "availableDate": "2026-02-15"
   },
   "rs-025": {
     "id": "rs-025",
@@ -185,7 +186,7 @@
     ],
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "available_soon",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -198,9 +199,10 @@
         "solid fills"
       ]
     },
-    "inStock": true,
+    "inStock": false,
     "featured": false,
-    "stripe_price_id": "price_1Sm3uQAiq7NBxfpw8cQnk3cg"
+    "stripe_price_id": "price_1Sm3uQAiq7NBxfpw8cQnk3cg",
+    "availableDate": "2026-02-15"
   },
   "rmg-025": {
     "id": "rmg-025",
@@ -313,7 +315,7 @@
     ],
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "available_soon",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -326,8 +328,9 @@
         "colour packing"
       ]
     },
-    "inStock": true,
+    "inStock": false,
     "featured": true,
-    "stripe_price_id": "price_1Sm41UAiq7NBxfpw10Z2VYoy"
+    "stripe_price_id": "price_1Sm41UAiq7NBxfpw10Z2VYoy",
+    "availableDate": "2026-02-15"
   }
 }

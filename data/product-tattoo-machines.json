@@ -52,8 +52,8 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 30,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -97,8 +97,8 @@
     ],
     "content": {},
     "inventory": {
-      "stock_quantity": 50,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -299,8 +299,8 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 20,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -376,8 +376,8 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 15,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -434,8 +434,8 @@
       }
     },
     "inventory": {
-      "stock_quantity": 12,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 2
     },
     "seo": {
@@ -490,8 +490,8 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 8,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 2
     },
     "seo": {
@@ -559,8 +559,8 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 5,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
     "seo": {

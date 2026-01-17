@@ -298,7 +298,7 @@
     },
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "available_soon",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -312,9 +312,10 @@
         "tattoo"
       ]
     },
-    "inStock": true,
+    "inStock": false,
     "featured": true,
-    "stripe_price_id": "price_1Sm1MoAiq7NBxfpw4efgnQ1A"
+    "stripe_price_id": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
+    "availableDate": "2026-02-15"
   },
   "transfer-it": {
     "id": "transfer-it",
@@ -421,7 +422,7 @@
     },
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -435,7 +436,7 @@
         "tattoo"
       ]
     },
-    "inStock": true,
+    "inStock": false,
     "stripe_price_id": "price_1Sm1W8Aiq7NBxfpwmkBIpvUp"
   },
   "clean-up": {
