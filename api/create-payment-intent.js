@@ -491,6 +491,20 @@ module.exports = async function handler(req, res) {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
         currency: 'eur',
+        // Include shipping on the PaymentIntent so webhooks can read a structured
+        // address from `paymentIntent.shipping` (preferred over metadata parsing).
+        shipping: {
+          name: metadata.customer_name || req.body.name || `${(shippingAddress.firstName || '')} ${(shippingAddress.lastName || '')}`.trim(),
+          phone: shippingAddress.phone || metadata.phone || '',
+          address: {
+            line1: shippingAddress.line1 || shippingAddress.address || '',
+            line2: shippingAddress.line2 || shippingAddress.address2 || '',
+            city: shippingAddress.city || '',
+            state: shippingAddress.state || '',
+            postal_code: shippingAddress.postalCode || shippingAddress.postal_code || '',
+            country: shippingAddress.country || ''
+          }
+        },
         metadata: {
           ...metadata,
           subtotal: totals.subtotal.toFixed(2),
