@@ -757,7 +757,18 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
         const price = Number(unitRaw || 0);
         const quantity = item.quantity || 1;
-        return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong><br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
+        const lineTotal = (price * quantity) || 0;
+        return `
+          <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">
+              <strong>${item.name || item.description || item.id || 'Item'}</strong>
+              ${item.variant ? `<br><small style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999;">${item.variant}</small>` : ''}
+            </td>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: center; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">${quantity}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">€${price.toFixed(2)}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000; font-weight: 700;">€${lineTotal.toFixed(2)}</td>
+          </tr>
+        `;
       }).join('');
 
       const finalClientHtml = clientEmailHtml.replace(/{{itemsList}}/g, itemsHtml);
@@ -821,7 +832,19 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
         const price = Number(unitRaw || 0);
         const quantity = item.quantity || 1;
-        return `<div class="item"><strong>${item.name || item.description || item.id || 'Item'}</strong> (SKU: ${item.sku || 'N/A'})<br>Qty: ${quantity} × €${price.toFixed(2)} = €${(quantity * price).toFixed(2)}</div>`;
+        const lineTotal = (price * quantity) || 0;
+        return `
+          <tr>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">
+              <strong>${item.name || item.description || item.id || 'Item'}</strong>
+              ${item.sku ? ` <small style="color:#999999">(SKU: ${item.sku})</small>` : ''}
+              ${item.variant ? `<br><small style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999;">${item.variant}</small>` : ''}
+            </td>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: center; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">${quantity}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">€${price.toFixed(2)}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000; font-weight: 700;">€${lineTotal.toFixed(2)}</td>
+          </tr>
+        `;
       }).join('');
 
       const finalAdminHtml = adminEmailHtml.replace(/{{itemsList}}/g, adminItemsHtml);
