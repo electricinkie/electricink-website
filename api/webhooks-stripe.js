@@ -26,6 +26,37 @@ try {
   console.warn('⚠️ Email templates could not be loaded:', tplErr && tplErr.message);
 }
 
+// Product catalog loader (read-only, cached) - used ONLY for enriching email HTML
+let PRODUCT_CATALOG_CACHE = null;
+function loadProductCatalog() {
+  if (PRODUCT_CATALOG_CACHE) return PRODUCT_CATALOG_CACHE;
+  try {
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) return [];
+    const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
+    const catalog = [];
+    for (const f of files) {
+      try {
+        const content = fs.readFileSync(path.join(dataDir, f), 'utf8');
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          catalog.push(...parsed);
+        } else if (parsed && typeof parsed === 'object') {
+          // some files might be object maps; convert to array of values
+          catalog.push(...Object.values(parsed));
+        }
+      } catch (e) {
+        console.warn('⚠️ Failed to parse catalog file', f, e && e.message);
+      }
+    }
+    PRODUCT_CATALOG_CACHE = catalog;
+    return PRODUCT_CATALOG_CACHE;
+  } catch (err) {
+    console.error('❌ loadProductCatalog error:', err && err.message);
+    return [];
+  }
+}
+
 // Email configuration
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
@@ -751,7 +782,17 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2));
 
-      const itemsHtml = (order.items || []).map(item => {
+      // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização
+      const productCatalog = loadProductCatalog();
+      const itemsForEmail = (order.items || []).map(item => {
+        const product = productCatalog.find(p => p.id === item.id);
+        return Object.assign({}, item, {
+          name: (product && (product.name || product.title)) ? (product.name || product.title) : (item.name || item.id),
+          price: (product && (product.price !== undefined && product.price !== null)) ? Number(product.price) : (item.price !== undefined ? Number(item.price) : 0)
+        });
+      });
+
+      const itemsHtml = (itemsForEmail || []).map(item => {
         const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
           ? (item.unit_amount / 100)
           : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
@@ -826,7 +867,17 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2));
 
-      const adminItemsHtml = (order.items || []).map(item => {
+      // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização (admin)
+      const productCatalogForAdmin = PRODUCT_CATALOG_CACHE || loadProductCatalog();
+      const itemsForEmailAdmin = (order.items || []).map(item => {
+        const product = productCatalogForAdmin.find(p => p.id === item.id);
+        return Object.assign({}, item, {
+          name: (product && (product.name || product.title)) ? (product.name || product.title) : (item.name || item.id),
+          price: (product && (product.price !== undefined && product.price !== null)) ? Number(product.price) : (item.price !== undefined ? Number(item.price) : 0)
+        });
+      });
+
+      const adminItemsHtml = (itemsForEmailAdmin || []).map(item => {
         const unitRaw = (item.unit_amount !== undefined && item.unit_amount !== null)
           ? (item.unit_amount / 100)
           : (item.price !== undefined ? item.price : (item.amount_total !== undefined ? (item.amount_total / 100) : 0));
