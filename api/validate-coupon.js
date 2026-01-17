@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
     if (!code || !email || subtotal === undefined) {
       return res.status(400).json({ 
         valid: false, 
-        message: 'Código, email e subtotal são obrigatórios' 
+        message: 'Code, email and subtotal are required' 
       });
     }
 
@@ -67,13 +67,32 @@ module.exports = async (req, res) => {
         // Check expiration
         if (!coupon.valid || (coupon.redeem_by && Date.now() / 1000 > coupon.redeem_by)) {
           console.log(`[COUPON] Expired: ${upperCode}`);
-          return res.json({ valid: false, message: 'Cupom expirado' });
+          return res.json({ valid: false, message: 'Coupon expired' });
         }
         
         // Check max redemptions
         if (coupon.max_redemptions && coupon.times_redeemed >= coupon.max_redemptions) {
           console.log(`[COUPON] Max redemptions reached: ${upperCode}`);
-          return res.json({ valid: false, message: 'Cupom esgotado' });
+          return res.json({ valid: false, message: 'Coupon fully redeemed' });
+        }
+        // ═══════════════════════════════════════════════════════════════
+        // CHECK CUSTOMER RESTRICTION (for pro team / specific customers)
+        // ═══════════════════════════════════════════════════════════════
+        if (promoCode && promoCode.metadata && promoCode.metadata.restricted_email) {
+          const restrictedEmail = promoCode.metadata.restricted_email.toLowerCase().trim();
+          const customerEmail = email.toLowerCase().trim();
+          
+          console.log(`[COUPON] Checking restriction: coupon requires ${restrictedEmail}, customer is ${customerEmail}`);
+          
+          if (customerEmail !== restrictedEmail) {
+            console.log(`[COUPON] Email restriction failed - coupon not available for ${customerEmail}`);
+            return res.json({ 
+              valid: false, 
+              message: 'This coupon is not available for your email' 
+            });
+          }
+          
+          console.log(`[COUPON] Email restriction passed - ${customerEmail} is authorized`);
         }
         
       } else {
@@ -83,12 +102,12 @@ module.exports = async (req, res) => {
         
         if (!coupon || !coupon.valid) {
           console.log(`[COUPON] Invalid coupon: ${upperCode}`);
-          return res.json({ valid: false, message: 'Cupom inválido' });
+          return res.json({ valid: false, message: 'Invalid coupon' });
         }
       }
     } catch (err) {
       console.log(`[COUPON] Not found: ${upperCode}`, err.message);
-      return res.json({ valid: false, message: 'Cupom não encontrado' });
+      return res.json({ valid: false, message: 'Coupon not found' });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -109,7 +128,7 @@ module.exports = async (req, res) => {
         console.log(`[COUPON] Not first order for: ${email}`);
         return res.json({ 
           valid: false, 
-          message: 'Cupom válido apenas para primeira compra' 
+          message: 'Coupon valid only for first order' 
         });
       }
       
@@ -156,14 +175,14 @@ module.exports = async (req, res) => {
       },
       discount: Number(discountAmount.toFixed(2)),
       discountDisplay: discountDisplay,
-      message: `✅ Cupom aplicado: ${discountDisplay}`
+      message: `Coupon applied: ${discountDisplay}`
     });
 
   } catch (error) {
     console.error('[COUPON] Validation error:', error);
     return res.status(500).json({ 
       valid: false, 
-      message: 'Erro ao validar cupom' 
+      message: 'Error validating coupon' 
     });
   }
 };

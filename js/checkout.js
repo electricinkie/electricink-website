@@ -144,7 +144,7 @@ window.appliedDiscount = 0;
       // UX: if Firebase unavailable (CSP/CDN), show discrete notice and continue
       const note = document.getElementById('accountNotice');
       if (note) {
-        note.textContent = 'Recursos de conta indisponíveis no momento; o checkout continua funcionando.';
+          note.textContent = 'Account features unavailable right now; checkout continues.';
         note.style.display = 'block';
       } else if (window.toast && typeof window.toast.info === 'function') {
         window.toast.info('Account features unavailable; checkout continues.');
@@ -919,13 +919,13 @@ window.appliedDiscount = 0;
     const code = (codeArg && String(codeArg).trim()) || (discountInput && discountInput.value.trim());
 
     if (!code) {
-      showDiscountMessage('Digite um código de desconto', 'error');
+      showDiscountMessage('Enter a discount code', 'error');
       return;
     }
 
     const email = document.getElementById('email') ? document.getElementById('email').value : '';
     if (!email) {
-      showDiscountMessage('Preencha seu email primeiro', 'error');
+      showDiscountMessage('Please enter your email first', 'error');
       return;
     }
 
@@ -935,7 +935,7 @@ window.appliedDiscount = 0;
     // Show loading state
     if (applyBtn) {
       applyBtn.disabled = true;
-      applyBtn.textContent = 'Validando...';
+      applyBtn.textContent = 'Validating...';
     }
 
     try {
@@ -951,17 +951,17 @@ window.appliedDiscount = 0;
         window.appliedCoupon = result.coupon || { code };
         window.appliedDiscount = Number(result.discount || 0);
 
-        showDiscountMessage(result.message || 'Cupom aplicado', 'success');
+        showDiscountMessage(result.message || 'Coupon applied', 'success');
         calculateTotals();
         renderOrderSummary();
 
         // Disable input after successful application
         if (discountInput) discountInput.disabled = true;
-        if (applyBtn) applyBtn.textContent = '✓ Aplicado';
+        if (applyBtn) applyBtn.textContent = 'Applied';
 
         console.log('[COUPON] Applied:', result.coupon && result.coupon.code, '- Discount:', result.discount);
       } else {
-        showDiscountMessage((result && result.message) || 'Cupom inválido', 'error');
+        showDiscountMessage((result && result.message) || 'Invalid coupon', 'error');
         window.appliedCoupon = null;
         window.appliedDiscount = 0;
         if (applyBtn) {
@@ -971,7 +971,7 @@ window.appliedDiscount = 0;
       }
     } catch (error) {
       console.error('[COUPON] Validation error:', error);
-      showDiscountMessage('Erro ao validar cupom. Tente novamente.', 'error');
+      showDiscountMessage('Error validating coupon. Please try again.', 'error');
       if (applyBtn) {
         applyBtn.disabled = false;
         applyBtn.textContent = originalBtnText;
