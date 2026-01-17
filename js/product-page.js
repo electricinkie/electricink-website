@@ -392,106 +392,193 @@
   }
 
   // ADD TO CART button
-  document.getElementById('addToCartBtn').onclick = function() {
-    let itemToAdd;
-    
-    if (productData.variants && productData.variants.length > 0) {
-      // Product with variants
-      const variantSelect = document.getElementById('variantSelect');
-      
-      if (!variantSelect || variantSelect.selectedIndex === -1) {
-        alert('Please select a variant');
-        return;
-      }
-      
-      const selectedOption = variantSelect.options[variantSelect.selectedIndex];
-      const selectedVariant = productData.variants.find(v => v.id === selectedOption.value);
-      
-      if (!selectedVariant) {
-        alert('Invalid variant selected');
-        return;
-      }
-      
-      // Resolve priceId explicitly and fail if missing
-      let resolvedPriceId;
+/**
+ * Check if product can be purchased
+ * @param {Object} product - Product object with inventory data
+ * @returns {Object} - {canPurchase, reason, message}
+ */
+function checkProductAvailability(product) {
+  const stockStatus = product.inventory?.stock_status;
+  
+  // Coming Soon - cannot purchase
+  if (stockStatus === 'available_soon') {
+    const availableDate = product.availableDate || product.inventory?.availableDate;
+    let dateText = '';
+    if (availableDate) {
       try {
-        resolvedPriceId = resolveStripePriceId(productData, selectedVariant);
-      } catch (err) {
-        console.error('Stripe price resolution failed (variant):', err);
-        alert('Product price not configured correctly. Please contact support.');
-        return;
+        const date = new Date(availableDate);
+        dateText = ' (' + date.toLocaleDateString('en-IE', { month: 'short', day: 'numeric' }) + ')';
+      } catch (e) {
+        dateText = availableDate ? ` (${availableDate})` : '';
       }
-
-      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
-
-      // Resolve a usable price for the selected variant (fallback to product price)
-      const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
-        ? selectedVariant.price
-        : (productData.basic?.price ?? productData.price ?? null);
-
-      if (resolvedVariantPrice === null) {
-        console.error('No price available for selected variant or product', { productId, selectedVariant });
-        alert('Product price not available');
-        return;
-      }
-
-      itemToAdd = {
-        id: `${productId}-${selectedVariant.id}`,
-        name: `${name} - ${selectedVariant.label}`,
-        price: resolvedVariantPrice,
-        stripe_price_id: resolvedPriceId,
-        image: selectedVariant.image || mainImage,
-        variant: selectedVariant.id || selectedVariant.label || null
-      };
-    } else {
-      // Simple product
-      const price = productData.basic?.price || productData.price;
-      // Resolve priceId explicitly and fail if missing
-      let resolvedPriceId;
-      try {
-        resolvedPriceId = resolveStripePriceId(productData, undefined);
-      } catch (err) {
-        console.error('Stripe price resolution failed (simple product):', err, productData);
-        alert('Product price not configured correctly. Please contact support.');
-        return;
-      }
-
-      console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: null, resolvedPriceId });
-
-      if (!price) {
-        alert('Product price not available');
-        return;
-      }
-
-      itemToAdd = {
-        id: productId,
-        name: name,
-        price: price,
-        stripe_price_id: resolvedPriceId,
-        image: mainImage
-      };
     }
-    
-    // Add to cart usando global system
-    if (window.cart && window.cart.addItem) {
-      if (window.cart.addItem(itemToAdd)) {
-        // Success feedback no botão
-        const btn = this;
-        const originalText = btn.textContent;
-        btn.textContent = '✓ Added!';
-        btn.style.background = '#43BDAB';
-        
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.background = '';
-        }, 2000);
-      } else {
-        alert('Failed to add item to cart. Please try again.');
-      }
-    } else {
-      alert('Cart system not available. Please refresh the page.');
-    }
+    return {
+      canPurchase: false,
+      reason: 'coming_soon',
+      message: `This product will be available soon${dateText}`
+    };
+  }
+  
+  // Out of Stock - cannot purchase
+  if (stockStatus === 'out_of_stock') {
+    return {
+      canPurchase: false,
+      reason: 'out_of_stock',
+      message: 'This product is currently out of stock'
+    };
+  }
+  
+  // Order on Request - can purchase (but takes longer)
+  if (stockStatus === 'available_on_request') {
+    return {
+      canPurchase: true,
+      reason: 'order_on_request',
+      message: ''
+    };
+  }
+  
+  // In Stock - can purchase normally
+  return {
+    canPurchase: true,
+    reason: 'in_stock',
+    message: ''
   };
+}
+
+  // Set up Add to Cart button with availability check
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  if (addToCartBtn) {
+    const availability = checkProductAvailability(productData);
+
+    if (!availability.canPurchase) {
+    // Product cannot be purchased - disable button
+    addToCartBtn.disabled = true;
+    addToCartBtn.style.opacity = '0.5';
+    addToCartBtn.style.cursor = 'not-allowed';
+    addToCartBtn.style.backgroundColor = '#6b7280';
+    
+    // Change button text based on reason
+    if (availability.reason === 'coming_soon') {
+      addToCartBtn.textContent = 'Coming Soon';
+    } else if (availability.reason === 'out_of_stock') {
+      addToCartBtn.textContent = 'Out of Stock';
+    }
+    
+    // Show message to user
+    if (availability.message) {
+      const productPrice = document.querySelector('.product-price') || document.getElementById('productPrice');
+      if (productPrice) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'availability-message';
+        messageDiv.style.cssText = 'color: #6b7280; font-size: 0.9rem; margin-top: 8px; font-style: italic;';
+        messageDiv.textContent = availability.message;
+        productPrice.parentNode.insertBefore(messageDiv, productPrice.nextSibling);
+      }
+    }
+  } else {
+      // Product can be purchased - attach existing handler
+      addToCartBtn.onclick = function() {
+        let itemToAdd;
+        
+        if (productData.variants && productData.variants.length > 0) {
+          // Product with variants
+          const variantSelect = document.getElementById('variantSelect');
+          
+          if (!variantSelect || variantSelect.selectedIndex === -1) {
+            alert('Please select a variant');
+            return;
+          }
+          
+          const selectedOption = variantSelect.options[variantSelect.selectedIndex];
+          const selectedVariant = productData.variants.find(v => v.id === selectedOption.value);
+          
+          if (!selectedVariant) {
+            alert('Invalid variant selected');
+            return;
+          }
+          
+          // Resolve priceId explicitly and fail if missing
+          let resolvedPriceId;
+          try {
+            resolvedPriceId = resolveStripePriceId(productData, selectedVariant);
+          } catch (err) {
+            console.error('Stripe price resolution failed (variant):', err);
+            alert('Product price not configured correctly. Please contact support.');
+            return;
+          }
+
+          console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
+
+          // Resolve a usable price for the selected variant (fallback to product price)
+          const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
+            ? selectedVariant.price
+            : (productData.basic?.price ?? productData.price ?? null);
+
+          if (resolvedVariantPrice === null) {
+            console.error('No price available for selected variant or product', { productId, selectedVariant });
+            alert('Product price not available');
+            return;
+          }
+
+          itemToAdd = {
+            id: `${productId}-${selectedVariant.id}`,
+            name: `${name} - ${selectedVariant.label}`,
+            price: resolvedVariantPrice,
+            stripe_price_id: resolvedPriceId,
+            image: selectedVariant.image || mainImage,
+            variant: selectedVariant.id || selectedVariant.label || null
+          };
+        } else {
+          // Simple product
+          const price = productData.basic?.price || productData.price;
+          // Resolve priceId explicitly and fail if missing
+          let resolvedPriceId;
+          try {
+            resolvedPriceId = resolveStripePriceId(productData, undefined);
+          } catch (err) {
+            console.error('Stripe price resolution failed (simple product):', err, productData);
+            alert('Product price not configured correctly. Please contact support.');
+            return;
+          }
+
+          console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: null, resolvedPriceId });
+
+          if (!price) {
+            alert('Product price not available');
+            return;
+          }
+
+          itemToAdd = {
+            id: productId,
+            name: name,
+            price: price,
+            stripe_price_id: resolvedPriceId,
+            image: mainImage
+          };
+        }
+        
+        // Add to cart usando global system
+        if (window.cart && window.cart.addItem) {
+          if (window.cart.addItem(itemToAdd)) {
+            // Success feedback no botão
+            const btn = this;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Added!';
+            btn.style.background = '#43BDAB';
+            
+            setTimeout(() => {
+              btn.textContent = originalText;
+              btn.style.background = '';
+            }, 2000);
+          } else {
+            alert('Failed to add item to cart. Please try again.');
+          }
+        } else {
+          alert('Cart system not available. Please refresh the page.');
+        }
+      };
+    }
+  }
 
   // Breadcrumb - atualiza com informação correta do produto
   const breadcrumbCategory = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Products';

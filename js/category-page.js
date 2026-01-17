@@ -351,6 +351,55 @@
     return false;
   }
 
+/**
+ * Get availability badge info for a product
+ * Returns badge configuration or null for in-stock products
+ */
+function getAvailabilityBadgeInfo(product) {
+  const stockStatus = product.inventory?.stock_status;
+  const stockQuantity = product.inventory?.stock_quantity || 0;
+  
+  // COMING SOON - Cannot purchase (not launched yet)
+  if (stockStatus === 'available_soon') {
+    const availableDate = product.availableDate || product.inventory?.availableDate;
+    let dateText = '';
+    if (availableDate) {
+      try {
+        const date = new Date(availableDate);
+        dateText = ' - ' + date.toLocaleDateString('en-IE', { month: 'short', day: 'numeric' });
+      } catch (e) {
+        console.warn('Invalid availableDate:', availableDate);
+      }
+    }
+    return {
+      text: `Coming Soon${dateText}`,
+      class: 'badge-coming-soon',
+      canPurchase: false
+    };
+  }
+  
+  // OUT OF STOCK - Cannot purchase
+  if (stockStatus === 'out_of_stock') {
+    return {
+      text: 'Out of Stock',
+      class: 'badge-out-of-stock',
+      canPurchase: false
+    };
+  }
+  
+  // ORDER ON REQUEST - Can purchase (takes longer to ship)
+  if (stockStatus === 'available_on_request') {
+    return {
+      text: 'Order on Request',
+      class: 'badge-order-request',
+      canPurchase: true
+    };
+  }
+  
+  // IN STOCK - No badge (default clean look)
+  return null;
+}
+
   function renderProducts(products) {
     const grid = document.getElementById('productsGrid');
     const emptyState = document.getElementById('emptyState');
@@ -411,12 +460,16 @@
         // Assemble card
         info.appendChild(categoryBadge);
 
-        // Product-level availability badge ("Available to Order") for inks/accessories
-        if (isAvailableToOrder(product)) {
-          const avail = document.createElement('span');
-          avail.className = 'product-availability-badge';
-          avail.textContent = 'Available to Order';
-          info.appendChild(avail);
+        // Add availability badge if needed
+        const badgeInfo = getAvailabilityBadgeInfo(product);
+        if (badgeInfo) {
+          const badge = document.createElement('span');
+          badge.className = `product-availability-badge ${badgeInfo.class}`;
+          badge.textContent = badgeInfo.text;
+          card.appendChild(badge);
+          
+          // Store purchase status for potential future use
+          card.dataset.canPurchase = badgeInfo.canPurchase;
         }
         info.appendChild(name);
         info.appendChild(price);

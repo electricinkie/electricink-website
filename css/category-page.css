@@ -292,27 +292,37 @@
   color: #43BDAB;
 }
 
-/* Product availability badge (reuses homepage badge structure, brand teal variant) */
+/* Base badge style */
 .product-availability-badge {
-  display: inline-block;
-  background: rgba(67,189,171,0.10);
-  color: #043A33; /* dark teal for text */
-  border: 1px solid rgba(67,189,171,0.22);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
   padding: 6px 12px;
-  border-radius: 18px;
-  margin-top: 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-@media (max-width: 640px) {
-  .product-availability-badge {
-    font-size: 11px;
-    padding: 5px 10px;
-  }
+/* ORDER ON REQUEST - Dark teal/gray-green */
+.badge-order-request {
+  background-color: #2E4A51;
+  color: white;
+}
+
+/* COMING SOON - Orange */
+.badge-coming-soon {
+  background-color: #FFA300;
+  color: white;
+}
+
+/* OUT OF STOCK - Dark red */
+.badge-out-of-stock {
+  background-color: #AA0000;
+  color: white;
 }
 
 .product-name {

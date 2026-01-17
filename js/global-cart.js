@@ -36,6 +36,22 @@
 
   // ────────── Add Item to Cart ──────────
   function addItem(item) {
+    // Defensive check: prevent adding unavailable products
+    if (item && (item.availability === 'available_soon' || item.availability === 'coming_soon')) {
+      console.warn('Cannot add coming soon product to cart:', item.id);
+      return false;
+    }
+    
+    if (item && (item.availability === 'out_of_stock' || item.stock_status === 'out_of_stock')) {
+      console.warn('Cannot add out of stock product to cart:', item.id);
+      return false;
+    }
+    
+    if (item && item.stock_status === 'available_soon') {
+      console.warn('Cannot add coming soon product to cart:', item.id);
+      return false;
+    }
+
     // Validação
     if (!item || !item.id || !item.name || !item.price) {
       console.error('Invalid item:', item);
