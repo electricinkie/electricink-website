@@ -415,7 +415,8 @@ function checkProductAvailability(product) {
     return {
       canPurchase: false,
       reason: 'coming_soon',
-      message: `This product will be available soon${dateText}`
+      // Mensagem removida por solicitação — manter string vazia
+      message: ''
     };
   }
   
