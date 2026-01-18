@@ -82,7 +82,7 @@
   border-color: #43BDAB;
 }
 
-.trust-badges {
+.product-showcase .trust-badges {
   display: flex;
   gap: 15px;
   padding: 18px 20px;
@@ -91,20 +91,20 @@
   border: 1px solid rgba(67, 189, 171, 0.2);
 }
 
-.trust-item {
+.product-showcase .trust-item {
   display: flex;
   align-items: center;
   gap: 10px;
   flex: 1;
 }
 
-.trust-check {
+.product-showcase .trust-check {
   color: #43BDAB;
   font-size: 16px;
   font-weight: 700;
 }
 
-.trust-badges .trust-text {
+.product-showcase .trust-badges .trust-text {
   font-family: 'Montserrat', sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -226,6 +226,129 @@
   font-size: 36px;
   font-weight: 700;
   color: #000000;
+}
+
+/* Promo price visuals for Ultra Pen showcase (scoped to avoid conflicts) */
+.product-showcase .price-display-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.product-showcase .promo-badge-large {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  box-shadow: 0 6px 18px rgba(255, 107, 53, 0.12);
+}
+
+.product-showcase .price-was {
+  color: #777;
+  text-decoration: line-through;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.product-showcase .price-now {
+  color: #0f9f88;
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.product-showcase .price-savings {
+  color: #FF6B35;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* Hide legacy single price when promo container exists to avoid duplicate prices */
+.product-showcase .price-display-container + .price-main,
+.product-showcase .price-main:empty {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .product-showcase .price-display-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .product-showcase .price-now {
+    font-size: 1.35rem;
+  }
+}
+
+/* Desktop-only: compact the trust-badges area for a leaner look */
+@media (min-width: 1025px) {
+  .product-showcase .trust-badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* keep items on one line */
+    padding: 8px 12px; /* reduced padding for compact look */
+    gap: 18px; /* space between each trust item */
+    border-radius: 6px;
+    background: rgba(67, 189, 171, 0.06);
+    border: 1px solid rgba(67, 189, 171, 0.12);
+  }
+
+
+  /* Make each trust item visually consistent (desktop only). Keeps
+     the group compact while giving each item a subtle pill and a
+     circular check token for clarity. */
+  .product-showcase .trust-item {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(67, 189, 171, 0.02);
+    gap: 10px;
+    align-items: center;
+    display: inline-flex;
+  }
+
+  .product-showcase .trust-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #E8F8F4;
+    color: #0f9f88;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    border: 1px solid rgba(67, 189, 171, 0.12);
+  }
+
+  /* Make left and right columns behave as vertical flex containers
+     so we can align the small trust badges and the guarantee box
+     to the same vertical position (desktop only). */
+  .product-showcase .showcase-visual,
+  .product-showcase .showcase-info {
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* allow flex children to shrink correctly inside CSS Grid */
+  }
+
+  /* Ensure the two grid columns stretch to equal height so bottom-alignment
+     (using margin-top:auto on inner items) lines up precisely. */
+  .product-showcase .showcase-container {
+    align-items: stretch;
+  }
+
+  /* Push these elements toward the bottom of their column so they
+     align horizontally across the two-column layout. */
+  .product-showcase .trust-badges,
+  .product-guarantee {
+    margin-top: auto;
+  }
 }
 
 .product-actions {
@@ -364,7 +487,7 @@
     font-size: 36px;
   }
 
-  .trust-badges {
+  .product-showcase .trust-badges {
     flex-wrap: wrap;
     gap: 15px;
   }
@@ -401,13 +524,19 @@
     padding: 16px;
   }
 
-  .trust-item {
+  .product-showcase .trust-badges {
+    flex-direction: row;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .product-showcase .trust-item {
     flex-direction: column;
     text-align: center;
     gap: 4px;
   }
 
-  .trust-text {
+  .product-showcase .trust-text {
     font-size: 10px;
   }
 

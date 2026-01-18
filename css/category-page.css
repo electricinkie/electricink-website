@@ -508,3 +508,127 @@
     right: 6px;
   }
 }
+
+
+/* ============================================
+   PROMOTIONAL PRICING - Visual Marketing Only
+   ============================================ */
+
+.promo-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  box-shadow: 0 3px 8px rgba(255, 107, 53, 0.3);
+}
+
+.price-display-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.price-was {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.price-now {
+  color: #43BDAB;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.price-savings {
+  color: #FF6B35;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0.25rem 0 0 0;
+}
+
+@media (max-width: 768px) {
+  .price-display-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+
+/* Ultra Pen specific visuals (targets only Ultra Pen card by href) */
+a.product-card[href*="ultra-pen-2-combo"] {
+  position: relative;
+}
+
+a.product-card[href*="ultra-pen-2-combo"]::before {
+  content: "SPECIAL OFFER";
+  position: absolute;
+  /* move below any availability badge (e.g. 'Order on Request') to avoid overlap */
+  top: 56px; /* increased spacing for breathing room */
+  right: 12px;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  z-index: 3;
+  box-shadow: 0 3px 8px rgba(255,107,53,0.25);
+}
+
+/* Responsive: bring special offer closer on smaller screens where badges are smaller */
+@media (max-width: 768px) {
+  a.product-card[href*="ultra-pen-2-combo"]::before {
+    top: 48px; /* more vertical space on tablet */
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  a.product-card[href*="ultra-pen-2-combo"]::before {
+    top: 44px; /* more vertical space on small screens */
+    right: 8px;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+  }
+}
+
+/* Prepend was-price and append savings under the rendered price for Ultra Pen */
+a.product-card[href*="ultra-pen-2-combo"] .product-price::before {
+  content: "€1034.80";
+  color: #999;
+  text-decoration: line-through;
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+a.product-card[href*="ultra-pen-2-combo"] .product-price {
+  color: #43BDAB;
+  font-weight: 800;
+}
+
+a.product-card[href*="ultra-pen-2-combo"] .product-price::after {
+  content: " Save €184.80";
+  display: block;
+  color: #FF6B35;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+
