@@ -523,7 +523,11 @@
       "productId": "prod_TkwYdAGyqrMKW0",
       "priceId": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
     },
-    "price": 1034.8,
+    "price": 850.0,
+    "promoDisplay": {
+      "wasPrice": 1034.80,
+      "label": "SPECIAL OFFER"
+    },
     "variants": [],
     "image": "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
     "images": [

@@ -921,3 +921,103 @@
   margin-top: 8px;
   font-style: italic;
 }
+
+
+/* ============================================
+   PROMOTIONAL PRICING - Product Detail Page
+   ============================================ */
+
+.promo-badge-large {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+}
+
+.product-page .price-display-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.product-page .price-was {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.product-page .price-now {
+  color: #43BDAB;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.product-page .price-savings {
+  color: #FF6B35;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .product-page .price-now {
+    font-size: 1.5rem;
+  }
+  
+  .product-page .price-was {
+    font-size: 1rem;
+  }
+}
+
+
+/* Ultra Pen specific visuals on product detail (targets image src for Ultra Pen) */
+.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) {
+  position: relative;
+}
+
+.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) .product-info::before {
+  content: "SPECIAL OFFER";
+  display: inline-block;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 12px rgba(255,107,53,0.25);
+}
+
+.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::before {
+  content: "€1034.80";
+  color: #999;
+  text-decoration: line-through;
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice {
+  color: #43BDAB;
+  font-weight: 800;
+  font-size: 2rem;
+}
+
+.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::after {
+  content: " Save €184.80";
+  display: block;
+  color: #FF6B35;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+
