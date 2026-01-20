@@ -425,17 +425,27 @@
     const appsSection = document.createElement('div');
     appsSection.className = 'product-applications';
     appsSection.innerHTML = '<h3>Commonly Used For</h3>';
-    
-    if (productData.applications.primary_uses) {
+
+    // Support two shapes:
+    // - productData.applications = { primary_uses: [..] }
+    // - productData.applications = [..]
+    let uses = [];
+    if (Array.isArray(productData.applications)) {
+      uses = productData.applications;
+    } else if (productData.applications.primary_uses && Array.isArray(productData.applications.primary_uses)) {
+      uses = productData.applications.primary_uses;
+    }
+
+    if (uses.length > 0) {
       const usesList = document.createElement('ul');
-      productData.applications.primary_uses.forEach(use => {
+      uses.forEach(use => {
         const li = document.createElement('li');
         li.textContent = use;
         usesList.appendChild(li);
       });
       appsSection.appendChild(usesList);
     }
-    
+
     document.getElementById('productSpecs')?.after(appsSection) ||
     document.getElementById('productFeatures')?.after(appsSection);
   }
