@@ -132,6 +132,45 @@
     priceEl.textContent = (typeof price === 'number' && !isNaN(price)) ? `€${price.toFixed(2)}` : 'Price unavailable';
   }
 
+  // RENDER stock indicator badge based on inventory.stock_status
+  (function renderStockBadge() {
+    const stockStatus = productData.inventory?.stock_status || (productData.inStock ? 'in_stock' : 'out_of_stock');
+    const productStock = document.getElementById('productStock');
+    if (!productStock) return;
+    const dot = productStock.querySelector('.stock-dot');
+    const text = productStock.querySelector('.stock-text');
+
+    let label = 'In Stock';
+    let color = '#43BDAB';
+
+    if (stockStatus === 'available_soon') {
+      const availableDate = productData.availableDate || productData.inventory?.availableDate;
+      if (availableDate) {
+        try {
+          const d = new Date(availableDate);
+          label = `Coming soon (${d.toLocaleDateString('en-IE', { month: 'short', day: 'numeric' })})`;
+        } catch (e) {
+          label = 'Coming soon';
+        }
+      } else {
+        label = 'Coming soon';
+      }
+      color = '#f59e0b';
+    } else if (stockStatus === 'available_on_request') {
+      label = 'Available — may ship with delay';
+      color = '#f97316';
+    } else if (stockStatus === 'out_of_stock') {
+      label = 'Out of Stock';
+      color = '#6b7280';
+    } else {
+      label = 'In Stock';
+      color = '#43BDAB';
+    }
+
+    if (dot) dot.style.background = color;
+    if (text) text.textContent = label;
+  })();
+
   // RENDER images
   const mainImg = document.getElementById('mainProductImage');
   const thumbsContainer = document.getElementById('thumbnails');
