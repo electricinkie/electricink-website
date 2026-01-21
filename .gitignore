@@ -102,3 +102,22 @@ temp/
 service-account-base64.txt
 dev-server.log
 .env*.local
+
+
+# === Additional ignore patterns added by security audit ===
+# Secrets e Credenciais
+.env
+.env.*
+!.env.example
+serviceAccountKey.json
+**/serviceAccount*.json
+
+# Logs sensíveis
+logs/
+*.log
+npm-debug.log*
+
+# Backups e temporários
+*.backup
+*.tmp
+.DS_Store

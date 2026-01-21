@@ -266,8 +266,9 @@ module.exports = async function handler(req, res) {
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
 
     console.log('✅ Assinatura verificada!');
-    console.log('✅ Event type:', event.type);
-    console.log('✅ Event ID:', event.id);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ [DEV] Webhook event:', event.type, 'ID:', event.id);
+    }
 
     logger.info(JSON.stringify({
       msg: 'Webhook verified',
@@ -298,6 +299,22 @@ module.exports = async function handler(req, res) {
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
+        // Security: require backend validation flag set when PaymentIntent was created
+        try {
+          const paymentIntent = event.data && event.data.object ? event.data.object : null;
+          if (!paymentIntent || !(paymentIntent.metadata && paymentIntent.metadata.backend_validated === 'true')) {
+            console.error('❌ Webhook rejected: metadata not validated', {
+              paymentIntentIdLast4: paymentIntent && paymentIntent.id ? String(paymentIntent.id).slice(-4) : null,
+              requestId
+            });
+            return res.status(400).json({ error: 'Invalid metadata - backend validation missing', requestId });
+          }
+          console.log('✅ Metadata validated by backend', { paymentIntentIdLast4: String(paymentIntent.id).slice(-4) });
+        } catch (e) {
+          console.error('❌ Error checking backend_validated flag:', e && e.message);
+          return res.status(400).json({ error: 'Invalid metadata - backend validation check failed', requestId });
+        }
+
         console.log('🎯 Chamando handlePaymentIntentSucceeded...');
         await handlePaymentIntentSucceeded(event, requestId);
         console.log('🎯 handlePaymentIntentSucceeded concluído');
@@ -735,7 +752,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
     // CLIENT EMAIL
-    console.log('📧 [CLIENT] Sending order confirmation to:', order.customerEmail);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📧 [DEV] Sending order confirmation', { orderId });
+    } else {
+      console.log('📧 Order confirmation sent', { orderId });
+    }
     try {
       if (!resend) throw new Error('Resend not configured');
 

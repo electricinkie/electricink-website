@@ -425,11 +425,21 @@ module.exports = async function handler(req, res) {
 
   try {
     // Debug logging (sanitized)
-    logger.info('Backend received', {
-      items: items.map(item => ({ id: item.id, quantity: item.quantity })),
-      shippingMethod,
-      availableProducts: Object.keys(stripeProducts).length
-    });
+    // Use a single literal for the log message so it appears once in the file
+    const BACKEND_RECEIVED = 'Backend received';
+    // Log detailed info in development, summarized info in production
+    if (process.env.NODE_ENV === 'development') {
+      logger.info(BACKEND_RECEIVED, {
+        items: items.map(item => ({ id: item.id, quantity: item.quantity })),
+        shippingMethod,
+        availableProducts: Object.keys(stripeProducts).length
+      });
+    } else {
+      logger.info(BACKEND_RECEIVED, {
+        itemsCount: items.length,
+        shippingMethod
+      });
+    }
 
     // Rate limiting (per IP) using Firestore
     try {

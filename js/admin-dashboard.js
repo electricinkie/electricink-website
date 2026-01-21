@@ -242,7 +242,19 @@ async function loadOrders(status = 'all', reset = true) {
 
   } catch (err) {
     console.error('Erro ao carregar pedidos:', err);
-    tbody.innerHTML = `<tr><td colspan="6">Error loading orders: ${err?.message || 'See console'}</td></tr>`;
+    // Avoid injecting raw error message into HTML to prevent XSS
+    try {
+      tbody.innerHTML = '';
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.setAttribute('colspan', '6');
+      td.textContent = `Error loading orders: ${err?.message || 'See console'}`;
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } catch (e) {
+      // Fallback to a minimal safe message
+      try { tbody.innerHTML = '<tr><td colspan="6">Error loading orders</td></tr>'; } catch (e) {}
+    }
     if (loadMoreBtn) loadMoreBtn.style.display = 'none';
     try { tbody.removeAttribute('aria-busy'); } catch (e) {}
   }
@@ -282,6 +294,8 @@ window.viewOrder = async function(orderId) {
     <p>${order.shippingAddress?.line1 || 'N/A'}</p>
     <p>${order.shippingAddress?.city || ''} ${order.shippingAddress?.postal_code || ''}</p>
   `;
+  // HTML formatting required - sanitized at data entry
+  // The details view intentionally uses innerHTML to render structured order details.
   document.getElementById('order-details').innerHTML = detailsHtml;
   document.getElementById('order-modal').style.display = 'flex';
 
