@@ -64,42 +64,43 @@ const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
 // INVENTORY CONFIGURATION
 // ═══════════════════════════════════════════════════════════
 
-const INVENTORY_CONFIG = {
-  OBSERVATION_MODE: true, // Set false to enable blocking behavior
-  ENABLE_INVENTORY_CHECK: true, // Toggle inventory checks entirely
-  SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
-};
-function validateMetadata(metadata = {}) {
-  const validated = {
-    email: metadata.customer_email || 'no-email@electricink.ie',
-    name: metadata.customer_name || 'Customer',
-    phone: metadata.phone || '',
-    addressLine1: metadata.addressLine1 || metadata.street || 'Address not provided',
-    addressLine2: metadata.addressLine2 || metadata.complement || '',
-    city: metadata.city || 'Dublin',
-    state: metadata.state || 'Leinster',
-    postalCode: metadata.postalCode || metadata.postal_code || '',
-    country: metadata.country || 'IE'
+  const INVENTORY_CONFIG = {
+    OBSERVATION_MODE: true, // Set false to enable blocking behavior
+    ENABLE_INVENTORY_CHECK: true, // Toggle inventory checks entirely
+    SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
   };
 
-  const hasIncompleteData = (
-    !metadata.customer_email ||
-    !metadata.customer_name,
-    !metadata.addressLine1 && !metadata.street ||
-    !metadata.postalCode && !metadata.postal_code
-  );
+  // Consolidated validateMetadata - single robust definition
+  function validateMetadata(metadata = {}) {
+    const validated = {
+      email: metadata.customer_email || 'no-email@electricink.ie',
+      name: metadata.customer_name || 'Customer',
+      phone: metadata.phone || '',
+      addressLine1: metadata.addressLine1 || 'Address not provided',
+      addressLine2: metadata.addressLine2 || '',
+      city: metadata.city || 'Dublin',
+      state: metadata.state || 'Leinster',
+      postalCode: metadata.postalCode || '',
+      country: metadata.country || 'IE'
+    };
 
-  if (hasIncompleteData) {
-    logger.warn('Incomplete metadata detected', {
-      hasEmail: !!metadata.customer_email,
-      hasName: !!metadata.customer_name,
-      hasAddress: !!(metadata.addressLine1 || metadata.street),
-      hasPostalCode: !!(metadata.postalCode || metadata.postal_code)
-    });
+    // Log se metadata parece incompleta
+    const hasIncompleteData = 
+      !metadata.customer_email || 
+      !metadata.customer_name || 
+      !metadata.addressLine1 || 
+      !metadata.postalCode;
+    if (hasIncompleteData) {
+      logger.warn('Incomplete metadata detected', {
+        hasEmail: !!metadata.customer_email,
+        hasName: !!metadata.customer_name,
+        hasAddress: !!metadata.addressLine1,
+        hasPostalCode: !!metadata.postalCode
+      });
+    }
+
+    return validated;
   }
-
-  return validated;
-}
 // Validar Firestore em produção
 if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
   if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
@@ -505,35 +506,7 @@ async function sendLowStockAlert(checkResults, orderData) {
     }
   }
 }
-// Validate and fill defaults for possibly-truncated Stripe metadata
-function validateMetadata(metadata) {
-  const validated = {
-    email: metadata.customer_email || 'no-email@electricink.ie',
-    name: metadata.customer_name || 'Customer',
-    phone: metadata.phone || '',
-    addressLine1: metadata.addressLine1 || 'Address not provided',
-    addressLine2: metadata.addressLine2 || '',
-    city: metadata.city || 'Dublin',
-    state: metadata.state || 'Leinster',
-    postalCode: metadata.postalCode || '',
-    country: metadata.country || 'IE'
-  };
-  // Log se metadata parece incompleta
-  const hasIncompleteData = 
-    !metadata.customer_email || 
-    !metadata.customer_name || 
-    !metadata.addressLine1 || 
-    !metadata.postalCode;
-  if (hasIncompleteData) {
-    logger.warn('Incomplete metadata detected', {
-      hasEmail: !!metadata.customer_email,
-      hasName: !!metadata.customer_name,
-      hasAddress: !!metadata.addressLine1,
-      hasPostalCode: !!metadata.postalCode
-    });
-  }
-  return validated;
-}
+  // (duplicate removed) validateMetadata consolidated at top of file
 
 async function handlePaymentIntentSucceeded(event, requestId) {
   const db = getFirestore();
