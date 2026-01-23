@@ -50,6 +50,34 @@
     return;
   }
 
+  // ===== INVENTORY TRACKING SYSTEM =====
+  let decrements = {};
+
+  async function loadDecrements() {
+    try {
+      const response = await fetch('/data/decrements.json');
+      if (response.ok) {
+        decrements = await response.json();
+        console.log('✅ Inventory decrements loaded');
+      }
+    } catch (error) {
+      console.log('ℹ️ No decrements file (inventory tracking not active yet)');
+    }
+  }
+
+  function getRealQuantity(variant) {
+    if (variant.quantity === undefined || variant.quantity === null) {
+      return null;
+    }
+    const sold = decrements[variant.id] || 0;
+    const available = variant.quantity - sold;
+    return Math.max(0, available);
+  }
+
+  // Carregar decrements ao iniciar
+  await loadDecrements();
+  // ===== FIM INVENTORY TRACKING =====
+
   // EXTRACT values with fallbacks (supports old and new structure)
   const name = productData.basic?.name || productData.name || 'Unnamed Product';
   const tagline = productData.basic?.tagline || null;
@@ -223,6 +251,8 @@
       variantsContainer.insertBefore(variantDesc, variantSelect);
     }
 
+    
+
     // Populate options (use safe price fallback and avoid toFixed on undefined)
     // Determine whether variants share a single price
     const variantPrices = productData.variants
@@ -246,9 +276,27 @@
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
 
+      // ↓ NOVO: adicionar estoque real se aplicável
+      const realQty = getRealQuantity(variant);
+      if (realQty !== null) {
+        option.dataset.quantity = String(realQty);
+        if (realQty === 0) {
+          option.disabled = true;
+          option.textContent = `${variant.label} - Out of Stock`;
+        } else if (realQty <= 3) {
+          option.textContent = `${variant.label} - ${realQty} left`;
+        }
+      }
+
       // Use dataset.price for display to avoid calling toFixed on undefined
       const displayPrice = parseFloat(option.dataset.price);
-      option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}`;
+      // If we already set textContent above for stock messages, keep it and append price where applicable
+      if (!option.textContent || option.textContent.trim() === '') {
+        option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}`;
+      } else if (!isNaN(displayPrice)) {
+        // append price alongside existing stock text
+        option.textContent = `${option.textContent} - €${displayPrice.toFixed(2)}`;
+      }
 
       variantSelect.appendChild(option);
     });
@@ -281,6 +329,21 @@
           descEl.className = 'variant-selected-description';
           descEl.textContent = selected.dataset.description;
           variantSelect.after(descEl);
+        }
+      }
+      
+      // ↓ NOVO: verificar estoque ao trocar variante
+      const qty = selected.dataset.quantity;
+      const addBtn = document.getElementById('addToCartBtn');
+      if (qty !== undefined && parseInt(qty) === 0) {
+        if (addBtn) {
+          addBtn.disabled = true;
+          addBtn.textContent = 'Out of Stock';
+        }
+      } else {
+        if (addBtn) {
+          addBtn.disabled = false;
+          addBtn.textContent = 'Add to Cart';
         }
       }
     };

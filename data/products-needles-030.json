@@ -11,18 +11,20 @@
       "Silicone safety membrane",
       "10 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Liner (RL)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 10
     },
-    "applications": [
-      "Fine line",
-      "Mini realism",
-      "Black & grey realism",
-      "Colour realism"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Fine line",
+        "Mini realism",
+        "Black & grey realism",
+        "Colour realism"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhJwWkOc0F85o",
       "priceId": "price_1SmDudAiq7NBxfpwzkhtpgGJ"
@@ -123,18 +125,20 @@
       "Silicone safety membrane",
       "20 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Liner (RL)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 20
     },
-    "applications": [
-      "Fine line",
-      "Mini realism",
-      "Black & grey realism",
-      "Colour realism"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Fine line",
+        "Mini realism",
+        "Black & grey realism",
+        "Colour realism"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhR8pJa853cMa",
       "priceId": "price_1SmE2JAiq7NBxfpwdCYynktI"
@@ -234,18 +238,20 @@
       "Silicone safety membrane",
       "10 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Shader (RS)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 10
     },
-    "applications": [
-      "Solid fills",
-      "Bold lines",
-      "Light shading",
-      "Shadows & blending"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Solid fills",
+        "Bold lines",
+        "Light shading",
+        "Shadows & blending"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhXO4l74HjELb",
       "priceId": "price_1SmE7zAiq7NBxfpwmjDQfnlH"
@@ -327,18 +333,20 @@
       "Silicone safety membrane",
       "20 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Shader (RS)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 20
     },
-    "applications": [
-      "Solid fills",
-      "Bold lines",
-      "Light shading",
-      "Shadows & blending"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Solid fills",
+        "Bold lines",
+        "Light shading",
+        "Shadows & blending"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhaIfGNjDQ4Ey",
       "priceId": "price_1SmEBiAiq7NBxfpwvZcAdnvb"
@@ -420,19 +428,21 @@
       "Silicone safety membrane",
       "10 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Magnum (RMG)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 10
     },
-    "applications": [
-      "Large solid fills",
-      "Colour realism",
-      "Black & grey shading",
-      "Gradients & soft blends",
-      "Neo-traditional work"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Large solid fills",
+        "Colour realism",
+        "Black & grey shading",
+        "Gradients & soft blends",
+        "Neo-traditional work"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhhpsKAcBWNMS",
       "priceId": "price_1SmEIZAiq7NBxfpwcHtikzIm"
@@ -550,19 +560,21 @@
       "Silicone safety membrane",
       "20 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Magnum (RMG)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 20
     },
-    "applications": [
-      "Large solid fills",
-      "Colour realism",
-      "Black & grey shading",
-      "Gradients & soft blends",
-      "Neo-traditional work"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Large solid fills",
+        "Colour realism",
+        "Black & grey shading",
+        "Gradients & soft blends",
+        "Neo-traditional work"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhqtxLJCwjgkL",
       "priceId": "price_1SmER2Aiq7NBxfpwJSKMRWa2"
@@ -680,18 +692,20 @@
       "Silicone safety membrane",
       "10 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Magnum (MG)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 10
     },
-    "applications": [
-      "Large solid fills",
-      "Colour realism",
-      "Black & grey shading",
-      "Gradients & soft blends"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Large solid fills",
+        "Colour realism",
+        "Black & grey shading",
+        "Gradients & soft blends"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjhvEobM8ohbuh",
       "priceId": "price_1SmEVVAiq7NBxfpwmmOKQiiz"
@@ -809,18 +823,20 @@
       "Silicone safety membrane",
       "20 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Magnum (MG)",
       "diameter": "0.30mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 20
     },
-    "applications": [
-      "Large solid fills",
-      "Colour realism",
-      "Black & grey shading",
-      "Gradients & soft blends"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Large solid fills",
+        "Colour realism",
+        "Black & grey shading",
+        "Gradients & soft blends"
+      ]
+    },
     "stripe": {
       "productId": "prod_Tji34cY8Hx6mtY",
       "priceId": "price_1SmEdbAiq7NBxfpwLFFBmIhF"

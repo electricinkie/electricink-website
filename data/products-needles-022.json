@@ -11,18 +11,20 @@
       "Silicone safety membrane",
       "20 units per box"
     ],
-    "specs": {
+    "specifications": {
       "needleType": "Round Liner (RL)",
       "diameter": "0.22mm",
       "taper": "Super Long Taper",
       "unitsPerBox": 20
     },
-    "applications": [
-      "Fine line",
-      "Mini realism",
-      "Black & grey realism",
-      "Colour realism"
-    ],
+    "applications": {
+      "primary_uses": [
+        "Fine line",
+        "Mini realism",
+        "Black & grey realism",
+        "Colour realism"
+      ]
+    },
     "stripe": {
       "productId": "prod_TjWlEPhxpYZOlC",
       "priceId": "price_1Sm3heAiq7NBxfpwKkRuPLEv"
@@ -45,7 +47,8 @@
         "price": 28.8,
         "priceId": "price_1Sm3heAiq7NBxfpwaJYhlcu5",
         "stripe_price_id": "price_1Sm3heAiq7NBxfpwaJYhlcu5",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp",
+        "quantity": 5
       },
       {
         "id": "rl-022-05",
@@ -54,7 +57,8 @@
         "price": 30.5,
         "priceId": "price_1Sm3heAiq7NBxfpwwFhwDmzs",
         "stripe_price_id": "price_1Sm3heAiq7NBxfpwwFhwDmzs",
-        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
+        "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp",
+        "quantity": 5
       },
       {
         "id": "rl-022-07",

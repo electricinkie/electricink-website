@@ -134,6 +134,88 @@ try {
   console.error('[RESEND-INIT] ❌ Failed to initialize:', error);
 }
 
+// ===== GITHUB INVENTORY DECREMENT SYSTEM =====
+const GITHUB_INVENTORY_CONFIG = {
+  ENABLED: process.env.ENABLE_GITHUB_INVENTORY === 'true',
+  OWNER: process.env.GITHUB_OWNER,
+  REPO: process.env.GITHUB_REPO,
+  TOKEN: process.env.GITHUB_TOKEN,
+  BRANCH: process.env.GITHUB_BRANCH || 'main'
+};
+
+async function decrementInventoryViaGitHub(items) {
+  if (!GITHUB_INVENTORY_CONFIG.ENABLED) {
+    console.log('ℹ️ GitHub inventory decrement disabled');
+    return { success: false, reason: 'disabled' };
+  }
+
+  if (!GITHUB_INVENTORY_CONFIG.TOKEN) {
+    console.error('❌ GITHUB_TOKEN not configured');
+    return { success: false, reason: 'no_token' };
+  }
+
+  try {
+    const { Octokit } = await import('@octokit/rest');
+    const octokit = new Octokit({ auth: GITHUB_INVENTORY_CONFIG.TOKEN });
+
+    const owner = GITHUB_INVENTORY_CONFIG.OWNER;
+    const repo = GITHUB_INVENTORY_CONFIG.REPO;
+    const path = 'data/decrements.json';
+    const branch = GITHUB_INVENTORY_CONFIG.BRANCH;
+
+    let decrements = {};
+    let sha = null;
+
+    try {
+      const { data } = await octokit.repos.getContent({ owner, repo, path, ref: branch });
+      const content = Buffer.from(data.content, 'base64').toString('utf8');
+      decrements = JSON.parse(content);
+      sha = data.sha;
+      console.log('✅ Current decrements loaded from GitHub');
+    } catch (error) {
+      if (error.status === 404) {
+        console.log('ℹ️ decrements.json not found, will create new one');
+        decrements = {};
+      } else {
+        throw error;
+      }
+    }
+
+    for (const item of items) {
+      const variantId = item.v || item.id;
+      const quantity = item.q || item.quantity || 1;
+      decrements[variantId] = (decrements[variantId] || 0) + quantity;
+      console.log(`📦 Decrementing ${variantId}: +${quantity} sold`);
+    }
+
+    const newContent = JSON.stringify(decrements, null, 2);
+    const encodedContent = Buffer.from(newContent).toString('base64');
+
+    const commitData = {
+      owner,
+      repo,
+      path,
+      message: `chore(inventory): auto-decrement after order`,
+      content: encodedContent,
+      branch
+    };
+
+    if (sha) commitData.sha = sha;
+
+    await octokit.repos.createOrUpdateFileContents(commitData);
+
+    console.log('✅ Inventory decremented via GitHub successfully');
+    return { success: true, decrements, itemsProcessed: items.length };
+  } catch (error) {
+    console.error('❌ GitHub inventory decrement failed:', error && error.message);
+    if (error && error.response) {
+      console.error('GitHub API Error:', { status: error.response.status, data: error.response.data });
+    }
+    return { success: false, error: error && error.message };
+  }
+}
+// ===== FIM GITHUB INVENTORY SYSTEM =====
+
 
 
 // Vercel serverless config
@@ -726,6 +808,30 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     }
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
+    // ===== AUTO-DECREMENT INVENTORY VIA GITHUB =====
+    try {
+      // Use parsed items from metadata if available
+      const itemsToDecrement = items || JSON.parse(paymentIntent.metadata.items || '[]');
+      if (itemsToDecrement && itemsToDecrement.length > 0) {
+        console.log(`🔄 Attempting to decrement inventory for ${itemsToDecrement.length} items`);
+        const result = await decrementInventoryViaGitHub(itemsToDecrement);
+        if (result && result.success) {
+          console.log('✅ Inventory successfully decremented via GitHub');
+          console.log('📊 Decrements updated:', result.decrements);
+        } else {
+          console.warn('⚠️ Inventory decrement skipped:', result && (result.reason || result.error));
+        }
+      }
+    } catch (error) {
+      console.error('❌ Inventory decrement error (non-critical):', error && error.message);
+      console.error('Stack:', error && error.stack);
+      if (typeof captureException === 'function') {
+        captureException(error, {
+          extra: { context: 'inventory_decrement', paymentIntentId: paymentIntent.id }
+        });
+      }
+    }
+    // ===== FIM AUTO-DECREMENT =====
     if (!resend) {
       logger.warn(JSON.stringify({
         msg: 'Resend not initialized - skipping email notifications',

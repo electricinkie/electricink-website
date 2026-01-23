@@ -29,7 +29,7 @@
       "usage_instructions": "Apply 2-3 times daily for 14 days."
     },
     "inventory": {
-      "stock_quantity": 3,
+      "stock_quantity": 50,
       "stock_status": "in_stock",
       "low_stock_threshold": 2
     },
@@ -75,7 +75,7 @@
       "usage_instructions": "Use daily to moisturize healed tattoos and maintain vibrancy."
     },
     "inventory": {
-      "stock_quantity": 3,
+      "stock_quantity": 5,
       "stock_status": "in_stock",
       "low_stock_threshold": 2
     },
@@ -142,7 +142,7 @@
       "usage_instructions": "Apply during tattooing as needed.\nReduces inflammation immediately.\nMaintains stencil clarity and improves ink visibility."
     },
     "inventory": {
-      "stock_quantity": 3,
+      "stock_quantity": 15,
       "stock_status": "in_stock",
       "low_stock_threshold": 2
     },
@@ -188,8 +188,8 @@
       "usage_instructions": "Apply sufficient amount onto the area to be tattooed.\nGently massage in circular motion to exfoliate skin.\nRinse thoroughly with Clean Up/Prep to remove debris."
     },
     "inventory": {
-      "stock_quantity": 3,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 2
     },
     "seo": {
@@ -233,7 +233,7 @@
       "usage_instructions": "Apply directly on skin or on disposable absorbent paper.\nSpread foam evenly across area for easy hair removal.\nRemove excess foam with absorbent paper—no rinsing needed."
     },
     "inventory": {
-      "stock_quantity": 3,
+      "stock_quantity": 10,
       "stock_status": "in_stock",
       "low_stock_threshold": 2
     },
@@ -297,8 +297,8 @@
       "usage_instructions": "Apply gel, spread evenly in a thin layer.\nPosition stencil, press 10-15 seconds.\nRemove slowly for a clean, sharp stencil."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_soon",
+      "stock_quantity": 15,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -374,7 +374,7 @@
       "usage_instructions": "Apply a thin layer on prepared skin.\nPosition stencil, press firmly 10-15 seconds.\nRemove carefully—stays clear throughout the session."
     },
     "inventory": {
-      "stock_quantity": 3,
+      "stock_quantity": 10,
       "stock_status": "in_stock",
       "low_stock_threshold": 2
     },
@@ -421,8 +421,8 @@
       "usage_instructions": "Spray onto absorbent paper and press onto stencil for 5 seconds.\nFor freehand: spray directly onto skin to fix the drawing."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "out_of_stock",
+      "stock_quantity": 10,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -489,8 +489,8 @@
       "usage_instructions": "Apply foam directly to tattooed area.\nGently spread evenly over skin.\nThoroughly clean with disposable paper."
     },
     "inventory": {
-      "stock_quantity": 3,
-      "stock_status": "in_stock",
+      "stock_quantity": 0,
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 2
     },
     "seo": {
@@ -534,7 +534,7 @@
     ],
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -648,7 +648,7 @@
     },
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -714,8 +714,8 @@
       "usage_instructions": "Apply a thin layer during tattooing to ensure smooth needle glide and skin protection.\nReapply as necessary."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_quantity": 2,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -779,8 +779,8 @@
       "usage_instructions": "Apply After All to cleaned, tattooed area.\nGently pat skin dry with soft paper.\nNo rinsing necessary."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_quantity": 16,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -845,7 +845,7 @@
     },
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -887,7 +887,7 @@
     ],
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 5
     },
     "seo": {
