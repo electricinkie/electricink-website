@@ -26,6 +26,20 @@ try {
   console.warn('⚠️ Email templates could not be loaded:', tplErr && tplErr.message);
 }
 
+// ===== ENV VARS VERIFICATION (STARTUP LOG) =====
+console.log('🔧 [STARTUP] GitHub Inventory Config:', {
+  enabled: process.env.ENABLE_GITHUB_INVENTORY,
+  hasToken: !!process.env.GITHUB_TOKEN,
+  owner: process.env.GITHUB_OWNER,
+  repo: process.env.GITHUB_REPO,
+  branch: process.env.GITHUB_BRANCH || 'main'
+});
+
+if (process.env.ENABLE_GITHUB_INVENTORY === 'true' && !process.env.GITHUB_TOKEN) {
+  console.error('❌ [STARTUP] ENABLE_GITHUB_INVENTORY is true but GITHUB_TOKEN is missing!');
+}
+// ===== FIM ENV VARS VERIFICATION =====
+
 // Product catalog loader (read-only, cached) - used ONLY for enriching email HTML
 let PRODUCT_CATALOG_CACHE = null;
 function loadProductCatalog() {
@@ -66,7 +80,7 @@ const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
 
   const INVENTORY_CONFIG = {
     OBSERVATION_MODE: true, // Set false to enable blocking behavior
-    ENABLE_INVENTORY_CHECK: true, // Toggle inventory checks entirely
+    ENABLE_INVENTORY_CHECK: false, // Toggle inventory checks entirely (DISABLED - using GitHub decrements)
     SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
   };
 
@@ -714,107 +728,58 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       });
       console.log('✅ Order criada com sucesso no Firestore (inventory checks disabled)');
     } else {
-      // Inventory-checking path (observation-mode safe rollout)
-      try {
-        await db.runTransaction(async (transaction) => {
-          const orderDoc = await transaction.get(orderRef);
-          if (orderDoc.exists) {
-            logger.info(JSON.stringify({
-              msg: 'Order already processed (idempotent)',
-              orderId,
-              requestId,
-              timestamp: new Date().toISOString(),
-              status: 'idempotent'
-            }));
-            return;
-          }
+      // ===== FIRESTORE INVENTORY (DESABILITADO) =====
+      // Firestore-based inventory checks and decrements are disabled.
+      // Inventory is now managed via GitHub `data/decrements.json` (decrementInventoryViaGitHub).
+      // The original transaction-based inventory-check/decrement logic is preserved in the
+      // repository history and in the functions `checkInventoryAvailability` and `decrementInventory`.
+      // To keep behavior explicit and non-executing, the Firestore inventory branch is intentionally
+      // commented out below for future reference.
 
-          // If no items metadata, behave as before
-          if (!items || items.length === 0) {
-            const cleanOrder = removeUndefined(order);
-            transaction.set(orderRef, cleanOrder);
-            return;
-          }
+      // if (INVENTORY_CONFIG.ENABLE_INVENTORY_CHECK) {
+      //   try {
+      //     await db.runTransaction(async (transaction) => {
+      //       // original inventory-check & decrement logic (commented)
+      //     });
+      //   } catch (txErr) {
+      //     // original error handling (commented)
+      //   }
+      // }
 
-          // STEP 1: Check inventory availability (read-only checks within transaction)
-          const checkResults = await checkInventoryAvailability(items, transaction);
-          const allSufficient = checkResults.every(r => r.sufficient);
-
-          if (!allSufficient && !INVENTORY_CONFIG.OBSERVATION_MODE) {
-            console.error('❌ INSUFFICIENT STOCK - Order blocked (blocking mode)');
-            // Throw to abort transaction
-            throw new Error('Insufficient stock for one or more items');
-          }
-
-          if (!allSufficient && INVENTORY_CONFIG.OBSERVATION_MODE) {
-            console.warn('⚠️  OBSERVATION: Stock insufficient but order will be accepted');
-            if (INVENTORY_CONFIG.SEND_LOW_STOCK_ALERTS) {
-              // Send alert (best-effort) - do not throw
-              try {
-                await sendLowStockAlert(checkResults, order);
-              } catch (alertErr) {
-                console.error('⚠️ Failed to send low stock alert:', alertErr && alertErr.message);
-              }
-            }
-          }
-
-          // STEP 2: Decrement inventory for items (still within transaction)
-          const decrementResults = await decrementInventory(items, transaction);
-
-          // STEP 3: Save order with inventory audit fields
-          const cleanOrder = removeUndefined(order);
-          transaction.set(orderRef, {
-            ...cleanOrder,
-            inventoryChecked: true,
-            inventoryCheckResults: checkResults,
-            inventoryDecrementResults: decrementResults,
-            observationMode: INVENTORY_CONFIG.OBSERVATION_MODE,
-            createdAt: admin.firestore.FieldValue.serverTimestamp()
-          });
-        });
-
-        console.log('✅ Order criada com sucesso no Firestore (inventory checked)');
-        logger.info(JSON.stringify({
-          msg: 'Order created with inventory audit',
-          orderId,
-          requestId,
-          timestamp: new Date().toISOString(),
-          status: 'created_with_inventory'
-        }));
-
-      } catch (txErr) {
-        console.error('❌ Transaction error while processing inventory-aware order:', txErr && txErr.message);
-        // In observation mode, accept order even if inventory transaction fails
-        if (INVENTORY_CONFIG.OBSERVATION_MODE) {
-          console.warn('⚠️ Transaction failed but accepting order (observation mode)');
-          try {
-            await db.collection('orders').doc(orderId).set(removeUndefined(order));
-            logger.info(JSON.stringify({
-              msg: 'Order created after transaction failure (observation)',
-              orderId,
-              requestId,
-              timestamp: new Date().toISOString(),
-              status: 'created_after_tx_failure'
-            }));
-          } catch (setErr) {
-            console.error('❌ Failed to persist order after transaction failure:', setErr && setErr.message);
-            throw setErr;
-          }
-        } else {
-          // Blocking mode - rethrow to make Stripe retry
-          throw txErr;
-        }
-      }
+      // ===== FIM FIRESTORE INVENTORY =====
     }
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
     // ===== AUTO-DECREMENT INVENTORY VIA GITHUB =====
-    try {
+      try {
       // Use parsed items from metadata if available
       const itemsToDecrement = items || JSON.parse(paymentIntent.metadata.items || '[]');
+
+      // DEBUG: log items payload before attempting GitHub decrement
+      console.log('🔍 [DEBUG] Items to decrement:', JSON.stringify(itemsToDecrement || [], null, 2));
+
       if (itemsToDecrement && itemsToDecrement.length > 0) {
         console.log(`🔄 Attempting to decrement inventory for ${itemsToDecrement.length} items`);
+
+        // DEBUG: pre-call GitHub inventory config check
+        console.log('🔍 [DEBUG] Pre-GitHub decrement check:', {
+          enabled: GITHUB_INVENTORY_CONFIG.ENABLED,
+          hasToken: !!GITHUB_INVENTORY_CONFIG.TOKEN,
+          owner: GITHUB_INVENTORY_CONFIG.OWNER,
+          repo: GITHUB_INVENTORY_CONFIG.REPO,
+          itemsCount: itemsToDecrement?.length
+        });
+
         const result = await decrementInventoryViaGitHub(itemsToDecrement);
+
+        // DEBUG: post-call result
+        console.log('🔍 [DEBUG] GitHub decrement result:', {
+          success: result?.success,
+          reason: result?.reason,
+          error: result?.error,
+          hasDecrements: !!result?.decrements
+        });
+
         if (result && result.success) {
           console.log('✅ Inventory successfully decremented via GitHub');
           console.log('📊 Decrements updated:', result.decrements);
