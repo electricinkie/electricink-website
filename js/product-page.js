@@ -56,6 +56,11 @@
   const shortDesc = productData.basic?.short_description || productData.description || '';
   const fullDesc = productData.content?.full_description || productData.description || shortDesc;
   const category = productData.basic?.category || productData.category || '';
+  // Map old 'Needles' category to 'Cartridges' for display (cartridge products
+  // are stored under category 'Needles' in data files)
+  const displayCategory = (category || '').toString().toLowerCase() === 'needles'
+    ? 'Cartridges'
+    : category;
   const mainImage = productData.media?.main_image || productData.image || '/images/placeholder.jpg';
   const gallery = productData.media?.gallery || productData.images || [mainImage];
 
@@ -85,10 +90,10 @@
     document.getElementById('productName').after(taglineEl);
   }
 
-  // Category badge
-  if (category) {
+  // Category badge (use mapped displayCategory)
+  if (displayCategory) {
     const categoryEl = document.getElementById('productCategory');
-    categoryEl.textContent = category.toUpperCase();
+    categoryEl.textContent = displayCategory.toUpperCase();
     categoryEl.style.display = 'inline-block';
   }
 
@@ -641,12 +646,12 @@ function checkProductAvailability(product) {
   }
 
   // Breadcrumb - atualiza com informação correta do produto
-  const breadcrumbCategory = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Products';
+  const breadcrumbCategory = displayCategory ? displayCategory.charAt(0).toUpperCase() + displayCategory.slice(1) : 'Products';
   const categoryLink = document.getElementById('breadcrumb-category-link');
   
   if (categoryLink) {
     categoryLink.textContent = breadcrumbCategory;
-    const catParam = category ? encodeURIComponent(category.toString().toLowerCase()) : 'all';
+    const catParam = displayCategory ? encodeURIComponent(displayCategory.toString().toLowerCase()) : 'all';
     categoryLink.href = `/category.html?cat=${catParam}`;
   }
   
