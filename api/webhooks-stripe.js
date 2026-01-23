@@ -180,6 +180,11 @@ async function decrementInventoryViaGitHub(items) {
     let decrements = {};
     let sha = null;
 
+    console.log('🔍 [DECREMENT] Starting GitHub inventory update', {
+      itemsCount: (items || []).length,
+      items: (items || []).map(i => ({ id: i.v || i.id, qty: i.q || i.quantity || 1 }))
+    });
+
     try {
       const { data } = await octokit.repos.getContent({ owner, repo, path, ref: branch });
       const content = Buffer.from(data.content, 'base64').toString('utf8');
@@ -203,7 +208,7 @@ async function decrementInventoryViaGitHub(items) {
     }
 
     const newContent = JSON.stringify(decrements, null, 2);
-    const encodedContent = Buffer.from(newContent).toString('base64');
+    let encodedContent = Buffer.from(newContent).toString('base64');
 
     const commitData = {
       owner,
@@ -216,9 +221,79 @@ async function decrementInventoryViaGitHub(items) {
 
     if (sha) commitData.sha = sha;
 
-    await octokit.repos.createOrUpdateFileContents(commitData);
+    // ===== RETRY LOGIC FOR CONFLICT RESOLUTION =====
+    let commitSuccess = false;
+    let retryCount = 0;
+    const maxRetries = 3;
 
-    console.log('✅ Inventory decremented via GitHub successfully');
+    while (!commitSuccess && retryCount < maxRetries) {
+      console.log('🔍 [DECREMENT] Attempting commit', {
+        retry: retryCount,
+        currentSHA: sha ? String(sha).substring(0, 7) : 'none',
+        variantsToUpdate: Object.keys(decrements)
+      });
+      try {
+        if (retryCount > 0) {
+          console.log(`🔄 Retry ${retryCount}/${maxRetries} - refetching latest decrements`);
+          try {
+            const { data: latestData } = await octokit.repos.getContent({ owner, repo, path, ref: branch });
+            const latestContent = Buffer.from(latestData.content, 'base64').toString('utf8');
+            const latestParsed = latestContent ? JSON.parse(latestContent) : {};
+            // Replace local decrements with latest and re-apply increments
+            decrements = latestParsed || {};
+            sha = latestData.sha;
+
+            for (const item of items) {
+              const variantId = item.v || item.id;
+              const quantity = item.q || item.quantity || 1;
+              decrements[variantId] = (decrements[variantId] || 0) + quantity;
+              console.log(`📦 (retry) Decrementing ${variantId}: +${quantity} sold`);
+            }
+
+            const refreshedContent = JSON.stringify(decrements, null, 2);
+            encodedContent = Buffer.from(refreshedContent).toString('base64');
+            commitData.content = encodedContent;
+            commitData.sha = sha;
+          } catch (refetchError) {
+            console.error('❌ Refetch failed during retry:', refetchError && refetchError.message);
+            throw refetchError;
+          }
+        }
+
+        // Attempt commit
+        await octokit.repos.createOrUpdateFileContents(commitData);
+
+        commitSuccess = true;
+        console.log('✅ [DECREMENT] Commit successful', {
+          retry: retryCount,
+          newDecrements: decrements,
+          itemsProcessed: items.length
+        });
+      } catch (error) {
+        retryCount++;
+
+        const isConflict = error && (error.status === 409 || error.status === 422 || (error.message && error.message.includes('does not match')));
+
+        if (isConflict && retryCount < maxRetries) {
+          console.warn(`⚠️ SHA conflict detected, will retry (${retryCount}/${maxRetries})`);
+          // Small exponential-ish backoff
+          await new Promise(resolve => setTimeout(resolve, 100 * retryCount));
+          continue;
+        } else {
+          console.error('❌ GitHub inventory decrement failed:', error && error.message);
+          if (error && error.response) {
+            console.error('GitHub API Error:', { status: error.response.status, data: error.response.data });
+          }
+          return { success: false, error: error && error.message };
+        }
+      }
+    }
+
+    if (!commitSuccess) {
+      console.error('❌ Failed to commit decrements after retries');
+      return { success: false, error: 'max_retries_exceeded' };
+    }
+
     return { success: true, decrements, itemsProcessed: items.length };
   } catch (error) {
     console.error('❌ GitHub inventory decrement failed:', error && error.message);

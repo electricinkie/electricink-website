@@ -717,6 +717,18 @@ function checkProductAvailability(product) {
           };
         }
         
+        // ===== VALIDAÇÃO DE STOCK (FRONTEND) =====
+        // Verificar quantity no momento do click (proteção extra)
+        if (productData.variants && productData.variants.length > 0) {
+          const variantSelect = document.getElementById('variantSelect');
+          const selectedOption = variantSelect && variantSelect.options[variantSelect.selectedIndex];
+          const currentQty = selectedOption && selectedOption.dataset && selectedOption.dataset.quantity;
+          if (currentQty !== undefined && parseInt(currentQty, 10) <= 0) {
+            alert('Sorry, this item is currently out of stock. Please refresh the page for updated availability.');
+            return;
+          }
+        }
+
         // Add to cart usando global system
         if (window.cart && window.cart.addItem) {
           if (window.cart.addItem(itemToAdd)) {
