@@ -64,42 +64,43 @@ const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
 // INVENTORY CONFIGURATION
 // ═══════════════════════════════════════════════════════════
 
-const INVENTORY_CONFIG = {
-  OBSERVATION_MODE: true, // Set false to enable blocking behavior
-  ENABLE_INVENTORY_CHECK: true, // Toggle inventory checks entirely
-  SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
-};
-function validateMetadata(metadata = {}) {
-  const validated = {
-    email: metadata.customer_email || 'no-email@electricink.ie',
-    name: metadata.customer_name || 'Customer',
-    phone: metadata.phone || '',
-    addressLine1: metadata.addressLine1 || metadata.street || 'Address not provided',
-    addressLine2: metadata.addressLine2 || metadata.complement || '',
-    city: metadata.city || 'Dublin',
-    state: metadata.state || 'Leinster',
-    postalCode: metadata.postalCode || metadata.postal_code || '',
-    country: metadata.country || 'IE'
+  const INVENTORY_CONFIG = {
+    OBSERVATION_MODE: true, // Set false to enable blocking behavior
+    ENABLE_INVENTORY_CHECK: true, // Toggle inventory checks entirely
+    SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
   };
 
-  const hasIncompleteData = (
-    !metadata.customer_email ||
-    !metadata.customer_name,
-    !metadata.addressLine1 && !metadata.street ||
-    !metadata.postalCode && !metadata.postal_code
-  );
+  // Consolidated validateMetadata - single robust definition
+  function validateMetadata(metadata = {}) {
+    const validated = {
+      email: metadata.customer_email || 'no-email@electricink.ie',
+      name: metadata.customer_name || 'Customer',
+      phone: metadata.phone || '',
+      addressLine1: metadata.addressLine1 || 'Address not provided',
+      addressLine2: metadata.addressLine2 || '',
+      city: metadata.city || 'Dublin',
+      state: metadata.state || 'Leinster',
+      postalCode: metadata.postalCode || '',
+      country: metadata.country || 'IE'
+    };
 
-  if (hasIncompleteData) {
-    logger.warn('Incomplete metadata detected', {
-      hasEmail: !!metadata.customer_email,
-      hasName: !!metadata.customer_name,
-      hasAddress: !!(metadata.addressLine1 || metadata.street),
-      hasPostalCode: !!(metadata.postalCode || metadata.postal_code)
-    });
+    // Log se metadata parece incompleta
+    const hasIncompleteData = 
+      !metadata.customer_email || 
+      !metadata.customer_name || 
+      !metadata.addressLine1 || 
+      !metadata.postalCode;
+    if (hasIncompleteData) {
+      logger.warn('Incomplete metadata detected', {
+        hasEmail: !!metadata.customer_email,
+        hasName: !!metadata.customer_name,
+        hasAddress: !!metadata.addressLine1,
+        hasPostalCode: !!metadata.postalCode
+      });
+    }
+
+    return validated;
   }
-
-  return validated;
-}
 // Validar Firestore em produção
 if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
   if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
@@ -265,8 +266,9 @@ module.exports = async function handler(req, res) {
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
 
     console.log('✅ Assinatura verificada!');
-    console.log('✅ Event type:', event.type);
-    console.log('✅ Event ID:', event.id);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ [DEV] Webhook event:', event.type, 'ID:', event.id);
+    }
 
     logger.info(JSON.stringify({
       msg: 'Webhook verified',
@@ -297,6 +299,22 @@ module.exports = async function handler(req, res) {
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
+        // Security: require backend validation flag set when PaymentIntent was created
+        try {
+          const paymentIntent = event.data && event.data.object ? event.data.object : null;
+          if (!paymentIntent || !(paymentIntent.metadata && paymentIntent.metadata.backend_validated === 'true')) {
+            console.error('❌ Webhook rejected: metadata not validated', {
+              paymentIntentIdLast4: paymentIntent && paymentIntent.id ? String(paymentIntent.id).slice(-4) : null,
+              requestId
+            });
+            return res.status(400).json({ error: 'Invalid metadata - backend validation missing', requestId });
+          }
+          console.log('✅ Metadata validated by backend', { paymentIntentIdLast4: String(paymentIntent.id).slice(-4) });
+        } catch (e) {
+          console.error('❌ Error checking backend_validated flag:', e && e.message);
+          return res.status(400).json({ error: 'Invalid metadata - backend validation check failed', requestId });
+        }
+
         console.log('🎯 Chamando handlePaymentIntentSucceeded...');
         await handlePaymentIntentSucceeded(event, requestId);
         console.log('🎯 handlePaymentIntentSucceeded concluído');
@@ -505,35 +523,7 @@ async function sendLowStockAlert(checkResults, orderData) {
     }
   }
 }
-// Validate and fill defaults for possibly-truncated Stripe metadata
-function validateMetadata(metadata) {
-  const validated = {
-    email: metadata.customer_email || 'no-email@electricink.ie',
-    name: metadata.customer_name || 'Customer',
-    phone: metadata.phone || '',
-    addressLine1: metadata.addressLine1 || 'Address not provided',
-    addressLine2: metadata.addressLine2 || '',
-    city: metadata.city || 'Dublin',
-    state: metadata.state || 'Leinster',
-    postalCode: metadata.postalCode || '',
-    country: metadata.country || 'IE'
-  };
-  // Log se metadata parece incompleta
-  const hasIncompleteData = 
-    !metadata.customer_email || 
-    !metadata.customer_name || 
-    !metadata.addressLine1 || 
-    !metadata.postalCode;
-  if (hasIncompleteData) {
-    logger.warn('Incomplete metadata detected', {
-      hasEmail: !!metadata.customer_email,
-      hasName: !!metadata.customer_name,
-      hasAddress: !!metadata.addressLine1,
-      hasPostalCode: !!metadata.postalCode
-    });
-  }
-  return validated;
-}
+  // (duplicate removed) validateMetadata consolidated at top of file
 
 async function handlePaymentIntentSucceeded(event, requestId) {
   const db = getFirestore();
@@ -762,7 +752,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
 
     // CLIENT EMAIL
-    console.log('📧 [CLIENT] Sending order confirmation to:', order.customerEmail);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📧 [DEV] Sending order confirmation', { orderId });
+    } else {
+      console.log('📧 Order confirmation sent', { orderId });
+    }
     try {
       if (!resend) throw new Error('Resend not configured');
 

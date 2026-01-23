@@ -84,8 +84,7 @@ function initializeFirebaseAdmin() {
         credential: admin.credential.cert(serviceAccount),
         projectId: serviceAccount.project_id
       });
-      console.log('✅ Firebase Admin inicializado');
-      console.log('✅ Project ID:', serviceAccount.project_id);
+      console.log('✅ Firebase Admin initialized');
       return admin.firestore();
     } catch (initErr) {
       console.error('❌ Error during admin.initializeApp:', initErr && initErr.message);

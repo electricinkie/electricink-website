@@ -340,10 +340,13 @@
     const title = productData.content.materials ? 'Materials' : 'Ingredients';
     const content = productData.content.materials || productData.content.ingredients;
     
-    materialsSection.innerHTML = `
-      <h3>${title}</h3>
-      <p>${content}</p>
-    `;
+    // Build elements safely to avoid injecting untrusted HTML
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    const pContent = document.createElement('p');
+    pContent.textContent = content;
+    materialsSection.appendChild(h3);
+    materialsSection.appendChild(pContent);
     
     document.querySelector('.product-usage')?.after(materialsSection) || 
     document.getElementById('productDescription').after(materialsSection);
@@ -372,14 +375,29 @@
       </svg>`;
 
     // Build simple vertical content: IMPORTANT badge above the message (no icon)
-    warningBox.innerHTML = `
-      <div class="warning-content">
-        <div class="warning-top">
-          ${importantHTML}
-        </div>
-        <p class="warning-text">${bodyText}</p>
-      </div>
-    `;
+    // Insert presentational SVG (static) then create text nodes safely
+    if (lucideInfo) warningBox.insertAdjacentHTML('beforeend', lucideInfo);
+    const warningContentDiv = document.createElement('div');
+    warningContentDiv.className = 'warning-content';
+
+    const warningTopDiv = document.createElement('div');
+    warningTopDiv.className = 'warning-top';
+    if (importantHTML) {
+      // importantHTML is a static badge string - create element instead of injecting raw HTML
+      const impSpan = document.createElement('span');
+      impSpan.className = 'important-note';
+      impSpan.textContent = 'IMPORTANT';
+      warningTopDiv.appendChild(impSpan);
+    }
+
+    const warningP = document.createElement('p');
+    warningP.className = 'warning-text';
+    // HTML formatting required for IMPORTANT notices - content controlled by admin
+    warningP.innerHTML = bodyText;
+
+    warningContentDiv.appendChild(warningTopDiv);
+    warningContentDiv.appendChild(warningP);
+    warningBox.appendChild(warningContentDiv);
 
     document.querySelector('.product-materials')?.after(warningBox) ||
     document.querySelector('.product-usage')?.after(warningBox) ||
@@ -430,17 +448,27 @@
     const appsSection = document.createElement('div');
     appsSection.className = 'product-applications';
     appsSection.innerHTML = '<h3>Commonly Used For</h3>';
-    
-    if (productData.applications.primary_uses) {
+
+    // Support two shapes:
+    // - productData.applications = { primary_uses: [..] }
+    // - productData.applications = [..]
+    let uses = [];
+    if (Array.isArray(productData.applications)) {
+      uses = productData.applications;
+    } else if (productData.applications.primary_uses && Array.isArray(productData.applications.primary_uses)) {
+      uses = productData.applications.primary_uses;
+    }
+
+    if (uses.length > 0) {
       const usesList = document.createElement('ul');
-      productData.applications.primary_uses.forEach(use => {
+      uses.forEach(use => {
         const li = document.createElement('li');
         li.textContent = use;
         usesList.appendChild(li);
       });
       appsSection.appendChild(usesList);
     }
-    
+
     document.getElementById('productSpecs')?.after(appsSection) ||
     document.getElementById('productFeatures')?.after(appsSection);
   }
@@ -449,8 +477,12 @@
   if (productData.content?.disclaimer) {
     const disclaimerBox = document.createElement('div');
     disclaimerBox.className = 'product-disclaimer';
-    disclaimerBox.innerHTML = `<p><em>${productData.content.disclaimer}</em></p>`;
-    
+    const p = document.createElement('p');
+    const em = document.createElement('em');
+    em.textContent = productData.content.disclaimer;
+    p.appendChild(em);
+    disclaimerBox.appendChild(p);
+
     document.querySelector('.product-applications')?.after(disclaimerBox) ||
     document.getElementById('productSpecs')?.after(disclaimerBox);
   }
@@ -572,7 +604,9 @@ function checkProductAvailability(product) {
             return;
           }
 
-          console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: selectedVariant.label, resolvedPriceId });
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[DEV] Add to cart:', { productId: productId, variantId: selectedVariant?.id });
+          }
 
           // Resolve a usable price for the selected variant (fallback to product price)
           const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
@@ -606,7 +640,9 @@ function checkProductAvailability(product) {
             return;
           }
 
-          console.log('[ADD_TO_CART]', { productId: productId, productName: name, variant: null, resolvedPriceId });
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[DEV] Add to cart:', { productId: productId, variantId: null });
+          }
 
           if (!price) {
             alert('Product price not available');

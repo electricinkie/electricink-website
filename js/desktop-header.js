@@ -247,7 +247,7 @@ import { isAdmin } from './admin-check.js';
         console.log('[DesktopHeader] Auth observer already attached; skipping.');
       } else {
         onAuthChange((user) => {
-          console.log('[DesktopHeader] 🔄 Auth state changed, user:', user?.email || 'none');
+          console.log('[DesktopHeader] 🔄 Auth state changed', { uid: user?.uid || null });
           
           if (user) {
             showSignedInState(user);
@@ -298,7 +298,11 @@ import { isAdmin } from './admin-check.js';
         await new Promise(r => setTimeout(r, 100));
       }
       if (user) {
-        console.log('[DesktopHeader] immediate user found:', user.email);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[DEV] DesktopHeader immediate user', { uid: user.uid, emailDomain: user.email?.split('@')[1] });
+        } else {
+          console.log('[DesktopHeader] immediate user found', { uid: user.uid || null });
+        }
         showSignedInState(user);
       } else {
         console.log('[DesktopHeader] no immediate user; waiting for observer');
@@ -332,7 +336,7 @@ import { isAdmin } from './admin-check.js';
 
   function showSignedInState(user) {
     // 🔧 FIX: Log para debug
-    console.log('[DesktopHeader] showSignedInState called, user:', (user && user.email) ? user.email : 'none');
+    console.log('[DesktopHeader] showSignedInState called', { uid: user?.uid || null });
     const out = document.querySelector('[data-auth-signed-out]');
     const inEl = document.querySelector('[data-auth-signed-in]');
     if (out) out.style.display = 'none';
