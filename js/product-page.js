@@ -667,9 +667,7 @@ function checkProductAvailability(product) {
             return;
           }
 
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[DEV] Add to cart:', { productId: productId, variantId: selectedVariant?.id });
-          }
+          console.log('[DEBUG] Add to cart:', { productId: productId, variantId: selectedVariant?.id });
 
           // Resolve a usable price for the selected variant (fallback to product price)
           const resolvedVariantPrice = (typeof selectedVariant.price === 'number' && !isNaN(selectedVariant.price))
@@ -703,9 +701,7 @@ function checkProductAvailability(product) {
             return;
           }
 
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[DEV] Add to cart:', { productId: productId, variantId: null });
-          }
+          console.log('[DEBUG] Add to cart:', { productId: productId, variantId: null });
 
           if (!price) {
             alert('Product price not available');

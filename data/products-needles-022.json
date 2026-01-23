@@ -95,8 +95,8 @@
       "/images/products/cartridges/rl-0.22/coifa-rl.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_soon",
+      "stock_quantity": 10,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -110,7 +110,7 @@
         "tattoo cartridge"
       ]
     },
-    "inStock": false,
+    "inStock": true,
     "featured": true,
     "stripe_price_id": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
     "availableDate": "2026-02-01"

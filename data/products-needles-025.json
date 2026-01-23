@@ -98,8 +98,8 @@
       "/images/products/cartridges/rl-0.25/coifa-rl.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_soon",
+      "stock_quantity": 25,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -113,7 +113,7 @@
         "tattoo cartridge"
       ]
     },
-    "inStock": false,
+    "inStock": true,
     "featured": true,
     "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUKq5DWPn",
     "availableDate": "2026-02-01"
@@ -207,8 +207,8 @@
       "/images/products/cartridges/rs-0.25/coifa-rs.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_soon",
+      "stock_quantity": 8,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -221,7 +221,7 @@
         "solid fills"
       ]
     },
-    "inStock": false,
+    "inStock": true,
     "featured": false,
     "stripe_price_id": "price_1Sm3uQAiq7NBxfpw8cQnk3cg",
     "availableDate": "2026-02-01"
@@ -343,8 +343,8 @@
       "/images/products/cartridges/rmg-0.25/coifa-rmg.webp"
     ],
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "available_soon",
+      "stock_quantity": 15,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -357,7 +357,7 @@
         "colour packing"
       ]
     },
-    "inStock": false,
+    "inStock": true,
     "featured": true,
     "stripe_price_id": "price_1Sm41UAiq7NBxfpw10Z2VYoy",
     "availableDate": "2026-02-01"
