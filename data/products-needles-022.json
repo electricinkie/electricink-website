@@ -36,6 +36,7 @@
         "configuration": "RL01",
         "label": "RL01 - 1 Needle",
         "price": 27.8,
+        "quantity": 0,
         "priceId": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
         "stripe_price_id": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
         "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
@@ -65,6 +66,7 @@
         "configuration": "RL07",
         "label": "RL07 - 7 Needles",
         "price": 30.5,
+        "quantity": 0,
         "priceId": "price_1Sm3itAiq7NBxfpwUhOPHgKY",
         "stripe_price_id": "price_1Sm3itAiq7NBxfpwUhOPHgKY",
         "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
@@ -74,6 +76,7 @@
         "configuration": "RL09",
         "label": "RL09 - 9 Needles",
         "price": 33.3,
+        "quantity": 0,
         "priceId": "price_1Sm3itAiq7NBxfpwhhh1zHHU",
         "stripe_price_id": "price_1Sm3itAiq7NBxfpwhhh1zHHU",
         "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"
@@ -83,6 +86,7 @@
         "configuration": "RL11",
         "label": "RL11 - 11 Needles",
         "price": 33.3,
+        "quantity": 0,
         "priceId": "price_1Sm3itAiq7NBxfpwNxeGIlsM",
         "stripe_price_id": "price_1Sm3itAiq7NBxfpwNxeGIlsM",
         "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp"

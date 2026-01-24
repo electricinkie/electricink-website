@@ -36,6 +36,7 @@
         "configuration": "RL01",
         "label": "RL01 - 1 Needle",
         "price": 27.8,
+        "quantity": 0,
         "priceId": "price_1Sm3oiAiq7NBxfpwUKq5DWPn",
         "stripe_price_id": "price_1Sm3oiAiq7NBxfpwUKq5DWPn",
         "image": "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp"
@@ -195,6 +196,7 @@
         "configuration": "RS14",
         "label": "RS14 - 14 Needles",
         "price": 36.15,
+        "quantity": 0,
         "priceId": "price_1Sm3uQAiq7NBxfpwgohr4MGg",
         "stripe_price_id": "price_1Sm3uQAiq7NBxfpwgohr4MGg",
         "image": "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp"
@@ -263,6 +265,7 @@
         "configuration": "RMG07",
         "label": "RMG07 - 7 Needles",
         "price": 30.5,
+        "quantity": 0,
         "priceId": "price_1Sm41UAiq7NBxfpw10Z2VYoy",
         "stripe_price_id": "price_1Sm41UAiq7NBxfpw10Z2VYoy",
         "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
@@ -272,6 +275,7 @@
         "configuration": "RMG09",
         "label": "RMG09 - 9 Needles",
         "price": 32.35,
+        "quantity": 0,
         "priceId": "price_1Sm41UAiq7NBxfpwHXuviPzU",
         "stripe_price_id": "price_1Sm41UAiq7NBxfpwHXuviPzU",
         "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
@@ -321,6 +325,7 @@
         "configuration": "RMG23",
         "label": "RMG23 - 23 Needles",
         "price": 44.4,
+        "quantity": 0,
         "priceId": "price_1Sm41UAiq7NBxfpw0iex5Tvj",
         "stripe_price_id": "price_1Sm41UAiq7NBxfpw0iex5Tvj",
         "image": "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp"
