@@ -25,7 +25,8 @@
         "price": 132.15,
         "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
-        "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6"
+        "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6",
+        "quantity": 1
       },
       {
         "id": "grip-ultra-pen-balance-flex-45mm",
@@ -34,7 +35,8 @@
         "price": 146.8,
         "priceId": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp",
-        "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg"
+        "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
+        "quantity": 1
       }
     ],
     "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
@@ -52,7 +54,7 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -97,7 +99,7 @@
     ],
     "content": {},
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -137,67 +139,78 @@
         "id": "black",
         "color": "Black",
         "label": "Black",
-        "image": "/images/products/tattoo-machines/electra-pop-black-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-black-1.webp",
+        "quantity": 1
       },
       {
         "id": "blue",
         "color": "Blue",
         "label": "Blue",
-        "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp",
+        "quantity": 1
       },
       {
         "id": "pink",
         "color": "Pink",
         "label": "Pink",
-        "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp",
+        "quantity": 1
       },
       {
         "id": "white",
         "color": "White",
         "label": "White",
-        "image": "/images/products/tattoo-machines/electra-pop-white-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
+        "quantity": 1
       },
       {
         "id": "lilac",
         "color": "Lilac",
         "label": "Lilac",
-        "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp",
+        "quantity": 1
       },
       {
         "id": "silver",
         "color": "Silver",
         "label": "Silver",
-        "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp",
+        "quantity": 1
       },
       {
         "id": "bordeaux",
         "color": "Bordeaux",
         "label": "Bordeaux",
-        "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp",
+        "quantity": 1
       },
       {
         "id": "smoke-grey",
         "color": "Smoke Grey",
         "label": "Smoke Grey",
-        "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp",
+        "quantity": 1
       },
       {
         "id": "neon-coral",
         "color": "Neon Coral",
         "label": "Neon Coral",
-        "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp",
+        "quantity": 1
       },
       {
         "id": "neon-yellow",
         "color": "Neon Yellow",
         "label": "Neon Yellow",
-        "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp",
+        "quantity": 1
       },
       {
         "id": "neon-orange",
         "color": "Neon Orange",
         "label": "Neon Orange",
-        "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp",
+        "quantity": 1
       }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
@@ -299,7 +312,7 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -339,13 +352,15 @@
         "id": "black",
         "color": "Black",
         "label": "Black",
-        "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
+        "quantity": 1
       },
       {
         "id": "pink",
         "color": "Pink",
         "label": "Pink",
-        "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp"
+        "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp",
+        "quantity": 1
       }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
@@ -376,7 +391,7 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -434,7 +449,7 @@
       }
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 2
     },
@@ -490,7 +505,7 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 2
     },
@@ -523,9 +538,9 @@
       "productId": "prod_TkwYdAGyqrMKW0",
       "priceId": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
     },
-    "price": 850.0,
+    "price": 850,
     "promoDisplay": {
-      "wasPrice": 1034.80,
+      "wasPrice": 1034.8,
       "label": "SPECIAL OFFER"
     },
     "variants": [],
@@ -563,7 +578,7 @@
       ]
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },

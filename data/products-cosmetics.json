@@ -119,6 +119,7 @@
         "price": 11.25,
         "priceId": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd",
         "stripe_price_id": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd",
+        "quantity": 15,
         "image": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp"
       },
       {
@@ -128,6 +129,7 @@
         "price": 18.5,
         "priceId": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l",
         "stripe_price_id": "price_1Sm1G9Aiq7NBxfpwoLK1ju4l",
+        "quantity": 15,
         "image": "/images/products/cosmetics/slimer-tattoo-gel-400ml.webp"
       }
     ],
@@ -276,6 +278,7 @@
         "price": 10,
         "priceId": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
         "stripe_price_id": "price_1Sm1MoAiq7NBxfpw4efgnQ1A",
+        "quantity": 15,
         "image": "/images/products/cosmetics/gloo-30g.webp"
       },
       {
@@ -285,6 +288,7 @@
         "price": 26,
         "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
         "stripe_price_id": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
+        "quantity": 15,
         "image": "/images/products/cosmetics/gloo-240g.webp"
       }
     ],
@@ -343,6 +347,7 @@
         "price": 9,
         "priceId": "price_1Sm1TMAiq7NBxfpw2WoWPudJ",
         "stripe_price_id": "price_1Sm1TMAiq7NBxfpw2WoWPudJ",
+        "quantity": 10,
         "image": "/images/products/cosmetics/it-30ml.webp"
       },
       {
@@ -352,6 +357,7 @@
         "price": 16.35,
         "priceId": "price_1Sm1TMAiq7NBxfpwa2GqTGeO",
         "stripe_price_id": "price_1Sm1TMAiq7NBxfpwa2GqTGeO",
+        "quantity": 10,
         "image": "/images/products/cosmetics/it-120ml.webp"
       },
       {
@@ -361,6 +367,7 @@
         "price": 24.5,
         "priceId": "price_1Sm1TMAiq7NBxfpwOb98757m",
         "stripe_price_id": "price_1Sm1TMAiq7NBxfpwOb98757m",
+        "quantity": 10,
         "image": "/images/products/cosmetics/it-240ml.webp"
       }
     ],
@@ -465,6 +472,7 @@
         "price": 9,
         "priceId": "price_1Sm1YkAiq7NBxfpw3AgyJySW",
         "stripe_price_id": "price_1Sm1YkAiq7NBxfpw3AgyJySW",
+        "quantity": 0,
         "image": "/images/products/cosmetics/clean-up-90ml.webp"
       },
       {
@@ -474,6 +482,7 @@
         "price": 10.65,
         "priceId": "price_1Sm1YlAiq7NBxfpwavldit9Z",
         "stripe_price_id": "price_1Sm1YlAiq7NBxfpwavldit9Z",
+        "quantity": 0,
         "image": "/images/products/cosmetics/clean-up-200ml.webp"
       }
     ],
@@ -579,6 +588,7 @@
         "price": 9,
         "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "quantity": 0,
         "image": "/images/products/cosmetics/cat-slobber-90g-tradicional.webp"
       },
       {
@@ -589,6 +599,7 @@
         "price": 9,
         "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "quantity": 0,
         "image": "/images/products/cosmetics/cat-slobber-90g-clove&cinnamon.webp"
       },
       {
@@ -599,6 +610,7 @@
         "price": 9,
         "priceId": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ",
+        "quantity": 0,
         "image": "/images/products/cosmetics/cat-slobber-90g-mint.webp"
       },
       {
@@ -609,6 +621,7 @@
         "price": 25.7,
         "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "quantity": 0,
         "image": "/images/products/cosmetics/cat-slobber-250g-tradicional.webp"
       },
       {
@@ -619,6 +632,7 @@
         "price": 25.7,
         "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "quantity": 0,
         "image": "/images/products/cosmetics/cat-slobber-250g-clove&cinnamon.webp"
       },
       {
@@ -629,6 +643,7 @@
         "price": 25.7,
         "priceId": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
         "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwj1okI19c",
+        "quantity": 0,
         "image": "/images/products/cosmetics/cat-slobber-250g-mint.webp"
       }
     ],
@@ -691,6 +706,7 @@
         "price": 8.2,
         "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
         "stripe_price_id": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
+        "quantity": 2,
         "image": "/images/products/cosmetics/slip-premium-90g.webp"
       },
       {
@@ -700,6 +716,7 @@
         "price": 9.8,
         "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
         "stripe_price_id": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
+        "quantity": 2,
         "image": "/images/products/cosmetics/slip-premium-150g.webp"
       }
     ],
@@ -757,6 +774,7 @@
         "price": 9.8,
         "priceId": "price_1Sm1oPAiq7NBxfpwOvWFWJBr",
         "stripe_price_id": "price_1Sm1oPAiq7NBxfpwOvWFWJBr",
+        "quantity": 16,
         "image": "/images/products/cosmetics/after-all-90ml.webp"
       },
       {
@@ -766,6 +784,7 @@
         "price": 15.5,
         "priceId": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN",
         "stripe_price_id": "price_1Sm1p7Aiq7NBxfpwCtdxeNQN",
+        "quantity": 16,
         "image": "/images/products/cosmetics/after-all-250ml.webp"
       }
     ],
@@ -823,6 +842,7 @@
         "price": 14.7,
         "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
         "stripe_price_id": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
+        "quantity": 0,
         "image": "/images/products/cosmetics/barrier-film-25ml.webp"
       },
       {
@@ -832,6 +852,7 @@
         "price": 32.7,
         "priceId": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy",
         "stripe_price_id": "price_1Sm1uoAiq7NBxfpwdtX8D1Zy",
+        "quantity": 0,
         "image": "/images/products/cosmetics/barrier-film-100ml.webp"
       }
     ],
