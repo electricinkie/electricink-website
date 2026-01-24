@@ -67,21 +67,38 @@
    * 3. fallback to quantity > 0
    * 4. if neither present => assume available (backwards compatible)
    */
-  function isAvailable(variant) {
-    if (!variant) return true;
+  /**
+   * Verifica se variant está disponível para compra
+   * Regra segura: sem quantity = indisponível
+   *
+   * @param {Object} productData - Dados completos do produto
+   * @param {Object} variant - Variante específica
+   * @returns {boolean} true se disponível, false caso contrário
+   */
+  function isAvailable(productData, variant) {
+    // 1. Produto inteiro out of stock? Nenhum variant disponível
+    if (productData?.inventory?.stock_status === 'out_of_stock') {
+      return false;
+    }
+
+    // 2. Variant não existe? Indisponível
+    if (!variant) {
+      return false;
+    }
+
+    // 3. Variant explicitamente marcado out of stock?
     if (variant.stock_status === 'out_of_stock') {
       return false;
     }
-    if (variant.stock_status === 'in_stock') {
-      if (variant.quantity !== undefined && variant.quantity !== null) {
-        return variant.quantity > 0;
-      }
-      return true;
-    }
+
+    // 4. Variant tem quantity definido?
     if (variant.quantity !== undefined && variant.quantity !== null) {
-      return variant.quantity > 0;
+      // Disponível apenas se quantity > 0
+      return Number(variant.quantity) > 0;
     }
-    return true;
+
+    // 5. Sem quantity e sem stock_status explícito = INDISPONÍVEL (safe default)
+    return false;
   }
 
   // EXTRACT values with fallbacks (supports old and new structure)
@@ -282,12 +299,10 @@
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
 
-      // Inventory (read-only from JSON): use hybrid availability
+      // Inventory (read-only from JSON): use secure availability check
       const qty = getQuantity(variant);
-      // Respect product-level inventory.stock_status: if the whole product is out_of_stock,
-      // make variants unavailable regardless of per-variant quantity/stock_status.
-      const productOutOfStock = productData.inventory?.stock_status === 'out_of_stock';
-      const available = !productOutOfStock && isAvailable(variant);
+      // Use new isAvailable signature which checks product-level stock_status internally
+      const available = isAvailable(productData, variant);
 
       // expose availability and quantity to DOM for handlers
       option.dataset.available = available ? 'true' : 'false';
