@@ -50,33 +50,14 @@
     return;
   }
 
-  // ===== INVENTORY TRACKING SYSTEM =====
-  let decrements = {};
-
-  async function loadDecrements() {
-    try {
-      const response = await fetch('/data/decrements.json');
-      if (response.ok) {
-        decrements = await response.json();
-        console.log('✅ Inventory decrements loaded');
-      }
-    } catch (error) {
-      console.log('ℹ️ No decrements file (inventory tracking not active yet)');
-    }
-  }
-
-  function getRealQuantity(variant) {
+  // ===== INVENTORY (SIMPLE) =====
+  function getQuantity(variant) {
     if (variant.quantity === undefined || variant.quantity === null) {
       return null;
     }
-    const sold = decrements[variant.id] || 0;
-    const available = variant.quantity - sold;
-    return Math.max(0, available);
+    return variant.quantity;
   }
-
-  // Carregar decrements ao iniciar
-  await loadDecrements();
-  // ===== FIM INVENTORY TRACKING =====
+  // ===== FIM INVENTORY (SIMPLE) =====
 
   // EXTRACT values with fallbacks (supports old and new structure)
   const name = productData.basic?.name || productData.name || 'Unnamed Product';
@@ -276,15 +257,15 @@
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
 
-      // ↓ NOVO: adicionar estoque real se aplicável
-      const realQty = getRealQuantity(variant);
-      if (realQty !== null) {
-        option.dataset.quantity = String(realQty);
-        if (realQty === 0) {
+      // ↓ Estoque (apenas leitura do JSON: variant.quantity)
+      const qty = getQuantity(variant);
+      if (qty !== null) {
+        option.dataset.quantity = String(qty);
+        if (qty === 0) {
           option.disabled = true;
           option.textContent = `${variant.label} - Out of Stock`;
-        } else if (realQty <= 3) {
-          option.textContent = `${variant.label} - ${realQty} left`;
+        } else if (qty <= 3) {
+          option.textContent = `${variant.label} - ${qty} left`;
         }
       }
 

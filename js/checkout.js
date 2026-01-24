@@ -955,6 +955,24 @@ window.appliedDiscount = 0;
         calculateTotals();
         renderOrderSummary();
 
+        // ===== UPDATE PAYMENT REQUEST (WALLETS) =====
+        // Atualizar total do Apple/Google Pay quando cupom aplicado
+        if (window.paymentRequest && window.totals) {
+          const totalCents = Math.round(window.totals.total * 100);
+          try {
+            window.paymentRequest.update({
+              total: {
+                label: 'Total',
+                amount: totalCents
+              }
+            });
+            console.log('✅ Payment Request updated with coupon discount');
+          } catch (error) {
+            console.warn('⚠️ Could not update Payment Request:', error.message);
+          }
+        }
+        // ===== FIM UPDATE PAYMENT REQUEST =====
+
         // Disable input after successful application
         if (discountInput) discountInput.disabled = true;
         if (applyBtn) applyBtn.textContent = 'Applied';

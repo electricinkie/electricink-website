@@ -150,7 +150,7 @@ try {
 
 // ===== GITHUB INVENTORY DECREMENT SYSTEM =====
 const GITHUB_INVENTORY_CONFIG = {
-  ENABLED: process.env.ENABLE_GITHUB_INVENTORY === 'true',
+  ENABLED: false, // ← DESATIVADO PERMANENTEMENTE
   OWNER: process.env.GITHUB_OWNER,
   REPO: process.env.GITHUB_REPO,
   TOKEN: process.env.GITHUB_TOKEN,

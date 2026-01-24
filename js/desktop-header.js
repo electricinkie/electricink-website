@@ -298,11 +298,8 @@ import { isAdmin } from './admin-check.js';
         await new Promise(r => setTimeout(r, 100));
       }
       if (user) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[DEV] DesktopHeader immediate user', { uid: user.uid, emailDomain: user.email?.split('@')[1] });
-        } else {
-          console.log('[DesktopHeader] immediate user found', { uid: user.uid || null });
-        }
+        // Log a concise, safe message in all environments (avoid `process.env` in browser)
+        console.log('[DesktopHeader] immediate user found', { uid: user.uid || null });
         showSignedInState(user);
       } else {
         console.log('[DesktopHeader] no immediate user; waiting for observer');
