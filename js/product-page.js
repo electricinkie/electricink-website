@@ -59,6 +59,31 @@
   }
   // ===== FIM INVENTORY (SIMPLE) =====
 
+  /**
+   * Hybrid availability check.
+   * Priority:
+   * 1. variant.stock_status === 'out_of_stock' => unavailable
+   * 2. variant.stock_status === 'in_stock' => available (but validate quantity if present)
+   * 3. fallback to quantity > 0
+   * 4. if neither present => assume available (backwards compatible)
+   */
+  function isAvailable(variant) {
+    if (!variant) return true;
+    if (variant.stock_status === 'out_of_stock') {
+      return false;
+    }
+    if (variant.stock_status === 'in_stock') {
+      if (variant.quantity !== undefined && variant.quantity !== null) {
+        return variant.quantity > 0;
+      }
+      return true;
+    }
+    if (variant.quantity !== undefined && variant.quantity !== null) {
+      return variant.quantity > 0;
+    }
+    return true;
+  }
+
   // EXTRACT values with fallbacks (supports old and new structure)
   const name = productData.basic?.name || productData.name || 'Unnamed Product';
   const tagline = productData.basic?.tagline || null;
@@ -257,16 +282,22 @@
       option.dataset.image = variant.image || '';
       option.dataset.description = variant.description || '';
 
-      // ↓ Estoque (apenas leitura do JSON: variant.quantity)
+      // Inventory (read-only from JSON): use hybrid availability
       const qty = getQuantity(variant);
+      // Respect product-level inventory.stock_status: if the whole product is out_of_stock,
+      // make variants unavailable regardless of per-variant quantity/stock_status.
+      const productOutOfStock = productData.inventory?.stock_status === 'out_of_stock';
+      const available = !productOutOfStock && isAvailable(variant);
+
+      // expose availability and quantity to DOM for handlers
+      option.dataset.available = available ? 'true' : 'false';
       if (qty !== null) {
         option.dataset.quantity = String(qty);
-        if (qty === 0) {
-          option.disabled = true;
-          option.textContent = `${variant.label} - Out of Stock`;
-        } else if (qty <= 3) {
-          option.textContent = `${variant.label} - ${qty} left`;
-        }
+      }
+
+      if (!available) {
+        option.disabled = true;
+        option.textContent = `${variant.label} - Out of Stock`;
       }
 
       // Use dataset.price for display to avoid calling toFixed on undefined
@@ -313,10 +344,10 @@
         }
       }
       
-      // ↓ NOVO: verificar estoque ao trocar variante
-      const qty = selected.dataset.quantity;
+      // Verify availability on variant change (uses dataset.available set during population)
+      const available = selected.dataset.available;
       const addBtn = document.getElementById('addToCartBtn');
-      if (qty !== undefined && parseInt(qty) === 0) {
+      if (available === 'false') {
         if (addBtn) {
           addBtn.disabled = true;
           addBtn.textContent = 'Out of Stock';
@@ -699,13 +730,13 @@ function checkProductAvailability(product) {
         }
         
         // ===== VALIDAÇÃO DE STOCK (FRONTEND) =====
-        // Verificar quantity no momento do click (proteção extra)
+        // Proteção extra: verificar disponibilidade declarada no option
         if (productData.variants && productData.variants.length > 0) {
           const variantSelect = document.getElementById('variantSelect');
           const selectedOption = variantSelect && variantSelect.options[variantSelect.selectedIndex];
-          const currentQty = selectedOption && selectedOption.dataset && selectedOption.dataset.quantity;
-          if (currentQty !== undefined && parseInt(currentQty, 10) <= 0) {
-            alert('Sorry, this item is currently out of stock. Please refresh the page for updated availability.');
+          const available = selectedOption && selectedOption.dataset && selectedOption.dataset.available;
+          if (available === 'false') {
+            alert('Sorry, this item is currently out of stock. Please select another variant.');
             return;
           }
         }
