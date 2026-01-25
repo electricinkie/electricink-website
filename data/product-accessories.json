@@ -22,37 +22,43 @@
         "id": "turquoise",
         "label": "Turquoise",
         "colour": "Turquoise",
-        "image": "/images/products/accessories/turquoise-grip.webp"
+        "image": "/images/products/accessories/turquoise-grip.webp",
+        "quantity": 3
       },
       {
         "id": "black",
         "label": "Black",
         "colour": "Black",
-        "image": "/images/products/accessories/black-grip.webp"
+        "image": "/images/products/accessories/black-grip.webp",
+        "quantity": 3
       },
       {
         "id": "purple",
         "label": "Purple",
         "colour": "Purple",
-        "image": "/images/products/accessories/purple-grip.webp"
+        "image": "/images/products/accessories/purple-grip.webp",
+        "quantity": 3
       },
       {
         "id": "red",
         "label": "Red",
         "colour": "Red",
-        "image": "/images/products/accessories/red-grip.webp"
+        "image": "/images/products/accessories/red-grip.webp",
+        "quantity": 3
       },
       {
         "id": "blue",
         "label": "Blue",
         "colour": "Blue",
-        "image": "/images/products/accessories/blue-grip.webp"
+        "image": "/images/products/accessories/blue-grip.webp",
+        "quantity": 3
       },
       {
         "id": "beige",
         "label": "Beige",
         "colour": "Beige",
-        "image": "/images/products/accessories/beige-grip.webp"
+        "image": "/images/products/accessories/beige-grip.webp",
+        "quantity": 3
       }
     ],
     "image": "/images/products/accessories/all-grips.webp",
@@ -107,56 +113,64 @@
         "size": "S",
         "colour": "Pink",
         "label": "S - 500 x 0.5mL (Pink)",
-        "image": "/images/products/accessories/ink-cap-pink-small.webp"
+        "image": "/images/products/accessories/ink-cap-pink-small.webp",
+        "quantity": 3
       },
       {
         "id": "s-blue",
         "size": "S",
         "colour": "Blue",
         "label": "S - 500 x 0.5mL (Blue)",
-        "image": "/images/products/accessories/ink-cap-blue-small.webp"
+        "image": "/images/products/accessories/ink-cap-blue-small.webp",
+        "quantity": 3
       },
       {
         "id": "m-pink",
         "size": "M",
         "colour": "Pink",
         "label": "M - 300 x 1mL (Pink)",
-        "image": "/images/products/accessories/ink-cap-pink-medium.webp"
+        "image": "/images/products/accessories/ink-cap-pink-medium.webp",
+        "quantity": 3
       },
       {
         "id": "m-blue",
         "size": "M",
         "colour": "Blue",
         "label": "M - 300 x 1mL (Blue)",
-        "image": "/images/products/accessories/ink-cap-blue-medium.webp"
+        "image": "/images/products/accessories/ink-cap-blue-medium.webp",
+        "quantity": 3
       },
       {
         "id": "l-pink",
         "size": "L",
         "colour": "Pink",
         "label": "L - 200 x 2mL (Pink)",
-        "image": "/images/products/accessories/ink-cap-pink-large.webp"
+        "image": "/images/products/accessories/ink-cap-pink-large.webp",
+        "quantity": 3
       },
       {
         "id": "l-blue",
         "size": "L",
         "colour": "Blue",
         "label": "L - 200 x 2mL (Blue)",
-        "image": "/images/products/accessories/ink-cap-blue-large.webp"
+        "image": "/images/products/accessories/ink-cap-blue-large.webp",
+        "quantity": 3
       },
       {
         "id": "xl-pink",
         "size": "XL",
         "colour": "Pink",
         "label": "XL - 100 x 4mL (Pink)",
-        "image": "/images/products/accessories/ink-cap-pink-extra-large.webp"
+        "image": "/images/products/accessories/ink-cap-pink-extra-large.webp",
+        "quantity": 3
       },
       {
         "id": "xl-blue",
         "size": "XL",
         "colour": "Blue",
         "label": "XL - 100 x 4mL (Blue)",
-        "image": "/images/products/accessories/ink-cap-blue-extra-large.webp"
+        "image": "/images/products/accessories/ink-cap-blue-extra-large.webp",
+        "quantity": 3
       }
     ],
     "image": "/images/products/accessories/blue-and-pink-ink-cap-cover.webp",
@@ -216,7 +230,7 @@
       {
         "id": "black-medical-bibs-100",
         "label": "100 units",
-        "quantity": 100,
+        "quantity": 1,
         "price": 9.5,
         "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW",
         "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW",
@@ -225,7 +239,7 @@
       {
         "id": "black-medical-bibs-500",
         "label": "500 units",
-        "quantity": 500,
+        "quantity": 1,
         "price": 21.5,
         "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz",
         "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz",
@@ -240,7 +254,7 @@
       "product_details": "Sterilized with ethylene oxide and Beta/Gamma rays. Absorbent tissue with waterproof layer."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -286,7 +300,8 @@
         "price": 9,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
+        "image": "/images/products/accessories/black-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-black-s",
@@ -296,7 +311,8 @@
         "price": 9,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
+        "image": "/images/products/accessories/black-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-black-m",
@@ -306,7 +322,8 @@
         "price": 9,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
+        "image": "/images/products/accessories/black-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-black-l",
@@ -316,7 +333,8 @@
         "price": 9,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
+        "image": "/images/products/accessories/black-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-black-xl",
@@ -326,7 +344,8 @@
         "price": 9,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
-        "image": "/images/products/accessories/black-latex-gloves.webp"
+        "image": "/images/products/accessories/black-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-white-xs",
@@ -336,7 +355,8 @@
         "price": 7.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
+        "image": "/images/products/accessories/white-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-white-s",
@@ -346,7 +366,8 @@
         "price": 7.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
+        "image": "/images/products/accessories/white-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-white-m",
@@ -356,7 +377,8 @@
         "price": 7.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
+        "image": "/images/products/accessories/white-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-white-l",
@@ -366,7 +388,8 @@
         "price": 7.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
+        "image": "/images/products/accessories/white-latex-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "latex-gloves-white-xl",
@@ -376,7 +399,8 @@
         "price": 7.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
-        "image": "/images/products/accessories/white-latex-gloves.webp"
+        "image": "/images/products/accessories/white-latex-gloves.webp",
+        "quantity": 1
       }
     ],
     "image": "/images/products/accessories/black-latex-gloves.webp",
@@ -388,7 +412,7 @@
       "product_details": "Powder-free latex gloves available in Black and White. Sizes XS–XL. Colour affects price to match Stripe setup."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -430,31 +454,36 @@
         "id": "xs",
         "label": "XS",
         "size": "XS",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+        "image": "/images/products/accessories/black-nitrile-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "s",
         "label": "S",
         "size": "S",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+        "image": "/images/products/accessories/black-nitrile-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "m",
         "label": "M",
         "size": "M",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+        "image": "/images/products/accessories/black-nitrile-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "l",
         "label": "L",
         "size": "L",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+        "image": "/images/products/accessories/black-nitrile-gloves.webp",
+        "quantity": 1
       },
       {
         "id": "xl",
         "label": "XL",
         "size": "XL",
-        "image": "/images/products/accessories/black-nitrile-gloves.webp"
+        "image": "/images/products/accessories/black-nitrile-gloves.webp",
+        "quantity": 1
       }
     ],
     "image": "/images/products/accessories/black-nitrile-gloves.webp",
@@ -466,7 +495,7 @@
       "product_details": "Powder-free nitrile for allergy-friendly protection. Designed for precision work and long sessions."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -512,7 +541,7 @@
       "specifications": "Colour: Transparent. Quantity: 25 units. Size: 6mm x 18mm x 0.08mm."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -554,25 +583,29 @@
         "id": "red",
         "label": "Red",
         "colour": "Red",
-        "image": "/images/products/accessories/clip-cord-protector-red.webp"
+        "image": "/images/products/accessories/clip-cord-protector-red.webp",
+        "quantity": 1
       },
       {
         "id": "pink",
         "label": "Pink",
         "colour": "Pink",
-        "image": "/images/products/accessories/clip-cord-protector-pink.webp"
+        "image": "/images/products/accessories/clip-cord-protector-pink.webp",
+        "quantity": 1
       },
       {
         "id": "blue",
         "label": "Blue",
         "colour": "Blue",
-        "image": "/images/products/accessories/clip-cord-protector-blue.webp"
+        "image": "/images/products/accessories/clip-cord-protector-blue.webp",
+        "quantity": 1
       },
       {
         "id": "transparent",
         "label": "Transparent",
         "colour": "Transparent",
-        "image": "/images/products/accessories/clip-cord-protector-transparent.webp"
+        "image": "/images/products/accessories/clip-cord-protector-transparent.webp",
+        "quantity": 1
       }
     ],
     "image": "/images/products/accessories/clip-cord-protector-transparent.webp",
@@ -584,7 +617,7 @@
       "dimensions": "60mm x 700mm x 0.008mm. Length covers clip-cords up to 70cm."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -628,7 +661,8 @@
         "price": 3.5,
         "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
         "stripe_price_id": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
-        "image": "/images/products/accessories/wash-bottle-200ml.webp"
+        "image": "/images/products/accessories/wash-bottle-200ml.webp",
+        "quantity": 1
       },
       {
         "id": "electric-ink-wash-500ml",
@@ -637,7 +671,8 @@
         "price": 4.5,
         "priceId": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
         "stripe_price_id": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
-        "image": "/images/products/accessories/wash-bottle-500ml.webp"
+        "image": "/images/products/accessories/wash-bottle-500ml.webp",
+        "quantity": 1
       }
     ],
     "image": "/images/products/accessories/wash-bottle-200ml.webp",
@@ -649,7 +684,7 @@
       "product_details": "Capacity options: 250mL and 500mL. Durable material and simple maintenance."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -695,7 +730,7 @@
       "product_details": "Convenient foam dispenser, 210mL capacity. Ideal for studio hygiene."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
@@ -741,7 +776,7 @@
       "product_details": "Transparent cling film roll for covering equipment. Length: 300m, width: 30cm."
     },
     "inventory": {
-      "stock_quantity": 0,
+      "stock_quantity": 1,
       "stock_status": "available_on_request",
       "low_stock_threshold": 5
     },
