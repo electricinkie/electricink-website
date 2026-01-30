@@ -328,9 +328,51 @@
       variantSelect.appendChild(option);
     });
 
+    // Ensure select has a valid selection: pick first available variant if present,
+    // otherwise select the first option (even if disabled). If there are no options,
+    // add a disabled placeholder to avoid an empty select element.
+    if (variantSelect.options.length === 0) {
+      const ph = document.createElement('option');
+      ph.textContent = 'No variants available';
+      ph.disabled = true;
+      ph.setAttribute('aria-disabled', 'true');
+      variantSelect.appendChild(ph);
+      variantSelect.selectedIndex = 0;
+    } else {
+      const firstAvailable = Array.from(variantSelect.options).find(o => !o.disabled);
+      if (firstAvailable) {
+        variantSelect.value = firstAvailable.value;
+      } else {
+        // none available - choose first option so select isn't empty
+        variantSelect.selectedIndex = 0;
+      }
+    }
+
     // Update price and image on change (defensive: handle missing dataset.price)
     variantSelect.onchange = function() {
-      const selected = this.options[this.selectedIndex];
+      let selected = this.options[this.selectedIndex];
+
+      // Guard: if no selected option, try to pick a sensible fallback
+      if (!selected) {
+        const firstAvailable = Array.from(this.options).find(o => !o.disabled);
+        if (firstAvailable) {
+          this.value = firstAvailable.value;
+          selected = this.options[this.selectedIndex];
+        } else if (this.options.length > 0) {
+          this.selectedIndex = 0;
+          selected = this.options[0];
+        } else {
+          // Nothing to do - ensure add-to-cart is disabled and return
+          const addBtn = document.getElementById('addToCartBtn');
+          if (addBtn) {
+            addBtn.disabled = true;
+            addBtn.textContent = 'Out of Stock';
+          }
+          priceEl.textContent = productData.price_range?.display || 'Price unavailable';
+          return;
+        }
+      }
+
       const parsed = parseFloat(selected.dataset.price);
       if (!isNaN(parsed)) {
         priceEl.textContent = `€${parsed.toFixed(2)}`;
@@ -375,7 +417,7 @@
       }
     };
 
-    // Trigger change event for the first variant to initialize the image
+    // Trigger change event for the selected variant to initialize the image
     variantSelect.dispatchEvent(new Event('change'));
   }
 
