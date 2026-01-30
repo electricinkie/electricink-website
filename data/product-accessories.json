@@ -23,42 +23,42 @@
         "label": "Turquoise",
         "colour": "Turquoise",
         "image": "/images/products/accessories/turquoise-grip.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "black",
         "label": "Black",
         "colour": "Black",
         "image": "/images/products/accessories/black-grip.webp",
-        "quantity": 3
+        "quantity": 5
       },
       {
         "id": "purple",
         "label": "Purple",
         "colour": "Purple",
         "image": "/images/products/accessories/purple-grip.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "red",
         "label": "Red",
         "colour": "Red",
         "image": "/images/products/accessories/red-grip.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "blue",
         "label": "Blue",
         "colour": "Blue",
         "image": "/images/products/accessories/blue-grip.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "beige",
         "label": "Beige",
         "colour": "Beige",
         "image": "/images/products/accessories/beige-grip.webp",
-        "quantity": 3
+        "quantity": 0
       }
     ],
     "image": "/images/products/accessories/all-grips.webp",
@@ -72,7 +72,7 @@
       "/images/products/accessories/beige-grip.webp"
     ],
     "inventory": {
-      "stock_quantity": 3,
+      "stock_quantity": 5,
       "stock_status": "in_stock",
       "low_stock_threshold": 2
     },
@@ -114,7 +114,7 @@
         "colour": "Pink",
         "label": "S - 500 x 0.5mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-small.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "s-blue",
@@ -122,7 +122,7 @@
         "colour": "Blue",
         "label": "S - 500 x 0.5mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-small.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "m-pink",
@@ -130,7 +130,7 @@
         "colour": "Pink",
         "label": "M - 300 x 1mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-medium.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "m-blue",
@@ -138,7 +138,7 @@
         "colour": "Blue",
         "label": "M - 300 x 1mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-medium.webp",
-        "quantity": 3
+        "quantity": 20
       },
       {
         "id": "l-pink",
@@ -146,7 +146,7 @@
         "colour": "Pink",
         "label": "L - 200 x 2mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-large.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "l-blue",
@@ -154,7 +154,7 @@
         "colour": "Blue",
         "label": "L - 200 x 2mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-large.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "xl-pink",
@@ -162,7 +162,7 @@
         "colour": "Pink",
         "label": "XL - 100 x 4mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-extra-large.webp",
-        "quantity": 3
+        "quantity": 0
       },
       {
         "id": "xl-blue",
@@ -170,7 +170,7 @@
         "colour": "Blue",
         "label": "XL - 100 x 4mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-extra-large.webp",
-        "quantity": 3
+        "quantity": 0
       }
     ],
     "image": "/images/products/accessories/blue-and-pink-ink-cap-cover.webp",
