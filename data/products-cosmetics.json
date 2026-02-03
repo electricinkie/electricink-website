@@ -842,7 +842,7 @@
         "price": 14.7,
         "priceId": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
         "stripe_price_id": "price_1Sm1tjAiq7NBxfpwGxJOqSye",
-        "quantity": 0,
+        "quantity": 9,
         "image": "/images/products/cosmetics/barrier-film-25ml.webp"
       },
       {
@@ -865,8 +865,8 @@
       "usage_instructions": "Apply a layer of Barrier Film over the tattoo and allow it to dry completely.\nTo remove: rinse with warm water or use Clean Up."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "out_of_stock",
+      "stock_quantity": 9,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
