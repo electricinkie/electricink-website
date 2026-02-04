@@ -3,6 +3,8 @@
  * Monitora erros no backend
  */
 
+const logger = require('./logger');
+
 // Sentry initialization (optional - only if SENTRY_DSN is configured)
 let Sentry = null;
 
@@ -68,7 +70,7 @@ try {
       } catch (e) {
         // Never throw from sanitizer
         // eslint-disable-next-line no-console
-        console.warn('Sentry sanitizer error:', e && e.message);
+        logger.warn('Sentry sanitizer error', { error: e && e.message });
       }
       return event;
     };
@@ -86,13 +88,12 @@ try {
       }
     });
 
-    console.log('✅ Sentry initialized successfully');
+    logger.info('Sentry initialized successfully');
   } else {
-    console.log('ℹ️ Sentry DSN not configured - error tracking disabled');
+    logger.info('Sentry DSN not configured - error tracking disabled');
   }
 } catch (error) {
-  console.warn('⚠️ Sentry initialization failed:', error.message);
-  console.log('Continuing without error tracking...');
+  logger.warn('Sentry initialization failed', { error: error && error.message });
 }
 
 /**
@@ -113,7 +114,7 @@ try {
         Sentry.captureException(error);
       });
   } else {
-    console.error('Error:', error, context);
+    logger.error('Error (Sentry disabled)', error, context);
   }
 }
 
@@ -135,7 +136,7 @@ try {
         Sentry.captureMessage(message);
       });
   } else {
-    console.log(`[${level.toUpperCase()}]`, message, context);
+    logger[level] && logger[level](message, context);
   }
 }
 

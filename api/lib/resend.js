@@ -1,4 +1,5 @@
 const { Resend } = require('resend');
+const logger = require('./logger');
 
 let resendClient = null;
 let initAttempted = false;
@@ -9,16 +10,16 @@ function initResend() {
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey || apiKey === 'your-resend-api-key-here') {
-    console.warn('[RESEND] ⚠️  RESEND_API_KEY not configured - emails will not be sent');
+    logger.error('RESEND_API_KEY not found');
     return null;
   }
 
   try {
     resendClient = new Resend(apiKey);
-    console.log('[RESEND] ✅ Initialized successfully');
+    logger.info('Resend initialized successfully');
     return resendClient;
   } catch (error) {
-    console.error('[RESEND] ❌ Failed to initialize:', error && error.message);
+    logger.error('Resend initialization failed', error);
     return null;
   }
 }

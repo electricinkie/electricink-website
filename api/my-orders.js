@@ -27,12 +27,14 @@ module.exports = async function handler(req, res) {
   const authHeader = req.headers.authorization || req.headers.Authorization || '';
   const match = String(authHeader || '').match(/^Bearer (.+)$/i);
   if (!match) {
-    console.log('❌ [MY-ORDERS] Missing auth header');
+    logger.warn('[MY-ORDERS] Missing auth header');
     return res.status(401).json({ error: 'Missing Authorization Bearer token' });
   }
   const idToken = match[1];
 
-  console.log('🔐 [MY-ORDERS] Request received, verifying token...');
+  if (process.env.NODE_ENV === 'development') {
+    logger.debug('[MY-ORDERS] Request received, verifying token');
+  }
 
   try {
     const db = getFirestore();
@@ -40,7 +42,9 @@ module.exports = async function handler(req, res) {
     const uid = decoded && decoded.uid;
     const email = decoded && decoded.email;
     
-    console.log('🔐 User authenticated:', uid ? '✅' : '❌');
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('[MY-ORDERS] User authenticated', { hasUid: !!uid });
+    }
     
     if (!uid) return res.status(401).json({ error: 'Invalid token' });
 
@@ -57,10 +61,14 @@ module.exports = async function handler(req, res) {
     // Helper to run query without orderBy (avoids index requirement)
     async function runWhere(field, op, value) {
       try {
-        console.log(`🔍 [MY-ORDERS] Query: ${field} ${op} ${value}`);
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('[MY-ORDERS] Running query', { field, op, value });
+        }
         const snap = await ordersRef.where(field, op, value).limit(limit).get();
         
-        console.log(`📊 [MY-ORDERS] Query ${field} returned ${snap.size} results`);
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('[MY-ORDERS] Query results', { field, count: snap.size });
+        }
         
         snap.forEach(d => {
           if (seen.has(d.id)) return;
@@ -82,7 +90,7 @@ module.exports = async function handler(req, res) {
           results.push(Object.assign({ id: d.id, createdAt }, data));
         });
       } catch (err) {
-        console.warn(`⚠️ [MY-ORDERS] Query ${field} failed:`, err.message);
+        logger.warn('[MY-ORDERS] Query failed', { field, error: err.message });
       }
     }
 
@@ -96,12 +104,12 @@ module.exports = async function handler(req, res) {
 
     const payload = results.slice(0, limit);
     
-    console.log(`✅ [MY-ORDERS] Returning ${payload.length} orders`);
+    logger.info('[MY-ORDERS] Returning orders', { count: payload.length });
 
     return res.status(200).json({ success: true, orders: payload });
     
   } catch (err) {
-    console.error('❌ [MY-ORDERS] Error:', err.message);
+    logger.error('[MY-ORDERS] Error', err);
     
     captureException && captureException(err, { endpoint: 'my-orders' });
     logger && logger.error && logger.error('Error in my-orders', err.message);

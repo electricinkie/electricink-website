@@ -4,6 +4,7 @@
 // needed for local dev here.
 // const updateOrderStatusHandler = require('./handlers/update-order-status');
 const { getFirestore, admin } = require('./lib/firebase-admin');
+const logger = require('./lib/logger');
 
 async function requireAdmin(req) {
   const authHeader = req.headers.authorization || req.headers.Authorization || '';
@@ -23,7 +24,7 @@ async function requireAdmin(req) {
     }
     return null;
   } catch (e) {
-    try { console.warn('[Admin] verifyIdToken failed:', e && e.message); } catch (logErr) {}
+    try { logger.warn('[Admin] verifyIdToken failed', { error: e && e.message }); } catch (logErr) {}
     return null;
   }
 }

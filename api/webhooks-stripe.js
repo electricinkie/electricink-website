@@ -9,6 +9,9 @@ if (fs.existsSync(envLocalPath)) {
   require('dotenv').config({ path: envPath });
 }
 
+// Import logger early (needed for startup logs)
+const logger = require('./lib/logger');
+
 // Load email templates once at startup (used for client/admin emails)
 let clientTemplateHtml = '';
 let adminTemplateHtml = '';
@@ -21,22 +24,24 @@ try {
     path.join(process.cwd(), 'email-templates', 'order-notification-admin.html'),
     'utf8'
   );
-  console.log('✅ Email templates loaded');
+  logger.info('Email templates loaded');
 } catch (tplErr) {
-  console.warn('⚠️ Email templates could not be loaded:', tplErr && tplErr.message);
+  logger.warn('Email templates could not be loaded', { error: tplErr && tplErr.message });
 }
 
 // ===== ENV VARS VERIFICATION (STARTUP LOG) =====
-console.log('🔧 [STARTUP] GitHub Inventory Config:', {
-  enabled: process.env.ENABLE_GITHUB_INVENTORY,
-  hasToken: !!process.env.GITHUB_TOKEN,
-  owner: process.env.GITHUB_OWNER,
-  repo: process.env.GITHUB_REPO,
-  branch: process.env.GITHUB_BRANCH || 'main'
-});
+if (process.env.NODE_ENV !== 'production') {
+  logger.info('GitHub Inventory Config', {
+    enabled: process.env.ENABLE_GITHUB_INVENTORY,
+    hasToken: !!process.env.GITHUB_TOKEN,
+    owner: process.env.GITHUB_OWNER,
+    repo: process.env.GITHUB_REPO,
+    branch: process.env.GITHUB_BRANCH || 'main'
+  });
+}
 
 if (process.env.ENABLE_GITHUB_INVENTORY === 'true' && !process.env.GITHUB_TOKEN) {
-  console.error('❌ [STARTUP] ENABLE_GITHUB_INVENTORY is true but GITHUB_TOKEN is missing!');
+  logger.error('ENABLE_GITHUB_INVENTORY is true but GITHUB_TOKEN is missing');
 }
 // ===== FIM ENV VARS VERIFICATION =====
 
@@ -60,13 +65,13 @@ function loadProductCatalog() {
           catalog.push(...Object.values(parsed));
         }
       } catch (e) {
-        console.warn('⚠️ Failed to parse catalog file', f, e && e.message);
+        logger.warn('Failed to parse catalog file', { file: f, error: e && e.message });
       }
     }
     PRODUCT_CATALOG_CACHE = catalog;
     return PRODUCT_CATALOG_CACHE;
   } catch (err) {
-    console.error('❌ loadProductCatalog error:', err && err.message);
+    logger.error('loadProductCatalog error', { error: err && err.message });
     return [];
   }
 }
@@ -131,7 +136,6 @@ const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
 const { getFirestore, admin } = require('./lib/firebase-admin');
-const logger = require('./lib/logger');
 const { v4: uuidv4 } = require('uuid');
 
 // Initialize Resend for direct email sending (guarded: do not throw if API key missing)
@@ -140,12 +144,12 @@ let resend = null;
 try {
   if (process.env.RESEND_API_KEY) {
     resend = new Resend(process.env.RESEND_API_KEY);
-    console.log('[RESEND-INIT] ✓ Resend initialized successfully');
+    logger.info('Resend initialized successfully');
   } else {
-    console.error('[RESEND-INIT] ❌ RESEND_API_KEY not found');
+    logger.error('RESEND_API_KEY not found');
   }
 } catch (error) {
-  console.error('[RESEND-INIT] ❌ Failed to initialize:', error);
+  logger.error('Resend failed to initialize', { error: error.message });
 }
 
 // ===== GITHUB INVENTORY DECREMENT SYSTEM =====
@@ -159,12 +163,12 @@ const GITHUB_INVENTORY_CONFIG = {
 
 async function decrementInventoryViaGitHub(items) {
   if (!GITHUB_INVENTORY_CONFIG.ENABLED) {
-    console.log('ℹ️ GitHub inventory decrement disabled');
+    logger.info('GitHub inventory decrement disabled');
     return { success: false, reason: 'disabled' };
   }
 
   if (!GITHUB_INVENTORY_CONFIG.TOKEN) {
-    console.error('❌ GITHUB_TOKEN not configured');
+    logger.error('GITHUB_TOKEN not configured');
     return { success: false, reason: 'no_token' };
   }
 
@@ -180,7 +184,7 @@ async function decrementInventoryViaGitHub(items) {
     let decrements = {};
     let sha = null;
 
-    console.log('🔍 [DECREMENT] Starting GitHub inventory update', {
+    logger.info('[DECREMENT] Starting GitHub inventory update', {
       itemsCount: (items || []).length,
       items: (items || []).map(i => ({ id: i.v || i.id, qty: i.q || i.quantity || 1 }))
     });
@@ -190,10 +194,10 @@ async function decrementInventoryViaGitHub(items) {
       const content = Buffer.from(data.content, 'base64').toString('utf8');
       decrements = JSON.parse(content);
       sha = data.sha;
-      console.log('✅ Current decrements loaded from GitHub');
+      logger.info('Current decrements loaded from GitHub');
     } catch (error) {
       if (error.status === 404) {
-        console.log('ℹ️ decrements.json not found, will create new one');
+        logger.info('decrements.json not found, will create new one');
         decrements = {};
       } else {
         throw error;
@@ -204,7 +208,7 @@ async function decrementInventoryViaGitHub(items) {
       const variantId = item.v || item.id;
       const quantity = item.q || item.quantity || 1;
       decrements[variantId] = (decrements[variantId] || 0) + quantity;
-      console.log(`📦 Decrementing ${variantId}: +${quantity} sold`);
+      logger.debug('Decrementing variant', { variantId, quantity, total: decrements[variantId] });
     }
 
     const newContent = JSON.stringify(decrements, null, 2);
@@ -227,14 +231,14 @@ async function decrementInventoryViaGitHub(items) {
     const maxRetries = 3;
 
     while (!commitSuccess && retryCount < maxRetries) {
-      console.log('🔍 [DECREMENT] Attempting commit', {
+      logger.info('[DECREMENT] Attempting commit', {
         retry: retryCount,
         currentSHA: sha ? String(sha).substring(0, 7) : 'none',
         variantsToUpdate: Object.keys(decrements)
       });
       try {
         if (retryCount > 0) {
-          console.log(`🔄 Retry ${retryCount}/${maxRetries} - refetching latest decrements`);
+          logger.info('Retry - refetching latest decrements', { retry: retryCount, maxRetries });
           try {
             const { data: latestData } = await octokit.repos.getContent({ owner, repo, path, ref: branch });
             const latestContent = Buffer.from(latestData.content, 'base64').toString('utf8');
@@ -247,7 +251,7 @@ async function decrementInventoryViaGitHub(items) {
               const variantId = item.v || item.id;
               const quantity = item.q || item.quantity || 1;
               decrements[variantId] = (decrements[variantId] || 0) + quantity;
-              console.log(`📦 (retry) Decrementing ${variantId}: +${quantity} sold`);
+              logger.debug('(retry) Decrementing variant', { variantId, quantity, total: decrements[variantId] });
             }
 
             const refreshedContent = JSON.stringify(decrements, null, 2);
@@ -255,7 +259,7 @@ async function decrementInventoryViaGitHub(items) {
             commitData.content = encodedContent;
             commitData.sha = sha;
           } catch (refetchError) {
-            console.error('❌ Refetch failed during retry:', refetchError && refetchError.message);
+            logger.error('Refetch failed during retry', { error: refetchError && refetchError.message });
             throw refetchError;
           }
         }
@@ -264,7 +268,7 @@ async function decrementInventoryViaGitHub(items) {
         await octokit.repos.createOrUpdateFileContents(commitData);
 
         commitSuccess = true;
-        console.log('✅ [DECREMENT] Commit successful', {
+        logger.info('[DECREMENT] Commit successful', {
           retry: retryCount,
           newDecrements: decrements,
           itemsProcessed: items.length
@@ -275,31 +279,33 @@ async function decrementInventoryViaGitHub(items) {
         const isConflict = error && (error.status === 409 || error.status === 422 || (error.message && error.message.includes('does not match')));
 
         if (isConflict && retryCount < maxRetries) {
-          console.warn(`⚠️ SHA conflict detected, will retry (${retryCount}/${maxRetries})`);
+          logger.warn('SHA conflict detected, will retry', { retry: retryCount, maxRetries });
           // Small exponential-ish backoff
           await new Promise(resolve => setTimeout(resolve, 100 * retryCount));
           continue;
         } else {
-          console.error('❌ GitHub inventory decrement failed:', error && error.message);
-          if (error && error.response) {
-            console.error('GitHub API Error:', { status: error.response.status, data: error.response.data });
-          }
+          logger.error('GitHub inventory decrement failed', { 
+            error: error && error.message,
+            status: error && error.response && error.response.status,
+            data: error && error.response && error.response.data
+          });
           return { success: false, error: error && error.message };
         }
       }
     }
 
     if (!commitSuccess) {
-      console.error('❌ Failed to commit decrements after retries');
+      logger.error('Failed to commit decrements after retries');
       return { success: false, error: 'max_retries_exceeded' };
     }
 
     return { success: true, decrements, itemsProcessed: items.length };
   } catch (error) {
-    console.error('❌ GitHub inventory decrement failed:', error && error.message);
-    if (error && error.response) {
-      console.error('GitHub API Error:', { status: error.response.status, data: error.response.data });
-    }
+    logger.error('GitHub inventory decrement failed', { 
+      error: error && error.message,
+      status: error && error.response && error.response.status,
+      data: error && error.response && error.response.data
+    });
     return { success: false, error: error && error.message };
   }
 }
@@ -322,9 +328,11 @@ async function validateResendConfig() {
 
   try {
     const domains = await resend.domains.list();
-    console.log('[RESEND-CONFIG] Domains configured:', 
-      domains?.data?.map(d => `${d.name} (${d.status})`).join(', ')
-    );
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('[RESEND-CONFIG] Domains configured', { 
+        domains: domains?.data?.map(d => `${d.name} (${d.status})`).join(', ')
+      });
+    }
 
     const electricinkDomain = domains?.data?.find(d => 
       d.name === 'electricink.ie'
@@ -355,9 +363,10 @@ async function validateResendConfig() {
  */
 
 module.exports = async function handler(req, res) {
-  console.log('\n🟢 WEBHOOK INICIADO');
-  console.log('🟢 Method:', req.method);
-  console.log('🟢 URL:', req.url);
+  if (process.env.NODE_ENV === 'development') {
+    logger.debug('Webhook started', { method: req.method });
+  }
+
 
   // Secure CORS - only allow our domain
   const allowedOrigins = [
@@ -379,7 +388,7 @@ module.exports = async function handler(req, res) {
 
   // Warn early if Resend API key missing (emails will be skipped)
   if (!process.env.RESEND_API_KEY) {
-    console.warn('[WEBHOOK] RESEND_API_KEY not configured - emails will be skipped');
+    logger.warn('[WEBHOOK] RESEND_API_KEY not configured - emails will be skipped');
   }
 
   // Handle preflight
@@ -395,7 +404,7 @@ module.exports = async function handler(req, res) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    console.error('❌ STRIPE_WEBHOOK_SECRET não configurado');
+    logger.error('STRIPE_WEBHOOK_SECRET não configurado');
     return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
@@ -403,12 +412,14 @@ module.exports = async function handler(req, res) {
   try {
     const configCheck = await validateResendConfig();
     if (!configCheck?.valid) {
-      console.warn('[RESEND-CONFIG] Validation warning:', configCheck);
+      logger.warn('[RESEND-CONFIG] Validation warning', configCheck);
     } else {
-      console.log('[RESEND-CONFIG] Validation:', configCheck);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Resend validation', configCheck);
+      }
     }
   } catch (e) {
-    console.error('[RESEND-CONFIG] Validation failed:', e && e.message);
+    logger.error('[RESEND-CONFIG] Validation failed', { error: e && e.message });
   }
 
   let event;
@@ -420,25 +431,32 @@ module.exports = async function handler(req, res) {
     if (req.body && Buffer.isBuffer(req.body)) {
       // Dev-server com express.raw() - body já processado
       rawBody = req.body;
-      console.log('🔍 Usando req.body (express.raw)');
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Using req.body (express.raw)');
+      }
     } else if (req.body && typeof req.body === 'string') {
       // Body como string
       rawBody = Buffer.from(req.body);
-      console.log('🔍 Convertendo string para Buffer');
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Converting string to Buffer');
+      }
     } else {
       // Vercel/produção - ler stream
       rawBody = await getRawBody(req);
-      console.log('🔍 Usando getRawBody (stream)');
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Using getRawBody (stream)');
+      }
     }
     
-    console.log('🔍 Raw body length:', rawBody.length);
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Raw body length', { length: rawBody.length });
+    }
 
     // Verify webhook signature
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
 
-    console.log('✅ Assinatura verificada!');
     if (process.env.NODE_ENV === 'development') {
-      console.log('✅ [DEV] Webhook event:', event.type, 'ID:', event.id);
+      logger.debug('Webhook signature verified', { eventType: event.type, eventId: event.id });
     }
 
     logger.info(JSON.stringify({
@@ -450,7 +468,7 @@ module.exports = async function handler(req, res) {
       status: 'verified'
     }));
   } catch (err) {
-    console.error('❌ Erro na verificação de assinatura:', err.message);
+    logger.error('Erro na verificação de assinatura', { error: err.message, requestId });
     captureException(err, {
       endpoint: 'webhooks-stripe',
       context: { eventType: 'signature-verification', requestId }
@@ -474,21 +492,25 @@ module.exports = async function handler(req, res) {
         try {
           const paymentIntent = event.data && event.data.object ? event.data.object : null;
           if (!paymentIntent || !(paymentIntent.metadata && paymentIntent.metadata.backend_validated === 'true')) {
-            console.error('❌ Webhook rejected: metadata not validated', {
+            logger.error('Webhook rejected: metadata not validated', {
               paymentIntentIdLast4: paymentIntent && paymentIntent.id ? String(paymentIntent.id).slice(-4) : null,
               requestId
             });
             return res.status(400).json({ error: 'Invalid metadata - backend validation missing', requestId });
           }
-          console.log('✅ Metadata validated by backend', { paymentIntentIdLast4: String(paymentIntent.id).slice(-4) });
+
         } catch (e) {
-          console.error('❌ Error checking backend_validated flag:', e && e.message);
+          logger.error('Error checking backend_validated flag', { error: e && e.message, requestId });
           return res.status(400).json({ error: 'Invalid metadata - backend validation check failed', requestId });
         }
 
-        console.log('🎯 Chamando handlePaymentIntentSucceeded...');
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('Calling handlePaymentIntentSucceeded');
+        }
         await handlePaymentIntentSucceeded(event, requestId);
-        console.log('🎯 handlePaymentIntentSucceeded concluído');
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('handlePaymentIntentSucceeded completed');
+        }
         break;
       case 'payment_intent.payment_failed':
         await handlePaymentIntentFailed(event.data.object, requestId);
@@ -505,12 +527,16 @@ module.exports = async function handler(req, res) {
           status: 'warn'
         }));
     }
-    console.log('✅ Retornando 200');
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Returning 200 OK');
+    }
     res.status(200).json({ received: true, requestId });
   } catch (error) {
-    console.error('\n❌❌❌ ERRO NO PROCESSAMENTO ❌❌❌');
-    console.error('❌ Error:', error.message);
-    console.error('❌ Stack:', error.stack);
+    logger.error('ERRO NO PROCESSAMENTO', { 
+      error: error.message, 
+      stack: error.stack,
+      requestId 
+    });
     
     logger.error(JSON.stringify({
       msg: 'Webhook processing error',
@@ -579,7 +605,7 @@ async function checkInventoryAvailability(items, transaction) {
       const inventoryRef = admin.firestore().collection('inventory').doc(docId);
       const inventoryDoc = await transaction.get(inventoryRef);
       if (!inventoryDoc.exists) {
-        console.warn(`⚠️  Inventory doc not found: ${docId}`);
+        logger.warn('Inventory doc not found', { docId });
         results.push({
           docId,
           requested: quantity,
@@ -602,7 +628,7 @@ async function checkInventoryAvailability(items, transaction) {
         reason: sufficient ? 'ok' : 'insufficient_stock'
       });
     } catch (error) {
-      console.error(`❌ Error checking inventory for ${docId}:`, error);
+      logger.error('Error checking inventory', { docId, error: error && error.message });
       results.push({
         docId,
         requested: quantity,
@@ -628,7 +654,7 @@ async function decrementInventory(items, transaction) {
       const inventoryRef = admin.firestore().collection('inventory').doc(docId);
       const inventoryDoc = await transaction.get(inventoryRef);
       if (!inventoryDoc.exists) {
-        console.warn(`⚠️  Cannot decrement - doc not found: ${docId}`);
+        logger.warn('Cannot decrement - doc not found', { docId });
         results.push({
           docId,
           success: false,
@@ -654,9 +680,9 @@ async function decrementInventory(items, transaction) {
         newQty,
         success: true
       });
-      console.log(`✅ Decremented ${docId}: ${currentQty} → ${newQty}`);
+      logger.info('Decremented inventory', { docId, from: currentQty, to: newQty });
     } catch (error) {
-      console.error(`❌ Error decrementing inventory for ${docId}:`, error);
+      logger.error('Error decrementing inventory', { docId, error: error && error.message });
       results.push({
         docId,
         success: false,
@@ -675,10 +701,11 @@ async function decrementInventory(items, transaction) {
 async function sendLowStockAlert(checkResults, orderData) {
   const insufficientItems = checkResults.filter(r => !r.sufficient);
   if (insufficientItems.length === 0) return;
-  console.warn('⚠️  LOW STOCK ALERT - Order would be blocked in production:');
-  console.warn(JSON.stringify(insufficientItems, null, 2));
+  logger.warn('LOW STOCK ALERT - Order would be blocked in production', { 
+    insufficientItems: JSON.stringify(insufficientItems, null, 2)
+  });
   const alertMessage = `\n🚨 LOW STOCK ALERT - OBSERVATION MODE\n\nOrder ID: ${orderData.orderId || 'unknown'}\nCustomer: ${orderData.customerEmail || 'unknown'}\n\nItems with insufficient stock:\n${insufficientItems.map(item => `- ${item.productName || item.docId}${item.variantLabel ? ' (' + item.variantLabel + ')' : ''}\n   Requested: ${item.requested}, Available: ${item.available}, Reason: ${item.reason}`).join('\n')}\n\n⚠️  NOTE: Order was ACCEPTED in observation mode.\nIn production mode, this order would be BLOCKED.\n\nAction required: Restock or manually handle order.\n  `;
-  console.log(alertMessage);
+  logger.info('Low stock alert message', { alertMessage });
   // TODO: hook into email service when ready (Resend)
   if (INVENTORY_CONFIG.SEND_LOW_STOCK_ALERTS && resend) {
     try {
@@ -688,9 +715,9 @@ async function sendLowStockAlert(checkResults, orderData) {
         subject: `🚨 LOW STOCK ALERT - Order ${orderData.orderId || 'unknown'}`,
         html: `<pre>${alertMessage}</pre>`
       });
-      console.log('✅ Low stock alert email sent');
+      logger.info('Low stock alert email sent');
     } catch (err) {
-      console.error('⚠️ Failed to send low stock alert email:', err && err.message);
+      logger.error('Failed to send low stock alert email', { error: err && err.message });
     }
   }
 }
@@ -708,7 +735,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     validatedMetadata.phone = validatedMetadata.phone || '';
   }
   try {
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Processing shipping address');
+    }
     // Prefer Stripe's provided shipping address (paymentIntent.shipping.address)
     // Fall back to metadata fields if Stripe shipping is not present.
     const stripeShipping = paymentIntent.shipping && paymentIntent.shipping.address ? paymentIntent.shipping.address : null;
@@ -781,8 +810,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     };
     // Tentar criar document com ID específico (atomicidade)
     const orderRef = db.collection('orders').doc(orderId);
-    console.log('🔍 Iniciando inventory-aware transaction para order:', orderId);
-    console.log('🔍 Order ref path:', orderRef.path);
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Starting inventory-aware transaction', { orderId, refPath: orderRef.path });
+    }
 
     if (!INVENTORY_CONFIG.ENABLE_INVENTORY_CHECK) {
       // Fast path: no inventory checks, preserve previous behavior
@@ -801,7 +831,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         const cleanOrder = removeUndefined(order);
         transaction.set(orderRef, cleanOrder);
       });
-      console.log('✅ Order criada com sucesso no Firestore (inventory checks disabled)');
+      logger.info('Order created successfully in Firestore (inventory checks disabled)');
     } else {
       // ===== FIRESTORE INVENTORY (DESABILITADO) =====
       // Firestore-based inventory checks and decrements are disabled.
@@ -831,40 +861,48 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       const itemsToDecrement = items || JSON.parse(paymentIntent.metadata.items || '[]');
 
       // DEBUG: log items payload before attempting GitHub decrement
-      console.log('🔍 [DEBUG] Items to decrement:', JSON.stringify(itemsToDecrement || [], null, 2));
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Items to decrement', { items: JSON.stringify(itemsToDecrement || [], null, 2) });
+      }
 
       if (itemsToDecrement && itemsToDecrement.length > 0) {
-        console.log(`🔄 Attempting to decrement inventory for ${itemsToDecrement.length} items`);
+        logger.info('Attempting to decrement inventory via GitHub', { itemsCount: itemsToDecrement.length });
 
         // DEBUG: pre-call GitHub inventory config check
-        console.log('🔍 [DEBUG] Pre-GitHub decrement check:', {
-          enabled: GITHUB_INVENTORY_CONFIG.ENABLED,
-          hasToken: !!GITHUB_INVENTORY_CONFIG.TOKEN,
-          owner: GITHUB_INVENTORY_CONFIG.OWNER,
-          repo: GITHUB_INVENTORY_CONFIG.REPO,
-          itemsCount: itemsToDecrement?.length
-        });
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('Pre-GitHub decrement check', {
+            enabled: GITHUB_INVENTORY_CONFIG.ENABLED,
+            hasToken: !!GITHUB_INVENTORY_CONFIG.TOKEN,
+            owner: GITHUB_INVENTORY_CONFIG.OWNER,
+            repo: GITHUB_INVENTORY_CONFIG.REPO,
+            itemsCount: itemsToDecrement?.length
+          });
+        }
 
         const result = await decrementInventoryViaGitHub(itemsToDecrement);
 
         // DEBUG: post-call result
-        console.log('🔍 [DEBUG] GitHub decrement result:', {
-          success: result?.success,
-          reason: result?.reason,
-          error: result?.error,
-          hasDecrements: !!result?.decrements
-        });
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('GitHub decrement result', {
+            success: result?.success,
+            reason: result?.reason,
+            error: result?.error,
+            hasDecrements: !!result?.decrements
+          });
+        }
 
         if (result && result.success) {
-          console.log('✅ Inventory successfully decremented via GitHub');
-          console.log('📊 Decrements updated:', result.decrements);
+          logger.info('Inventory successfully decremented via GitHub', { decrements: result.decrements });
         } else {
-          console.warn('⚠️ Inventory decrement skipped:', result && (result.reason || result.error));
+          logger.warn('Inventory decrement skipped', { reason: result && (result.reason || result.error) });
         }
       }
     } catch (error) {
-      console.error('❌ Inventory decrement error (non-critical):', error && error.message);
-      console.error('Stack:', error && error.stack);
+      logger.error('Inventory decrement error (non-critical)', { 
+        error: error && error.message,
+        stack: error && error.stack,
+        paymentIntentId: paymentIntent.id
+      });
       if (typeof captureException === 'function') {
         captureException(error, {
           extra: { context: 'inventory_decrement', paymentIntentId: paymentIntent.id }
@@ -899,9 +937,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
     // CLIENT EMAIL
     if (process.env.NODE_ENV === 'development') {
-      console.log('📧 [DEV] Sending order confirmation', { orderId });
-    } else {
-      console.log('📧 Order confirmation sent', { orderId });
+      logger.debug('Sending order confirmation', { orderId });
     }
     try {
       if (!resend) throw new Error('Resend not configured');
@@ -961,7 +997,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         html: finalClientHtml
       });
 
-      console.log('✅ [CLIENT] Email sent successfully! ID:', clientResult.id);
+      logger.info('[CLIENT] Email sent successfully', { orderId, emailId: clientResult.id });
 
       if (db) {
         await db.collection('orders').doc(orderId).update({
@@ -969,24 +1005,25 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
           emailId: clientResult.id
         }).catch(err => {
-          console.error('⚠️ [CLIENT] Failed to update Firestore:', err);
+          logger.error('[CLIENT] Failed to update Firestore', { orderId, error: err && err.message });
         });
       }
     } catch (clientErr) {
-      console.error('❌ [CLIENT] Email failed:', clientErr);
+      logger.error('[CLIENT] Email failed', { orderId, error: clientErr && clientErr.message });
       if (db) {
         await db.collection('orders').doc(orderId).update({
           emailStatus: 'failed',
           emailError: clientErr?.message
         }).catch(err => {
-          console.error('⚠️ [CLIENT] Failed to update error in Firestore:', err);
+          logger.error('[CLIENT] Failed to update error in Firestore', { orderId, error: err && err.message });
         });
       }
     }
 
     // ADMIN EMAIL
-    console.log('📧 [ADMIN-EMAIL] Starting admin notification');
-    console.log('📧 [ADMIN] Sending notification to (alias):', ADMIN_EMAIL);
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('[ADMIN-EMAIL] Starting admin notification', { adminEmail: ADMIN_EMAIL });
+    }
     try {
       if (!resend) throw new Error('Resend not configured');
 
@@ -1040,7 +1077,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
       const finalAdminHtml = adminEmailHtml.replace(/{{itemsList}}/g, adminItemsHtml);
 
-      console.log('📧 [ADMIN-EMAIL] Sending to:', ADMIN_EMAIL);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('[ADMIN-EMAIL] Sending to', { adminEmail: ADMIN_EMAIL });
+      }
       const adminEmailResult = await resend.emails.send({
         from: EMAIL_FROM,
         to: ADMIN_EMAIL,
@@ -1048,7 +1087,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         html: finalAdminHtml
       });
 
-      console.log('✅ [ADMIN-EMAIL] Sent successfully! Email ID:', adminEmailResult.id);
+      logger.info('[ADMIN-EMAIL] Sent successfully', { orderId, emailId: adminEmailResult.id });
 
       if (db) {
         await db.collection('orders').doc(orderId).update({
@@ -1056,23 +1095,25 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
           adminEmailId: adminEmailResult.id
         }).catch(err => {
-          console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore:', err);
+          logger.error('[ADMIN-EMAIL] Failed to update Firestore', { orderId, error: err && err.message });
         });
       }
     } catch (adminErr) {
-      console.error('❌ [ADMIN-EMAIL] Failed to send:', adminErr);
+      logger.error('[ADMIN-EMAIL] Failed to send', { orderId, error: adminErr && adminErr.message });
       if (db) {
         await db.collection('orders').doc(orderId).update({
           adminEmailStatus: 'failed',
           adminEmailError: adminErr?.message,
           adminEmailErrorAt: admin.firestore.FieldValue.serverTimestamp()
         }).catch(err => {
-          console.error('⚠️ [ADMIN-EMAIL] Failed to update Firestore error:', err);
+          logger.error('[ADMIN-EMAIL] Failed to update Firestore error', { orderId, error: err && err.message });
         });
       }
     }
 
-    console.log('📧 Both emails processed');
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Both emails processed');
+    }
     logger.info(JSON.stringify({
       msg: 'Order saved and emails processed',
       orderId,

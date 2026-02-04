@@ -9,6 +9,11 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
 const { z } = require('zod');
 const logger = require('./lib/logger');
+
+// Conditional debug logging helper
+const debug = process.env.NODE_ENV === 'development' 
+  ? (...args) => logger.debug(...args)
+  : () => {};
 const fs = require('fs');
 const path = require('path');
 
@@ -31,7 +36,7 @@ function loadProducts() {
         const obj = require(path.join('..', 'data', file));
         if (obj && typeof obj === 'object') merged = { ...merged, ...obj };
       } catch (e) {
-        console.warn('Failed to load data file', file, e && e.message);
+        logger.warn('Failed to load data file', { file, error: e && e.message });
       }
     }
 
@@ -54,7 +59,7 @@ function loadProducts() {
       }
     }
   } catch (err) {
-    console.warn('Data directory not found or unreadable:', err && err.message);
+    logger.warn('Data directory not found or unreadable', { error: err && err.message });
   }
   return merged;
 }
@@ -112,8 +117,9 @@ async function checkRateLimit(key) {
     return result;
   } catch (err) {
     logger.error('Rate limit transaction failed', err);
-    // Fail open: if rate limiter fails, allow the request
-    return { allowed: true };
+    // Fail closed in production for security, fail open in development for convenience
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+    return { allowed: !isProduction };
   }
 }
 
@@ -451,7 +457,7 @@ module.exports = async function handler(req, res) {
         return res.status(429).json({ error: 'Too many requests', retryAfter });
       }
     } catch (e) {
-      console.error('Rate limit check failed, allowing request:', e);
+      logger.error('Rate limit check failed, allowing request', e);
     }
 
     // Improved error handling

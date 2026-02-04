@@ -1,11 +1,14 @@
 const admin = require('firebase-admin');
+const logger = require('./logger');
 
 let db = null;
 
 function initializeFirebaseAdmin() {
   // Evita reinicialização
   if (admin.apps && admin.apps.length > 0) {
-    console.log('✅ Firebase Admin já inicializado');
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Firebase Admin already initialized');
+    }
     return admin.firestore();
   }
 
@@ -20,7 +23,7 @@ function initializeFirebaseAdmin() {
     // Fallback for local/dev only: try to load serviceAccountKey.json
     if (!serviceAccountRaw) {
       if (isProd) {
-        console.error('❌ FATAL: FIREBASE_SERVICE_ACCOUNT not set in production environment. Admin initialization aborted.');
+        logger.error('FATAL: FIREBASE_SERVICE_ACCOUNT not set in production environment');
         throw new Error('FIREBASE_SERVICE_ACCOUNT missing in production environment');
       }
       try {
@@ -28,10 +31,12 @@ function initializeFirebaseAdmin() {
         const fs = require('fs');
         const localPath = path.join(__dirname, '..', 'serviceAccountKey.json');
         if (fs.existsSync(localPath)) {
-          console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT missing; loading local serviceAccountKey.json (dev only)');
+          if (process.env.NODE_ENV === 'development') {
+            logger.debug('Loading local serviceAccountKey.json (dev only)');
+          }
           serviceAccountRaw = fs.readFileSync(localPath, 'utf8');
         } else {
-          console.error('❌ FIREBASE_SERVICE_ACCOUNT not found in env and no local serviceAccountKey.json present');
+          logger.error('FIREBASE_SERVICE_ACCOUNT not found in env and no local serviceAccountKey.json present');
           throw new Error('FIREBASE_SERVICE_ACCOUNT not found');
         }
       } catch (e) {
@@ -51,20 +56,22 @@ function initializeFirebaseAdmin() {
         let decoded;
         try {
           decoded = Buffer.from(serviceAccountRaw, 'base64').toString('utf8');
-          console.log('DEBUG: FIREBASE_SERVICE_ACCOUNT appears base64-encoded (preview suppressed)');
+          if (process.env.NODE_ENV === 'development') {
+            logger.debug('FIREBASE_SERVICE_ACCOUNT appears base64-encoded');
+          }
         } catch (decErr) {
-          console.error('❌ Failed to base64-decode FIREBASE_SERVICE_ACCOUNT. Please verify environment variable encoding.');
+          logger.error('Failed to base64-decode FIREBASE_SERVICE_ACCOUNT', decErr);
           throw decErr;
         }
         try {
           serviceAccount = JSON.parse(decoded);
         } catch (jsonErr) {
-          console.error('❌ Failed to JSON.parse decoded FIREBASE_SERVICE_ACCOUNT. Verify it is valid JSON.');
+          logger.error('Failed to JSON.parse decoded FIREBASE_SERVICE_ACCOUNT', jsonErr);
           throw jsonErr;
         }
       }
     } catch (parseErr) {
-      console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT or local serviceAccountKey.json:', parseErr && parseErr.message);
+      logger.error('Failed to parse FIREBASE_SERVICE_ACCOUNT or local serviceAccountKey.json', parseErr);
       // Fail fast so callers see an explicit initialization error
       throw parseErr;
     }
@@ -72,28 +79,27 @@ function initializeFirebaseAdmin() {
     // Inicializa Firebase Admin com try/catch para capturar erros em runtime
     try {
       if (!serviceAccount || !serviceAccount.project_id) {
-        console.error('❌ Parsed service account is missing required field `project_id`. Aborting admin.init.');
+        logger.error('Parsed service account is missing required field project_id');
         throw new Error('service account missing project_id');
       }
       // Ensure minimal required fields exist to avoid silent runtime failures
       if (!serviceAccount.client_email) {
-        console.error('❌ Parsed service account is missing required field `client_email`. Aborting admin.init.');
+        logger.error('Parsed service account is missing required field client_email');
         throw new Error('service account missing client_email');
       }
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         projectId: serviceAccount.project_id
       });
-      console.log('✅ Firebase Admin initialized');
+      logger.info('Firebase Admin initialized');
       return admin.firestore();
     } catch (initErr) {
-      console.error('❌ Error during admin.initializeApp:', initErr && initErr.message);
-      console.error('❌ initializeApp stack:', initErr && initErr.stack);
+      logger.error('Error during admin.initializeApp', initErr);
       // Re-throw so callers know initialization failed
       throw initErr;
     }
   } catch (error) {
-    console.error('❌ Erro ao inicializar Firebase Admin:', error.message);
+    logger.error('Erro ao inicializar Firebase Admin', error);
     throw error;
   }
 }

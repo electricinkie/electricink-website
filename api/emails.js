@@ -1,7 +1,11 @@
 cat > api/emails.js << 'EOF'
 // Minimal stub - webhook handles all email logic
+const logger = require('./lib/logger');
+
 module.exports = async function handler(req, res) {
-  console.log('[API/EMAILS] Stub handler - use webhook for emails');
+  if (process.env.NODE_ENV === 'development') {
+    logger.debug('[API/EMAILS] Stub handler - use webhook for emails');
+  }
   
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');

@@ -1,5 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { getFirestore } = require('./lib/firebase-admin');
+const logger = require('./lib/logger');
 
 module.exports = async (req, res) => {
   // ═══════════════════════════════════════════════════════════
@@ -40,7 +41,7 @@ module.exports = async (req, res) => {
     }
 
     const upperCode = code.trim().toUpperCase();
-    console.log(`[COUPON] Validating: ${upperCode} for ${email}, subtotal: €${subtotal}`);
+    logger.info('[COUPON] Validating', { code: upperCode, email, subtotal });
 
     // ═══════════════════════════════════════════════════════════
     // VALIDATE STRIPE COUPON/PROMOTION CODE
@@ -62,17 +63,17 @@ module.exports = async (req, res) => {
         coupon = promoCode.coupon;
         promoCodeId = promoCode.id;
         
-        console.log(`[COUPON] Found promotion code: ${promoCodeId}`);
+        logger.info('[COUPON] Found promotion code', { promoCodeId });
         
         // Check expiration
         if (!coupon.valid || (coupon.redeem_by && Date.now() / 1000 > coupon.redeem_by)) {
-          console.log(`[COUPON] Expired: ${upperCode}`);
+          logger.warn('[COUPON] Expired', { code: upperCode });
           return res.json({ valid: false, message: 'Coupon expired' });
         }
         
         // Check max redemptions
         if (coupon.max_redemptions && coupon.times_redeemed >= coupon.max_redemptions) {
-          console.log(`[COUPON] Max redemptions reached: ${upperCode}`);
+          logger.warn('[COUPON] Max redemptions reached', { code: upperCode });
           return res.json({ valid: false, message: 'Coupon fully redeemed' });
         }
         // ═══════════════════════════════════════════════════════════════
@@ -82,31 +83,37 @@ module.exports = async (req, res) => {
           const restrictedEmail = promoCode.metadata.restricted_email.toLowerCase().trim();
           const customerEmail = email.toLowerCase().trim();
           
-          console.log(`[COUPON] Checking restriction: coupon requires ${restrictedEmail}, customer is ${customerEmail}`);
+          if (process.env.NODE_ENV === 'development') {
+            logger.debug('[COUPON] Checking email restriction', { restrictedEmail, customerEmail });
+          }
           
           if (customerEmail !== restrictedEmail) {
-            console.log(`[COUPON] Email restriction failed - coupon not available for ${customerEmail}`);
+            logger.warn('[COUPON] Email restriction failed', { customerEmail });
             return res.json({ 
               valid: false, 
               message: 'This coupon is not available for your email' 
             });
           }
           
-          console.log(`[COUPON] Email restriction passed - ${customerEmail} is authorized`);
+          if (process.env.NODE_ENV === 'development') {
+            logger.debug('[COUPON] Email restriction passed', { customerEmail });
+          }
         }
         
       } else {
         // Second try: Direct coupon lookup (e.g., promo_XXX)
-        console.log(`[COUPON] Trying direct coupon lookup: ${upperCode}`);
+        if (process.env.NODE_ENV === 'development') {
+          logger.debug('[COUPON] Trying direct coupon lookup', { code: upperCode });
+        }
         coupon = await stripe.coupons.retrieve(upperCode);
         
         if (!coupon || !coupon.valid) {
-          console.log(`[COUPON] Invalid coupon: ${upperCode}`);
+          logger.warn('[COUPON] Invalid coupon', { code: upperCode });
           return res.json({ valid: false, message: 'Invalid coupon' });
         }
       }
     } catch (err) {
-      console.log(`[COUPON] Not found: ${upperCode}`, err.message);
+      logger.warn('[COUPON] Not found', { code: upperCode, error: err.message });
       return res.json({ valid: false, message: 'Coupon not found' });
     }
 
@@ -115,7 +122,9 @@ module.exports = async (req, res) => {
     // ═══════════════════════════════════════════════════════════
     
     if (coupon.metadata && coupon.metadata.first_order_only === 'true') {
-      console.log(`[COUPON] Checking first order for: ${email}`);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('[COUPON] Checking first order', { email });
+      }
       
       const db = getFirestore();
       const ordersSnapshot = await db.collection('orders')
@@ -125,14 +134,16 @@ module.exports = async (req, res) => {
         .get();
       
       if (!ordersSnapshot.empty) {
-        console.log(`[COUPON] Not first order for: ${email}`);
+        logger.warn('[COUPON] Not first order', { email });
         return res.json({ 
           valid: false, 
           message: 'Coupon valid only for first order' 
         });
       }
       
-      console.log(`[COUPON] First order confirmed for: ${email}`);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('[COUPON] First order confirmed', { email });
+      }
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -156,7 +167,7 @@ module.exports = async (req, res) => {
     // Don't allow discount > subtotal
     discountAmount = Math.min(discountAmount, subtotal);
     
-    console.log(`[COUPON] Valid! Discount: €${discountAmount.toFixed(2)} (${discountType})`);
+    logger.info('[COUPON] Valid', { code: upperCode, discount: discountAmount.toFixed(2), type: discountType });
 
     // ═══════════════════════════════════════════════════════════
     // RETURN SUCCESS
@@ -179,7 +190,7 @@ module.exports = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('[COUPON] Validation error:', error);
+    logger.error('[COUPON] Validation error', error);
     return res.status(500).json({ 
       valid: false, 
       message: 'Error validating coupon' 
