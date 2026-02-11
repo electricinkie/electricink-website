@@ -189,33 +189,4 @@
   // ────────── Listen for cart updates ──────────
   window.addEventListener('cart-updated', updateCartCount);
 
-  // Auth helpers
-  function showSignedOutState() {
-    // 🔧 FIX: Log para debug
-    console.log('[DesktopHeader] showSignedOutState called');
-    const out = document.querySelector('[data-auth-signed-out]');
-    const inEl = document.querySelector('[data-auth-signed-in]');
-    if (out) out.style.display = 'flex';
-    if (inEl) inEl.style.display = 'none';
-  }
-
-  function showSignedInState(user) {
-    // 🔧 FIX: Log para debug
-    console.log('[DesktopHeader] showSignedInState called', { uid: user?.uid || null });
-    const out = document.querySelector('[data-auth-signed-out]');
-    const inEl = document.querySelector('[data-auth-signed-in]');
-    if (out) out.style.display = 'none';
-    if (inEl) inEl.style.display = 'flex';
-    const nameEl = document.querySelector('.user-name');
-    if (nameEl) nameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
-
-    // reveal admin based on Firestore-driven admin list
-    (async () => {
-      try {
-        const isAdminUser = await isAdmin({ user });
-        const adminLink = document.querySelector('[data-admin-only]');
-        if (adminLink) adminLink.style.display = isAdminUser ? 'inline-block' : 'none';
-      } catch (e) { /* ignore */ }
-    })();
-  }
-removed - showSignedOutState and showSignedInState functions removed
+  // Auth removed - showSignedOutState and showSignedInState functions removed
