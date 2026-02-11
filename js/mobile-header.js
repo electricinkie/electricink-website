@@ -3,8 +3,9 @@
 // Electric Ink IE
 // ========================================
 
-import { onAuthChange, openAuthModal, logout } from './auth.js';
-import { isAdmin } from './admin-check.js';
+// Auth removed - guest checkout only
+// import { onAuthChange, openAuthModal, logout } from './auth.js';
+// import { isAdmin } from './admin-check.js';
 
 'use strict';
 
@@ -56,31 +57,7 @@ import { isAdmin } from './admin-check.js';
         </button>
       </div>
 
-      <!-- ✅ AUTH SECTION NO TOPO DO MENU -->
-      <div class="mobile-auth-section" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
-        <!-- Signed OUT state -->
-        <div id="mobile-auth-signed-out" style="display:flex; justify-content:center;">
-          <!-- 🚨 TEMPORARY: Hidden for guest-only checkout (remove when auth fixed) -->
-          <button id="mobile-auth-button" class="mobile-auth-button" style="display:none !important;">Sign in</button>
-        </div>
-        
-        <!-- Signed IN state -->
-        <div id="mobile-auth-signed-in" style="display:none;">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-            <div style="width:40px; height:40px; min-width:40px; min-height:40px; border-radius:50%; background:#43BDAB; color:white; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:16px; flex-shrink:0;">
-              <span id="mobile-user-initials">U</span>
-            </div>
-            <div style="flex:1;">
-              <div id="mobile-user-name" style="font-weight:600; color:#ffa300; font-size:15px;">User</div>
-              <div id="mobile-user-email" style="font-size:11px; color:#6b7280; max-width:110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">email@example.com</div>
-            </div>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <a href="/profile.html" style="flex:1; padding:10px; text-align:center; background:#f3f4f6; border-radius:8px; font-size:14px; font-weight:500; color:#374151; text-decoration:none;">Profile</a>
-            <button id="mobile-logout-btn" style="flex:1; padding:10px; background:#fee2e2; border:none; border-radius:8px; font-size:14px; font-weight:500; color:#dc2626; cursor:pointer;">Logout</button>
-          </div>
-        </div>
-      </div>
+      <!-- Auth removed - guest checkout only -->
 
       <ul class="mobile-menu-list">
         
@@ -166,26 +143,14 @@ import { isAdmin } from './admin-check.js';
           </a>
         </li>
         
-        <!-- Admin (hidden by default) -->
-        <li id="mobile-admin-link" style="display:none;">
-          <a href="/admin/dashboard.html" class="mobile-menu-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
-            Admin Dashboard
-          </a>
-        </li>
+        <!-- Auth removed - admin link removed -->
         
       </ul>
 
     </nav>
   `;
 
-  // ────────── Helper: Generate initials ──────────
-  function getInitials(name) {
-    if (!name) return 'U';
-    return name.split(' ').map(n => n[0] || '').slice(0, 2).join('').toUpperCase();
-  }
+  // Auth removed - getInitials helper removed
 
   // ────────── Initialize Header ──────────
   function initMobileHeader() {
@@ -202,128 +167,11 @@ import { isAdmin } from './admin-check.js';
     setupSubmenu();
     updateCartCount();
     setActiveMenuItem();
-    setupAuthHandlers();
 
-    // ✅ CRITICAL: Immediate auth state check AFTER DOM injection
-    applyAuthStateImmediately();
+    // Auth removed - setupAuthHandlers and applyAuthStateImmediately removed
   }
 
-  // ────────── Setup Auth Handlers ──────────
-  function setupAuthHandlers() {
-    // Sign in button
-    document.getElementById('mobile-auth-button')?.addEventListener('click', () => {
-      try { openAuthModal('login'); } catch (err) { console.warn(err); }
-    });
-
-    // Logout button
-    document.getElementById('mobile-logout-btn')?.addEventListener('click', async () => {
-      try {
-        await logout();
-        try { if (window && window.toast && typeof window.toast.show === 'function') window.toast.show({ message: 'You have been signed out', type: 'removed' }); } catch(e) {}
-        // Wait 1 second for toast to be visible before redirecting
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        window.location.reload();
-      } catch (err) {
-        console.warn('Logout failed:', err);
-        try { if (window && window.toast && typeof window.toast.error === 'function') window.toast.error('Sign out failed'); } catch(e) {}
-        // Wait for error toast too
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        window.location.reload(); // Force reload anyway
-      }
-    });
-  }
-
-  // ────────── Apply Auth State Immediately ──────────
-  async function applyAuthStateImmediately() {
-    try {
-      console.log('[MobileHeader] 🔍 Checking immediate auth state...');
-      const m = await import('./auth.js');
-      const { getCurrentUser } = m;
-
-      // Singleton flag: evita múltiplos observers quando ambos headers carregam
-      // Se o polling já foi feito por outro header, apenas obtém o user uma vez.
-      if (window.__AUTH_POLL_DONE) {
-        try {
-          const userOnce = await getCurrentUser();
-          updateMobileAuthUI(userOnce || null);
-        } catch (e) {
-          updateMobileAuthUI(null);
-        }
-        return;
-      }
-
-      // Poll for restored auth (Firebase can take a moment to restore from persistence)
-      let user = null;
-      for (let i = 0; i < 8; i++) {
-        try {
-          user = await getCurrentUser();
-          if (user) break;
-        } catch (e) {
-          // Ignore transient errors
-        }
-        await new Promise(r => setTimeout(r, 150)); // 150ms intervals
-      }
-
-      if (user) {
-        console.log('[MobileHeader] ✅ User found immediately:', user.email);
-        updateMobileAuthUI(user);
-      } else {
-        console.log('[MobileHeader] ℹ️ No user found; showing signed-out state');
-        updateMobileAuthUI(null);
-      }
-      // Marcar que o polling inicial já foi executado (singleton)
-      window.__AUTH_POLL_DONE = true;
-    } catch (e) {
-      console.warn('[MobileHeader] ⚠️ Immediate auth check failed:', e.message);
-      updateMobileAuthUI(null);
-    }
-  }
-
-  // ────────── Update Mobile Auth UI ──────────
-  export function updateMobileAuthUI(user) {
-    // 🔧 FIX: Log para debug
-    console.log('[MobileHeader] updateMobileAuthUI called, user:', (user && user.email) ? user.email : 'none');
-    const signedOut = document.getElementById('mobile-auth-signed-out');
-    const signedIn = document.getElementById('mobile-auth-signed-in');
-    const userName = document.getElementById('mobile-user-name');
-    const userEmail = document.getElementById('mobile-user-email');
-    const userInitials = document.getElementById('mobile-user-initials');
-    const adminLink = document.getElementById('mobile-admin-link');
-
-    if (!signedOut || !signedIn) {
-      console.warn('[MobileHeader] ⚠️ Auth UI elements not found in DOM');
-      return;
-    }
-
-    if (user) {
-      // SIGNED IN
-      signedOut.style.display = 'none';
-      signedIn.style.display = 'block';
-      
-      if (userName) userName.textContent = user.displayName || 'User';
-      if (userEmail) userEmail.textContent = user.email || '';
-      if (userInitials) userInitials.textContent = getInitials(user.displayName || user.email);
-
-      // Check admin status
-      (async () => {
-        try {
-          const isAdminUser = await isAdmin({ user });
-          if (adminLink) adminLink.style.display = isAdminUser ? 'block' : 'none';
-        } catch (e) {
-          if (adminLink) adminLink.style.display = 'none';
-        }
-      })();
-
-      console.log('[MobileHeader] ✅ UI updated: SIGNED IN as', user.email);
-    } else {
-      // SIGNED OUT
-      signedOut.style.display = 'flex';
-      signedIn.style.display = 'none';
-      if (adminLink) adminLink.style.display = 'none';
-
-      console.log('[MobileHeader] ✅ UI updated: SIGNED OUT');
-    }
-  }
+  // Auth removed - applyAuthStateImmediately and updateMobileAuthUI functions removed
 
   // ────────── Menu Toggle ──────────
   function setupMenuToggle() {
@@ -416,34 +264,10 @@ import { isAdmin } from './admin-check.js';
     initMobileHeader();
   }
 
-  // ────────── Wire Global Auth Observer ──────────
-  try {
-    // Singleton flag: evita múltiplos observers quando ambos headers carregam
-    if (window.__AUTH_OBSERVER_ATTACHED) {
-      console.log('[MobileHeader] Auth observer already attached; skipping.');
-    } else {
-      onAuthChange((user) => {
-        console.log('[MobileHeader] 🔄 Auth state changed, updating UI...');
-        updateMobileAuthUI(user);
-        
-        // 🔧 FIX: Força re-render completo para garantir sincronização
-        setTimeout(() => {
-          updateMobileAuthUI(user);
-        }, 100);
-      });
-      window.__AUTH_OBSERVER_ATTACHED = true;
-    }
-  } catch (e) {
-    console.warn('[MobileHeader] ⚠️ Auth observer setup failed:', e.message);
-  }
+  // Auth removed - auth observer and forceUpdateMobileAuthUI removed
 
   // ────────── Export ──────────
   window.MobileHeader = {
     init: initMobileHeader,
     updateCartCount: updateCartCount
   };
-
-  // 🔧 FIX: Expor função de atualização para ser chamada após login
-  if (typeof window !== 'undefined') {
-    window.forceUpdateMobileAuthUI = updateMobileAuthUI;
-  }

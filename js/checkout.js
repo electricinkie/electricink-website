@@ -6,7 +6,8 @@
 
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
 import { initFirebase } from './firebase-config.js';
-import { getCurrentUser, onAuthChange } from './auth.js';
+// Auth removed - guest checkout only
+// import { getCurrentUser, onAuthChange } from './auth.js';
 
 // Debug flag - ativo apenas em localhost ou com ?debug=true
 const DEBUG = typeof window !== 'undefined' && (
@@ -267,13 +268,14 @@ window.appliedDiscount = 0;
   // Fetch user discount percent from Firestore (non-blocking but awaited by init)
   async function fetchUserDiscountPercent() {
     try {
+      // Auth removed - guest checkout only
       // Make auth optional: getCurrentUser may throw if Firebase not configured.
       let user = null;
-      try {
-        user = await getCurrentUser();
-      } catch (e) {
-        user = null;
-      }
+      // try {
+      //   user = await getCurrentUser();
+      // } catch (e) {
+      //   user = null;
+      // }
       if (!user) return;
       const { db } = await initFirebase();
       const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
@@ -1135,13 +1137,14 @@ window.appliedDiscount = 0;
   // Após renderizar o form, pré-preencher email se o usuário estiver logado
   async function prefillUserEmail(userArg) {
     try {
+      // Auth removed - guest checkout only
       let user = userArg || null;
       if (!user) {
-        try {
-          user = await getCurrentUser();
-        } catch (e) {
-          user = null;
-        }
+        // try {
+        //   user = await getCurrentUser();
+        // } catch (e) {
+        //   user = null;
+        // }
       }
 
       const emailInput = document.querySelector('#email') || (elements.form && elements.form.email);
@@ -1364,16 +1367,17 @@ window.appliedDiscount = 0;
       }
 
       // Send to backend for SECURE price calculation
+      // Auth removed - guest checkout only
       // Attach authUid when available so backend can associate orders to UID
       // Auth is optional — callers should continue as guest when no user available
       let currentUser = null;
-      try {
-        currentUser = await getCurrentUser();
-        debugLog('🔐 [CHECKOUT] Current user:', currentUser ? currentUser.uid : 'GUEST');
-      } catch (e) {
-        debugLog('🔐 [CHECKOUT] No user (guest)');
-        currentUser = null;
-      }
+      // try {
+      //   currentUser = await getCurrentUser();
+      //   debugLog('🔐 [CHECKOUT] Current user:', currentUser ? currentUser.uid : 'GUEST');
+      // } catch (e) {
+      //   debugLog('🔐 [CHECKOUT] No user (guest)');
+      //   currentUser = null;
+      // }
       const orderData = {
         cartItems: cartItems,
         shippingAddress: shippingAddress,
@@ -1402,16 +1406,17 @@ window.appliedDiscount = 0;
       debugLog('🔒 Sending cart to backend for price validation...');
 
       // Call API function
+      // Auth removed - guest checkout only
       // Include server-trusted ID token when available so backend can stamp user UID
       let authHeader = {};
-      try {
-        if (currentUser && typeof currentUser.getIdToken === 'function') {
-          const idToken = await currentUser.getIdToken();
-          if (idToken) authHeader.Authorization = `Bearer ${idToken}`;
-        }
-      } catch (e) {
-        console.warn('Failed to obtain idToken for checkout:', e && e.message);
-      }
+      // try {
+      //   if (currentUser && typeof currentUser.getIdToken === 'function') {
+      //     const idToken = await currentUser.getIdToken();
+      //     if (idToken) authHeader.Authorization = `Bearer ${idToken}`;
+      //   }
+      // } catch (e) {
+      //   console.warn('Failed to obtain idToken for checkout:', e && e.message);
+      // }
 
       const response = await fetch(PAYMENT_INTENT_URL, {
         method: 'POST',
@@ -1594,13 +1599,14 @@ window.appliedDiscount = 0;
   window.addEventListener('pageshow', async (event) => {
     debugLog('[CHECKOUT] Page shown, re-checking auth...', { persisted: !!event.persisted });
     try {
-      const currentUser = await getCurrentUser();
-      if (currentUser) {
-        await prefillUserEmail(currentUser);
-      } else {
+      // Auth removed - guest checkout only
+      // const currentUser = await getCurrentUser();
+      // if (currentUser) {
+      //   await prefillUserEmail(currentUser);
+      // } else {
         // Ensure field is unlocked for guests
         await prefillUserEmail(null);
-      }
+      // }
     } catch (e) {
       debugLog('[CHECKOUT] pageshow prefill error:', e && e.message ? e.message : e);
     }

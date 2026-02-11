@@ -3,8 +3,9 @@
 // Electric Ink IE
 // ========================================
 
-import { onAuthChange, openAuthModal, logout } from './auth.js';
-import { isAdmin } from './admin-check.js';
+// Auth removed - guest checkout only
+// import { onAuthChange, openAuthModal, logout } from './auth.js';
+// import { isAdmin } from './admin-check.js';
 
 'use strict';
 
@@ -45,44 +46,16 @@ import { isAdmin } from './admin-check.js';
           </ul>
         </nav>
         
-        <!-- Auth / Cart (Right) -->
+        <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
-          <!-- Signed out -->
-          <div class="header-auth" data-auth-signed-out style="display:flex;align-items:center;gap:8px;">
-            <!-- 🚨 TEMPORARY: Hidden for guest-only checkout (remove when auth fixed) -->
-            <button class="sign-in-btn" data-open-auth style="display:none !important;">Sign in</button>
-            <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              </svg>
-              <span class="desktop-cart-count" data-cart-count>0</span>
-            </a>
-          </div>
-
-          <!-- Signed in -->
-          <div class="header-auth" data-auth-signed-in style="display:none;align-items:center;gap:8px;">
-            <div class="user-menu">
-              <button class="user-menu-trigger">
-                <span class="user-name">User</span>
-                <svg width="12" height="12" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-              </button>
-              <div class="user-dropdown" style="display:none;">
-                <a href="/profile.html">My Profile</a>
-                <a href="/admin/dashboard.html" data-admin-only style="display:none; margin-left:12px;">Dashboard</a>
-                <button class="logout-btn">Logout</button>
-              </div>
-            </div>
-            <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-              </svg>
-              <span class="desktop-cart-count" data-cart-count>0</span>
-            </a>
-          </div>
+          <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="desktop-cart-count" data-cart-count>0</span>
+          </a>
         </div>
 
       </div>
@@ -129,13 +102,8 @@ import { isAdmin } from './admin-check.js';
     });
   }
 
-  // 🔧 FIX: Expor funções de atualização
-  if (typeof window !== 'undefined') {
-    window.forceUpdateDesktopAuthUI = (user) => {
-      if (user) showSignedInState(user);
-      else showSignedOutState();
-    };
-  }
+  // Auth removed - guest checkout only
+  // Removed forceUpdateDesktopAuthUI function
 
   // ────────── Update Cart Count ──────────
   function updateCartCount() {
@@ -205,111 +173,11 @@ import { isAdmin } from './admin-check.js';
     updateCartCount();
     setActiveMenuItem();
 
-    // Wire auth UI actions
-    const signInBtn = document.querySelector('[data-open-auth]');
-    signInBtn?.addEventListener('click', (e) => { e.preventDefault(); try { openAuthModal('login'); } catch (err) { console.warn(err); } });
-
-    const userTrigger = document.querySelector('.user-menu-trigger');
-    userTrigger?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const dropdown = document.querySelector('.user-dropdown');
-      if (!dropdown) return;
-      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.user-menu')) {
-        const dd = document.querySelector('.user-dropdown');
-        if (dd) dd.style.display = 'none';
-      }
-    });
-
-    document.querySelector('.logout-btn')?.addEventListener('click', async () => {
-      try {
-        await logout();
-        try { if (window && window.toast && typeof window.toast.show === 'function') window.toast.show({ message: 'You have been signed out', type: 'removed' }); } catch(e) {}
-        // Wait 1 second for toast to be visible before redirecting
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        window.location.reload();
-      } catch (err) {
-        console.warn(err);
-        try { if (window && window.toast && typeof window.toast.error === 'function') window.toast.error('Sign out failed'); } catch(e) {}
-        // Wait for error toast too
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // Note: no reload in error case for desktop (preserves original behavior)
-      }
-    });
-
-    // Observe auth state
-    try {
-      // Singleton flag: evita múltiplos observers quando ambos headers carregam
-      if (window.__AUTH_OBSERVER_ATTACHED) {
-        console.log('[DesktopHeader] Auth observer already attached; skipping.');
-      } else {
-        onAuthChange((user) => {
-          console.log('[DesktopHeader] 🔄 Auth state changed', { uid: user?.uid || null });
-          
-          if (user) {
-            showSignedInState(user);
-            
-            // 🔧 FIX: Força re-render após 100ms para garantir DOM atualizado
-            setTimeout(() => {
-              showSignedInState(user);
-            }, 100);
-          } else {
-            showSignedOutState();
-            
-            setTimeout(() => {
-              showSignedOutState();
-            }, 100);
-          }
-        });
-        window.__AUTH_OBSERVER_ATTACHED = true;
-      }
-    } catch (e) { console.warn('Auth observer not available', e); showSignedOutState(); }
+    // Auth removed - all auth UI interactions removed
   }
 
-  // Quick immediate check: poll for restored auth if observer hasn't fired yet
-  (async () => {
-    try {
-      console.log('[DesktopHeader] immediate auth check start');
-      // Singleton flag: evita múltiplos observers quando ambos headers carregam
-      // Se outro header já fez o polling inicial, apenas obter o user uma vez.
-      if (window.__AUTH_POLL_DONE) {
-        try {
-          const m = await import('./auth.js');
-          const { getCurrentUser } = m;
-          const userOnce = await getCurrentUser();
-          if (userOnce) {
-            showSignedInState(userOnce);
-          } else {
-            showSignedOutState();
-          }
-        } catch (e) { /* ignore */ }
-        return;
-      }
-
-      const m = await import('./auth.js');
-      const { getCurrentUser } = m;
-      let user = null;
-      for (let i = 0; i < 6; i++) {
-        try { user = await getCurrentUser(); } catch (e) {}
-        if (user) break;
-        await new Promise(r => setTimeout(r, 100));
-      }
-      if (user) {
-        // Log a concise, safe message in all environments (avoid `process.env` in browser)
-        console.log('[DesktopHeader] immediate user found', { uid: user.uid || null });
-        showSignedInState(user);
-      } else {
-        console.log('[DesktopHeader] no immediate user; waiting for observer');
-      }
-      // Marcar que o polling inicial já foi executado (singleton)
-      window.__AUTH_POLL_DONE = true;
-    } catch (e) {
-      console.warn('[DesktopHeader] immediate auth check failed:', e && e.message);
-    }
-  })();
+  // Auth removed - quick immediate check removed
+  // Auth removed - showSignedOutState and showSignedInState removed
 
   // ────────── Auto Initialize ──────────
   if (document.readyState === 'loading') {
@@ -350,3 +218,4 @@ import { isAdmin } from './admin-check.js';
       } catch (e) { /* ignore */ }
     })();
   }
+removed - showSignedOutState and showSignedInState functions removed
