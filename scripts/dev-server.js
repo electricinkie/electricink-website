@@ -58,16 +58,7 @@ app.all('/api/create-payment-intent', async (req, res) => {
 //   }
 // });
 
-// 2c. Local admin router
-const adminRouter = require('../api/admin.js');
-app.all('/api/admin', async (req, res) => {
-  try {
-    await adminRouter(req, res);
-  } catch (err) {
-    console.error('❌ [admin] Error:', err);
-    res.status(500).json({ error: 'Handler error', details: err.message });
-  }
-});
+// Auth/admin routes removed - guest checkout only
 
 // 3. Stripe Webhooks
 console.log('🔧 Registrando rota do webhook...');
@@ -92,17 +83,7 @@ app.all('/api/config', async (req, res) => {
   }
 });
 
-// My Orders endpoint
-app.get('/api/my-orders', async (req, res) => {
-  try {
-    const handler = require('../api/my-orders');
-    await handler(req, res);
-  } catch (err) {
-    console.error('[SERVER] /api/my-orders error:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-// ADDED: /api/my-orders registered here
+// My Orders endpoint removed - auth system deleted
 
 // Serve static files from project root (dev-server moved into scripts/)
 // Serve static files with intelligent cache headers via `setHeaders`
@@ -142,7 +123,8 @@ try {
   console.log('✅ Firebase Admin initialized');
 } catch (error) {
   console.error('❌ Firebase Admin initialization failed:', error.message);
-  process.exit(1);
+  console.warn('⚠️  Server will continue without Firebase (frontend testing only)');
+  // Don't exit - allow server to run for frontend development
 }
 
 const port = process.env.PORT || 3000;
