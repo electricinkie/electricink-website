@@ -5,7 +5,6 @@
 
 // Auth removed - guest checkout only
 // import { onAuthChange, openAuthModal, logout } from './auth.js';
-// import { isAdmin } from './admin-check.js';
 
 'use strict';
 
@@ -142,8 +141,6 @@
             <span class="menu-cart-count" data-cart-count>0</span>
           </a>
         </li>
-        
-        <!-- Auth removed - admin link removed -->
         
       </ul>
 

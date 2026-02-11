@@ -5,7 +5,6 @@
 
 // Auth removed - guest checkout only
 // import { onAuthChange, openAuthModal, logout } from './auth.js';
-// import { isAdmin } from './admin-check.js';
 
 'use strict';
 

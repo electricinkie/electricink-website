@@ -683,18 +683,6 @@
   <script type="module" src="js/ultra-pen.js"></script>
   <script type="module" src="js/bestsellers.js"></script>
 
-  <!-- Init admin realtime listener early so role changes are detected promptly -->
-  <script type="module">
-    (async () => {
-      try {
-        const { initAdminRealtimeListener } = await import('/js/admin-check.js');
-        try { initAdminRealtimeListener(); } catch (e) { console.warn('initAdminRealtimeListener failed', e); }
-      } catch (e) {
-        console.warn('initAdminRealtimeListener skipped', e);
-      }
-    })();
-  </script>
-
   <!-- Vercel Speed Insights -->
   <script>
     window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
