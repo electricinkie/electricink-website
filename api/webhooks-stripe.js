@@ -745,11 +745,81 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
       // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização
       const productCatalog = loadProductCatalog();
+
+      // Heurística para resolver produto/variante a partir de ids que podem conter
+      // prefixos duplicados (ex: "diluent-diluent-240ml") ou serem ids de variante.
+      function resolveCatalogItem(itemId) {
+        if (!itemId || typeof itemId !== 'string') return null;
+
+        // exact product id
+        let prod = productCatalog.find(p => p.id === itemId);
+        if (prod) return { product: prod, variant: null };
+
+        // variant exact match or priceId match
+        for (const p of productCatalog) {
+          if (p.variants && Array.isArray(p.variants)) {
+            const v = p.variants.find(vv => vv.id === itemId || vv.priceId === itemId || vv.stripe_price_id === itemId);
+            if (v) return { product: p, variant: v };
+          }
+        }
+
+        // Remove duplicated prefix (e.g. "diluent-diluent-240ml" -> "diluent-240ml")
+        const tokens = itemId.split('-');
+        for (let k = 1; k <= Math.floor(tokens.length / 2); k++) {
+          let repeated = true;
+          for (let i = 0; i < k; i++) {
+            if (tokens[i] !== tokens[i + k]) { repeated = false; break; }
+          }
+          if (repeated) {
+            const candidate = tokens.slice(k).join('-');
+            // product match
+            const pmatch = productCatalog.find(p => p.id === candidate);
+            if (pmatch) return { product: pmatch, variant: null };
+            // variant match
+            for (const p of productCatalog) {
+              if (p.variants && Array.isArray(p.variants)) {
+                const v = p.variants.find(vv => vv.id === candidate || vv.priceId === candidate || vv.stripe_price_id === candidate);
+                if (v) return { product: p, variant: v };
+              }
+            }
+          }
+        }
+
+        // Try suffix matching of last 1..3 tokens against variant ids
+        for (let i = 1; i <= Math.min(3, tokens.length - 1); i++) {
+          const suffix = tokens.slice(tokens.length - i).join('-');
+          for (const p of productCatalog) {
+            if (p.variants && p.variants.find(vv => vv.id === suffix)) {
+              return { product: p, variant: p.variants.find(vv => vv.id === suffix) };
+            }
+          }
+        }
+
+        return null;
+      }
+
       const itemsForEmail = (order.items || []).map(item => {
-        const product = productCatalog.find(p => p.id === item.id);
+        const resolved = resolveCatalogItem(item.id);
+        let name = item.name || item.id;
+        let price = 0;
+        if (resolved && resolved.product) {
+          name = (resolved.product.name || resolved.product.title) || name;
+          if (resolved.variant) {
+            price = (typeof resolved.variant.price === 'number') ? Number(resolved.variant.price) : (resolved.product.basic && typeof resolved.product.basic.price === 'number' ? Number(resolved.product.basic.price) : (resolved.product.price !== undefined ? Number(resolved.product.price) : 0));
+            // Prefer variant label if available
+            if (resolved.variant.label) {
+              name = `${name} - ${resolved.variant.label}`;
+            }
+          } else {
+            price = (resolved.product.basic && typeof resolved.product.basic.price === 'number') ? Number(resolved.product.basic.price) : (resolved.product.price !== undefined ? Number(resolved.product.price) : 0);
+          }
+        } else {
+          price = (item.price !== undefined ? Number(item.price) : 0);
+        }
+
         return Object.assign({}, item, {
-          name: (product && (product.name || product.title)) ? (product.name || product.title) : (item.name || item.id),
-          price: (product && (product.price !== undefined && product.price !== null)) ? Number(product.price) : (item.price !== undefined ? Number(item.price) : 0)
+          name,
+          price
         });
       });
 
