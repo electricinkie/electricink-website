@@ -24,7 +24,13 @@
   ];
 
   try {
-    const responses = await Promise.all(productFiles.map(p => fetch(p).catch(e => ({ ok: false }))));
+    // Start local fetches
+    const localFetches = productFiles.map(p => fetch(p).catch(e => ({ ok: false, error: e })));
+
+    // Start internal API fetch in parallel
+    const apiFetch = fetch(`/api/catalog?type=product&id=${encodeURIComponent(productId)}`).catch(e => ({ ok: false, _error: e }));
+
+    const responses = await Promise.all(localFetches);
     let allProducts = {};
     for (let i = 0; i < responses.length; i++) {
       const res = responses[i];
@@ -37,13 +43,80 @@
       Object.assign(allProducts, json);
     }
 
-    productData = allProducts[productId];
-
-    if (!productData) {
+    const localProduct = allProducts[productId];
+    if (!localProduct) {
       alert('Product not found');
       window.location.href = '/';
       return;
     }
+
+    // Await API result (may have already completed)
+    let apiData = null;
+    try {
+      const apiRes = await apiFetch;
+      if (apiRes && apiRes.ok) {
+        const apiJson = await apiRes.json();
+        if (Array.isArray(apiJson) && apiJson.length > 0) apiData = apiJson;
+      } else if (apiRes && apiRes._error) {
+        console.warn('Could not fetch internal catalog for product:', apiRes._error);
+      } else if (apiRes && apiRes.ok === false) {
+        console.warn('Internal catalog returned non-OK for product');
+      }
+    } catch (e) {
+      console.warn('Could not fetch internal catalog for product:', e);
+    }
+
+    // Merge pricing/stock from internal API into local productData (if available)
+    if (apiData && localProduct) {
+      // Build a map of api entries by variant_id for quick lookup
+      const apiByVariant = new Map();
+      apiData.forEach(item => {
+        if (item && item.variant_id) apiByVariant.set(item.variant_id, item);
+      });
+
+      // Helper to match variant id heuristically
+      function findApiForVariant(variant) {
+        if (!variant) return null;
+        const vid = variant.id || '';
+        if (apiByVariant.has(vid)) return apiByVariant.get(vid);
+        // try product-prefixed variant id e.g. `${productId}-${variant.id}`
+        const prefixed = `${productId}-${vid}`;
+        if (apiByVariant.has(prefixed)) return apiByVariant.get(prefixed);
+        // try suffix match
+        for (const [k, v] of apiByVariant.entries()) {
+          if (k.endsWith(vid)) return v;
+        }
+        return null;
+      }
+
+      // If variants exist, patch them
+      if (Array.isArray(localProduct.variants) && localProduct.variants.length > 0) {
+        localProduct.variants.forEach(variant => {
+          const apiEntry = findApiForVariant(variant);
+          if (apiEntry) {
+            if (typeof apiEntry.price_ex === 'number') variant.price = apiEntry.price_ex;
+            if (typeof apiEntry.stock !== 'undefined') variant.quantity = apiEntry.stock;
+          }
+        });
+
+        // Update inventory.stock_status based on total stock
+        const totalStock = localProduct.variants.reduce((sum, v) => sum + (Number(v.quantity) || 0), 0);
+        localProduct.inventory = localProduct.inventory || {};
+        localProduct.inventory.stock_status = totalStock > 0 ? 'in_stock' : 'out_of_stock';
+      } else if (Array.isArray(apiData) && apiData.length > 0) {
+        // Simple product - apply first api entry as fallback
+        const first = apiData[0];
+        if (first && typeof first.price_ex === 'number') {
+          if (localProduct.basic) localProduct.basic.price = first.price_ex; else localProduct.price = first.price_ex;
+        }
+        localProduct.inventory = localProduct.inventory || {};
+        const anyStock = apiData.some(a => Number(a.stock) > 0);
+        localProduct.inventory.stock_status = anyStock ? 'in_stock' : 'out_of_stock';
+      }
+    }
+
+    // Use localProduct (possibly merged) going forward
+    productData = localProduct;
   } catch (error) {
     console.error('Error loading product:', error);
     alert('Error loading product. Please try again.');

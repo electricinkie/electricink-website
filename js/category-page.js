@@ -180,7 +180,12 @@
   ];
 
   try {
-    const responses = await Promise.all(productFiles.map(p => fetch(p).catch(e => ({ ok: false, error: e }))));
+    // Fetch local product files
+    const localFetches = productFiles.map(p => fetch(p).catch(e => ({ ok: false, error: e })));
+    // Fetch internal catalog in parallel
+    const apiFetch = fetch('/api/catalog?type=products').catch(e => ({ ok: false, _error: e }));
+
+    const responses = await Promise.all(localFetches);
     for (let i = 0; i < responses.length; i++) {
       const res = responses[i];
       const path = productFiles[i];
@@ -190,6 +195,74 @@
       }
       const json = await res.json();
       Object.assign(allProducts, json);
+    }
+
+    // Try to merge pricing/stock from internal API
+    let apiProducts = null;
+    try {
+      const apiRes = await apiFetch;
+      if (apiRes && apiRes.ok) {
+        const apiJson = await apiRes.json();
+        if (Array.isArray(apiJson)) apiProducts = apiJson;
+      } else if (apiRes && apiRes._error) {
+        console.warn('Could not fetch internal catalog:', apiRes._error);
+      } else if (apiRes && apiRes.ok === false) {
+        console.warn('Internal catalog returned non-OK status');
+      }
+    } catch (e) {
+      console.warn('Could not fetch internal catalog:', e);
+    }
+
+    if (apiProducts && Array.isArray(apiProducts)) {
+      // Group api entries by product id
+      const apiByProduct = apiProducts.reduce((acc, item) => {
+        if (!item || !item.id) return acc;
+        acc[item.id] = acc[item.id] || [];
+        acc[item.id].push(item);
+        return acc;
+      }, {});
+
+      // Merge into local allProducts
+      Object.keys(allProducts).forEach(pid => {
+        const local = allProducts[pid];
+        const entries = apiByProduct[pid];
+        if (!entries || entries.length === 0) return;
+
+        // If product has variants, map per variant
+        if (Array.isArray(local.variants) && local.variants.length > 0) {
+          local.variants.forEach(variant => {
+            if (!variant) return;
+            // Try to find matching api entry by variant_id
+            let found = entries.find(e => e.variant_id === variant.id);
+            if (!found) {
+              // try product-prefixed id
+              found = entries.find(e => e.variant_id === `${pid}-${variant.id}`);
+            }
+            if (!found) {
+              // try suffix match
+              found = entries.find(e => variant.id && e.variant_id && e.variant_id.endsWith(variant.id));
+            }
+            if (found) {
+              if (typeof found.price_ex === 'number') variant.price = found.price_ex;
+              if (typeof found.stock !== 'undefined') variant.quantity = found.stock;
+            }
+          });
+
+          // update product-level inventory.stock_status
+          const totalStock = local.variants.reduce((s, v) => s + (Number(v.quantity) || 0), 0);
+          local.inventory = local.inventory || {};
+          local.inventory.stock_status = totalStock > 0 ? 'in_stock' : 'out_of_stock';
+        } else {
+          // Simple product - apply first entry price and stock summary
+          const first = entries[0];
+          if (first && typeof first.price_ex === 'number') {
+            if (local.basic) local.basic.price = first.price_ex; else local.price = first.price_ex;
+          }
+          local.inventory = local.inventory || {};
+          const anyStock = entries.some(e => Number(e.stock) > 0);
+          local.inventory.stock_status = anyStock ? 'in_stock' : 'out_of_stock';
+        }
+      });
     }
   } catch (error) {
     console.error('Error loading products:', error);
