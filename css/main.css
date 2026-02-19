@@ -81,8 +81,6 @@ a {
 .new-product-price::after,
 .price-display-container .price-now::after,
 .cart-item-price::after,
-#summarySubtotal::after,
-#summaryVAT::after,
 #summaryTotal::after {
   content: "VAT inc.";
   display: inline-block;
