@@ -56,10 +56,10 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
     // 🔧 FIX: Shipping removido do cart - calculado apenas no checkout
-    // VAT calculado sobre subtotal (sem shipping)
-    const vat = subtotal * 0.23;
-    // Total do cart = subtotal + VAT (shipping será adicionado no checkout)
-    const total = subtotal + vat;
+    // VAT is informational (prices include VAT). Calculate VAT portion by reverse-rate.
+    // Do NOT add VAT on top of the subtotal — total remains the subtotal here.
+    const total = subtotal;
+    const vat = subtotal - (subtotal / 1.23);
     
     return {
       subtotal,
