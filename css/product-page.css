@@ -197,6 +197,19 @@
   color: #000;
 }
 
+/* VAT small label for product page prices */
+.product-price::after,
+.product-page .price-now::after {
+  content: "VAT inc.";
+  display: inline-block;
+  margin-left: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  vertical-align: middle;
+}
+
 .product-stock {
   display: flex;
   align-items: center;

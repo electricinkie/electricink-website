@@ -162,6 +162,21 @@
   margin-top: auto;
 }
 
+/* VAT small label for cart prices and summary values */
+.cart-item-price::after,
+#summarySubtotal::after,
+#summaryVAT::after,
+#summaryTotal::after {
+  content: "VAT inc.";
+  display: inline-block;
+  margin-left: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  vertical-align: middle;
+}
+
 /* Item Actions */
 .cart-item-actions {
   display: flex;
