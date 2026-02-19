@@ -997,7 +997,7 @@
 }
 
 .product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::before {
-  content: "€1034.80";
+  content: "€1299.00";
   color: #999;
   text-decoration: line-through;
   margin-right: 0.75rem;
@@ -1013,7 +1013,7 @@
 }
 
 .product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::after {
-  content: " Save €184.80";
+  content: " Save €249.00";
   display: block;
   color: #FF6B35;
   font-size: 0.95rem;

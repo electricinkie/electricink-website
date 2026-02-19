@@ -14,14 +14,14 @@
       "productId": "prod_TkKwH2bSLeWfNQ",
       "priceId": "price_1SmqH4Aiq7NBxfpwjk4vVkAR"
     },
-    "price": 4.25,
+    "price": 9.0,
     "size": "30mL",
     "variants": [
       {
         "id": "diluent-30ml",
         "size": "30mL",
         "label": "30mL",
-        "price": 4.25,
+        "price": 9.0,
         "priceId": "price_1SmqH4Aiq7NBxfpwjk4vVkAR",
         "stripe_price_id": "price_1SmqH4Aiq7NBxfpwjk4vVkAR",
         "quantity": 1,
@@ -31,7 +31,7 @@
         "id": "diluent-120ml",
         "size": "120mL",
         "label": "120mL",
-        "price": 10,
+        "price": 15.0,
         "priceId": "price_1SmqH4Aiq7NBxfpwBzvkAyGy",
         "stripe_price_id": "price_1SmqH4Aiq7NBxfpwBzvkAyGy",
         "quantity": 1,
@@ -41,7 +41,7 @@
         "id": "diluent-240ml",
         "size": "240mL",
         "label": "240mL",
-        "price": 16,
+        "price": 22.0,
         "priceId": "price_1SmqH4Aiq7NBxfpw88DpmqhM",
         "stripe_price_id": "price_1SmqH4Aiq7NBxfpw88DpmqhM",
         "quantity": 1,
@@ -96,14 +96,14 @@
       "productId": "prod_TkKPQEPTC3ZJyU",
       "priceId": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [
       {
         "id": "raven-black-30ml",
         "size": "30mL",
         "label": "30mL",
-        "price": 21.25,
+        "price": 26.0,
         "priceId": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw",
         "stripe_price_id": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw",
         "quantity": 3,
@@ -113,7 +113,7 @@
         "id": "raven-black-240ml",
         "size": "240mL",
         "label": "240mL",
-        "price": 63,
+        "price": 49.0,
         "priceId": "price_1SmpkxAiq7NBxfpwRH2EdnbF",
         "stripe_price_id": "price_1SmpkxAiq7NBxfpwRH2EdnbF",
         "quantity": 3,
@@ -168,14 +168,14 @@
       "productId": "prod_TkKT0jR3CSgXAr",
       "priceId": "price_1SmpotAiq7NBxfpwwxlsH0n2"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [
       {
         "id": "ghost-white-30ml",
         "size": "30mL",
         "label": "30mL",
-        "price": 21.25,
+        "price": 26.0,
         "priceId": "price_1SmpotAiq7NBxfpwwxlsH0n2",
         "stripe_price_id": "price_1SmpotAiq7NBxfpwwxlsH0n2",
         "quantity": 3,
@@ -185,7 +185,7 @@
         "id": "ghost-white-120ml",
         "size": "120mL",
         "label": "120mL",
-        "price": 42,
+        "price": 51.0,
         "priceId": "price_1SmpotAiq7NBxfpwKpqM0VyR",
         "stripe_price_id": "price_1SmpotAiq7NBxfpwKpqM0VyR",
         "quantity": 0,
@@ -195,7 +195,7 @@
         "id": "ghost-white-240ml",
         "size": "240mL",
         "label": "240mL",
-        "price": 63,
+        "price": 56.0,
         "priceId": "price_1SmpotAiq7NBxfpwBS44QqtX",
         "stripe_price_id": "price_1SmpotAiq7NBxfpwBS44QqtX",
         "quantity": 3,
@@ -251,7 +251,7 @@
       "productId": "prod_TkKW0d7nf9TUXa",
       "priceId": "price_1SmprRAiq7NBxfpwVL8NKUBi"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-red.webp",
@@ -301,7 +301,7 @@
       "productId": "prod_TkKaj8gm7da1In",
       "priceId": "price_1SmpvZAiq7NBxfpwlDmaSC5E"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-orange.webp",
@@ -351,7 +351,7 @@
       "productId": "prod_TkKcgThMX25j1o",
       "priceId": "price_1SmpwoAiq7NBxfpwhrzZuRxX"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-florida-orange.webp",
@@ -401,7 +401,7 @@
       "productId": "prod_TkKcXA6DA21ZQ1",
       "priceId": "price_1SmpxWAiq7NBxfpwQFgbviUn"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-coral.webp",
@@ -451,7 +451,7 @@
       "productId": "prod_TkKdqvS4FQSkfm",
       "priceId": "price_1SmpyGAiq7NBxfpwcZoIfJFO"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-navy-grey.webp",
@@ -501,7 +501,7 @@
       "productId": "prod_TkKebkGFlmUDsd",
       "priceId": "price_1Smpz4Aiq7NBxfpwuJ7EKGOc"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-steel-grey.webp",
@@ -551,7 +551,7 @@
       "productId": "prod_TkKf9ngacTVhq4",
       "priceId": "price_1Smq09Aiq7NBxfpwF9UEwfAH"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-coconut-cream.webp",
@@ -601,7 +601,7 @@
       "productId": "prod_TkKgZpNQdQaL61",
       "priceId": "price_1Smq0uAiq7NBxfpw4tdTdfE2"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-canary-yellow.webp",
@@ -651,7 +651,7 @@
       "productId": "prod_TkKhsOffYU6b7c",
       "priceId": "price_1Smq1kAiq7NBxfpwwktKBNPk"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-bus-yellow.webp",
@@ -701,7 +701,7 @@
       "productId": "prod_TkKhB9rjoqhs0y",
       "priceId": "price_1Smq2SAiq7NBxfpwDHxaasyq"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-mustard.webp",
@@ -751,7 +751,7 @@
       "productId": "prod_TkKi82cuojtfC4",
       "priceId": "price_1Smq37Aiq7NBxfpwhJZHvxAO"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-electric-pink.webp",
@@ -801,7 +801,7 @@
       "productId": "prod_TkKjZQI63cA2ga",
       "priceId": "price_1Smq41Aiq7NBxfpw33T6wBnw"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-bubblegum.webp",
@@ -851,7 +851,7 @@
       "productId": "prod_TkKkFyrsPdqQx8",
       "priceId": "price_1Smq4ZAiq7NBxfpwk9bJnJGW"
     },
-    "price": 21.25,
+    "price": 26.0,
     "variants": [],
     "size": "30mL",
     "image": "/images/products/artistic-inks/30ml-rose.webp",
@@ -901,7 +901,7 @@
       "productId": "prod_TkKk2JXM14pZX0",
       "priceId": "price_1Smq5EAiq7NBxfpw3f5Tia6P"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-deepest-pink.webp",
@@ -952,7 +952,7 @@
       "productId": "prod_TkKl7Qaw2HO1Un",
       "priceId": "price_1Smq5pAiq7NBxfpwEQ9WuIjk"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-electric-blue.webp",
@@ -1002,7 +1002,7 @@
       "productId": "prod_TkKmKryuEM9GkU",
       "priceId": "price_1Smq6XAiq7NBxfpwBmByn5Ev"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-olympic-blue.webp",
@@ -1052,7 +1052,7 @@
       "productId": "prod_TkKmEsn3GU0HYJ",
       "priceId": "price_1Smq70Aiq7NBxfpwkrykpndl"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-navy-blue.webp",
@@ -1102,7 +1102,7 @@
       "productId": "prod_TkKptYBJKM6qjC",
       "priceId": "price_1Smq9zAiq7NBxfpwSvINK6OS"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-deep-violet.webp",
@@ -1152,7 +1152,7 @@
       "productId": "prod_TkKqWbtqat4Fny",
       "priceId": "price_1SmqAgAiq7NBxfpwGD20oscK"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-brilliant-green.webp",
@@ -1202,7 +1202,7 @@
       "productId": "prod_TkKrOrCdJaSM4F",
       "priceId": "price_1SmqBQAiq7NBxfpwGs86JVYa"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-snake-green.webp",
@@ -1252,7 +1252,7 @@
       "productId": "prod_TkKrjCTZzHPD0C",
       "priceId": "price_1SmqBwAiq7NBxfpwx8AZUjgC"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-true-green.webp",
@@ -1302,7 +1302,7 @@
       "productId": "prod_TkKsRWX1GBwQqb",
       "priceId": "price_1SmqCaAiq7NBxfpwLiyjepQv"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-deepest-green.webp",
@@ -1352,7 +1352,7 @@
       "productId": "prod_TkKsyy7E0mgy64",
       "priceId": "price_1SmqD4Aiq7NBxfpwNfyDwB6s"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-golden-tan.webp",
@@ -1402,7 +1402,7 @@
       "productId": "prod_TkKtPGGYvu5LxW",
       "priceId": "price_1SmqDdAiq7NBxfpwwEygm665"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-snake-brown.webp",
@@ -1452,7 +1452,7 @@
       "productId": "prod_TkKuzKiF8uAjOt",
       "priceId": "price_1SmqEhAiq7NBxfpwdoBrCjLk"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-eagle-brown.webp",
@@ -1502,7 +1502,7 @@
       "productId": "prod_TkKvDInkjBH907",
       "priceId": "price_1SmqFJAiq7NBxfpwXE6xmQID"
     },
-    "price": 21.25,
+    "price": 26.0,
     "size": "30mL",
     "variants": [],
     "image": "/images/products/artistic-inks/30ml-monkey-brown.webp",

@@ -15,7 +15,7 @@
       "productId": "prod_TkqYQhBAIqBCuj",
       "priceId": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
     },
-    "price": 3.25,
+    "price": 4.0,
     "size": "5cm x 4.50m",
     "variants": [
       {
@@ -105,7 +105,7 @@
       "productId": "prod_Tkqdv934THWw8Y",
       "priceId": "price_1SnKwAAiq7NBxfpwImUZw2aS"
     },
-    "price": 11.45,
+    "price": 14.0,
     "size": "Various (see variants)",
     "variants": [
       {
@@ -224,14 +224,14 @@
       "productId": "prod_Tkt0XymbQwrzqj",
       "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW"
     },
-    "price": 9.5,
+    "price": 11.5,
     "size": "Pack options",
     "variants": [
       {
         "id": "black-medical-bibs-100",
         "label": "100 units",
         "quantity": 1,
-        "price": 9.5,
+        "price": 11.5,
         "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW",
         "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW",
         "image": "/images/products/accessories/black-medical-bibs.webp"
@@ -240,7 +240,7 @@
         "id": "black-medical-bibs-500",
         "label": "500 units",
         "quantity": 1,
-        "price": 21.5,
+        "price": 26.5,
         "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz",
         "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz",
         "image": "/images/products/accessories/black-medical-bibs.webp"
@@ -289,7 +289,7 @@
       "productId": "prod_TktMHRYmtSvJBC",
       "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE"
     },
-    "price": 9,
+    "price": 11.0,
     "size": "Multiple sizes",
     "variants": [
       {
@@ -297,7 +297,7 @@
         "colour": "Black",
         "size": "XS",
         "label": "Black - XS",
-        "price": 9,
+        "price": 11.0,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "image": "/images/products/accessories/black-latex-gloves.webp",
@@ -308,7 +308,7 @@
         "colour": "Black",
         "size": "S",
         "label": "Black - S",
-        "price": 9,
+        "price": 11.0,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "image": "/images/products/accessories/black-latex-gloves.webp",
@@ -319,7 +319,7 @@
         "colour": "Black",
         "size": "M",
         "label": "Black - M",
-        "price": 9,
+        "price": 11.0,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "image": "/images/products/accessories/black-latex-gloves.webp",
@@ -330,7 +330,7 @@
         "colour": "Black",
         "size": "L",
         "label": "Black - L",
-        "price": 9,
+        "price": 11.0,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "image": "/images/products/accessories/black-latex-gloves.webp",
@@ -341,7 +341,7 @@
         "colour": "Black",
         "size": "XL",
         "label": "Black - XL",
-        "price": 9,
+        "price": 11.0,
         "priceId": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
         "image": "/images/products/accessories/black-latex-gloves.webp",
@@ -352,7 +352,7 @@
         "colour": "White",
         "size": "XS",
         "label": "White - XS",
-        "price": 7.5,
+        "price": 9.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -363,7 +363,7 @@
         "colour": "White",
         "size": "S",
         "label": "White - S",
-        "price": 7.5,
+        "price": 9.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -374,7 +374,7 @@
         "colour": "White",
         "size": "M",
         "label": "White - M",
-        "price": 7.5,
+        "price": 9.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -385,7 +385,7 @@
         "colour": "White",
         "size": "L",
         "label": "White - L",
-        "price": 7.5,
+        "price": 9.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -396,7 +396,7 @@
         "colour": "White",
         "size": "XL",
         "label": "White - XL",
-        "price": 7.5,
+        "price": 9.5,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -447,7 +447,7 @@
       "productId": "prod_TktK33s5t8Afm0",
       "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
     },
-    "price": 7.5,
+    "price": 9.5,
     "size": "Multiple sizes",
     "variants": [
       {
@@ -530,7 +530,7 @@
       "productId": "prod_TkqbVXdpviuUMT",
       "priceId": "price_1SnKtuAiq7NBxfpwU8DjVxgy"
     },
-    "price": 6.55,
+    "price": 8.0,
     "variants": [],
     "size": "25 units",
     "image": "/images/products/accessories/pen-machine-cover-25un-pen 3-and-ultra-pen-2.webp",
@@ -576,7 +576,7 @@
       "productId": "prod_TkqfxykNa8l2B1",
       "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI"
     },
-    "price": 14.7,
+    "price": 18.0,
     "size": "60mm x 700mm",
     "variants": [
       {
@@ -651,14 +651,14 @@
       "productId": "prod_Tkqhoc5rBVgt10",
       "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs"
     },
-    "price": 3.5,
+    "price": 4.5,
     "size": "Multiple",
     "variants": [
       {
         "id": "electric-ink-wash-250ml",
         "size": "250mL",
         "label": "250mL",
-        "price": 3.5,
+        "price": 4.5,
         "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
         "stripe_price_id": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
         "image": "/images/products/accessories/wash-bottle-200ml.webp",
@@ -668,7 +668,7 @@
         "id": "electric-ink-wash-500ml",
         "size": "500mL",
         "label": "500mL",
-        "price": 4.5,
+        "price": 5.5,
         "priceId": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
         "stripe_price_id": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
         "image": "/images/products/accessories/wash-bottle-500ml.webp",
@@ -719,7 +719,7 @@
       "productId": "prod_Tkqjhxh3m7ifs7",
       "priceId": "price_1SnL1hAiq7NBxfpwtmT5aLSu"
     },
-    "price": 4.7,
+    "price": 6.0,
     "variants": [],
     "size": "210mL",
     "image": "/images/products/accessories/foam-bottle.webp",
@@ -765,7 +765,7 @@
       "productId": "prod_TktNPZ4nPPgOgp",
       "priceId": "price_1SnNb5Aiq7NBxfpwAsfecGoo"
     },
-    "price": 9,
+    "price": 11.0,
     "variants": [],
     "size": "30cm x 300m",
     "image": "/images/products/accessories/transparent-plastic-film-cover.webp",

@@ -609,7 +609,7 @@ a.product-card[href*="ultra-pen-2-combo"]::before {
 
 /* Prepend was-price and append savings under the rendered price for Ultra Pen */
 a.product-card[href*="ultra-pen-2-combo"] .product-price::before {
-  content: "€1034.80";
+  content: "€1299.00";
   color: #999;
   text-decoration: line-through;
   margin-right: 0.5rem;
@@ -624,7 +624,7 @@ a.product-card[href*="ultra-pen-2-combo"] .product-price {
 }
 
 a.product-card[href*="ultra-pen-2-combo"] .product-price::after {
-  content: " Save €184.80";
+  content: " Save €249.00";
   display: block;
   color: #FF6B35;
   font-size: 0.75rem;

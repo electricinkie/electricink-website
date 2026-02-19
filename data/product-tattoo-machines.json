@@ -16,13 +16,13 @@
       "productId": "prod_TkwOadafeLFuIO",
       "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6"
     },
-    "price": 132.15,
+    "price": 162.5,
     "variants": [
       {
         "id": "grip-ultra-pen-balance-flex-38mm",
         "label": "38mm",
         "size": "38mm",
-        "price": 132.15,
+        "price": 162.5,
         "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
         "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6",
@@ -32,7 +32,7 @@
         "id": "grip-ultra-pen-balance-flex-45mm",
         "label": "45mm",
         "size": "45mm",
-        "price": 146.8,
+        "price": 183.0,
         "priceId": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp",
         "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
@@ -89,7 +89,7 @@
       "productId": "prod_TkwU45FeLI0wwU",
       "priceId": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
     },
-    "price": 52.85,
+    "price": 65.0,
     "variants": [],
     "image": "/images/products/tattoo-machines/grip-pen-3-cover.webp",
     "images": [
@@ -133,7 +133,7 @@
       "productId": "prod_TkwWcYWrWbHmU5",
       "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1"
     },
-    "price": 118.3,
+    "price": 146.0,
     "variants": [
       {
         "id": "black",
@@ -346,7 +346,7 @@
       "productId": "prod_TkwbZLto4pyKdn",
       "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
     },
-    "price": 147.85,
+    "price": 182.0,
     "variants": [
       {
         "id": "black",
@@ -425,7 +425,7 @@
       "productId": "prod_TkxRC9EqfpyVB5",
       "priceId": "price_1SnRWEAiq7NBxfpw235gURaJ"
     },
-    "price": 322.55,
+    "price": 398.0,
     "variants": [],
     "image": "/images/products/tattoo-machines/pen-3-cover.webp",
     "images": [
@@ -481,7 +481,7 @@
       "productId": "prod_TkwaRscy82RkNj",
       "priceId": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0"
     },
-    "price": 846.7,
+    "price": 948.0,
     "variants": [],
     "image": "/images/products/tattoo-machines/ultra-pen-1-cover.webp",
     "images": [
@@ -538,9 +538,9 @@
       "productId": "prod_TkwYdAGyqrMKW0",
       "priceId": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
     },
-    "price": 850,
+    "price": 1050.0,
     "promoDisplay": {
-      "wasPrice": 1034.8,
+      "wasPrice": 1299.0,
       "label": "SPECIAL OFFER"
     },
     "variants": [],
