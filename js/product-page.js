@@ -94,8 +94,10 @@
         localProduct.variants.forEach(variant => {
           const apiEntry = findApiForVariant(variant);
           if (apiEntry) {
-            if (typeof apiEntry.price_ex === 'number') variant.price = apiEntry.price_ex;
-            if (typeof apiEntry.stock !== 'undefined') variant.quantity = apiEntry.stock;
+            const parsedPrice = parseFloat(apiEntry.price_ex);
+            if (!isNaN(parsedPrice)) variant.price = parsedPrice;
+            const parsedStock = parseInt(apiEntry.stock, 10);
+            if (!isNaN(parsedStock)) variant.quantity = parsedStock;
           }
         });
 
@@ -106,8 +108,11 @@
       } else if (Array.isArray(apiData) && apiData.length > 0) {
         // Simple product - apply first api entry as fallback
         const first = apiData[0];
-        if (first && typeof first.price_ex === 'number') {
-          if (localProduct.basic) localProduct.basic.price = first.price_ex; else localProduct.price = first.price_ex;
+        if (first) {
+          const parsedPrice = parseFloat(first.price_ex);
+          if (!isNaN(parsedPrice)) {
+            if (localProduct.basic) localProduct.basic.price = parsedPrice; else localProduct.price = parsedPrice;
+          }
         }
         localProduct.inventory = localProduct.inventory || {};
         const anyStock = apiData.some(a => Number(a.stock) > 0);

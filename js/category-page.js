@@ -243,8 +243,10 @@
               found = entries.find(e => variant.id && e.variant_id && e.variant_id.endsWith(variant.id));
             }
             if (found) {
-              if (typeof found.price_ex === 'number') variant.price = found.price_ex;
-              if (typeof found.stock !== 'undefined') variant.quantity = found.stock;
+              const parsedPrice = parseFloat(found.price_ex);
+              if (!isNaN(parsedPrice)) variant.price = parsedPrice;
+              const parsedStock = parseInt(found.stock, 10);
+              if (!isNaN(parsedStock)) variant.quantity = parsedStock;
             }
           });
 
@@ -255,8 +257,11 @@
         } else {
           // Simple product - apply first entry price and stock summary
           const first = entries[0];
-          if (first && typeof first.price_ex === 'number') {
-            if (local.basic) local.basic.price = first.price_ex; else local.price = first.price_ex;
+          if (first) {
+            const parsedPrice = parseFloat(first.price_ex);
+            if (!isNaN(parsedPrice)) {
+              if (local.basic) local.basic.price = parsedPrice; else local.price = parsedPrice;
+            }
           }
           local.inventory = local.inventory || {};
           const anyStock = entries.some(e => Number(e.stock) > 0);
