@@ -810,7 +810,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         const salePayload = {
           items: enrichedItems,
           total: order.total,
-          order_id: orderId,
+          order_id: order.orderId,
           customer_name: order.customerName,
           customer_email: order.customerEmail
         };
