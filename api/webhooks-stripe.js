@@ -977,6 +977,36 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       status: 'emails_processed'
     }));
 
+    // Register sale in internal system (non-blocking)
+    try {
+      const internalApiUrl = process.env.INTERNAL_API_URL;
+      const internalSecret = process.env.INTERNAL_WEBHOOK_SECRET;
+      if (internalApiUrl && internalSecret) {
+        const salePayload = {
+          items: enrichedItems,
+          total: order.total,
+          order_id: orderId,
+          customer_name: order.customerName,
+          customer_email: order.customerEmail
+        };
+        const saleRes = await fetch(`${internalApiUrl}/api/sales/website`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-webhook-secret': internalSecret
+          },
+          body: JSON.stringify(salePayload)
+        });
+        if (!saleRes.ok) {
+          logger.warn('Failed to register sale in internal system', { orderId, status: saleRes.status });
+        } else {
+          logger.info('Sale registered in internal system', { orderId });
+        }
+      }
+    } catch (saleErr) {
+      logger.error('Error registering sale in internal system', { orderId, error: saleErr && saleErr.message });
+    }
+
     return { success: true, orderId, emailStatus: 'processed', requestId };
 
   } catch (error) {
