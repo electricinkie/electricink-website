@@ -113,7 +113,7 @@
     "size": "90g",
     "variants": [
       {
-        "id": "slimer-gel-90g",
+        "id": "slimer-90",
         "size": "90g",
         "label": "90g",
         "price": 14.0,
@@ -123,7 +123,7 @@
         "image": "/images/products/cosmetics/slimer-tattoo-gel-90ml.webp"
       },
       {
-        "id": "slimer-gel-400g",
+        "id": "slimer-400",
         "size": "400g",
         "label": "400g",
         "price": 23.0,
@@ -272,7 +272,7 @@
     "size": "30mL",
     "variants": [
       {
-        "id": "gloo-stencil-30ml",
+        "id": "gloo-30",
         "size": "30mL",
         "label": "30mL",
         "price": 12.5,
@@ -282,7 +282,7 @@
         "image": "/images/products/cosmetics/gloo-30g.webp"
       },
       {
-        "id": "gloo-stencil-120ml",
+        "id": "gloo-120",
         "size": "120mL",
         "label": "120mL",
         "price": 32.0,
@@ -341,7 +341,7 @@
     "size": "30mL",
     "variants": [
       {
-        "id": "transfer-it-30ml",
+        "id": "transfer-30",
         "size": "30mL",
         "label": "30mL",
         "price": 11.0,
@@ -351,7 +351,7 @@
         "image": "/images/products/cosmetics/it-30ml.webp"
       },
       {
-        "id": "transfer-it-120ml",
+        "id": "transfer-120",
         "size": "120mL",
         "label": "120mL",
         "price": 20.0,
@@ -361,7 +361,7 @@
         "image": "/images/products/cosmetics/it-120ml.webp"
       },
       {
-        "id": "transfer-it-240ml",
+        "id": "transfer-240",
         "size": "240mL",
         "label": "240mL",
         "price": 30.0,
@@ -466,7 +466,7 @@
     "size": "90mL",
     "variants": [
       {
-        "id": "clean-up-90ml",
+        "id": "cleanup-90",
         "size": "90mL",
         "label": "90mL",
         "price": 11.0,
@@ -476,7 +476,7 @@
         "image": "/images/products/cosmetics/clean-up-90ml.webp"
       },
       {
-        "id": "clean-up-200ml",
+        "id": "cleanup-200",
         "size": "200mL",
         "label": "200mL",
         "price": 13.0,
@@ -581,7 +581,7 @@
     "fragrance": "Traditional",
     "variants": [
       {
-        "id": "cat-slobber-90g-traditional",
+        "id": "cat-90-trad",
         "size": "90g",
         "fragrance": "Traditional",
         "label": "90g - Traditional",
@@ -592,7 +592,7 @@
         "image": "/images/products/cosmetics/cat-slobber-90g-tradicional.webp"
       },
       {
-        "id": "cat-slobber-90g-clove-cinnamon",
+        "id": "cat-90-clove",
         "size": "90g",
         "fragrance": "Clove & Cinnamon",
         "label": "90g - Clove & Cinnamon",
@@ -603,7 +603,7 @@
         "image": "/images/products/cosmetics/cat-slobber-90g-clove&cinnamon.webp"
       },
       {
-        "id": "cat-slobber-90g-mint",
+        "id": "cat-90-mint",
         "size": "90g",
         "fragrance": "Mint",
         "label": "90g - Mint",
@@ -614,7 +614,7 @@
         "image": "/images/products/cosmetics/cat-slobber-90g-mint.webp"
       },
       {
-        "id": "cat-slobber-250g-traditional",
+        "id": "cat-250-trad",
         "size": "250g",
         "fragrance": "Traditional",
         "label": "250g - Traditional",
@@ -625,7 +625,7 @@
         "image": "/images/products/cosmetics/cat-slobber-250g-tradicional.webp"
       },
       {
-        "id": "cat-slobber-250g-clove-cinnamon",
+        "id": "cat-250-clove",
         "size": "250g",
         "fragrance": "Clove & Cinnamon",
         "label": "250g - Clove & Cinnamon",
@@ -636,7 +636,7 @@
         "image": "/images/products/cosmetics/cat-slobber-250g-clove&cinnamon.webp"
       },
       {
-        "id": "cat-slobber-250g-mint",
+        "id": "cat-250-mint",
         "size": "250g",
         "fragrance": "Mint",
         "label": "250g - Mint",
@@ -700,7 +700,7 @@
     "size": "90g",
     "variants": [
       {
-        "id": "vaseline-slip-90g",
+        "id": "vas-90",
         "size": "90g",
         "label": "90g",
         "price": 10.0,
@@ -710,7 +710,7 @@
         "image": "/images/products/cosmetics/slip-premium-90g.webp"
       },
       {
-        "id": "vaseline-slip-150g",
+        "id": "vas-150",
         "size": "150g",
         "label": "150g",
         "price": 12.0,
@@ -768,7 +768,7 @@
     "size": "90mL",
     "variants": [
       {
-        "id": "after-all-90ml",
+        "id": "after-90",
         "size": "90mL",
         "label": "90mL",
         "price": 12.0,
@@ -778,7 +778,7 @@
         "image": "/images/products/cosmetics/after-all-90ml.webp"
       },
       {
-        "id": "after-all-250ml",
+        "id": "after-250",
         "size": "250mL",
         "label": "250mL",
         "price": 19.0,
@@ -836,7 +836,7 @@
     "size": "25mL",
     "variants": [
       {
-        "id": "barrier-film-25ml",
+        "id": "barrier-25",
         "size": "25mL",
         "label": "25mL",
         "price": 18.0,
@@ -846,7 +846,7 @@
         "image": "/images/products/cosmetics/barrier-film-25ml.webp"
       },
       {
-        "id": "barrier-film-100ml",
+        "id": "barrier-100",
         "size": "100mL",
         "label": "100mL",
         "price": 40.0,

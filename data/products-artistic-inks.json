@@ -18,7 +18,7 @@
     "size": "30mL",
     "variants": [
       {
-        "id": "diluent-30ml",
+        "id": "diluent-30",
         "size": "30mL",
         "label": "30mL",
         "price": 9.0,
@@ -28,7 +28,7 @@
         "image": "/images/products/artistic-inks/30ml-diluente.webp"
       },
       {
-        "id": "diluent-120ml",
+        "id": "diluent-120",
         "size": "120mL",
         "label": "120mL",
         "price": 15.0,
@@ -38,7 +38,7 @@
         "image": "/images/products/artistic-inks/120ml-diluente.webp"
       },
       {
-        "id": "diluent-240ml",
+        "id": "diluent-240",
         "size": "240mL",
         "label": "240mL",
         "price": 22.0,
@@ -100,7 +100,7 @@
     "size": "30mL",
     "variants": [
       {
-        "id": "raven-black-30ml",
+        "id": "raven-30",
         "size": "30mL",
         "label": "30mL",
         "price": 26.0,
@@ -110,7 +110,7 @@
         "image": "/images/products/artistic-inks/30ml-raven-black.webp"
       },
       {
-        "id": "raven-black-240ml",
+        "id": "raven-240",
         "size": "240mL",
         "label": "240mL",
         "price": 49.0,
@@ -172,7 +172,7 @@
     "size": "30mL",
     "variants": [
       {
-        "id": "ghost-white-30ml",
+        "id": "ghost-30",
         "size": "30mL",
         "label": "30mL",
         "price": 26.0,
@@ -182,7 +182,7 @@
         "image": "/images/products/artistic-inks/30ml-ghost-white.webp"
       },
       {
-        "id": "ghost-white-120ml",
+        "id": "ghost-120",
         "size": "120mL",
         "label": "120mL",
         "price": 51.0,
@@ -192,7 +192,7 @@
         "image": "/images/products/artistic-inks/120ml-ghost-white.webp"
       },
       {
-        "id": "ghost-white-240ml",
+        "id": "ghost-240",
         "size": "240mL",
         "label": "240mL",
         "price": 56.0,

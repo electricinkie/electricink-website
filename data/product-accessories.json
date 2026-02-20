@@ -19,42 +19,42 @@
     "size": "5cm x 4.50m",
     "variants": [
       {
-        "id": "turquoise",
+        "id": "grips-turquoise",
         "label": "Turquoise",
         "colour": "Turquoise",
         "image": "/images/products/accessories/turquoise-grip.webp",
         "quantity": 0
       },
       {
-        "id": "black",
+        "id": "grips-black",
         "label": "Black",
         "colour": "Black",
         "image": "/images/products/accessories/black-grip.webp",
         "quantity": 5
       },
       {
-        "id": "purple",
+        "id": "grips-purple",
         "label": "Purple",
         "colour": "Purple",
         "image": "/images/products/accessories/purple-grip.webp",
         "quantity": 0
       },
       {
-        "id": "red",
+        "id": "grips-red",
         "label": "Red",
         "colour": "Red",
         "image": "/images/products/accessories/red-grip.webp",
         "quantity": 0
       },
       {
-        "id": "blue",
+        "id": "grips-blue",
         "label": "Blue",
         "colour": "Blue",
         "image": "/images/products/accessories/blue-grip.webp",
         "quantity": 0
       },
       {
-        "id": "beige",
+        "id": "grips-beige",
         "label": "Beige",
         "colour": "Beige",
         "image": "/images/products/accessories/beige-grip.webp",
@@ -109,7 +109,7 @@
     "size": "Various (see variants)",
     "variants": [
       {
-        "id": "s-pink",
+        "id": "cups-s-pink",
         "size": "S",
         "colour": "Pink",
         "label": "S - 500 x 0.5mL (Pink)",
@@ -117,7 +117,7 @@
         "quantity": 0
       },
       {
-        "id": "s-blue",
+        "id": "cups-s-blue",
         "size": "S",
         "colour": "Blue",
         "label": "S - 500 x 0.5mL (Blue)",
@@ -125,7 +125,7 @@
         "quantity": 0
       },
       {
-        "id": "m-pink",
+        "id": "cups-m-pink",
         "size": "M",
         "colour": "Pink",
         "label": "M - 300 x 1mL (Pink)",
@@ -133,7 +133,7 @@
         "quantity": 0
       },
       {
-        "id": "m-blue",
+        "id": "cups-m-blue",
         "size": "M",
         "colour": "Blue",
         "label": "M - 300 x 1mL (Blue)",
@@ -141,7 +141,7 @@
         "quantity": 20
       },
       {
-        "id": "l-pink",
+        "id": "cups-l-pink",
         "size": "L",
         "colour": "Pink",
         "label": "L - 200 x 2mL (Pink)",
@@ -149,7 +149,7 @@
         "quantity": 0
       },
       {
-        "id": "l-blue",
+        "id": "cups-l-blue",
         "size": "L",
         "colour": "Blue",
         "label": "L - 200 x 2mL (Blue)",
@@ -157,7 +157,7 @@
         "quantity": 0
       },
       {
-        "id": "xl-pink",
+        "id": "cups-xl-pink",
         "size": "XL",
         "colour": "Pink",
         "label": "XL - 100 x 4mL (Pink)",
@@ -165,7 +165,7 @@
         "quantity": 0
       },
       {
-        "id": "xl-blue",
+        "id": "cups-xl-blue",
         "size": "XL",
         "colour": "Blue",
         "label": "XL - 100 x 4mL (Blue)",
@@ -228,7 +228,7 @@
     "size": "Pack options",
     "variants": [
       {
-        "id": "black-medical-bibs-100",
+        "id": "bibs-100",
         "label": "100 units",
         "quantity": 1,
         "price": 11.5,
@@ -237,7 +237,7 @@
         "image": "/images/products/accessories/black-medical-bibs.webp"
       },
       {
-        "id": "black-medical-bibs-500",
+        "id": "bibs-500",
         "label": "500 units",
         "quantity": 1,
         "price": 26.5,
@@ -293,7 +293,7 @@
     "size": "Multiple sizes",
     "variants": [
       {
-        "id": "latex-gloves-black-xs",
+        "id": "latex-black-xs",
         "colour": "Black",
         "size": "XS",
         "label": "Black - XS",
@@ -304,7 +304,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-black-s",
+        "id": "latex-black-s",
         "colour": "Black",
         "size": "S",
         "label": "Black - S",
@@ -315,7 +315,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-black-m",
+        "id": "latex-black-m",
         "colour": "Black",
         "size": "M",
         "label": "Black - M",
@@ -326,7 +326,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-black-l",
+        "id": "latex-black-l",
         "colour": "Black",
         "size": "L",
         "label": "Black - L",
@@ -337,7 +337,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-black-xl",
+        "id": "latex-black-xl",
         "colour": "Black",
         "size": "XL",
         "label": "Black - XL",
@@ -348,7 +348,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-white-xs",
+        "id": "latex-white-xs",
         "colour": "White",
         "size": "XS",
         "label": "White - XS",
@@ -359,7 +359,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-white-s",
+        "id": "latex-white-s",
         "colour": "White",
         "size": "S",
         "label": "White - S",
@@ -370,7 +370,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-white-m",
+        "id": "latex-white-m",
         "colour": "White",
         "size": "M",
         "label": "White - M",
@@ -381,7 +381,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-white-l",
+        "id": "latex-white-l",
         "colour": "White",
         "size": "L",
         "label": "White - L",
@@ -392,7 +392,7 @@
         "quantity": 1
       },
       {
-        "id": "latex-gloves-white-xl",
+        "id": "latex-white-xl",
         "colour": "White",
         "size": "XL",
         "label": "White - XL",
@@ -451,35 +451,35 @@
     "size": "Multiple sizes",
     "variants": [
       {
-        "id": "xs",
+        "id": "nitrile-xs",
         "label": "XS",
         "size": "XS",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
         "quantity": 1
       },
       {
-        "id": "s",
+        "id": "nitrile-s",
         "label": "S",
         "size": "S",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
         "quantity": 1
       },
       {
-        "id": "m",
+        "id": "nitrile-m",
         "label": "M",
         "size": "M",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
         "quantity": 1
       },
       {
-        "id": "l",
+        "id": "nitrile-l",
         "label": "L",
         "size": "L",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
         "quantity": 1
       },
       {
-        "id": "xl",
+        "id": "nitrile-xl",
         "label": "XL",
         "size": "XL",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
@@ -580,28 +580,28 @@
     "size": "60mm x 700mm",
     "variants": [
       {
-        "id": "red",
+        "id": "clip-red",
         "label": "Red",
         "colour": "Red",
         "image": "/images/products/accessories/clip-cord-protector-red.webp",
         "quantity": 1
       },
       {
-        "id": "pink",
+        "id": "clip-pink",
         "label": "Pink",
         "colour": "Pink",
         "image": "/images/products/accessories/clip-cord-protector-pink.webp",
         "quantity": 1
       },
       {
-        "id": "blue",
+        "id": "clip-blue",
         "label": "Blue",
         "colour": "Blue",
         "image": "/images/products/accessories/clip-cord-protector-blue.webp",
         "quantity": 1
       },
       {
-        "id": "transparent",
+        "id": "clip-transparent",
         "label": "Transparent",
         "colour": "Transparent",
         "image": "/images/products/accessories/clip-cord-protector-transparent.webp",
@@ -655,7 +655,7 @@
     "size": "Multiple",
     "variants": [
       {
-        "id": "electric-ink-wash-250ml",
+        "id": "wash-250",
         "size": "250mL",
         "label": "250mL",
         "price": 4.5,
@@ -665,7 +665,7 @@
         "quantity": 1
       },
       {
-        "id": "electric-ink-wash-500ml",
+        "id": "wash-500",
         "size": "500mL",
         "label": "500mL",
         "price": 5.5,

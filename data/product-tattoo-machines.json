@@ -19,7 +19,7 @@
     "price": 162.5,
     "variants": [
       {
-        "id": "grip-ultra-pen-balance-flex-38mm",
+        "id": "grip-38",
         "label": "38mm",
         "size": "38mm",
         "price": 162.5,
@@ -29,7 +29,7 @@
         "quantity": 1
       },
       {
-        "id": "grip-ultra-pen-balance-flex-45mm",
+        "id": "grip-45",
         "label": "45mm",
         "size": "45mm",
         "price": 183.0,
@@ -136,77 +136,77 @@
     "price": 146.0,
     "variants": [
       {
-        "id": "black",
+        "id": "electra-pop-black",
         "color": "Black",
         "label": "Black",
         "image": "/images/products/tattoo-machines/electra-pop-black-1.webp",
         "quantity": 1
       },
       {
-        "id": "blue",
+        "id": "electra-pop-blue",
         "color": "Blue",
         "label": "Blue",
         "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp",
         "quantity": 1
       },
       {
-        "id": "pink",
+        "id": "electra-pop-pink",
         "color": "Pink",
         "label": "Pink",
         "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp",
         "quantity": 1
       },
       {
-        "id": "white",
+        "id": "electra-pop-white",
         "color": "White",
         "label": "White",
         "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
         "quantity": 1
       },
       {
-        "id": "lilac",
+        "id": "electra-pop-lilac",
         "color": "Lilac",
         "label": "Lilac",
         "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp",
         "quantity": 1
       },
       {
-        "id": "silver",
+        "id": "electra-pop-silver",
         "color": "Silver",
         "label": "Silver",
         "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp",
         "quantity": 1
       },
       {
-        "id": "bordeaux",
+        "id": "electra-pop-bordeaux",
         "color": "Bordeaux",
         "label": "Bordeaux",
         "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp",
         "quantity": 1
       },
       {
-        "id": "smoke-grey",
+        "id": "electra-pop-smoke-grey",
         "color": "Smoke Grey",
         "label": "Smoke Grey",
         "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp",
         "quantity": 1
       },
       {
-        "id": "neon-coral",
+        "id": "electra-pop-neon-coral",
         "color": "Neon Coral",
         "label": "Neon Coral",
         "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp",
         "quantity": 1
       },
       {
-        "id": "neon-yellow",
+        "id": "electra-pop-neon-yellow",
         "color": "Neon Yellow",
         "label": "Neon Yellow",
         "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp",
         "quantity": 1
       },
       {
-        "id": "neon-orange",
+        "id": "electra-pop-neon-orange",
         "color": "Neon Orange",
         "label": "Neon Orange",
         "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp",
@@ -349,14 +349,14 @@
     "price": 182.0,
     "variants": [
       {
-        "id": "black",
+        "id": "electra-pop-pro-black",
         "color": "Black",
         "label": "Black",
         "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
         "quantity": 1
       },
       {
-        "id": "pink",
+        "id": "electra-pop-pro-pink",
         "color": "Pink",
         "label": "Pink",
         "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp",
