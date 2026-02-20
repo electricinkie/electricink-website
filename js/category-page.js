@@ -434,6 +434,15 @@ function getAvailabilityBadgeInfo(product) {
   }
   
   // ORDER ON REQUEST - Specific categories and products
+  // Prefer explicit flag on product to indicate "Order on Request"
+  if (product.orderOnRequest === true) {
+    return {
+      text: 'Order on Request',
+      class: 'badge-order-request',
+      canPurchase: true
+    };
+  }
+
   if (stockStatus === 'available_on_request') {
     const category = (product.category || '').toString().toLowerCase();
     const productId = (product.id || '').toString().toLowerCase();

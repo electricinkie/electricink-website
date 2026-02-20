@@ -17,7 +17,7 @@
       "productId": "prod_Tl17IQOJNZ4SHD",
       "priceId": "price_1SnV5RAiq7NBxfpwsV9gh4v4"
     },
-    "price": 10.0,
+    "price": 10,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable battery-plus-power-3-slim-24mm-cover.webp",
     "images": [
@@ -56,7 +56,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnV5RAiq7NBxfpwsV9gh4v4"
+    "stripe_price_id": "price_1SnV5RAiq7NBxfpwsV9gh4v4",
+    "orderOnRequest": true
   },
   "battery-power1": {
     "id": "battery-power1",
@@ -76,7 +77,7 @@
       "productId": "prod_Tl19Wj8opsDZ5i",
       "priceId": "price_1SnV7JAiq7NBxfpwuCDFkSBe"
     },
-    "price": 15.0,
+    "price": 15,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable-battery-li-ion-power-1-cover.webp",
     "images": [
@@ -115,7 +116,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnV7JAiq7NBxfpwuCDFkSBe"
+    "stripe_price_id": "price_1SnV7JAiq7NBxfpwuCDFkSBe",
+    "orderOnRequest": true
   },
   "battery-power3-slim": {
     "id": "battery-power3-slim",
@@ -175,7 +177,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVFeAiq7NBxfpwFi0cARc5"
+    "stripe_price_id": "price_1SnVFeAiq7NBxfpwFi0cARc5",
+    "orderOnRequest": true
   },
   "battery-power3-bold": {
     "id": "battery-power3-bold",
@@ -195,7 +198,7 @@
       "productId": "prod_Tl1JEU7VPzM5Sg",
       "priceId": "price_1SnVH3Aiq7NBxfpwZeIRRQQY"
     },
-    "price": 14.0,
+    "price": 14,
     "variants": [],
     "image": "/images/products/power-supplies/rechargeable-battery-Power-3-bold-cover.webp",
     "images": [
@@ -234,7 +237,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVH3Aiq7NBxfpwZeIRRQQY"
+    "stripe_price_id": "price_1SnVH3Aiq7NBxfpwZeIRRQQY",
+    "orderOnRequest": true
   },
   "charger-electric-ink": {
     "id": "charger-electric-ink",
@@ -254,7 +258,7 @@
       "productId": "prod_Tl1KdS9AmhYoMA",
       "priceId": "price_1SnVHvAiq7NBxfpwjfyZoSHp"
     },
-    "price": 30.0,
+    "price": 30,
     "variants": [],
     "image": "/images/products/power-supplies/electric-ink-charger-cover.webp",
     "images": [
@@ -296,7 +300,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVHvAiq7NBxfpwjfyZoSHp"
+    "stripe_price_id": "price_1SnVHvAiq7NBxfpwjfyZoSHp",
+    "orderOnRequest": true
   },
   "wireless-power1": {
     "id": "wireless-power1",
@@ -316,7 +321,7 @@
       "productId": "prod_Tl1Lx090DrbR2f",
       "priceId": "price_1SnVIvAiq7NBxfpwg5PgUqra"
     },
-    "price": 232.0,
+    "price": 232,
     "variants": [],
     "image": "/images/products/power-supplies/Wireless-ps-power-1-cover.webp",
     "images": [
@@ -356,7 +361,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVIvAiq7NBxfpwg5PgUqra"
+    "stripe_price_id": "price_1SnVIvAiq7NBxfpwg5PgUqra",
+    "orderOnRequest": true
   },
   "power3-slim": {
     "id": "power3-slim",
@@ -380,7 +386,7 @@
       "productId": "prod_Tl1NryMeQ6en1Z",
       "priceId": "price_1SnVKZAiq7NBxfpwju6KXwmK"
     },
-    "price": 355.0,
+    "price": 355,
     "variants": [],
     "image": "/images/products/power-supplies/power-3-slim-wireless-power-supply-cover.webp",
     "images": [
@@ -426,7 +432,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVKZAiq7NBxfpwju6KXwmK"
+    "stripe_price_id": "price_1SnVKZAiq7NBxfpwju6KXwmK",
+    "orderOnRequest": true
   },
   "power3": {
     "id": "power3",
@@ -450,7 +457,7 @@
       "productId": "prod_Tl1OHcBoIjafDZ",
       "priceId": "price_1SnVLgAiq7NBxfpwRqzRajg4"
     },
-    "price": 356.0,
+    "price": 356,
     "variants": [],
     "image": "/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover.webp",
     "images": [
@@ -496,7 +503,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVLgAiq7NBxfpwRqzRajg4"
+    "stripe_price_id": "price_1SnVLgAiq7NBxfpwRqzRajg4",
+    "orderOnRequest": true
   },
   "kit-power3-slim": {
     "id": "kit-power3-slim",
@@ -516,7 +524,7 @@
       "productId": "prod_Tl1RKuhd8alSRy",
       "priceId": "price_1SnVOAAiq7NBxfpw7riCmps0"
     },
-    "price": 355.0,
+    "price": 355,
     "variants": [],
     "image": "/images/products/power-supplies/kit-power-3-slim-wireless-power-supply-cover.webp",
     "images": [
@@ -561,7 +569,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVOAAiq7NBxfpw7riCmps0"
+    "stripe_price_id": "price_1SnVOAAiq7NBxfpw7riCmps0",
+    "orderOnRequest": true
   },
   "kit-power3": {
     "id": "kit-power3",
@@ -581,7 +590,7 @@
       "productId": "prod_Tl1Si6LssviRl1",
       "priceId": "price_1SnVPJAiq7NBxfpwbkgap62b"
     },
-    "price": 413.0,
+    "price": 413,
     "variants": [],
     "image": "/images/products/power-supplies/kit-power-3-wireless-power-supply-cover.webp",
     "images": [
@@ -626,6 +635,7 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnVPJAiq7NBxfpwbkgap62b"
+    "stripe_price_id": "price_1SnVPJAiq7NBxfpwbkgap62b",
+    "orderOnRequest": true
   }
 }

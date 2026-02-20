@@ -291,6 +291,9 @@
         label = 'Coming soon';
       }
       color = '#f59e0b';
+    } else if (productData.orderOnRequest === true) {
+      label = 'Available — may ship with delay';
+      color = '#f97316';
     } else if (stockStatus === 'available_on_request') {
       label = 'Available — may ship with delay';
       color = '#f97316';

@@ -32,7 +32,7 @@
         "id": "grip-45",
         "label": "45mm",
         "size": "45mm",
-        "price": 183.0,
+        "price": 183,
         "priceId": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-45mm.webp",
         "stripe_price_id": "price_1SnQZmAiq7NBxfpwrXvUtUyg",
@@ -70,7 +70,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6"
+    "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6",
+    "orderOnRequest": true
   },
   "grip-pen-3": {
     "id": "grip-pen-3",
@@ -89,7 +90,7 @@
       "productId": "prod_TkwU45FeLI0wwU",
       "priceId": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
     },
-    "price": 65.0,
+    "price": 65,
     "variants": [],
     "image": "/images/products/tattoo-machines/grip-pen-3-cover.webp",
     "images": [
@@ -114,7 +115,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnQbCAiq7NBxfpwpmHTuNmR"
+    "stripe_price_id": "price_1SnQbCAiq7NBxfpwpmHTuNmR",
+    "orderOnRequest": true
   },
   "electra-pop": {
     "id": "electra-pop",
@@ -133,7 +135,7 @@
       "productId": "prod_TkwWcYWrWbHmU5",
       "priceId": "price_1SnQd4Aiq7NBxfpwOIheCic1"
     },
-    "price": 146.0,
+    "price": 146,
     "variants": [
       {
         "id": "electra-pop-black",
@@ -327,7 +329,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1"
+    "stripe_price_id": "price_1SnQd4Aiq7NBxfpwOIheCic1",
+    "orderOnRequest": true
   },
   "electra-pop-pro": {
     "id": "electra-pop-pro",
@@ -346,7 +349,7 @@
       "productId": "prod_TkwbZLto4pyKdn",
       "priceId": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
     },
-    "price": 182.0,
+    "price": 182,
     "variants": [
       {
         "id": "electra-pop-pro-black",
@@ -406,7 +409,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL"
+    "stripe_price_id": "price_1SnQf2Aiq7NBxfpwskIRUqoL",
+    "orderOnRequest": true
   },
   "pen-3": {
     "id": "pen-3",
@@ -425,7 +429,7 @@
       "productId": "prod_TkxRC9EqfpyVB5",
       "priceId": "price_1SnRWEAiq7NBxfpw235gURaJ"
     },
-    "price": 398.0,
+    "price": 398,
     "variants": [],
     "image": "/images/products/tattoo-machines/pen-3-cover.webp",
     "images": [
@@ -463,7 +467,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnRWEAiq7NBxfpw235gURaJ"
+    "stripe_price_id": "price_1SnRWEAiq7NBxfpw235gURaJ",
+    "orderOnRequest": true
   },
   "ultra-pen": {
     "id": "ultra-pen",
@@ -481,7 +486,7 @@
       "productId": "prod_TkwaRscy82RkNj",
       "priceId": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0"
     },
-    "price": 948.0,
+    "price": 948,
     "variants": [],
     "image": "/images/products/tattoo-machines/ultra-pen-1-cover.webp",
     "images": [
@@ -519,7 +524,8 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0"
+    "stripe_price_id": "price_1SnQh1Aiq7NBxfpw3ZjLyxh0",
+    "orderOnRequest": true
   },
   "ultra-pen-2-combo": {
     "id": "ultra-pen-2-combo",
@@ -538,9 +544,9 @@
       "productId": "prod_TkwYdAGyqrMKW0",
       "priceId": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
     },
-    "price": 1050.0,
+    "price": 1050,
     "promoDisplay": {
-      "wasPrice": 1299.0,
+      "wasPrice": 1299,
       "label": "SPECIAL OFFER"
     },
     "variants": [],
@@ -593,6 +599,7 @@
       ]
     },
     "inStock": true,
-    "stripe_price_id": "price_1SnQhsAiq7NBxfpwUAuFyaRa"
+    "stripe_price_id": "price_1SnQhsAiq7NBxfpwUAuFyaRa",
+    "orderOnRequest": true
   }
 }
