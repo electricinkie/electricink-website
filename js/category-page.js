@@ -355,6 +355,7 @@
         specs: data.specs || {},
         image,
         priceDisplay,
+        orderOnRequest: !!data.orderOnRequest,
         // preserve inventory and stock metadata so availability logic can use it
         inventory: data.inventory || {},
         inStock: !!data.inStock,
