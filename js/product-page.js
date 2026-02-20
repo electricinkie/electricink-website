@@ -95,7 +95,7 @@
           const apiEntry = findApiForVariant(variant);
           if (apiEntry) {
             const parsedPrice = parseFloat(apiEntry.price_ex);
-            if (!isNaN(parsedPrice)) variant.price = parsedPrice;
+            if (!isNaN(parsedPrice)) variant.price = parseFloat((parsedPrice * 1.23).toFixed(2));
             const parsedStock = parseInt(apiEntry.stock, 10);
             if (!isNaN(parsedStock)) variant.quantity = parsedStock;
           }
@@ -111,7 +111,8 @@
         if (first) {
           const parsedPrice = parseFloat(first.price_ex);
           if (!isNaN(parsedPrice)) {
-            if (localProduct.basic) localProduct.basic.price = parsedPrice; else localProduct.price = parsedPrice;
+            const priceWithVat = parseFloat((parsedPrice * 1.23).toFixed(2));
+            if (localProduct.basic) localProduct.basic.price = priceWithVat; else localProduct.price = priceWithVat;
           }
         }
         localProduct.inventory = localProduct.inventory || {};

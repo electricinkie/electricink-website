@@ -244,7 +244,7 @@
             }
             if (found) {
               const parsedPrice = parseFloat(found.price_ex);
-              if (!isNaN(parsedPrice)) variant.price = parsedPrice;
+              if (!isNaN(parsedPrice)) variant.price = parseFloat((parsedPrice * 1.23).toFixed(2));
               const parsedStock = parseInt(found.stock, 10);
               if (!isNaN(parsedStock)) variant.quantity = parsedStock;
             }
@@ -260,7 +260,8 @@
           if (first) {
             const parsedPrice = parseFloat(first.price_ex);
             if (!isNaN(parsedPrice)) {
-              if (local.basic) local.basic.price = parsedPrice; else local.price = parsedPrice;
+              const priceWithVat = parseFloat((parsedPrice * 1.23).toFixed(2));
+              if (local.basic) local.basic.price = priceWithVat; else local.price = priceWithVat;
             }
           }
           local.inventory = local.inventory || {};
