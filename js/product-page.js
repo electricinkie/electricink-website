@@ -104,7 +104,9 @@
         // Update inventory.stock_status based on total stock
         const totalStock = localProduct.variants.reduce((sum, v) => sum + (Number(v.quantity) || 0), 0);
         localProduct.inventory = localProduct.inventory || {};
-        localProduct.inventory.stock_status = totalStock > 0 ? 'in_stock' : 'out_of_stock';
+        const originalStatus = localProduct.inventory?.stock_status;
+        const isOnRequest = localProduct.orderOnRequest === true || originalStatus === 'available_on_request';
+        localProduct.inventory.stock_status = totalStock > 0 ? 'in_stock' : (isOnRequest ? 'available_on_request' : 'out_of_stock');
       } else if (Array.isArray(apiData) && apiData.length > 0) {
         // Simple product - apply first api entry as fallback
         const first = apiData[0];
@@ -116,8 +118,10 @@
           }
         }
         localProduct.inventory = localProduct.inventory || {};
+        const originalStatus = localProduct.inventory?.stock_status;
+        const isOnRequest = localProduct.orderOnRequest === true || originalStatus === 'available_on_request';
         const anyStock = apiData.some(a => Number(a.stock) > 0);
-        localProduct.inventory.stock_status = anyStock ? 'in_stock' : 'out_of_stock';
+        localProduct.inventory.stock_status = anyStock ? 'in_stock' : (isOnRequest ? 'available_on_request' : 'out_of_stock');
       }
     }
 

@@ -267,8 +267,10 @@
             }
           }
           local.inventory = local.inventory || {};
+          const originalStatus = local.inventory?.stock_status;
+          const isOnRequest = local.orderOnRequest === true || originalStatus === 'available_on_request';
           const anyStock = entries.some(e => Number(e.stock) > 0);
-          local.inventory.stock_status = anyStock ? 'in_stock' : 'out_of_stock';
+          local.inventory.stock_status = anyStock ? 'in_stock' : (isOnRequest ? 'available_on_request' : 'out_of_stock');
         }
       });
     }
