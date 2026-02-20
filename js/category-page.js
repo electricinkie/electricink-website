@@ -251,9 +251,11 @@
           });
 
           // update product-level inventory.stock_status
-          const totalStock = local.variants.reduce((s, v) => s + (Number(v.quantity) || 0), 0);
-          local.inventory = local.inventory || {};
-          local.inventory.stock_status = totalStock > 0 ? 'in_stock' : 'out_of_stock';
+            const totalStock = local.variants.reduce((s, v) => s + (Number(v.quantity) || 0), 0);
+            local.inventory = local.inventory || {};
+            const originalStatus = local.inventory?.stock_status;
+            const isOnRequest = local.orderOnRequest === true || originalStatus === 'available_on_request';
+            local.inventory.stock_status = totalStock > 0 ? 'in_stock' : (isOnRequest ? 'available_on_request' : 'out_of_stock');
         } else {
           // Simple product - apply first entry price and stock summary
           const first = entries[0];
