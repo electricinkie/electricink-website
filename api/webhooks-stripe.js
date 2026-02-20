@@ -79,16 +79,6 @@ function loadProductCatalog() {
 // Email configuration
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'electricink.ie@gmail.com';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
-// ═══════════════════════════════════════════════════════════
-// INVENTORY CONFIGURATION
-// ═══════════════════════════════════════════════════════════
-
-  const INVENTORY_CONFIG = {
-    OBSERVATION_MODE: true, // Set false to enable blocking behavior
-    ENABLE_INVENTORY_CHECK: false, // Toggle inventory checks entirely (DISABLED - using GitHub decrements)
-    SEND_LOW_STOCK_ALERTS: true // Send low-stock alerts (logs/emails)
-  };
-
   // Consolidated validateMetadata - single robust definition
   function validateMetadata(metadata = {}) {
     const validated = {
@@ -152,7 +142,7 @@ try {
   logger.error('Resend failed to initialize', { error: error.message });
 }
 
-// GitHub inventory system removed (was permanently disabled with ENABLED: false)
+//
 
 // Vercel serverless config
 module.exports.config = {
@@ -417,150 +407,6 @@ function removeUndefined(obj) {
 /**
  * Handle successful payment
  */
-// ═══════════════════════════════════════════════════════════
-// INVENTORY MANAGEMENT FUNCTIONS
-// ═══════════════════════════════════════════════════════════
-
-/**
- * Get inventory doc ID from cart item
- * Prefers variant ID, falls back to product ID
- */
-function getInventoryDocId(item) {
-  // item structure: { id: productId, v: variantId, q: quantity }
-  // Variant ID takes priority (for products with variants)
-  const docId = item.v || item.id;
-  return docId;
-}
-
-/**
- * Check if sufficient inventory exists for all items
- * DOES NOT MODIFY - read-only check
- */
-async function checkInventoryAvailability(items, transaction) {
-  const results = [];
-  for (const item of items) {
-    const docId = getInventoryDocId(item);
-    const quantity = item.q || item.quantity || 1;
-    try {
-      const inventoryRef = admin.firestore().collection('inventory').doc(docId);
-      const inventoryDoc = await transaction.get(inventoryRef);
-      if (!inventoryDoc.exists) {
-        logger.warn('Inventory doc not found', { docId });
-        results.push({
-          docId,
-          requested: quantity,
-          available: null,
-          sufficient: false,
-          reason: 'inventory_doc_not_found'
-        });
-        continue;
-      }
-      const inventoryData = inventoryDoc.data();
-      const available = inventoryData.quantity || 0;
-      const sufficient = available >= quantity;
-      results.push({
-        docId,
-        productName: inventoryData.productName,
-        variantLabel: inventoryData.variantLabel,
-        requested: quantity,
-        available,
-        sufficient,
-        reason: sufficient ? 'ok' : 'insufficient_stock'
-      });
-    } catch (error) {
-      logger.error('Error checking inventory', { docId, error: error && error.message });
-      results.push({
-        docId,
-        requested: quantity,
-        available: null,
-        sufficient: false,
-        reason: 'error_checking_inventory'
-      });
-    }
-  }
-  return results;
-}
-
-/**
- * Decrement inventory for all items
- * Uses Firestore transaction for atomicity
- */
-async function decrementInventory(items, transaction) {
-  const results = [];
-  for (const item of items) {
-    const docId = getInventoryDocId(item);
-    const quantity = item.q || item.quantity || 1;
-    try {
-      const inventoryRef = admin.firestore().collection('inventory').doc(docId);
-      const inventoryDoc = await transaction.get(inventoryRef);
-      if (!inventoryDoc.exists) {
-        logger.warn('Cannot decrement - doc not found', { docId });
-        results.push({
-          docId,
-          success: false,
-          reason: 'doc_not_found'
-        });
-        continue;
-      }
-      const inventoryData = inventoryDoc.data();
-      const currentQty = inventoryData.quantity || 0;
-      const newQty = Math.max(0, currentQty - quantity);
-      // Update quantity
-      transaction.update(inventoryRef, {
-        quantity: newQty,
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-        lastDecrementedAt: admin.firestore.FieldValue.serverTimestamp(),
-        lastDecrementedBy: 'webhook_payment_success'
-      });
-      results.push({
-        docId,
-        productName: inventoryData.productName,
-        previousQty: currentQty,
-        decremented: quantity,
-        newQty,
-        success: true
-      });
-      logger.info('Decremented inventory', { docId, from: currentQty, to: newQty });
-    } catch (error) {
-      logger.error('Error decrementing inventory', { docId, error: error && error.message });
-      results.push({
-        docId,
-        success: false,
-        reason: 'error_during_decrement',
-        error: error.message
-      });
-    }
-  }
-  return results;
-}
-
-/**
- * Send email/log notification when stock insufficient
- * OBSERVATION MODE: Alerts admin without blocking order
- */
-async function sendLowStockAlert(checkResults, orderData) {
-  const insufficientItems = checkResults.filter(r => !r.sufficient);
-  if (insufficientItems.length === 0) return;
-  logger.warn('LOW STOCK ALERT - Order would be blocked in production', { 
-    insufficientItems: JSON.stringify(insufficientItems, null, 2)
-  });
-  const alertMessage = `\n🚨 LOW STOCK ALERT - OBSERVATION MODE\n\nOrder ID: ${orderData.orderId || 'unknown'}\nCustomer: ${orderData.customerEmail || 'unknown'}\n\nItems with insufficient stock:\n${insufficientItems.map(item => `- ${item.productName || item.docId}${item.variantLabel ? ' (' + item.variantLabel + ')' : ''}\n   Requested: ${item.requested}, Available: ${item.available}, Reason: ${item.reason}`).join('\n')}\n\n⚠️  NOTE: Order was ACCEPTED in observation mode.\nIn production mode, this order would be BLOCKED.\n\nAction required: Restock or manually handle order.\n  `;
-  logger.info('Low stock alert message', { alertMessage });
-  // TODO: hook into email service when ready (Resend)
-  if (INVENTORY_CONFIG.SEND_LOW_STOCK_ALERTS && resend) {
-    try {
-      await resend.emails.send({
-        from: EMAIL_FROM,
-        to: ADMIN_EMAIL,
-        subject: `🚨 LOW STOCK ALERT - Order ${orderData.orderId || 'unknown'}`,
-        html: `<pre>${alertMessage}</pre>`
-      });
-      logger.info('Low stock alert email sent');
-    } catch (err) {
-      logger.error('Failed to send low stock alert email', { error: err && err.message });
-    }
-  }
-}
   // (duplicate removed) validateMetadata consolidated at top of file
 
 async function handlePaymentIntentSucceeded(event, requestId) {
@@ -654,44 +500,23 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       logger.debug('Starting inventory-aware transaction', { orderId, refPath: orderRef.path });
     }
 
-    if (!INVENTORY_CONFIG.ENABLE_INVENTORY_CHECK) {
-      // Fast path: no inventory checks, preserve previous behavior
-      await db.runTransaction(async (transaction) => {
-        const orderDoc = await transaction.get(orderRef);
-        if (orderDoc.exists) {
-          logger.info(JSON.stringify({
-            msg: 'Order already processed (idempotent)',
-            orderId,
-            requestId,
-            timestamp: new Date().toISOString(),
-            status: 'idempotent'
-          }));
-          return;
-        }
-        const cleanOrder = removeUndefined(order);
-        transaction.set(orderRef, cleanOrder);
-      });
-      logger.info('Order created successfully in Firestore (inventory checks disabled)');
-    } else {
-      // ===== FIRESTORE INVENTORY (DESABILITADO) =====
-      // Firestore-based inventory checks and decrements are disabled.
-      // The original transaction-based inventory-check/decrement logic is preserved in the
-      // repository history and in the functions `checkInventoryAvailability` and `decrementInventory`.
-      // To keep behavior explicit and non-executing, the Firestore inventory branch is intentionally
-      // commented out below for future reference.
-
-      // if (INVENTORY_CONFIG.ENABLE_INVENTORY_CHECK) {
-      //   try {
-      //     await db.runTransaction(async (transaction) => {
-      //       // original inventory-check & decrement logic (commented)
-      //     });
-      //   } catch (txErr) {
-      //     // original error handling (commented)
-      //   }
-      // }
-
-      // ===== FIM FIRESTORE INVENTORY =====
-    }
+    // Fast path: save order without inventory checks
+    await db.runTransaction(async (transaction) => {
+      const orderDoc = await transaction.get(orderRef);
+      if (orderDoc.exists) {
+        logger.info(JSON.stringify({
+          msg: 'Order already processed (idempotent)',
+          orderId,
+          requestId,
+          timestamp: new Date().toISOString(),
+          status: 'idempotent'
+        }));
+        return;
+      }
+      const cleanOrder = removeUndefined(order);
+      transaction.set(orderRef, cleanOrder);
+    });
+    logger.info('Order created successfully in Firestore (inventory checks disabled)');
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
 
