@@ -60,7 +60,21 @@
               <h2 style="margin: 30px 0 20px 0; padding-bottom: 12px; border-bottom: 2px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; color: #000000;">Order Details</h2>
               
               <!-- Order Items -->
-              {{itemsList}}
+              <table role="presentation" width="100%" cellspacing="0" 
+                cellpadding="0" border="0" 
+                style="border: 1px solid #e8e8e8; border-radius: 8px;">
+                <thead>
+                  <tr style="background-color: #000000;">
+                    <th style="padding: 14px; text-align: left; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.5px;">Product</th>
+                    <th style="padding: 14px; text-align: center; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.5px;">Qty</th>
+                    <th style="padding: 14px; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.5px;">Price</th>
+                    <th style="padding: 14px; text-align: right; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 700; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.5px;">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{itemsList}}
+                </tbody>
+              </table>
               
               <!-- Totals -->
               <table role="presentation" class="totals-table" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 30px; table-layout: fixed; width: 100%;">

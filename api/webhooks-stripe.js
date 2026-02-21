@@ -771,7 +771,21 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       const internalSecret = process.env.INTERNAL_WEBHOOK_SECRET;
       if (internalApiUrl && internalSecret) {
         const salePayload = {
-          items: enrichedItems,
+          shipping_address: order.shippingAddress || null,
+          shipping_method: order.shippingMethod || null,
+          items: enrichedItems.map(it => ({
+            ...it,
+            price_ex: (() => {
+              const resolved = resolveCatalogItem(it.id);
+              if (resolved && resolved.variant) {
+                return resolved.variant.price || resolved.product?.basic?.price || 0;
+              }
+              if (resolved && resolved.product) {
+                return resolved.product.basic?.price || resolved.product.price || 0;
+              }
+              return 0;
+            })()
+          })),
           total: order.total,
           order_id: order.orderId,
           customer_name: order.customerName,
