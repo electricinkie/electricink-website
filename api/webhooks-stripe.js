@@ -128,18 +128,17 @@ const { captureException } = require('./lib/sentry');
 const { getFirestore, admin } = require('./lib/firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 
-// Initialize Resend for direct email sending (guarded: do not throw if API key missing)
-const { Resend } = require('resend');
-let resend = null;
-try {
-  if (process.env.RESEND_API_KEY) {
-    resend = new Resend(process.env.RESEND_API_KEY);
-    logger.info('Resend initialized successfully');
-  } else {
-    logger.error('RESEND_API_KEY not found');
-  }
-} catch (error) {
-  logger.error('Resend failed to initialize', { error: error.message });
+// Resend client helper
+const { getResend } = require('./lib/resend');
+const resend = getResend();
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 //
@@ -151,43 +150,7 @@ module.exports.config = {
   },
 };
 
-// Helper: validate Resend configuration (domains, verification)
-async function validateResendConfig() {
-  if (!resend) {
-    return { valid: false, error: 'Resend not initialized' };
-  }
-
-  try {
-    const domains = await resend.domains.list();
-    if (process.env.NODE_ENV === 'development') {
-      logger.debug('[RESEND-CONFIG] Domains configured', { 
-        domains: domains?.data?.map(d => `${d.name} (${d.status})`).join(', ')
-      });
-    }
-
-    const electricinkDomain = domains?.data?.find(d => 
-      d.name === 'electricink.ie'
-    );
-
-    if (!electricinkDomain) {
-      return { 
-        valid: false, 
-        error: 'Domain electricink.ie not found in Resend' 
-      };
-    }
-
-    if (electricinkDomain.status !== 'verified') {
-      return { 
-        valid: false, 
-        error: `Domain status: ${electricinkDomain.status}` 
-      };
-    }
-
-    return { valid: true, domain: electricinkDomain };
-  } catch (error) {
-    return { valid: false, error: error.message };
-  }
-}
+// Resend domain validation removed; per-webhook domains.list() was causing latency
 
 /**
  * Main webhook handler
@@ -239,19 +202,7 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Webhook secret not configured', requestId });
   }
 
-  // Validate Resend (non-blocking)
-  try {
-    const configCheck = await validateResendConfig();
-    if (!configCheck?.valid) {
-      logger.warn('[RESEND-CONFIG] Validation warning', configCheck);
-    } else {
-      if (process.env.NODE_ENV === 'development') {
-        logger.debug('Resend validation', configCheck);
-      }
-    }
-  } catch (e) {
-    logger.error('[RESEND-CONFIG] Validation failed', { error: e && e.message });
-  }
+  // Resend config validation removed to avoid per-webhook API calls
 
   let event;
 
@@ -559,10 +510,16 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
       clientEmailHtml = clientEmailHtml
         .replace(/{{orderNumber}}/g, orderId)
-        .replace(/{{customerName}}/g, order.customerName || '')
-        .replace(/{{customerEmail}}/g, order.customerEmail || '')
+        .replace(/{{customerName}}/g, escapeHtml(order.customerName || ''))
+        .replace(/{{customerEmail}}/g, escapeHtml(order.customerEmail || ''))
         .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
-        .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
+        .replace(/{{shippingAddress}}/g, escapeHtml([
+          order.shippingAddress?.line1,
+          order.shippingAddress?.line2,
+          order.shippingAddress?.city,
+          order.shippingAddress?.postalCode,
+          order.shippingAddress?.country
+        ].filter(Boolean).join(', ')))
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
@@ -714,11 +671,17 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
       adminEmailHtml = adminEmailHtml
         .replace(/{{orderNumber}}/g, orderId)
-        .replace(/{{customerName}}/g, order.customerName || '')
-        .replace(/{{customerEmail}}/g, order.customerEmail || '')
+        .replace(/{{customerName}}/g, escapeHtml(order.customerName || ''))
+        .replace(/{{customerEmail}}/g, escapeHtml(order.customerEmail || ''))
         .replace(/{{customerPhone}}/g, order.customerPhone || 'N/A')
         .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
-        .replace(/{{shippingAddress}}/g, `${order.shippingAddress?.line1 || ''}${order.shippingAddress?.line2 ? '<br>' + order.shippingAddress.line2 : ''}<br>${order.shippingAddress?.city || ''}${order.shippingAddress?.postalCode ? ', ' + order.shippingAddress.postalCode : ''}<br>${order.shippingAddress?.country || ''}`)
+        .replace(/{{shippingAddress}}/g, escapeHtml([
+          order.shippingAddress?.line1,
+          order.shippingAddress?.line2,
+          order.shippingAddress?.city,
+          order.shippingAddress?.postalCode,
+          order.shippingAddress?.country
+        ].filter(Boolean).join(', ')))
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
