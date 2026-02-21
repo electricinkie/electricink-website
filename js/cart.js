@@ -10,7 +10,6 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
   // ────────── Constants ──────────
   const CART_KEY = 'electricink_cart';
   // 🔧 FIX: SHIPPING_COST movido para checkout.js (não usado no cart)
-  // const SHIPPING_COST = 8.50; // €8.50 frete normal
   
   // ────────── DOM Elements ──────────
   const cartEmpty = document.getElementById('cartEmpty');

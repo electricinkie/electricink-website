@@ -32,9 +32,7 @@ function getResend() {
 function isResendConfigured() {
   return getResend() !== null;
 }
-
 module.exports = {
   initResend,
-  getResend,
-  isResendConfigured
+  getResend
 };

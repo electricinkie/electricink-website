@@ -7,7 +7,6 @@
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
 import { initFirebase } from './firebase-config.js';
 // Auth removed - guest checkout only
-// import { getCurrentUser, onAuthChange } from './auth.js';
 
 // Debug flag - ativo apenas em localhost ou com ?debug=true
 const DEBUG = typeof window !== 'undefined' && (
@@ -271,11 +270,6 @@ window.appliedDiscount = 0;
       // Auth removed - guest checkout only
       // Make auth optional: getCurrentUser may throw if Firebase not configured.
       let user = null;
-      // try {
-      //   user = await getCurrentUser();
-      // } catch (e) {
-      //   user = null;
-      // }
       if (!user) return;
       const { db } = await initFirebase();
       const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
@@ -861,15 +855,6 @@ window.appliedDiscount = 0;
   // DISCOUNT CODE
   // ============================================
   
-  // ════════════════════════════════════════════════════════════════
-  // NOTE: Discount validation moved to server-side (api/validate-coupon.js)
-  // This object kept for reference but not used - validation now in backend
-  // ════════════════════════════════════════════════════════════════
-  const DISCOUNT_CODES = {
-    // 'FIRSTORDER': { type: 'fixed', value: 15, description: '€15 off' },
-    // 'FREECAT': { type: 'shipping', value: 0, description: 'Free shipping' }
-    // Add new codes in Stripe Dashboard instead
-  };
   
   function setupDiscountCode() {
     const discountInput = document.getElementById('discountCode');
@@ -1140,11 +1125,7 @@ window.appliedDiscount = 0;
       // Auth removed - guest checkout only
       let user = userArg || null;
       if (!user) {
-        // try {
-        //   user = await getCurrentUser();
-        // } catch (e) {
-        //   user = null;
-        // }
+        // (previously attempted to fetch current user; intentionally guest-only)
       }
 
       const emailInput = document.querySelector('#email') || (elements.form && elements.form.email);

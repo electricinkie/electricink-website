@@ -448,15 +448,12 @@ function getAvailabilityBadgeInfo(product) {
     };
   }
 
-  if (stockStatus === 'available_on_request') {
-    const category = (product.category || '').toString().toLowerCase();
+    if (stockStatus === 'available_on_request') {
+      const category = (product.category || '').toString().toLowerCase();
     const productId = (product.id || '').toString().toLowerCase();
     const productName = (product.name || '').toString().toLowerCase();
     
-    // TEMPORARY DEBUG - Remove after testing
-    if (stockStatus === 'available_on_request') {
-      console.log('[BADGE]', product.name, '| Category:', product.category, '| ID:', product.id);
-    }
+    // TEMPORARY DEBUG - removed
     
     // 1) MACHINES - category is exactly "machines"
     const isMachine = category === 'machines' || 
