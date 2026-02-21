@@ -47,40 +47,7 @@
     "featured": true,
     "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
   },
-  "teste-product": {
-    "id": "teste-product",
-    "name": "TESTE PRODUCT",
-    "category": "Cosmetics",
-    "subcategory": "Aftercare",
-    "description": "Test product for internal flow validation.",
-    "features": [],
-    "stripe": {
-      "productId": "prod_Tlw3Y2Nb3ZEW8S",
-      "priceId": "price_1SoOBLALQaxEXnEzcZHjeW90"
-    },
-    "price": 0.50,
-    "variants": [],
-    "size": "",
-    "image": "/images/products/cosmetics/tattoo-balm-25g.webp",
-    "images": [
-      "/images/products/cosmetics/tattoo-balm-25g.webp"
-    ],
-    "content": {},
-    "inventory": {
-      "stock_quantity": 10,
-      "stock_status": "in_stock",
-      "low_stock_threshold": 1
-    },
-    "seo": {
-      "meta_title": "TESTE PRODUCT | Electric Ink Ireland",
-      "meta_description": "Test product.",
-      "keywords": ["test"]
-    },
-    "inStock": true,
-    "featured": false,
-    "stripe_price_id": "price_1SoOBLALQaxEXnEzcZHjeW90"
-  },
-
+  
   "tattoo-cream-derma-30g": {
     "id": "tattoo-cream-derma-30g",
     "name": "Tattoo Cream Derma",
