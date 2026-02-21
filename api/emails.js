@@ -1,4 +1,3 @@
-cat > api/emails.js << 'EOF'
 // Minimal stub - webhook handles all email logic
 const logger = require('./lib/logger');
 
@@ -19,4 +18,3 @@ module.exports = async function handler(req, res) {
     message: 'Email functionality handled by webhook' 
   });
 };
-EOF
