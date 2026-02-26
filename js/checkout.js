@@ -257,11 +257,12 @@ window.appliedDiscount = 0;
     // Calculate subtotal after discount
     const subtotalAfterDiscount = totals.subtotal - totals.discount;
 
-    // Calculate VAT (23% on subtotal + shipping)
-    totals.vat = (subtotalAfterDiscount + totals.shipping) * VAT_RATE;
+    // VAT is informational (prices include VAT). Calculate VAT portion by reverse-rate
+    // Do NOT add VAT on top of the subtotal — total remains subtotalAfterDiscount + shipping
+    totals.vat = subtotalAfterDiscount - (subtotalAfterDiscount / (1 + VAT_RATE));
 
-    // Calculate total (subtotal - discount + shipping + VAT)
-    totals.total = subtotalAfterDiscount + totals.shipping + totals.vat;
+    // Calculate total (subtotal after discount + shipping). VAT is included in prices.
+    totals.total = subtotalAfterDiscount + totals.shipping;
   }
 
   // Fetch user discount percent from Firestore (non-blocking but awaited by init)

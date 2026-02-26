@@ -508,6 +508,12 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         clientEmailHtml = `<html><body><p>Order #${orderId}</p></body></html>`;
       }
 
+      // Compute VAT to display: prefer metadata.vat from PaymentIntent if present,
+      // otherwise compute reverse-rate from stored subtotal (prices include VAT).
+      const metadataVat = (paymentIntent.metadata && paymentIntent.metadata.vat && !isNaN(Number(paymentIntent.metadata.vat))) ? Number(paymentIntent.metadata.vat) : null;
+      const computedClientVat = (metadataVat !== null) ? metadataVat : ((order.subtotal || 0) - ((order.subtotal || 0) / 1.23));
+      const VAT_DISPLAY = (typeof computedClientVat === 'number' && !isNaN(computedClientVat)) ? computedClientVat.toFixed(2) : '0.00';
+
       clientEmailHtml = clientEmailHtml
         .replace(/{{orderNumber}}/g, orderId)
         .replace(/{{customerName}}/g, escapeHtml(order.customerName || ''))
@@ -523,7 +529,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
-        .replace(/{{vat}}/g, (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2));
+        .replace(/{{vat}}/g, VAT_DISPLAY);
 
       // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização
       const productCatalog = loadProductCatalog();
@@ -669,6 +675,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         adminEmailHtml = `<html><body><p>New order #${orderId}</p></body></html>`;
       }
 
+      // Compute VAT for admin view: prefer metadata.vat then fallback to reverse-rate
+      const metadataVatAdmin = (paymentIntent.metadata && paymentIntent.metadata.vat && !isNaN(Number(paymentIntent.metadata.vat))) ? Number(paymentIntent.metadata.vat) : null;
+      const computedAdminVat = (metadataVatAdmin !== null) ? metadataVatAdmin : ((order.subtotal || 0) - ((order.subtotal || 0) / 1.23));
+      const VAT_DISPLAY_ADMIN = (typeof computedAdminVat === 'number' && !isNaN(computedAdminVat)) ? computedAdminVat.toFixed(2) : '0.00';
+
       adminEmailHtml = adminEmailHtml
         .replace(/{{orderNumber}}/g, orderId)
         .replace(/{{customerName}}/g, escapeHtml(order.customerName || ''))
@@ -685,7 +696,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
-        .replace(/{{vat}}/g, (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2));
+        .replace(/{{vat}}/g, VAT_DISPLAY_ADMIN);
 
       // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização (admin)
       const productCatalogForAdmin = PRODUCT_CATALOG_CACHE || loadProductCatalog();

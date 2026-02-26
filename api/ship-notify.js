@@ -80,7 +80,16 @@ module.exports = async function handler(req, res) {
 
     const SUBTOTAL = ((order.subtotal || 0)).toFixed(2);
     const SHIPPING = (order.shippingCost && order.shippingCost > 0) ? ('€' + Number(order.shippingCost).toFixed(2)) : 'Free';
-    const VAT = (((order.total || 0) - (order.subtotal || 0) - (order.shippingCost || 0)) || 0).toFixed(2);
+    // VAT: prefer explicit stored `order.vat` when available (number), otherwise
+    // compute VAT portion as reverse-rate from subtotal (prices include VAT)
+    let VAT = 0;
+    if (order.vat !== undefined && !isNaN(Number(order.vat))) {
+      VAT = Number(order.vat).toFixed(2);
+    } else {
+      const base = (order.subtotal || 0);
+      const computed = base - (base / 1.23);
+      VAT = (computed > 0 ? computed : 0).toFixed(2);
+    }
     const TOTAL = ((order.total || 0)).toFixed(2);
 
     // Build ORDER_ITEMS HTML rows

@@ -58,10 +58,18 @@
 
   // ────────── Render Totals ──────────
   if (orderData.totals) {
-    document.getElementById('orderSubtotal').textContent = `€${orderData.totals.subtotal.toFixed(2)}`;
-    document.getElementById('orderShipping').textContent = orderData.totals.shippingText || 'FREE';
-    document.getElementById('orderVAT').textContent = `€${orderData.totals.vat.toFixed(2)}`;
-    document.getElementById('orderTotal').textContent = `€${orderData.totals.total.toFixed(2)}`;
+    const t = orderData.totals;
+    document.getElementById('orderSubtotal').textContent = `€${(t.subtotal || 0).toFixed(2)}`;
+    document.getElementById('orderShipping').textContent = t.shippingText || 'FREE';
+
+    const vatEl = document.getElementById('orderVAT');
+    if (typeof t.vat === 'number' && Number.isFinite(t.vat)) {
+      vatEl.textContent = `€${t.vat.toFixed(2)}`;
+    } else {
+      vatEl.textContent = 'Included in price';
+    }
+
+    document.getElementById('orderTotal').textContent = `€${(t.total || 0).toFixed(2)}`;
   }
 
   // ────────── Render Shipping Address ──────────

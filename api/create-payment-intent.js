@@ -338,13 +338,14 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   }
 
   // Fallback: do not trust clientDiscount unless coupon validated; discount already calculated
-  // Calculate VAT (23%) on subtotal after discount
+  // Calculate VAT as informational only (prices include VAT)
   const subtotalAfterDiscount = subtotal - discount;
   const VAT_RATE = 0.23;
-  const vat = (subtotalAfterDiscount + shipping) * VAT_RATE;
+  // VAT portion (reverse-rate) calculated on subtotal after discount — do not add VAT on top
+  const vat = subtotalAfterDiscount - (subtotalAfterDiscount / (1 + VAT_RATE));
 
-  // Calculate final total
-  const total = subtotalAfterDiscount + shipping + vat;
+  // Final total: subtotal after discount + shipping (VAT already included in product prices)
+  const total = subtotalAfterDiscount + shipping;
 
   return {
     subtotal: parseFloat(subtotal.toFixed(2)),
