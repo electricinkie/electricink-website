@@ -1,7 +1,7 @@
 {
 
-  "tattoo-balm-25g": {
-  "id": "tattoo-balm-25g",
+  "tattoo-balm": {
+    "id": "tattoo-balm",
   "name": "Tattoo Balm",
   "category": "Cosmetics",
   "subcategory": "Aftercare",
@@ -87,8 +87,8 @@
   "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
 },
   
-  "tattoo-cream-derma-30g": {
-    "id": "tattoo-cream-derma-30g",
+  "tattoo-cream": {
+    "id": "tattoo-cream",
     "name": "Tattoo Cream Derma",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
@@ -202,8 +202,8 @@
     "featured": true,
     "stripe_price_id": "price_1Sm1G9Aiq7NBxfpw7JJlWAUd"
   },
-  "skin-scrub-out-250g": {
-    "id": "skin-scrub-out-250g",
+  "skin-scrub": {
+    "id": "skin-scrub",
     "name": "Tattoo Skin Scrub Out",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
@@ -247,8 +247,8 @@
     "inStock": true,
     "stripe_price_id": "price_1Sm1ICAiq7NBxfpw7gNrJWEi"
   },
-  "tattoo-prep-200ml": {
-    "id": "tattoo-prep-200ml",
+  "tattoo-prep": {
+    "id": "tattoo-prep",
     "name": "Tattoo Prep",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
@@ -440,8 +440,8 @@
     "featured": true,
     "stripe_price_id": "price_1Sm1TMAiq7NBxfpw2WoWPudJ"
   },
-  "stencil-fix-120ml": {
-    "id": "stencil-fix-120ml",
+  "stencil-fix": {
+    "id": "stencil-fix",
     "name": "Stencil Fix Spray",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
@@ -557,8 +557,8 @@
     "featured": true,
     "stripe_price_id": "price_1Sm1YkAiq7NBxfpw3AgyJySW"
   },
-  "clean-up-refill-1l": {
-    "id": "clean-up-refill-1l",
+  "clean-up-refill": {
+    "id": "clean-up-refill",
     "name": "Tattoo Clean Up Refill",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
@@ -922,8 +922,8 @@
     "inStock": true,
     "stripe_price_id": "price_1Sm1tjAiq7NBxfpwGxJOqSye"
   },
-  "tattoo-dry-10units": {
-    "id": "tattoo-dry-10units",
+  "tattoo-dry": {
+    "id": "tattoo-dry",
     "name": "Tattoo Dry Solidifier",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",

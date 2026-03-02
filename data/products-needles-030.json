@@ -1,6 +1,6 @@
 {
-  "rl-030-10un": {
-    "id": "rl-030-10un",
+  "rl-030-10": {
+    "id": "rl-030-10",
     "name": "Pro Cartridge Round Liner Ø0.30 (10un)",
     "category": "Needles",
     "subcategory": "Round Liner",
@@ -119,8 +119,8 @@
     "featured": true,
     "stripe_price_id": "price_1SmDudAiq7NBxfpwzkhtpgGJ"
   },
-  "rl-030-20un": {
-    "id": "rl-030-20un",
+  "rl-030-20": {
+    "id": "rl-030-20",
     "name": "Pro Cartridge Round Liner Ø0.30 (20un)",
     "category": "Needles",
     "subcategory": "Round Liner",
@@ -238,8 +238,8 @@
     "featured": true,
     "stripe_price_id": "price_1SmE2JAiq7NBxfpwdCYynktI"
   },
-  "rs-030-10un": {
-    "id": "rs-030-10un",
+  "rs-030-10": {
+    "id": "rs-030-10",
     "name": "Pro Cartridge Round Shader Ø0.30 (10un)",
     "category": "Needles",
     "subcategory": "Round Shader",
@@ -337,8 +337,8 @@
     "featured": false,
     "stripe_price_id": "price_1SmE7zAiq7NBxfpwmjDQfnlH"
   },
-  "rs-030-20un": {
-    "id": "rs-030-20un",
+  "rs-030-20": {
+    "id": "rs-030-20",
     "name": "Pro Cartridge Round Shader Ø0.30 (20un)",
     "category": "Needles",
     "subcategory": "Round Shader",
@@ -436,8 +436,8 @@
     "featured": false,
     "stripe_price_id": "price_1SmEBiAiq7NBxfpwvZcAdnvb"
   },
-  "rmg-030-10un": {
-    "id": "rmg-030-10un",
+  "rmg-030-10": {
+    "id": "rmg-030-10",
     "name": "Pro Cartridge Round Magnum Ø0.30 (10un)",
     "category": "Needles",
     "subcategory": "Round Magnum",
@@ -576,8 +576,8 @@
     "featured": false,
     "stripe_price_id": "price_1SmEIZAiq7NBxfpwcHtikzIm"
   },
-  "rmg-030-20un": {
-    "id": "rmg-030-20un",
+  "rmg-030-20": {
+    "id": "rmg-030-20",
     "name": "Pro Cartridge Round Magnum Ø0.30 (20un)",
     "category": "Needles",
     "subcategory": "Round Magnum",
@@ -716,8 +716,8 @@
     "featured": false,
     "stripe_price_id": "price_1SmER2Aiq7NBxfpwJSKMRWa2"
   },
-  "mg-030-10un": {
-    "id": "mg-030-10un",
+  "mg-030-10": {
+    "id": "mg-030-10",
     "name": "Pro Cartridge Magnum Ø0.30 (10un)",
     "category": "Needles",
     "subcategory": "Magnum",
@@ -855,8 +855,8 @@
     "featured": true,
     "stripe_price_id": "price_1SmEVVAiq7NBxfpwmmOKQiiz"
   },
-  "mg-030-20un": {
-    "id": "mg-030-20un",
+  "mg-030-20": {
+    "id": "mg-030-20",
     "name": "Pro Cartridge Magnum Ø0.30 (20un)",
     "category": "Needles",
     "subcategory": "Magnum",

@@ -1,6 +1,6 @@
 {
-  "battery-plus-power3-slim": {
-    "id": "battery-plus-power3-slim",
+  "battery-plus-p3-slim": {
+    "id": "battery-plus-p3-slim",
     "name": "Rechargeable Battery Plus for Power 3 SLIM - 24mm",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
@@ -119,8 +119,8 @@
     "stripe_price_id": "price_1SnV7JAiq7NBxfpwuCDFkSBe",
     "orderOnRequest": true
   },
-  "battery-power3-slim": {
-    "id": "battery-power3-slim",
+  "battery-p3-slim": {
+    "id": "battery-p3-slim",
     "name": "Rechargeable Battery for Power 3 SLIM",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
@@ -180,8 +180,8 @@
     "stripe_price_id": "price_1SnVFeAiq7NBxfpwFi0cARc5",
     "orderOnRequest": true
   },
-  "battery-power3-bold": {
-    "id": "battery-power3-bold",
+  "battery-p3-bold": {
+    "id": "battery-p3-bold",
     "name": "Rechargeable Battery for Power 3 BOLD",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",
@@ -240,8 +240,8 @@
     "stripe_price_id": "price_1SnVH3Aiq7NBxfpwZeIRRQQY",
     "orderOnRequest": true
   },
-  "charger-electric-ink": {
-    "id": "charger-electric-ink",
+  "charger-ei": {
+    "id": "charger-ei",
     "name": "Electric Ink Battery Charger",
     "category": "Power Supplies",
     "subcategory": "Batteries & Chargers",

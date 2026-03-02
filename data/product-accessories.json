@@ -89,8 +89,8 @@
     "featured": false,
     "stripe_price_id": "price_1SnKr1Aiq7NBxfpwIMzsKjnh"
   },
-  "silicone-ink-cups": {
-    "id": "silicone-ink-cups",
+  "silicone-cups": {
+    "id": "silicone-cups",
     "name": "Silicone Ink Cups",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
@@ -266,8 +266,8 @@
   "stripe_price_id": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
 },
 
-  "black-medical-bibs": {
-    "id": "black-medical-bibs",
+  "medical-bibs": {
+    "id": "medical-bibs",
     "name": "Black Medical Bibs",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
@@ -491,8 +491,8 @@
     "stripe_price_id": "price_1SnNZQAiq7NBxfpwfHzYG1HE",
     "orderOnRequest": true
   },
-  "black-nitrile-gloves": {
-    "id": "black-nitrile-gloves",
+  "nitrile-gloves": {
+    "id": "nitrile-gloves",
     "name": "Black Nitrile Gloves (Powder-Free)",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
@@ -575,8 +575,8 @@
     "stripe_price_id": "price_1SnNXSAiq7NBxfpwZNtkZfvM",
     "orderOnRequest": true
   },
-  "pen-machine-cover-25-units": {
-    "id": "pen-machine-cover-25-units",
+  "pen-cover": {
+    "id": "pen-cover",
     "name": "Pen Machine Cover - 25 Units",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
@@ -622,8 +622,8 @@
     "stripe_price_id": "price_1SnKtuAiq7NBxfpwU8DjVxgy",
     "orderOnRequest": true
   },
-  "clip-cord-protector": {
-    "id": "clip-cord-protector",
+  "clip-cord": {
+    "id": "clip-cord",
     "name": "Clip Cord Protector",
     "category": "Accessories",
     "subcategory": "Machine Accessories",
@@ -699,8 +699,8 @@
     "stripe_price_id": "price_1SnKxpAiq7NBxfpw1LpEDszI",
     "orderOnRequest": true
   },
-  "electric-ink-wash-bottle": {
-    "id": "electric-ink-wash-bottle",
+  "wash-bottle": {
+    "id": "wash-bottle",
     "name": "Electric Ink Wash Bottle",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
@@ -814,8 +814,8 @@
     "stripe_price_id": "price_1SnL1hAiq7NBxfpwtmT5aLSu",
     "orderOnRequest": true
   },
-  "transparent-plastic-film": {
-    "id": "transparent-plastic-film",
+  "plastic-film": {
+    "id": "plastic-film",
     "name": "Transparent Plastic Film",
     "category": "Accessories",
     "subcategory": "Hygiene & Protection",
