@@ -705,6 +705,117 @@
     document.getElementById('productSpecs')?.after(disclaimerBox);
   }
 
+  // ===== WHOLESALE SECTION =====
+if (productData.wholesale && productData.wholesale.enabled) {
+  const wholesale = productData.wholesale;
+  const productInfo = document.querySelector('.product-info');
+
+  // Tab buttons — inserir depois do título (productName)
+  const tabButtons = document.createElement('div');
+  tabButtons.className = 'product-tab-buttons';
+  tabButtons.innerHTML = `
+    <button class="product-tab-btn active" data-tab="individual">Individual</button>
+    <button class="product-tab-btn" data-tab="wholesale">Wholesale</button>
+  `;
+  document.getElementById('productName').after(tabButtons);
+
+  // Wholesale panel — inserir depois dos tab buttons
+  const wholesalePanel = document.createElement('div');
+  wholesalePanel.className = 'wholesale-panel';
+  wholesalePanel.style.display = 'none';
+
+  const wholesaleDesc = document.createElement('p');
+  wholesaleDesc.className = 'wholesale-description';
+  wholesaleDesc.textContent = wholesale.description;
+  wholesalePanel.appendChild(wholesaleDesc);
+
+  const tiersGrid = document.createElement('div');
+  tiersGrid.className = 'wholesale-tiers';
+
+  let selectedTier = wholesale.tiers[0];
+
+  wholesale.tiers.forEach((tier, index) => {
+    const card = document.createElement('div');
+    card.className = 'wholesale-tier-card' + (index === 0 ? ' selected' : '');
+    card.dataset.tierId = tier.id;
+    card.innerHTML = `
+      <div class="tier-label">${tier.label}</div>
+      <div class="tier-qty">${tier.quantity} units</div>
+      <div class="tier-unit-price">€${tier.unit_price.toFixed(2)}/unit</div>
+      <div class="tier-total">€${tier.price.toFixed(2)} total</div>
+    `;
+    card.addEventListener('click', () => {
+      tiersGrid.querySelectorAll('.wholesale-tier-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedTier = tier;
+      wholesaleBuyBtn.textContent = `Order ${tier.label} — €${tier.price.toFixed(2)} inc. VAT`;
+    });
+    tiersGrid.appendChild(card);
+  });
+
+  wholesalePanel.appendChild(tiersGrid);
+
+  const wholesaleBuyBtn = document.createElement('button');
+  wholesaleBuyBtn.className = 'btn-add-to-cart btn-wholesale-buy';
+  wholesaleBuyBtn.textContent = `Order ${selectedTier.label} — €${selectedTier.price.toFixed(2)} inc. VAT`;
+  wholesaleBuyBtn.addEventListener('click', () => {
+    if (!selectedTier) return;
+    const itemToAdd = {
+      id: selectedTier.id,
+      name: `${name} - Wholesale ${selectedTier.label} (${selectedTier.quantity} units)`,
+      price: selectedTier.price,
+      stripe_price_id: selectedTier.stripe_price_id,
+      image: mainImage,
+      variant: `${selectedTier.quantity} units`
+    };
+    if (window.cart && window.cart.addItem) {
+      if (window.cart.addItem(itemToAdd)) {
+        const orig = wholesaleBuyBtn.textContent;
+        wholesaleBuyBtn.textContent = '✓ Added!';
+        wholesaleBuyBtn.style.background = '#43BDAB';
+        setTimeout(() => {
+          wholesaleBuyBtn.textContent = orig;
+          wholesaleBuyBtn.style.background = '';
+        }, 2000);
+      }
+    }
+  });
+  wholesalePanel.appendChild(wholesaleBuyBtn);
+
+  tabButtons.after(wholesalePanel);
+
+  // Elementos que pertencem só à aba Individual
+  const individualEls = ['productPrice', 'productStock', 'variantsContainer', 'addToCartBtn'];
+
+  // Toggle
+  tabButtons.querySelectorAll('.product-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.querySelectorAll('.product-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const isWholesale = btn.dataset.tab === 'wholesale';
+      wholesalePanel.style.display = isWholesale ? 'flex' : 'none';
+      wholesalePanel.style.flexDirection = 'column';
+      wholesalePanel.style.gap = '24px';
+
+      individualEls.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (isWholesale) {
+          el.style.display = 'none';
+        } else {
+          if (id === 'variantsContainer') {
+            el.style.display = (productData.variants && productData.variants.length > 0) ? 'block' : 'none';
+          } else {
+            el.style.display = '';
+          }
+        }
+      });
+    });
+  });
+}
+// ===== FIM WHOLESALE =====
+
   // ADD TO CART button
 /**
  * Check if product can be purchased
