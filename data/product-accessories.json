@@ -208,6 +208,57 @@
     "featured": false,
     "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS"
   },
+
+ "cleaning-cap-box-of-20": {
+  "id": "cleaning-cap-box-of-20",
+  "name": "Cleaning Cap (Box of 20)",
+  "category": "Accessories",
+  "subcategory": "Machine Accessories",
+  "description": "Special foam to clean needle tips during the tattoo procedure. Pigments or paper residue can accumulate and prevent ink from flowing properly — the Cleaning Cap removes any residue and avoids new accumulation, keeping your work clean and precise.",
+  "features": [
+    "Box of 20 units",
+    "Removes pigment and paper residue from needle tips",
+    "Prevents ink flow blockage",
+    "Safe and effective needle maintenance",
+    "Easy to use during sessions"
+  ],
+  "stripe": {
+    "productId": "prod_U4lm1JPKftJokx",
+    "priceId": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
+  },
+  "price": 9.00,
+  "variants": [],
+  "size": "20 units",
+  "image": "/images/products/accessories/cleaning-cap-box-of-20.webp",
+  "images": [
+    "/images/products/accessories/cleaning-cap-box-of-20.webp",
+    "/images/products/accessories/cleaning-cap-box-of-20-1.webp",
+    "/images/products/accessories/cleaning-cap-box-of-20-2.webp"
+  ],
+  "content": {
+    "usage_instructions": "Add a few drops of distilled water to the Cleaning Cap.\nMix and use whenever necessary during the procedure to clean needle tips."
+  },
+  "inventory": {
+    "stock_quantity": 4,
+    "stock_status": "in_stock",
+    "low_stock_threshold": 2
+  },
+  "seo": {
+    "meta_title": "Cleaning Cap (Box of 20) | Electric Ink Ireland",
+    "meta_description": "Special foam to clean needle tips during tattooing. Removes pigment and paper residue, prevents ink flow blockage. Box of 20 units. Shop now at Electric Ink Ireland.",
+    "keywords": [
+      "accessories",
+      "cleaning cap",
+      "needle cleaning",
+      "ink caps",
+      "tattoo hygiene"
+    ]
+  },
+  "inStock": true,
+  "featured": false,
+  "stripe_price_id": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
+},
+
   "black-medical-bibs": {
     "id": "black-medical-bibs",
     "name": "Black Medical Bibs",
