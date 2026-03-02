@@ -209,11 +209,11 @@
     "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS"
   },
 
- "cleaning-cap-box-of-20": {
-  "id": "cleaning-cap-box-of-20",
+ "cleaning-cap-(box-of-20)": {
+  "id": "cleaning-cap-(box-of-20)",
   "name": "Cleaning Cap (Box of 20)",
   "category": "Accessories",
-  "subcategory": "Machine Accessories",
+  "subcategory": "",
   "description": "Special foam to clean needle tips during the tattoo procedure. Pigments or paper residue can accumulate and prevent ink from flowing properly — the Cleaning Cap removes any residue and avoids new accumulation, keeping your work clean and precise.",
   "features": [
     "Box of 20 units",
@@ -227,7 +227,14 @@
     "priceId": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
   },
   "price": 9.00,
-  "variants": [],
+  "variants": [
+    {
+      "id": "cleaning-cap-(box-of-20)-default",
+      "label": "Default",
+      "quantity": 4,
+      "image": "/images/products/accessories/cleaning-cap-box-of-20.webp"
+    }
+  ],
   "size": "20 units",
   "image": "/images/products/accessories/cleaning-cap-box-of-20.webp",
   "images": [
