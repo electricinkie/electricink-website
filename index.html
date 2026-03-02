@@ -45,37 +45,134 @@
   <!-- Header será injetado pelo mobile-header.js -->
     <script type="module" src="/js/toast-shim.js"></script>
     <script type="module" src="/js/index-init.js"></script>
+    <script type="module" src="/js/hero.js"></script>
   
-  <!-- HERO SECTION - TO BE IMPLEMENTED
-  Suggested structure (do not implement, just document):
-
-  Headline: "Official Electric Ink Distributor — Ireland"
-  Subheadline: "Professional tattoo supplies. Same-day delivery in Dublin (D01–D08). Order by 2pm."
-  CTA Primary: "Shop Supplies"
-  CTA Secondary: "Order via WhatsApp"
-
-  Trust badges to display:
-  - "Official Distributor"
-  - "Same-Day Delivery (Dublin)"
-  - "REACH Compliant Products"
-  - "Professional Grade"
-  -->
-
   <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-video-container">
-      <video class="hero-video"
-             autoplay
-             muted
-             loop
-             playsinline
-             webkit-playsinline
-             preload="auto"
-             poster="/images/home/hero-poster.jpg">
-        <source src="/images/home/hero-720.webm" type="video/webm">
-        <source src="/images/home/hero-poster.mp4" type="video/mp4">
-      </video>
+  <section class="hero-section" data-hero-section data-category="cosmetics" role="region" aria-roledescription="carousel" aria-label="Featured product categories" tabindex="0">
+    <div class="hero-viewport" data-hero-viewport>
+      <div class="hero-track" data-hero-track>
+        <article class="hero-slide" id="hero-slide-cosmetics" data-category="cosmetics" data-label="Cosmetics" role="group" aria-roledescription="slide" aria-label="1 of 6" aria-hidden="false">
+          <div class="hero-shell">
+            <div class="hero-copy">
+              <h1 class="hero-title">Professional <span class="hero-accent-word">aftercare</span> and skin prep.</h1>
+              <p class="hero-description">Products for before, during and after tattoo sessions, with official distributor support in Ireland.</p>
+              <div class="hero-actions">
+                <a class="hero-cta" href="/category.html?cat=cosmetics">Shop cosmetics</a>
+              </div>
+            </div>
+            <div class="hero-media">
+              <div class="hero-masonry">
+                <figure class="hero-card hero-card-dominant"><img src="/images/products/cosmetics/after-all-250ml.webp" alt="Cosmetics featured product" loading="eager" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-a"><img src="/images/products/cosmetics/cat-slobber-250g-tradicional.webp" alt="Cosmetics support product one" loading="eager" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-b"><img src="/images/products/cosmetics/clean-up-1l.webp" alt="Cosmetics support product two" loading="eager" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-c"><img src="/images/products/cosmetics/tattoo-balm-25g.webp" alt="Cosmetics support product three" loading="eager" decoding="async"></figure>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide" id="hero-slide-cartridges" data-category="cartridges" data-label="Cartridges" role="group" aria-roledescription="slide" aria-label="2 of 6" aria-hidden="true">
+          <div class="hero-shell">
+            <div class="hero-copy">
+              <h2 class="hero-title">Pro <span class="hero-accent-word">cartridges</span> for all techniques.</h2>
+              <p class="hero-description">Professional cartridge range selected for precise linework, shading and consistent session flow.</p>
+              <div class="hero-actions">
+                <a class="hero-cta" href="/category.html?cat=cartridges">Shop cartridges</a>
+              </div>
+            </div>
+            <div class="hero-media">
+              <div class="hero-masonry">
+                <figure class="hero-card hero-card-dominant"><img src="/images/products/cartridges/rl-0.25/0.25-rl-cover.webp" alt="Cartridges featured product" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-a"><img src="/images/products/cartridges/rl-0.30/0.30-rl-cover.webp" alt="Cartridges support product one" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-b"><img src="/images/products/cartridges/mg-0.30/0.30-mg-cover.webp" alt="Cartridges support product two" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-c"><img src="/images/products/cartridges/rs-0.30/0.30-rs-cover.webp" alt="Cartridges support product three" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide" id="hero-slide-inks" data-category="inks" data-label="Artistic Inks" role="group" aria-roledescription="slide" aria-label="3 of 6" aria-hidden="true">
+          <div class="hero-shell">
+            <div class="hero-copy">
+              <h2 class="hero-title">High-quality <span class="hero-accent-word">artistic inks</span>.</h2>
+              <p class="hero-description">Raven Black and Ghost White in stock, with a full colour range available in the category.</p>
+              <div class="hero-actions">
+                <a class="hero-cta" href="/category.html?cat=inks">Shop artistic inks</a>
+              </div>
+            </div>
+            <div class="hero-media">
+              <div class="hero-masonry">
+                <figure class="hero-card hero-card-dominant"><img src="/images/products/artistic-inks/30ml-raven-black.webp" alt="Artistic inks featured product" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-a"><img src="/images/products/artistic-inks/30ml-fire-red.webp" alt="Artistic inks support product one" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-b"><img src="/images/products/artistic-inks/30ml-electric-blue.webp" alt="Artistic inks support product two" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-c"><img src="/images/products/artistic-inks/30ml-ghost-white.webp" alt="Artistic inks support product three" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide" id="hero-slide-accessories" data-category="accessories" data-label="Accessories" role="group" aria-roledescription="slide" aria-label="4 of 6" aria-hidden="true">
+          <div class="hero-shell">
+            <div class="hero-copy">
+              <h2 class="hero-title">Essential studio <span class="hero-accent-word">accessories</span>.</h2>
+              <p class="hero-description">Essential tattoo tools and accessories for daily studio workflow, ready to browse by category.</p>
+              <div class="hero-actions">
+                <a class="hero-cta" href="/category.html?cat=accessories">Shop accessories</a>
+              </div>
+            </div>
+            <div class="hero-media">
+              <div class="hero-masonry">
+                <figure class="hero-card hero-card-dominant"><img src="/images/products/accessories/all-grips.webp" alt="Accessories featured product" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-a"><img src="/images/products/accessories/black-nitrile-gloves-box.webp" alt="Accessories support product one" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-b"><img src="/images/products/accessories/wash-bottle-500ml.webp" alt="Accessories support product two" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-c"><img src="/images/products/accessories/foam-bottle.webp" alt="Accessories support product three" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide" id="hero-slide-machines" data-category="machines" data-label="Tattoo Machines" role="group" aria-roledescription="slide" aria-label="5 of 6" aria-hidden="true">
+          <div class="hero-shell">
+            <div class="hero-copy">
+              <h2 class="hero-title">Professional <span class="hero-accent-word">tattoo machines</span> and kits.</h2>
+              <p class="hero-description">Professional tattoo machines, grips and complete kits selected for stable, consistent performance.</p>
+              <div class="hero-actions">
+                <a class="hero-cta" href="/category.html?cat=machines">Shop tattoo machines</a>
+              </div>
+            </div>
+            <div class="hero-media">
+              <div class="hero-masonry">
+                <figure class="hero-card hero-card-dominant"><img src="/images/products/tattoo-machines/ultra-pen-2-cover.webp" alt="Tattoo machines featured product" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-a"><img src="/images/products/tattoo-machines/electra-pop-black-1.webp" alt="Tattoo machines support product one" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-b"><img src="/images/products/tattoo-machines/pen-3-cover.webp" alt="Tattoo machines support product two" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-c"><img src="/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp" alt="Tattoo machines support product three" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide" id="hero-slide-power" data-category="power-supplies" data-label="Power Supplies" role="group" aria-roledescription="slide" aria-label="6 of 6" aria-hidden="true">
+          <div class="hero-shell">
+            <div class="hero-copy">
+              <h2 class="hero-title">Wireless <span class="hero-accent-word">power supplies</span> and batteries.</h2>
+              <p class="hero-description">Wireless power supplies, batteries, chargers and complete kits for uninterrupted sessions.</p>
+              <div class="hero-actions">
+                <a class="hero-cta" href="/category.html?cat=power-supplies">Shop power supplies</a>
+              </div>
+            </div>
+            <div class="hero-media">
+              <div class="hero-masonry">
+                <figure class="hero-card hero-card-dominant"><img src="/images/products/power-supplies/power-3-wireless-tattoo-power-supply-cover.webp" alt="Power supplies featured product" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-a"><img src="/images/products/power-supplies/electric-ink-charger-cover.webp" alt="Power supplies support product one" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-b"><img src="/images/products/power-supplies/rechargeable-battery-Power-3-slim-cover.webp" alt="Power supplies support product two" loading="lazy" decoding="async"></figure>
+                <figure class="hero-card hero-card-support-c"><img src="/images/products/power-supplies/Wireless-ps-power-1-cover.webp" alt="Power supplies support product three" loading="lazy" decoding="async"></figure>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
+
   </section>
 
   <!-- Main Content -->
