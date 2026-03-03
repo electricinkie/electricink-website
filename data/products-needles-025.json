@@ -96,6 +96,7 @@
     "images": [
       "/images/products/cartridges/rl-0.25/0.25-rl-cover.webp",
       "/images/products/cartridges/rl-0.25/0.25-rl-cover-2.webp",
+      "/images/products/cartridges/rl-0.25/fit-rl.webp",
       "/images/products/cartridges/rl-0.25/coifa-rl.webp",
       "/images/products/cartridges/rl-0.25/box-rl-0.25-20units.webp"
     ],
@@ -207,6 +208,7 @@
     "images": [
       "/images/products/cartridges/rs-0.25/0.25-rs-cover.webp",
       "/images/products/cartridges/rs-0.25/0.25-rs-cover-2.webp",
+      "/images/products/cartridges/rs-0.25/fit-rs.webp",
       "/images/products/cartridges/rs-0.25/coifa-rs.webp",
       "/images/products/cartridges/rs-0.25/box-rs-0.25-20units.webp"
     ],
@@ -347,6 +349,7 @@
     "images": [
       "/images/products/cartridges/rmg-0.25/0.25-rmg-cover.webp",
       "/images/products/cartridges/rmg-0.25/0.25-rmg-cover-2.webp",
+      "/images/products/cartridges/rmg-0.25/fit-rmg.webp",
       "/images/products/cartridges/rmg-0.25/coifa-rmg.webp",
       "/images/products/cartridges/rmg-0.25/box-rmg-0.25-20units.webp"
     ],
