@@ -604,7 +604,7 @@
   },
   "pen-pop-2-deluxe": {
     "id": "pen-pop-2-deluxe",
-    "name": "Pen Pop 2 Deluxe",
+    "name": "Combo Pen Pop 2 Deluxe",
     "category": "Tattoo Machines",
     "subcategory": "Rotary Machines",
     "description": "Pen Pop 2 Deluxe — rotary tattoo machine built to order. Configure motor, stroke, damping, and grip to match your technique. Built for artists who demand power and precision in a single machine.",
@@ -656,7 +656,7 @@
     },
     "inventory": {
       "stock_quantity": 0,
-      "stock_status": "available_on_request",
+      "stock_status": "out_of_stock",
       "low_stock_threshold": 1
     },
     "seo": {
@@ -673,6 +673,6 @@
     "inStock": false,
     "featured": false,
     "stripe_price_id": "",
-    "orderOnRequest": true
+    "orderOnRequest": false
   }
 }
