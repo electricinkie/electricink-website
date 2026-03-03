@@ -175,6 +175,12 @@
       return false;
     }
 
+    // Order on Request — always purchasable regardless of stock
+    if (productData?.orderOnRequest === true ||
+        productData?.inventory?.stock_status === 'available_on_request') {
+      return true;
+    }
+
     // 4. Variant tem quantity definido?
     if (variant.quantity !== undefined && variant.quantity !== null) {
       // Disponível apenas se quantity > 0
@@ -743,13 +749,23 @@ if (productData.wholesale && productData.wholesale.enabled) {
       <div class="tier-label">${tier.label}</div>
       <div class="tier-qty">${tier.quantity} units</div>
       <div class="tier-unit-price">€${tier.unit_price.toFixed(2)}/unit</div>
-      <div class="tier-total">€${tier.price.toFixed(2)} total</div>
+      ${(() => {
+        const individualPrice = productData.basic?.price ?? productData.price ?? 0;
+        const individualTotal = individualPrice * tier.quantity;
+        const saving = individualTotal - tier.price;
+        return saving > 0.01
+          ? `<div class="tier-saving"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.59 13.41 11 3H4v7l9.59 9.59a2 2 0 0 0 2.82 0l4.18-4.18a2 2 0 0 0 0-2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> Save €${saving.toFixed(2)}</div>`
+          : '';
+      })()}
     `;
     card.addEventListener('click', () => {
       tiersGrid.querySelectorAll('.wholesale-tier-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       selectedTier = tier;
-      wholesaleBuyBtn.textContent = `Order ${tier.label} — €${tier.price.toFixed(2)} inc. VAT`;
+      const individualPrice = productData.basic?.price ?? productData.price ?? 0;
+      const individualTotal = individualPrice * tier.quantity;
+      const saving = Math.max(0, individualTotal - tier.price);
+      wholesaleBuyBtn.textContent = `Order ${tier.label} — Save €${saving.toFixed(2)}`;
     });
     tiersGrid.appendChild(card);
   });
@@ -758,7 +774,12 @@ if (productData.wholesale && productData.wholesale.enabled) {
 
   const wholesaleBuyBtn = document.createElement('button');
   wholesaleBuyBtn.className = 'btn-add-to-cart btn-wholesale-buy';
-  wholesaleBuyBtn.textContent = `Order ${selectedTier.label} — €${selectedTier.price.toFixed(2)} inc. VAT`;
+  {
+    const individualPrice = productData.basic?.price ?? productData.price ?? 0;
+    const individualTotal = individualPrice * selectedTier.quantity;
+    const saving = Math.max(0, individualTotal - selectedTier.price);
+    wholesaleBuyBtn.textContent = `Order ${selectedTier.label} — Save €${saving.toFixed(2)}`;
+  }
   wholesaleBuyBtn.addEventListener('click', () => {
     if (!selectedTier) return;
     const itemToAdd = {

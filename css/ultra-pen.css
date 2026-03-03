@@ -396,7 +396,7 @@
 
 .product-showcase .product-actions .btn-add-to-cart:hover {
   background: #43BDAB;
-  color: #000;
+  color: #fff;
   transform: translateY(-2px);
 }
 

@@ -302,7 +302,7 @@
 
 .btn-add-to-cart:hover {
   background: #43BDAB;
-  color: #000;
+  color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
@@ -1151,6 +1151,19 @@
   font-weight: 700;
   color: #000;
   margin-top: 4px;
+}
+
+.tier-saving {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+  background: #43BDAB;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  padding: 2px 6px;
 }
 
 .btn-wholesale-buy {
