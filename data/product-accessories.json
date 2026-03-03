@@ -227,14 +227,7 @@
     "priceId": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
   },
   "price": 9.00,
-  "variants": [
-    {
-      "id": "cleaning-cap-(box-of-20)-default",
-      "label": "Default",
-      "quantity": 4,
-      "image": "/images/products/accessories/cleaning-cap-box-of-20.webp"
-    }
-  ],
+  "variants": [],
   "size": "20 units",
   "image": "/images/products/accessories/cleaning-cap-box-of-20.webp",
   "images": [
