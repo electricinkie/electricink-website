@@ -18,6 +18,7 @@
     '/data/products-cosmetics.json',
     '/data/products-artistic-inks.json',
     '/data/product-tattoo-machines.json',
+    '/data/products-power-supplies.json',
     '/data/products-needles-022.json',
     '/data/products-needles-025.json',
     '/data/products-needles-030.json'
