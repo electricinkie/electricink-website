@@ -655,8 +655,8 @@
       "warranty": "Machine & Power Supply: 1 year. Charger & Batteries: 90 days."
     },
     "inventory": {
-      "stock_quantity": 0,
-      "stock_status": "out_of_stock",
+      "stock_quantity": 1,
+      "stock_status": "in_stock",
       "low_stock_threshold": 1
     },
     "seo": {
@@ -670,7 +670,7 @@
         "Electric Ink"
       ]
     },
-    "inStock": false,
+    "inStock": true,
     "featured": false,
     "stripe_price_id": "",
     "orderOnRequest": false
