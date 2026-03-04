@@ -213,10 +213,32 @@
 .product-stock {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.stock-group {
+  display: flex;
+  align-items: center;
   gap: 8px;
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   color: #666;
+}
+
+.btn-share-inline {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.btn-share-inline:hover {
+  color: #43BDAB;
 }
 
 .stock-dot {
@@ -571,8 +593,8 @@
   .product-stock { order: 5; }
   .product-variants { order: 6; }
   .btn-add-to-cart { order: 7; }
-  .product-how-to-use { order: 8; }
-  .product-description { order: 9; }
+  .product-description { order: 8; }
+  .product-how-to-use { order: 9; }
   .product-trust { order: 10; }
   .product-usage { order: 11; }
   .product-materials { order: 12; }
@@ -669,9 +691,8 @@
 
 .product-how-to-use {
   margin: 32px 0;
-  padding: 24px 0;
+  padding: 24px 0 0 0;
   border-top: 1px solid #e8e8e8;
-  border-bottom: 1px solid #e8e8e8;
 }
 
 .how-to-toggle {

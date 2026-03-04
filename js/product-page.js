@@ -318,6 +318,25 @@
 
     if (dot) dot.style.background = color;
     if (text) text.textContent = label;
+
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'btn-share-inline';
+    shareBtn.title = 'Share this product';
+    shareBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+
+    shareBtn.addEventListener('click', async () => {
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: name, url: window.location.href });
+        } else {
+          await navigator.clipboard.writeText(window.location.href);
+          shareBtn.title = 'Link copied!';
+          setTimeout(() => { shareBtn.title = 'Share this product'; }, 2000);
+        }
+      } catch (e) {}
+    });
+
+    if (productStock) productStock.appendChild(shareBtn);
   })();
 
   // RENDER images
