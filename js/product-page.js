@@ -811,11 +811,11 @@ if (productData.wholesale && productData.wholesale.enabled) {
     };
     if (window.cart && window.cart.addItem) {
       if (window.cart.addItem(itemToAdd)) {
-        const orig = wholesaleBuyBtn.textContent;
-        wholesaleBuyBtn.textContent = '✓ Added!';
+        const orig = wholesaleBuyBtn.innerHTML;
+        wholesaleBuyBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/></svg> Added!`;
         wholesaleBuyBtn.style.background = '#43BDAB';
         setTimeout(() => {
-          wholesaleBuyBtn.textContent = orig;
+          wholesaleBuyBtn.innerHTML = orig;
           wholesaleBuyBtn.style.background = '';
         }, 2000);
       }
@@ -1041,12 +1041,11 @@ function checkProductAvailability(product) {
           if (window.cart.addItem(itemToAdd)) {
             // Success feedback no botão
             const btn = this;
-            const originalText = btn.textContent;
-            btn.textContent = '✓ Added!';
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/></svg> Added!`;
             btn.style.background = '#43BDAB';
-            
             setTimeout(() => {
-              btn.textContent = originalText;
+              btn.innerHTML = originalHTML;
               btn.style.background = '';
             }, 2000);
           } else {
@@ -1082,25 +1081,24 @@ function checkProductAvailability(product) {
   // Star input interaction
   const starBtns = document.querySelectorAll('.star-btn');
   starBtns.forEach(star => {
-    star.addEventListener('mouseover', () => {
-      const val = Number(star.dataset.value);
+    function renderStars(val) {
       starBtns.forEach(s => {
-        s.textContent = Number(s.dataset.value) <= val ? '★' : '☆';
+        s.innerHTML = Number(s.dataset.value) <= val
+          ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="#43BDAB" stroke="#43BDAB" stroke-width="1.5"><polygon points="12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9"/></svg>'
+          : '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.5"><polygon points="12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9"/></svg>';
         s.classList.toggle('active', Number(s.dataset.value) <= val);
       });
+    }
+    star.addEventListener('mouseover', () => {
+      const val = Number(star.dataset.value);
+      renderStars(val);
     });
     star.addEventListener('mouseleave', () => {
-      starBtns.forEach(s => {
-        s.textContent = Number(s.dataset.value) <= selectedRating ? '★' : '☆';
-        s.classList.toggle('active', Number(s.dataset.value) <= selectedRating);
-      });
+      renderStars(selectedRating);
     });
     star.addEventListener('click', () => {
       selectedRating = Number(star.dataset.value);
-      starBtns.forEach(s => {
-        s.textContent = Number(s.dataset.value) <= selectedRating ? '★' : '☆';
-        s.classList.toggle('active', Number(s.dataset.value) <= selectedRating);
-      });
+      renderStars(selectedRating);
     });
   });
 
@@ -1128,13 +1126,13 @@ function checkProductAvailability(product) {
       summaryEl.innerHTML = `
         <div>
           <div class="reviews-avg">${data.average}</div>
-          <div class="reviews-stars-display">${'★'.repeat(Math.round(data.average))}${'☆'.repeat(5 - Math.round(data.average))}</div>
+          <div class="reviews-stars-display">${[...Array(5)].map((_,i)=>i<Math.round(data.average)?'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>':'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>').join('')}</div>
           <div class="reviews-count">${data.total} review${data.total !== 1 ? 's' : ''}</div>
         </div>
         <div class="reviews-bars">
           ${dist.map(d => `
             <div class="reviews-bar-row">
-              <span>${d.stars}★</span>
+              <span>${d.stars}<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg></span>
               <div class="reviews-bar-track">
                 <div class="reviews-bar-fill" style="width:${data.total > 0 ? Math.round(d.count / data.total * 100) : 0}%"></div>
               </div>
@@ -1150,7 +1148,7 @@ function checkProductAvailability(product) {
             <span class="review-author">${r.reviewer_name.replace(/</g, '&lt;')}</span>
             <span class="review-date">${new Date(r.created_at).toLocaleDateString('en-IE', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
           </div>
-          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+          <div class="review-stars">${[...Array(5)].map((_,i)=>i<r.rating?'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>':'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>').join('')}</div>
           ${r.comment ? `<p class="review-comment">${r.comment.replace(/</g, '&lt;')}</p>` : ''}
         </div>
       `).join('');
@@ -1213,9 +1211,9 @@ function checkProductAvailability(product) {
                 <span class="review-author">${reviewerName.replace(/</g,'&lt;')}</span>
                 <span class="review-date">Just now</span>
               </div>
-              <div class="review-stars">${'★'.repeat(selectedRating)}${'☆'.repeat(5 - selectedRating)}</div>
-              ${comment ? `<p class="review-comment">${comment.replace(/</g,'&lt;')}</p>` : ''}
-              <p class="review-note" style="margin-top:12px;">⏳ Your review will appear after a quick check — usually within 24h.</p>
+              <div class="review-stars">${[...Array(5)].map((_,i)=>i<selectedRating?'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>':'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>').join('')}</div>
+              ${comment ? `<p class=\"review-comment\">${comment.replace(/</g,'&lt;')}</p>` : ''}
+              <p class=\"review-note\" style=\"margin-top:12px;display:flex;align-items:center;gap:6px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/></svg> Your review will appear after a quick check — usually within 24h.</p>
             </div>
           `;
           setTimeout(loadReviews, 1200);
@@ -1236,5 +1234,9 @@ function checkProductAvailability(product) {
   }
 
   loadReviews();
+  // Atualização automática dos reviews a cada 10 segundos
+  setInterval(() => {
+    loadReviews();
+  }, 10000);
 
 })();
