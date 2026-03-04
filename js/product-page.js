@@ -1074,4 +1074,151 @@ function checkProductAvailability(product) {
     breadcrumbProduct.textContent = name;
   }
 
+  // ===== REVIEWS =====
+  const REVIEWS_API = 'https://ei-internal-production.up.railway.app';
+
+  let selectedRating = 0;
+
+  // Star input interaction
+  const starBtns = document.querySelectorAll('.star-btn');
+  starBtns.forEach(star => {
+    star.addEventListener('mouseover', () => {
+      const val = Number(star.dataset.value);
+      starBtns.forEach(s => {
+        s.textContent = Number(s.dataset.value) <= val ? '★' : '☆';
+        s.classList.toggle('active', Number(s.dataset.value) <= val);
+      });
+    });
+    star.addEventListener('mouseleave', () => {
+      starBtns.forEach(s => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? '★' : '☆';
+        s.classList.toggle('active', Number(s.dataset.value) <= selectedRating);
+      });
+    });
+    star.addEventListener('click', () => {
+      selectedRating = Number(star.dataset.value);
+      starBtns.forEach(s => {
+        s.textContent = Number(s.dataset.value) <= selectedRating ? '★' : '☆';
+        s.classList.toggle('active', Number(s.dataset.value) <= selectedRating);
+      });
+    });
+  });
+
+  // Load and render reviews
+  async function loadReviews() {
+    try {
+      const res = await fetch(`${REVIEWS_API}/api/reviews?product_id=${encodeURIComponent(productId)}`);
+      const data = await res.json();
+
+      const summaryEl = document.getElementById('reviewsSummary');
+      const listEl = document.getElementById('reviewsList');
+
+      if (data.total === 0) {
+        summaryEl.innerHTML = '';
+        listEl.innerHTML = '<p class="reviews-empty">No reviews yet — be the first!</p>';
+        return;
+      }
+
+      // Distribution
+      const dist = [5,4,3,2,1].map(n => ({
+        stars: n,
+        count: data.reviews.filter(r => r.rating === n).length
+      }));
+
+      summaryEl.innerHTML = `
+        <div>
+          <div class="reviews-avg">${data.average}</div>
+          <div class="reviews-stars-display">${'★'.repeat(Math.round(data.average))}${'☆'.repeat(5 - Math.round(data.average))}</div>
+          <div class="reviews-count">${data.total} review${data.total !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="reviews-bars">
+          ${dist.map(d => `
+            <div class="reviews-bar-row">
+              <span>${d.stars}★</span>
+              <div class="reviews-bar-track">
+                <div class="reviews-bar-fill" style="width:${data.total > 0 ? Math.round(d.count / data.total * 100) : 0}%"></div>
+              </div>
+              <span>${d.count}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      listEl.innerHTML = data.reviews.map(r => `
+        <div class="review-card">
+          <div class="review-card-header">
+            <span class="review-author">${r.reviewer_name.replace(/</g, '&lt;')}</span>
+            <span class="review-date">${new Date(r.created_at).toLocaleDateString('en-IE', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+          </div>
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+          ${r.comment ? `<p class="review-comment">${r.comment.replace(/</g, '&lt;')}</p>` : ''}
+        </div>
+      `).join('');
+
+    } catch (err) {
+      console.warn('Could not load reviews:', err);
+    }
+  }
+
+  // Submit review
+  const reviewSubmitBtn = document.getElementById('reviewSubmitBtn');
+  if (reviewSubmitBtn) {
+    reviewSubmitBtn.addEventListener('click', async () => {
+      const reviewerName = document.getElementById('reviewName').value.trim();
+      const comment = document.getElementById('reviewComment').value.trim();
+
+      if (!selectedRating) {
+        alert('Please select a star rating.');
+        return;
+      }
+      if (!reviewerName) {
+        alert('Please enter your name.');
+        return;
+      }
+
+      reviewSubmitBtn.disabled = true;
+      reviewSubmitBtn.textContent = 'Submitting...';
+
+      try {
+        const res = await fetch(`${REVIEWS_API}/api/reviews`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            product_id: productId,
+            reviewer_name: reviewerName,
+            rating: selectedRating,
+            comment: comment || null
+          })
+        });
+
+        if (res.ok) {
+          const name = document.getElementById('reviewName').value.trim();
+          const comment = document.getElementById('reviewComment').value.trim();
+          const rating = selectedRating;
+
+          document.getElementById('reviewsFormWrap').innerHTML = `
+            <div class="review-card" style="border-top:1px solid #f0f0f0;opacity:0.6;">
+              <div class="review-card-header">
+                <span class="review-author">${name.replace(/</g,'&lt;')}</span>
+                <span class="review-date">Just now</span>
+              </div>
+              <div class="review-stars">${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</div>
+              ${comment ? `<p class="review-comment">${comment.replace(/</g,'&lt;')}</p>` : ''}
+              <p class="review-note" style="margin-top:12px;">⏳ Your review will appear after a quick check — usually within 24h.</p>
+            </div>
+          `;
+        } else {
+          throw new Error('Failed');
+        }
+      } catch (err) {
+        reviewSubmitBtn.disabled = false;
+        reviewSubmitBtn.textContent = 'Submit Review';
+        alert('Failed to submit review. Please try again.');
+      }
+    });
+  }
+
+  loadReviews();
+  // ===== FIM REVIEWS =====
+
 })();
