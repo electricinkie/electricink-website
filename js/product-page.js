@@ -1167,6 +1167,7 @@ function checkProductAvailability(product) {
       const reviewerName = document.getElementById('reviewName').value.trim();
       const comment = document.getElementById('reviewComment').value.trim();
 
+      // Validação de tamanho e caracteres
       if (!selectedRating) {
         alert('Please select a star rating.');
         return;
@@ -1175,9 +1176,22 @@ function checkProductAvailability(product) {
         alert('Please enter your name.');
         return;
       }
+      if (reviewerName.length > 32) {
+        alert('Name too long (max 32 chars).');
+        return;
+      }
+      if (!/^[\w\s\-'.À-ÿ]+$/i.test(reviewerName)) {
+        alert('Name contains invalid characters.');
+        return;
+      }
+      if (comment.length > 400) {
+        alert('Comment too long (max 400 chars).');
+        return;
+      }
 
       reviewSubmitBtn.disabled = true;
       reviewSubmitBtn.textContent = 'Submitting...';
+      reviewSubmitBtn.classList.add('loading');
 
       try {
         const res = await fetch(`${REVIEWS_API}/api/reviews`, {
@@ -1190,35 +1204,37 @@ function checkProductAvailability(product) {
             comment: comment || null
           })
         });
+        const result = await res.json().catch(() => ({}));
 
-        if (res.ok) {
-          const name = document.getElementById('reviewName').value.trim();
-          const comment = document.getElementById('reviewComment').value.trim();
-          const rating = selectedRating;
-
+        if (res.ok && result.success !== false) {
           document.getElementById('reviewsFormWrap').innerHTML = `
             <div class="review-card" style="border-top:1px solid #f0f0f0;opacity:0.6;">
               <div class="review-card-header">
-                <span class="review-author">${name.replace(/</g,'&lt;')}</span>
+                <span class="review-author">${reviewerName.replace(/</g,'&lt;')}</span>
                 <span class="review-date">Just now</span>
               </div>
-              <div class="review-stars">${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</div>
+              <div class="review-stars">${'★'.repeat(selectedRating)}${'☆'.repeat(5 - selectedRating)}</div>
               ${comment ? `<p class="review-comment">${comment.replace(/</g,'&lt;')}</p>` : ''}
               <p class="review-note" style="margin-top:12px;">⏳ Your review will appear after a quick check — usually within 24h.</p>
             </div>
           `;
+          setTimeout(loadReviews, 1200);
         } else {
-          throw new Error('Failed');
+          let msg = result && result.message ? result.message : 'Failed to submit review.';
+          alert(msg);
+          reviewSubmitBtn.disabled = false;
+          reviewSubmitBtn.textContent = 'Submit Review';
         }
       } catch (err) {
         reviewSubmitBtn.disabled = false;
         reviewSubmitBtn.textContent = 'Submit Review';
         alert('Failed to submit review. Please try again.');
+      } finally {
+        reviewSubmitBtn.classList.remove('loading');
       }
     });
   }
 
   loadReviews();
-  // ===== FIM REVIEWS =====
 
 })();

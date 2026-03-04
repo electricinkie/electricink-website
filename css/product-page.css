@@ -1,3 +1,25 @@
+/* Spinner para botão de review submit */
+.btn-add-to-cart.loading {
+  position: relative;
+  color: transparent !important;
+}
+.btn-add-to-cart.loading:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border: 2px solid #43BDAB;
+  border-top: 2px solid #e8e8e8;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 /* ========================================
    BREADCRUMB
    ======================================== */
