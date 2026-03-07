@@ -784,6 +784,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         const salePayload = {
           shipping_address: order.shippingAddress || null,
           shipping_method: order.shippingMethod || null,
+          customer_phone: order.customerPhone || null,
+
           items: enrichedItems.map(it => ({
             ...it,
             price_ex: (() => {
