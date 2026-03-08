@@ -618,10 +618,10 @@
       "Blue ring finish"
     ],
     "stripe": {
-      "productId": "",
-      "priceId": ""
+      "productId": "prod_U6iKxHHOJywGAB",
+      "priceId": "price_1T8UtzAiq7NBxfpwVGiGvkZF"
     },
-    "price": 0,
+    "price": 550,
     "variants": [],
     "image": "/images/products/tattoo-machines/pp2-deluxe_power-pop-azul.webp",
     "images": [
@@ -656,7 +656,7 @@
     },
     "inventory": {
       "stock_quantity": 1,
-      "stock_status": "in_stock",
+      "stock_status": "available_on_request",
       "low_stock_threshold": 1
     },
     "seo": {
@@ -672,7 +672,7 @@
     },
     "inStock": true,
     "featured": false,
-    "stripe_price_id": "",
+    "stripe_price_id": "price_1T8UtzAiq7NBxfpwVGiGvkZF",
     "orderOnRequest": false
   }
 }
