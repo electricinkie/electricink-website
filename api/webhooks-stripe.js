@@ -430,7 +430,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       customerPhone: validatedMetadata.phone,
       shippingAddress: shippingAddress,
       items: enrichedItems,
-      shippingMethod: paymentIntent.metadata.shippingMethod || null,
+      shippingMethod: paymentIntent.metadata.shipping_method || 'standard',
       shippingCost_cents: shipping_cents,
       subtotal_cents: subtotal_cents,
       total_cents: paymentIntent.amount,

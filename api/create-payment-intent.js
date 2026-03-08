@@ -526,6 +526,7 @@ module.exports = async function handler(req, res) {
         },
         metadata: {
           ...metadata,
+          shipping_method: req.body.shippingMethod || (req.body.shippingAddress && req.body.shippingAddress.method) || 'standard',
           subtotal: totals.subtotal.toFixed(2),
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),

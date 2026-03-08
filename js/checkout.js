@@ -578,7 +578,7 @@ window.appliedDiscount = 0;
             const {error: confirmError} = await stripe.confirmCardPayment(
               clientSecret,
               {payment_method: ev.paymentMethod.id},
-              {handleActions: false}
+              {handleActions: true}
             );
 
             if (confirmError) {
