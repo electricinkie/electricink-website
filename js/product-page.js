@@ -1261,12 +1261,15 @@ function openNotifyMeModal() {
   if (errorEl) errorEl.textContent = '';
   if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
   backdrop.style.display = 'flex';
+  requestAnimationFrame(() => backdrop.classList.add('show'));
   setTimeout(() => { if (emailInput) emailInput.focus(); }, 100);
 }
 
 function closeNotifyMeModal() {
   const backdrop = document.getElementById('notifyMeBackdrop');
-  if (backdrop) backdrop.style.display = 'none';
+  if (!backdrop) return;
+  backdrop.classList.remove('show');
+  setTimeout(() => { backdrop.style.display = 'none'; }, 300);
 }
 
 async function submitNotifyMe() {
@@ -1306,3 +1309,7 @@ async function submitNotifyMe() {
     if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
   }
 }
+
+window.openNotifyMeModal = openNotifyMeModal;
+window.closeNotifyMeModal = closeNotifyMeModal;
+window.submitNotifyMe = submitNotifyMe;
