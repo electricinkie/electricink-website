@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found — Electric Ink Ireland</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <meta name="theme-color" content="#43BDAB">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/mobile-header.css">
+  <link rel="stylesheet" href="/css/desktop-header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <style>
+    .not-found-section {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .not-found-inner {
+      max-width: 480px;
+    }
+    .not-found-code {
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 1;
+      color: #43BDAB;
+      margin-bottom: 16px;
+    }
+    .not-found-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .not-found-message {
+      font-size: 15px;
+      color: #888;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .not-found-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: #43BDAB;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      background: transparent;
+      color: #43BDAB;
+      border: 1.5px solid #43BDAB;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: #43BDAB; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <script type="module" src="/js/mobile-header.js"></script>
+  <script type="module" src="/js/desktop-header.js"></script>
+
+  <section class="not-found-section">
+    <div class="not-found-inner">
+      <div class="not-found-code">404</div>
+      <h1 class="not-found-title">Page not found</h1>
+      <p class="not-found-message">The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
+      <div class="not-found-actions">
+        <a href="/" class="btn-primary">Go to Homepage</a>
+        <a href="/category.html" class="btn-secondary">Browse Products</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2025 Electric Ink Ireland. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/toast-shim.js"></script>
+
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+</body>
+</html>

@@ -929,6 +929,16 @@ function checkProductAvailability(product) {
       addToCartBtn.textContent = 'Coming Soon';
     } else if (availability.reason === 'out_of_stock') {
       addToCartBtn.textContent = 'Out of Stock';
+
+      // Notify Me button
+      const notifyBtn = document.createElement('button');
+      notifyBtn.id = 'notifyMeBtn';
+      notifyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notify me when back in stock`;
+      notifyBtn.style.cssText = 'display:flex;align-items:center;justify-content:center;width:100%;margin-top:10px;padding:11px 16px;border-radius:10px;border:1.5px solid #43BDAB;background:transparent;color:#43BDAB;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all 0.2s ease';
+      notifyBtn.onmouseenter = () => { notifyBtn.style.background = '#43BDAB'; notifyBtn.style.color = '#fff'; };
+      notifyBtn.onmouseleave = () => { notifyBtn.style.background = 'transparent'; notifyBtn.style.color = '#43BDAB'; };
+      notifyBtn.onclick = () => openNotifyMeModal();
+      addToCartBtn.parentNode.insertBefore(notifyBtn, addToCartBtn.nextSibling);
     }
     
     // Show message to user
@@ -1240,3 +1250,59 @@ function checkProductAvailability(product) {
   }, 10000);
 
 })();
+
+function openNotifyMeModal() {
+  const backdrop = document.getElementById('notifyMeBackdrop');
+  const emailInput = document.getElementById('notifyMeEmail');
+  const errorEl = document.getElementById('notifyMeError');
+  const btn = document.getElementById('notifyMeSubmitBtn');
+  if (!backdrop) return;
+  if (emailInput) emailInput.value = '';
+  if (errorEl) errorEl.textContent = '';
+  if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
+  backdrop.style.display = 'flex';
+  setTimeout(() => { if (emailInput) emailInput.focus(); }, 100);
+}
+
+function closeNotifyMeModal() {
+  const backdrop = document.getElementById('notifyMeBackdrop');
+  if (backdrop) backdrop.style.display = 'none';
+}
+
+async function submitNotifyMe() {
+  const emailInput = document.getElementById('notifyMeEmail');
+  const errorEl = document.getElementById('notifyMeError');
+  const btn = document.getElementById('notifyMeSubmitBtn');
+  const email = emailInput?.value?.trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (errorEl) errorEl.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  const productId = new URLSearchParams(window.location.search).get('id') || 'unknown';
+  const productName = document.getElementById('product-name')?.textContent?.trim() || '';
+
+  if (btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
+  if (errorEl) errorEl.textContent = '';
+
+  try {
+    const res = await fetch('https://ei-internal-production.up.railway.app/api/waitlist/notify-me', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: productId, product_name: productName, email })
+    });
+
+    if (res.ok) {
+      closeNotifyMeModal();
+      window.toast.success("You're on the list! We'll notify you when it's back in stock.");
+    } else {
+      const data = await res.json().catch(() => ({}));
+      if (errorEl) errorEl.textContent = data.error || 'Something went wrong. Please try again.';
+      if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
+    }
+  } catch {
+    if (errorEl) errorEl.textContent = 'Connection error. Please try again.';
+    if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
+  }
+}
