@@ -928,11 +928,24 @@ window.appliedDiscount = 0;
     } catch {}
   }
 
-  // Trigger on email blur
-  document.addEventListener('DOMContentLoaded', function () {
+  // Trigger abandoned cart save — blur, input change, or first interaction after email exists
+  function attachAbandonedCartTrigger() {
     const emailInput = document.querySelector('#email');
-    if (emailInput) emailInput.addEventListener('blur', saveAbandonedCart);
-  });
+    if (!emailInput) return;
+    // blur on the email field itself
+    emailInput.addEventListener('blur', saveAbandonedCart);
+    // also trigger when user interacts with any other field (catches readonly prefill case)
+    ['#firstName', '#lastName', '#address', '#city', '#postalCode', '#phone'].forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.addEventListener('focus', saveAbandonedCart, { once: true });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachAbandonedCartTrigger);
+  } else {
+    attachAbandonedCartTrigger();
+  }
 
     const email = document.getElementById('email') ? document.getElementById('email').value : '';
     if (!email) {
