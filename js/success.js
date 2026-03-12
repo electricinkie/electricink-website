@@ -99,6 +99,26 @@
     document.getElementById('cardLast4').textContent = orderData.cardLast4;
   }
 
+  // ────────── Google Analytics — purchase event ──────────
+  try {
+    if (typeof gtag === 'function' && orderData.items && orderData.totals) {
+      gtag('event', 'purchase', {
+        transaction_id: orderNumber,
+        currency: 'EUR',
+        value: orderData.totals.total || 0,
+        shipping: orderData.totals.shipping || 0,
+        items: orderData.items.map((item, i) => ({
+          item_id: item.id || `item_${i}`,
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity || 1
+        }))
+      });
+    }
+  } catch (e) {
+    console.warn('[GA] purchase event failed', e);
+  }
+
   // ────────── Clear Cart ──────────
   localStorage.removeItem('electricink_cart');
   

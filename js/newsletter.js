@@ -15,6 +15,7 @@
     const backdrop = document.getElementById('newsletterBackdrop');
     if (!backdrop) return;
     markSeen();
+    if (typeof gtag === 'function') gtag('event', 'newsletter_modal_open');
     backdrop.style.display = 'flex';
     requestAnimationFrame(() => backdrop.classList.add('show'));
     setTimeout(() => {
@@ -73,6 +74,7 @@
       });
 
       if (res.ok) {
+        if (typeof gtag === 'function') gtag('event', 'newsletter_signup', { method: 'modal' });
         // Hide form, show success state
         const formContent = document.querySelector('#newsletterModal .modal-content:not(#newsletterSuccess)');
         const successContent = document.getElementById('newsletterSuccess');

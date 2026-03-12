@@ -813,6 +813,11 @@ if (productData.wholesale && productData.wholesale.enabled) {
     };
     if (window.cart && window.cart.addItem) {
       if (window.cart.addItem(itemToAdd)) {
+        if (typeof gtag === 'function') gtag('event', 'add_to_cart', {
+          currency: 'EUR',
+          value: itemToAdd.price,
+          items: [{ item_id: itemToAdd.id, item_name: itemToAdd.name, price: itemToAdd.price, quantity: itemToAdd.quantity || 1 }]
+        });
         const orig = wholesaleBuyBtn.innerHTML;
         wholesaleBuyBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/></svg> Added!`;
         wholesaleBuyBtn.style.background = '#43BDAB';
@@ -1051,6 +1056,11 @@ function checkProductAvailability(product) {
         // Add to cart usando global system
         if (window.cart && window.cart.addItem) {
           if (window.cart.addItem(itemToAdd)) {
+            if (typeof gtag === 'function') gtag('event', 'add_to_cart', {
+              currency: 'EUR',
+              value: itemToAdd.price,
+              items: [{ item_id: itemToAdd.id, item_name: itemToAdd.name, price: itemToAdd.price, quantity: 1 }]
+            });
             // Success feedback no botão
             const btn = this;
             const originalHTML = btn.innerHTML;
@@ -1263,6 +1273,7 @@ function openNotifyMeModal() {
   const errorEl = document.getElementById('notifyMeError');
   const btn = document.getElementById('notifyMeSubmitBtn');
   if (!backdrop) return;
+  if (typeof gtag === 'function') gtag('event', 'notify_me_open');
   if (emailInput) emailInput.value = '';
   if (errorEl) errorEl.textContent = '';
   if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
@@ -1303,6 +1314,7 @@ async function submitNotifyMe() {
     });
 
     if (res.ok) {
+      if (typeof gtag === 'function') gtag('event', 'notify_me_signup', { method: 'modal' });
       closeNotifyMeModal();
       window.toast.success("You're on the list! We'll notify you when it's back in stock.");
     } else {
