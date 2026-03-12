@@ -919,10 +919,6 @@ window.appliedDiscount = 0;
     const emailInput = document.querySelector('#email');
     if (!emailInput) return;
     emailInput.addEventListener('blur', saveAbandonedCart);
-    ['#firstName', '#lastName', '#address', '#city', '#postalCode', '#phone'].forEach(sel => {
-      const el = document.querySelector(sel);
-      if (el) el.addEventListener('focus', saveAbandonedCart, { once: true });
-    });
   }
 
   if (document.readyState === 'loading') {
