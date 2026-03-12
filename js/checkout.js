@@ -927,6 +927,22 @@ window.appliedDiscount = 0;
     attachAbandonedCartTrigger();
   }
 
+  // Restore abandoned cart from email link
+  (async () => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('restore');
+    if (!token) return;
+    try {
+      const email = atob(decodeURIComponent(token));
+      const res = await fetch(`${INTERNAL_API_URL}/api/abandoned-cart/restore?email=${encodeURIComponent(email)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.items || !data.items.length) return;
+      localStorage.setItem('electricink_cart', JSON.stringify(data.items));
+      if (typeof updateCartCount === 'function') updateCartCount();
+    } catch {}
+  })();
+
   async function applyDiscountCode(codeArg) {
     const discountInput = document.getElementById('discountCode');
     const discountMessage = document.getElementById('discountMessage');
