@@ -247,6 +247,13 @@
     padding-bottom: 8px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    /* hide native scrollbars but keep touch scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  .pt-grid::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
   }
 
   .pt-card {
