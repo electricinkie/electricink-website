@@ -71,6 +71,30 @@ a {
 .text-gray-400 { color: #9CA3AF !important; }
 .border-black { border-bottom-color: #000000 !important; }
 
+/* Title accent used across section headings
+   - default: full accent color on wrapped words
+   - special case: .bestsellers-title uses half gradient fill for a 'half-word' effect */
+.title-accent { 
+  color: var(--color-primary);
+  display: inline-block;
+}
+
+.bestsellers-title .title-accent {
+  /* use solid accent color for the 'Sellers' part */
+  color: var(--color-primary);
+}
+
+/* Ensure span respects uppercase/letter-spacing when used inside uppercase titles */
+.categories-title .title-accent,
+.new-arrivals-title .title-accent,
+.bestsellers-title .title-accent { text-transform: inherit; }
+
+/* Keep these section headings fully black (no green accent) */
+.new-arrivals-title .title-accent,
+.bestsellers-title .title-accent {
+  color: var(--black);
+}
+
 /* ========================================
    VAT label (global fallback)
    Adds a small, subtle "VAT inc." label next to visible price elements.

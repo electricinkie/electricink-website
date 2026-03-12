@@ -1,3 +1,5 @@
+import { INTERNAL_API_URL } from '/js/constants.js';
+
 (async function() {
   'use strict';
 
@@ -1084,7 +1086,7 @@ function checkProductAvailability(product) {
   }
 
   // ===== REVIEWS =====
-  const REVIEWS_API = 'https://ei-internal-production.up.railway.app';
+  const REVIEWS_API = INTERNAL_API_URL;
 
   let selectedRating = 0;
 
@@ -1116,6 +1118,7 @@ function checkProductAvailability(product) {
   async function loadReviews() {
     try {
       const res = await fetch(`${REVIEWS_API}/api/reviews?product_id=${encodeURIComponent(productId)}`);
+      if (!res.ok) return;
       const data = await res.json();
 
       const summaryEl = document.getElementById('reviewsSummary');
@@ -1245,9 +1248,12 @@ function checkProductAvailability(product) {
 
   loadReviews();
   // Atualização automática dos reviews a cada 10 segundos
-  setInterval(() => {
-    loadReviews();
-  }, 10000);
+  const _reviewsInterval = setInterval(loadReviews, 10000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(_reviewsInterval);
+    }
+  });
 
 })();
 
@@ -1290,7 +1296,7 @@ async function submitNotifyMe() {
   if (errorEl) errorEl.textContent = '';
 
   try {
-    const res = await fetch('https://ei-internal-production.up.railway.app/api/waitlist/notify-me', {
+    const res = await fetch(`${INTERNAL_API_URL}/api/waitlist/notify-me`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ product_id: productId, product_name: productName, email })

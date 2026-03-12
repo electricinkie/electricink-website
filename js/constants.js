@@ -13,3 +13,5 @@ export const PRODUCT_FIELDS = {
   STRIPE_PRICE_ID: 'stripe_price_id',
   VARIANT: 'variant'
 };
+
+export const INTERNAL_API_URL = 'https://ei-internal-production.up.railway.app';

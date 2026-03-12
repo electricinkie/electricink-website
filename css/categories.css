@@ -13,10 +13,11 @@
 .categories-title {
   font-family: 'Outfit', 'Montserrat', sans-serif;
   font-size: 36px;
-  font-weight: 700;
-  color: #000000;
+  font-weight: 900;
+  color: #111;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px; /* more breathing room for uppercase */
+  line-height: 0.95;
   margin-bottom: 15px;
 }
 
@@ -27,6 +28,8 @@
   color: #999999;
   letter-spacing: 0.5px;
 }
+
+.categories-title span { color: #111; }
 
 .categories-grid {
   display: grid;

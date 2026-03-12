@@ -1,0 +1,275 @@
+/* ===================================
+   Pro Team Section
+   =================================== */
+
+.pro-team {
+  background: #ffffff;
+  padding: 80px 24px;
+}
+
+.pro-team-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.pt-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: center;
+}
+
+.pt-title {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -3px;
+  color: #111;
+  line-height: 0.95;
+}
+
+.pt-title span {
+  color: #43BDAB;
+}
+
+.pt-subtitle {
+  margin-top: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #666;
+  max-width: 720px;
+  line-height: 1.35;
+}
+
+.pt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.pt-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  background: #1a1a1a;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.pt-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.pt-tattoo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.pt-card:hover .pt-photo { opacity: 0; }
+.pt-card:hover .pt-tattoo { opacity: 1; transform: scale(1); }
+
+.pt-overlay-base {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+  z-index: 2;
+}
+
+.pt-overlay-hover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 40%, rgba(67,189,171,0.08) 100%);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.pt-card:hover .pt-overlay-hover { opacity: 1; }
+
+.pt-logo-watermark {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.15s;
+}
+
+.pt-card:hover .pt-logo-watermark { opacity: 1; }
+
+.pt-logo-watermark img {
+  height: 28px;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+}
+
+.pt-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  z-index: 4;
+}
+
+.pt-name {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+  transition: transform 0.4s ease;
+}
+
+.pt-card:hover .pt-name { transform: translateY(-4px); }
+
+.pt-handle {
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  color: #43BDAB;
+  font-weight: 600;
+  margin-bottom: 6px;
+  transition: transform 0.4s ease;
+}
+
+.pt-card:hover .pt-handle { transform: translateY(-4px); }
+
+.pt-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.pt-card:hover .pt-info .pt-tags { opacity: 0; transform: translateY(4px); }
+
+.pt-tag {
+  font-size: 10px;
+  font-family: 'Montserrat', sans-serif;
+  color: #888;
+  background: rgba(255,255,255,0.06);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.pt-cta {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+}
+
+.pt-card:hover .pt-cta { opacity: 1; transform: translateY(0); }
+
+.pt-instagram-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pt-instagram-btn:hover {
+  background: rgba(67,189,171,0.2);
+  border-color: #43BDAB;
+}
+
+.pt-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #43BDAB;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+  z-index: 6;
+}
+
+.pt-card:hover .pt-line { transform: scaleX(1); }
+
+/* Placeholder gradients — remove when real photos are added */
+
+/* Remove placeholder gradients and set fallback background for better visibility */
+.pt-photo-1, .pt-photo-2, .pt-photo-3,
+.pt-tattoo-1, .pt-tattoo-2, .pt-tattoo-3 {
+  /* no placeholder background so the image fills the whole card */
+  background-color: transparent;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .pt-title { font-size: 44px; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .pro-team { padding: 60px 20px; }
+  .pt-title { font-size: 36px; letter-spacing: -2px; }
+  /* Use horizontal scroll snap for a compact, touch-friendly carousel
+     Shows partial next card to indicate more content. */
+  .pt-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-left: 12px;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pt-card {
+    flex: 0 0 86%;
+    min-width: 86%;
+    aspect-ratio: 3/4; /* portrait cards on mobile */
+    scroll-snap-align: start;
+  }
+}
+
+/* Slightly larger small screens: two-column grid between 480 and 768px */
+@media (min-width: 480px) and (max-width: 768px) {
+  .pt-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    overflow: visible;
+    padding-left: 0;
+  }
+
+  .pt-card {
+    flex: 0 0 auto;
+    min-width: unset;
+    aspect-ratio: 3/4;
+  }
+}

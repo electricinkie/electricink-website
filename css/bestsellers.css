@@ -24,10 +24,11 @@
 .bestsellers-title {
   font-family: 'Outfit', sans-serif;
   font-size: 42px;
-  font-weight: 700;
-  color: #000000;
+  font-weight: 900;
+  color: #111;
   margin: 0 0 12px 0;
-  line-height: 1.2;
+  line-height: 0.95;
+  letter-spacing: -1.5px;
 }
 
 .bestsellers-subtitle {
@@ -37,6 +38,8 @@
   color: #666666;
   margin: 0;
 }
+
+.bestsellers-title span { color: #43BDAB; }
 
 /* Swiper Container */
 .bestsellers-swiper {
