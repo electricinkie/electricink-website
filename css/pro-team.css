@@ -280,3 +280,26 @@
     aspect-ratio: 3/4;
   }
 }
+
+/* Subtle entrance animation: reveal cards as they scroll into view.
+   Keeps DOM/CSS-only work minimal; uses a tiny JS observer to toggle
+   `.is-visible` on each `.pt-card`. Respects reduced-motion. */
+.pt-card {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 420ms cubic-bezier(.2,.9,.2,1), transform 420ms cubic-bezier(.2,.9,.2,1);
+  will-change: opacity, transform;
+}
+.pt-card.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt-card,
+  .pt-card.is-visible {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
