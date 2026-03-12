@@ -221,6 +221,45 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     document.head.appendChild(metaDescTag);
   }
   metaDescTag.setAttribute('content', metaDesc);
+  // SEO — Open Graph
+  const setMeta = (sel, attr, val) => {
+    let el = document.querySelector(sel);
+    if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
+    el.setAttribute(attr, val);
+  };
+  const productUrl = `https://electricink.ie/products.html?id=${encodeURIComponent(productData.id || '')}`;
+  setMeta('meta[property="og:title"]',       'content', metaTitle);
+  setMeta('meta[property="og:description"]', 'content', metaDesc);
+  setMeta('meta[property="og:image"]',       'content', mainImage.startsWith('http') ? mainImage : `https://electricink.ie${mainImage}`);
+  setMeta('meta[property="og:url"]',         'content', productUrl);
+  setMeta('meta[property="og:type"]',        'content', 'product');
+
+  // SEO — Canonical URL
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+  canonical.href = productUrl;
+
+  // SEO — JSON-LD structured data
+  let jsonLd = document.getElementById('product-jsonld');
+  if (!jsonLd) { jsonLd = document.createElement('script'); jsonLd.id = 'product-jsonld'; jsonLd.type = 'application/ld+json'; document.head.appendChild(jsonLd); }
+  const price = productData.price || productData.variants?.[0]?.price || 0;
+  jsonLd.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: name,
+    description: metaDesc,
+    image: mainImage.startsWith('http') ? mainImage : `https://electricink.ie${mainImage}`,
+    url: productUrl,
+    brand: { '@type': 'Brand', name: 'Electric Ink' },
+    offers: {
+      '@type': 'Offer',
+      price: price,
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      url: productUrl,
+      seller: { '@type': 'Organization', name: 'Electric Ink IE' }
+    }
+  });
 
   // RENDER basic info
   document.getElementById('productName').textContent = name;
