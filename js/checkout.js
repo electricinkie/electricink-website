@@ -4,7 +4,7 @@
  * Handles checkout form validation and payment processing
  */
 
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS } from './constants.js';
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS, INTERNAL_API_URL } from './constants.js';
 import { initFirebase } from './firebase-config.js';
 // Auth removed - guest checkout only
 
@@ -898,6 +898,39 @@ window.appliedDiscount = 0;
     return cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
   }
 
+  // ── Abandoned cart capture ──
+  function saveAbandonedCart() {
+    try {
+      const emailInput = document.querySelector('#email');
+      if (!emailInput || !emailInput.value.trim()) return;
+      const email = emailInput.value.trim();
+      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
+      if (!cart.length) return;
+      const total = parseFloat(cart.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2));
+      fetch(`${INTERNAL_API_URL}/api/abandoned-cart/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, items: cart, total })
+      }).catch(() => {});
+    } catch {}
+  }
+
+  function attachAbandonedCartTrigger() {
+    const emailInput = document.querySelector('#email');
+    if (!emailInput) return;
+    emailInput.addEventListener('blur', saveAbandonedCart);
+    ['#firstName', '#lastName', '#address', '#city', '#postalCode', '#phone'].forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.addEventListener('focus', saveAbandonedCart, { once: true });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachAbandonedCartTrigger);
+  } else {
+    attachAbandonedCartTrigger();
+  }
+
   async function applyDiscountCode(codeArg) {
     const discountInput = document.getElementById('discountCode');
     const discountMessage = document.getElementById('discountMessage');
@@ -911,42 +944,7 @@ window.appliedDiscount = 0;
       return;
     }
 
-  // ── Abandoned cart capture ──
-  function saveAbandonedCart() {
-    try {
-      const emailInput = document.querySelector('#email');
-      if (!emailInput || !emailInput.value.trim()) return;
-      const email = emailInput.value.trim();
-      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
-      if (!cart.length) return;
-      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2);
-      fetch('https://ei-internal-production.up.railway.app/api/abandoned-cart/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, items: cart, total })
-      }).catch(() => {});
-    } catch {}
-  }
-
-  // Trigger abandoned cart save — blur, input change, or first interaction after email exists
-  function attachAbandonedCartTrigger() {
-    const emailInput = document.querySelector('#email');
-    if (!emailInput) return;
-    // blur on the email field itself
-    emailInput.addEventListener('blur', saveAbandonedCart);
-    // also trigger when user interacts with any other field (catches readonly prefill case)
-    ['#firstName', '#lastName', '#address', '#city', '#postalCode', '#phone'].forEach(sel => {
-      const el = document.querySelector(sel);
-      if (el) el.addEventListener('focus', saveAbandonedCart, { once: true });
-    });
-  }
-
-  // Attach abandoned cart trigger once DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', attachAbandonedCartTrigger);
-  } else {
-    attachAbandonedCartTrigger();
-  }
+  
 
     const email = document.getElementById('email') ? document.getElementById('email').value : '';
     if (!email) {
