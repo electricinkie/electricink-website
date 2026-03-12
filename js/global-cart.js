@@ -93,7 +93,9 @@
     
     // Salva
     if (saveCart(cart)) {
-      if (window.toast) {
+      if (window.cartDrawer) {
+        window.cartDrawer.openOnAdd(item);
+      } else if (window.toast) {
         window.toast.success(`${item.name} added to cart!`);
       }
       try {
