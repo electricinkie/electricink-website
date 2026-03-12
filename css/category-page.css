@@ -399,6 +399,14 @@
   color: #2da893;
 }
 
+.product-ships-note {
+  margin: 4px 0 0 0;
+  font-size: 11px;
+  color: #999999;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.02em;
+}
+
 /* ========================================
    EMPTY STATE
    ======================================== */

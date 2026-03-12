@@ -430,12 +430,9 @@ function getAvailabilityBadgeInfo(product) {
   }
   
   // OUT OF STOCK - Cannot purchase
+  // OUT OF STOCK - No badge in category, user discovers on product page
   if (stockStatus === 'out_of_stock') {
-    return {
-      text: 'Out of Stock',
-      class: 'badge-out-of-stock',
-      canPurchase: false
-    };
+    return null;
   }
   
   // ORDER ON REQUEST - Specific categories and products
@@ -597,7 +594,14 @@ function getAvailabilityBadgeInfo(product) {
           badge.className = `product-availability-badge ${badgeInfo.class}`;
           badge.textContent = badgeInfo.text;
           card.appendChild(badge);
-          
+
+          if (badgeInfo.class === 'badge-order-request') {
+            const shipsNote = document.createElement('p');
+            shipsNote.className = 'product-ships-note';
+            shipsNote.textContent = 'Ships in 7–10 days';
+            info.appendChild(shipsNote);
+          }
+
           // Store purchase status for potential future use
           card.dataset.canPurchase = badgeInfo.canPurchase;
         }
