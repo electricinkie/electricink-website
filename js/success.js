@@ -120,6 +120,17 @@
   }
 
   // ────────── Clear Cart ──────────
+  // ── Mark abandoned cart as converted ──
+  try {
+    if (orderData.email) {
+      fetch('https://ei-internal-production.up.railway.app/api/abandoned-cart/convert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: orderData.email })
+      }).catch(() => {});
+    }
+  } catch {}
+
   localStorage.removeItem('electricink_cart');
   
   // Atualiza cart count no header (se função existir)

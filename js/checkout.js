@@ -941,16 +941,12 @@ window.appliedDiscount = 0;
     });
   }
 
-  // Retry until form fields exist (checkout renders dynamically)
-  function tryAttachAbandonedCartTrigger() {
-    const emailInput = document.querySelector('#email');
-    if (emailInput) {
-      attachAbandonedCartTrigger();
-    } else {
-      setTimeout(tryAttachAbandonedCartTrigger, 500);
-    }
+  // Attach abandoned cart trigger once DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachAbandonedCartTrigger);
+  } else {
+    attachAbandonedCartTrigger();
   }
-  tryAttachAbandonedCartTrigger();
 
     const email = document.getElementById('email') ? document.getElementById('email').value : '';
     if (!email) {
