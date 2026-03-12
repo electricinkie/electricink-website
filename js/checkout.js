@@ -911,6 +911,29 @@ window.appliedDiscount = 0;
       return;
     }
 
+  // ── Abandoned cart capture ──
+  function saveAbandonedCart() {
+    try {
+      const emailInput = document.querySelector('#email');
+      if (!emailInput || !emailInput.value.trim()) return;
+      const email = emailInput.value.trim();
+      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
+      if (!cart.length) return;
+      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2);
+      fetch('https://ei-internal-production.up.railway.app/api/abandoned-cart/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, items: cart, total })
+      }).catch(() => {});
+    } catch {}
+  }
+
+  // Trigger on email blur
+  document.addEventListener('DOMContentLoaded', function () {
+    const emailInput = document.querySelector('#email');
+    if (emailInput) emailInput.addEventListener('blur', saveAbandonedCart);
+  });
+
     const email = document.getElementById('email') ? document.getElementById('email').value : '';
     if (!email) {
       showDiscountMessage('Please enter your email first', 'error');
