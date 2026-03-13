@@ -1,0 +1,1019 @@
+/* ═══════════════════════════════════════════════════════════
+   account.css — Ink Points Dashboard
+   Electric Ink Ireland
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Layout ── */
+.account-main {
+  background: #f2f2f2;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.account-container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 18px;
+}
+
+/* ── Auth wall — two panel layout ── */
+.auth-wall {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.auth-wall-inner {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  align-items: flex-start;
+}
+
+/* Left — brand panel */
+.auth-brand {
+  width: 300px;
+  flex-shrink: 0;
+  background: #000;
+  border-radius: 14px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.auth-brand-logo {
+  margin-bottom: 24px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.auth-brand-logo img {
+  height: 36px;
+  width: auto;
+}
+
+.auth-brand-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -.5px;
+}
+
+.auth-brand-title span {
+  color: #43BDAB;
+}
+
+.auth-brand-sub {
+  font-size: 12px;
+  color: #555;
+  margin-top: 10px;
+  line-height: 1.7;
+}
+
+.auth-perks {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-perk {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.auth-perk-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #43BDAB;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.auth-perk-text {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.55;
+}
+
+.auth-perk-text strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.auth-brand-footer {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid #1a1a1a;
+  font-size: 10px;
+  color: #333;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Right — form panel */
+.auth-form-panel {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 32px 28px;
+}
+
+.auth-tabs {
+  display: flex;
+  background: #f2f2f2;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+  margin-bottom: 24px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 9px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  border: none;
+  background: transparent;
+  color: #999;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .12s, color .12s;
+}
+
+.auth-tab.active {
+  background: #000;
+  color: #fff;
+}
+
+.auth-form-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 6px;
+  letter-spacing: -.3px;
+}
+
+.auth-form-desc {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 22px;
+  line-height: 1.65;
+}
+
+.auth-form-desc strong {
+  color: #000;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.form-optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #ccc;
+}
+
+.form-input {
+  padding: 11px 13px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #111;
+  background: #fff;
+  transition: border-color .15s;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #ccc;
+}
+
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #f0f0f0;
+}
+
+.form-divider-text {
+  font-size: 10px;
+  color: #ccc;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.referral-note {
+  background: #f5fdfb;
+  border: 1px solid #b2ead9;
+  border-radius: 8px;
+  padding: 11px 13px;
+  font-size: 11px;
+  color: #0a6e60;
+  line-height: 1.6;
+  margin-top: -6px;
+}
+
+.referral-note strong {
+  font-weight: 700;
+}
+
+.form-input:focus {
+  border-color: #43BDAB;
+}
+
+.form-error {
+  font-size: 12px;
+  color: #c0392b;
+  background: #fdf0ee;
+  border: 1px solid #f5c6c0;
+  border-radius: 7px;
+  padding: 9px 12px;
+}
+
+.btn-submit {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity .12s;
+  margin-top: 4px;
+}
+
+.btn-submit:hover { opacity: .82; }
+.btn-submit:active { transform: scale(.98); }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Dashboard header ── */
+.acct-header {
+  background: #000;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.acct-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.acct-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #43BDAB;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.acct-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.2px;
+}
+
+.acct-email {
+  font-size: 11px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.btn-signout {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 7px;
+  border: 1px solid #333;
+  background: transparent;
+  cursor: pointer;
+  color: #fff;
+  transition: border-color .15s;
+  flex-shrink: 0;
+}
+
+.btn-signout:hover { border-color: #fff; }
+
+/* ── Tabs ── */
+.tabs-shell {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabs-nav {
+  display: flex;
+  background: #f2f2f2;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tab {
+  flex: 1;
+  padding: 14px 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #aaa;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  transition: color .12s, background .12s, border-color .12s;
+}
+
+.tab.active {
+  color: #000;
+  background: #fff;
+  border-bottom-color: #000;
+}
+
+.tab:hover:not(.active) {
+  color: #555;
+  background: #ebebeb;
+}
+
+.tab-body {
+  padding: 28px;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* ── Section label ── */
+.slabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 14px;
+  display: block;
+}
+
+/* ── Overview grid ── */
+.ov-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ov-card {
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* ── Points ── */
+.pts-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 52px;
+  font-weight: 800;
+  color: #43BDAB;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-top: 8px;
+}
+
+.pts-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* ── Level badge — colour per level ── */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-top: 14px;
+  margin-bottom: 2px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: background .3s, color .3s;
+}
+
+.ldot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background .3s;
+}
+
+/* Apprentice — grey */
+.level-badge.lv-apprentice { background: #e8e8e8; color: #555; }
+.level-badge.lv-apprentice .ldot { background: #aaa; }
+
+/* Journeyman — black + teal dot */
+.level-badge.lv-journeyman { background: #000; color: #fff; }
+.level-badge.lv-journeyman .ldot { background: #43BDAB; }
+
+/* Artist — teal */
+.level-badge.lv-artist { background: #43BDAB; color: #fff; }
+.level-badge.lv-artist .ldot { background: #fff; }
+
+/* Master — amber #FFA300 */
+.level-badge.lv-master { background: #FFA300; color: #000; }
+.level-badge.lv-master .ldot { background: #000; }
+
+/* Legend — black + amber text */
+.level-badge.lv-legend { background: #000; color: #FFA300; }
+.level-badge.lv-legend .ldot { background: #FFA300; }
+
+/* ── Progress ── */
+.prog-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.prog-count {
+  font-size: 11px;
+  font-weight: 600;
+  font-style: normal;
+  color: #888;
+}
+
+.prog-bar {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 7px 0 5px;
+}
+
+.prog-fill {
+  height: 100%;
+  background: #43BDAB;
+  border-radius: 999px;
+  transition: width .5s ease;
+}
+
+.prog-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #bbb;
+}
+
+/* ── Referral ── */
+.ref-note {
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+  line-height: 1.7;
+}
+
+.ref-note strong { color: #000; }
+
+.ref-code-wrap {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 13px 15px;
+  margin-top: 14px;
+}
+
+.ref-code {
+  font-family: 'Courier New', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: #000;
+  margin: 4px 0 10px;
+}
+
+/* ── Shared buttons ── */
+.btn-outline-teal {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 7px;
+  border: 1.5px solid #43BDAB;
+  background: #fff;
+  color: #43BDAB;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+}
+
+.btn-outline-teal:hover { background: #43BDAB; color: #fff; }
+.btn-outline-teal:active { transform: scale(.98); }
+
+/* ── Missions ── */
+.missions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.m-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 18px;
+  background: #fff;
+}
+
+.m-card.done {
+  border-color: #43BDAB;
+  background: #f5fdfb;
+}
+
+.m-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.m-desc {
+  font-size: 11px;
+  color: #888;
+  margin-top: 5px;
+  line-height: 1.65;
+}
+
+.m-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.m-pts {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #43BDAB;
+}
+
+.badge-done {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #43BDAB;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.badge-open {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #999;
+  background: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* ── How it works ── */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.how-item {
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 13px 15px;
+}
+
+.how-item strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.how-item span {
+  font-size: 11px;
+  color: #888;
+}
+
+/* ── Levels strip ── */
+.levels-strip {
+  display: flex;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.lv {
+  flex: 1;
+  padding: 11px 6px;
+  text-align: center;
+  border-right: 1px solid #e0e0e0;
+  transition: background .3s;
+}
+
+.lv:last-child { border-right: none; }
+
+.lv-n {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #ccc;
+}
+
+.lv-p {
+  font-size: 10px;
+  color: #ddd;
+  margin-top: 3px;
+}
+
+/* Active level in strip — matches badge colour */
+.lv.lv-cur-apprentice { background: #e8e8e8; }
+.lv.lv-cur-apprentice .lv-n { color: #555; }
+.lv.lv-cur-apprentice .lv-p { color: #888; }
+
+.lv.lv-cur-journeyman { background: #000; }
+.lv.lv-cur-journeyman .lv-n { color: #43BDAB; }
+.lv.lv-cur-journeyman .lv-p { color: #555; }
+
+.lv.lv-cur-artist { background: #43BDAB; }
+.lv.lv-cur-artist .lv-n { color: #fff; }
+.lv.lv-cur-artist .lv-p { color: rgba(255,255,255,.7); }
+
+.lv.lv-cur-master { background: #FFA300; }
+.lv.lv-cur-master .lv-n { color: #000; }
+.lv.lv-cur-master .lv-p { color: #664200; }
+
+.lv.lv-cur-legend { background: #000; }
+.lv.lv-cur-legend .lv-n { color: #FFA300; }
+.lv.lv-cur-legend .lv-p { color: #555; }
+
+/* ── Rewards tab ── */
+.bal-strip {
+  background: #000;
+  border-radius: 9px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.bal-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.bal-pts {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #43BDAB;
+  margin-top: 2px;
+}
+
+.bal-note {
+  font-size: 11px;
+  color: #555;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.r-card {
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.r-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+}
+
+.r-type {
+  font-size: 10px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-top: 3px;
+}
+
+.r-cost {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.r-cost span {
+  font-size: 11px;
+  font-weight: 400;
+  color: #aaa;
+}
+
+.r-btn {
+  margin-top: 9px;
+  padding: 10px 0;
+  border-radius: 7px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity .12s;
+}
+
+.r-btn.can-afford {
+  background: #000;
+  color: #fff;
+}
+
+.r-btn.can-afford:hover { opacity: .8; }
+
+.r-btn.cannot-afford {
+  background: #ececec;
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+.r-btn.redeemed {
+  background: #43BDAB;
+  color: #fff;
+  cursor: default;
+}
+
+/* ── Coupon reveal ── */
+.coupon-reveal {
+  background: #f5fdfb;
+  border: 2px solid #43BDAB;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 18px;
+}
+
+.coupon-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #43BDAB;
+}
+
+.coupon-code {
+  font-family: 'Courier New', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: #000;
+  margin: 10px 0 6px;
+  word-break: break-all;
+}
+
+.coupon-note {
+  font-size: 11px;
+  color: #888;
+  line-height: 1.6;
+}
+
+/* ── History ── */
+.h-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.h-row:last-child { border-bottom: none; }
+
+.h-action {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+}
+
+.h-desc {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.h-right {
+  text-align: right;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.h-pos {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #43BDAB;
+}
+
+.h-neg {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #aaa;
+}
+
+.h-date {
+  font-size: 10px;
+  color: #ccc;
+  margin-top: 3px;
+}
+
+/* ── Orders ── */
+.o-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.o-row:last-child { border-bottom: none; }
+
+.o-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+}
+
+.o-meta {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 3px;
+}
+
+.o-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.p-shipped { background: #d1fae5; color: #065f46; }
+.p-pending { background: #fef3c7; color: #92400e; }
+.p-processing { background: #ede9fe; color: #5b21b6; }
+.p-cancelled { background: #fee2e2; color: #991b1b; }
+
+/* ── Loading / empty states ── */
+.rewards-loading,
+.list-loading,
+.list-empty {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .account-container { padding: 20px 14px; }
+  .ov-grid { grid-template-columns: 1fr; }
+  .missions-grid { grid-template-columns: 1fr; }
+  .how-grid { grid-template-columns: 1fr; }
+  .rewards-grid { grid-template-columns: repeat(2, 1fr); }
+  .levels-strip { flex-wrap: wrap; }
+  .lv { min-width: 50%; border-bottom: 1px solid #e0e0e0; }
+  .tab { font-size: 10px; padding: 12px 4px; }
+  .tab-body { padding: 20px 16px; }
+  .acct-header { gap: 12px; }
+  .bal-strip { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .bal-note { display: none; }
+  .pts-num { font-size: 44px; }
+}
+
+@media (max-width: 380px) {
+  .rewards-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Auth wall responsive ── */
+@media (max-width: 700px) {
+  .auth-wall-inner {
+    flex-direction: column;
+  }
+  .auth-brand {
+    width: 100%;
+    min-height: auto;
+    padding: 24px 22px;
+  }
+  .auth-brand-title { font-size: 24px; }
+  .auth-perks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .auth-brand-footer { display: none; }
+  .auth-form-panel { padding: 24px 22px; }
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account | Electric Ink IE</title>
+  <meta name="description" content="Manage your Ink Points, rewards and orders at Electric Ink Ireland.">
+  <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <link rel="manifest" href="/images/favicons/site.webmanifest">
+  <meta name="theme-color" content="#43BDAB">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/toast.css">
+  <link rel="stylesheet" href="/css/mobile-header.css">
+  <link rel="stylesheet" href="/css/desktop-header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/cart-drawer.css">
+  <link rel="stylesheet" href="/css/account.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7K2B1EJYH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F7K2B1EJYH');
+  </script>
+</head>
+<body>
+
+  <main class="account-main">
+    <div class="account-container">
+
+      <!-- AUTH WALL -->
+      <div id="authWall" class="auth-wall" style="display:none">
+        <div class="auth-wall-inner">
+
+          <!-- Left: brand panel -->
+          <div class="auth-brand">
+            <div class="auth-brand-logo">
+              <img src="/images/logos/logo-white.png" alt="Electric Ink" onerror="this.style.display='none'">
+            </div>
+            <div class="auth-brand-title">Ink<br><span>Points</span></div>
+            <div class="auth-brand-sub">The loyalty programme made by tattoo artists, for tattoo artists.</div>
+            <div class="auth-perks">
+              <div class="auth-perk">
+                <div class="auth-perk-dot"></div>
+                <div class="auth-perk-text"><strong>5 pts per €1 spent</strong> — every order counts</div>
+              </div>
+              <div class="auth-perk">
+                <div class="auth-perk-dot"></div>
+                <div class="auth-perk-text"><strong>Free products & vouchers</strong> — redeem anytime</div>
+              </div>
+              <div class="auth-perk">
+                <div class="auth-perk-dot"></div>
+                <div class="auth-perk-text"><strong>+2,500 pts</strong> when you refer a fellow artist</div>
+              </div>
+              <div class="auth-perk">
+                <div class="auth-perk-dot"></div>
+                <div class="auth-perk-text">Climb from <strong>Apprentice</strong> to <strong>Legend</strong></div>
+              </div>
+            </div>
+            <div class="auth-brand-footer">De tatuadores para tatuadores</div>
+          </div>
+
+          <!-- Right: form panel -->
+          <div class="auth-form-panel">
+            <div class="auth-tabs">
+              <button class="auth-tab" id="tabLoginBtn" onclick="switchAuthTab('login')">Sign in</button>
+              <button class="auth-tab active" id="tabRegisterBtn" onclick="switchAuthTab('register')">Join now</button>
+            </div>
+
+            <!-- Login -->
+            <div id="loginFormWrap" style="display:none">
+              <div class="auth-form-heading">Welcome back.</div>
+              <p class="auth-form-desc">Sign in to check your points, redeem rewards and track your orders.</p>
+              <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Password</label>
+                  <input type="password" id="loginPassword" class="form-input" placeholder="Your password" required autocomplete="current-password">
+                </div>
+                <div id="loginError" class="form-error" style="display:none"></div>
+                <button type="submit" class="btn-submit" id="loginSubmit">
+                  <span class="btn-text">Sign in</span>
+                  <span class="btn-loader" style="display:none">...</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Register -->
+            <div id="registerFormWrap">
+              <div class="auth-form-heading">Start earning.</div>
+              <p class="auth-form-desc">Create your free account and get <strong>+250 bonus points</strong> on your first purchase.</p>
+              <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                  <label class="form-label">Your name</label>
+                  <input type="text" id="registerName" class="form-input" placeholder="First and last name" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Password</label>
+                  <input type="password" id="registerPassword" class="form-input" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="form-divider">
+                  <div class="form-divider-line"></div>
+                  <div class="form-divider-text">optional</div>
+                  <div class="form-divider-line"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Referral code <span class="form-optional">(from a friend)</span></label>
+                  <input type="text" id="registerReferral" class="form-input" placeholder="e.g. EI-MARIA4QDS" autocomplete="off" style="text-transform:uppercase;letter-spacing:.06em">
+                </div>
+                <div class="referral-note">If a fellow artist shared their code, enter it here. They earn <strong>2,500 pts</strong> when you place your first order.</div>
+                <div id="registerError" class="form-error" style="display:none"></div>
+                <button type="submit" class="btn-submit" id="registerSubmit">
+                  <span class="btn-text">Create account — it's free</span>
+                  <span class="btn-loader" style="display:none">...</span>
+                </button>
+              </form>
+            </div>
+
+          </div><!-- /auth-form-panel -->
+        </div><!-- /auth-wall-inner -->
+      </div><!-- /authWall -->
+
+      <!-- DASHBOARD -->
+      <div id="dashboard" style="display:none">
+
+        <div class="acct-header">
+          <div class="acct-user">
+            <div class="acct-avatar" id="acctAvatar">M</div>
+            <div>
+              <div class="acct-name" id="acctName">—</div>
+              <div class="acct-email" id="acctEmail">—</div>
+            </div>
+          </div>
+          <button class="btn-signout" onclick="handleSignout()">Sign out</button>
+        </div>
+
+        <div class="tabs-shell">
+          <div class="tabs-nav" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true" onclick="goTab('overview',this)">Overview</button>
+            <button class="tab" role="tab" aria-selected="false" onclick="goTab('rewards',this)">Rewards</button>
+            <button class="tab" role="tab" aria-selected="false" onclick="goTab('history',this)">History</button>
+            <button class="tab" role="tab" aria-selected="false" onclick="goTab('orders',this)">Orders</button>
+          </div>
+
+          <div class="tab-body">
+
+            <!-- OVERVIEW -->
+            <div class="tab-panel active" id="tab-overview" role="tabpanel">
+              <div class="ov-grid">
+                <div class="ov-card">
+                  <div class="slabel">Ink Points balance</div>
+                  <div class="pts-num" id="ptsNum">—</div>
+                  <div class="pts-sub">points available</div>
+                  <div class="level-badge" id="levelBadge">
+                    <span class="ldot" id="levelDot"></span>
+                    <span id="levelName">—</span>
+                  </div>
+                  <div class="prog-head">
+                    <span class="slabel" style="margin:0" id="progLabel">Progress</span>
+                    <em class="prog-count" id="progCount"></em>
+                  </div>
+                  <div class="prog-bar">
+                    <div class="prog-fill" id="progFill" style="width:0%"></div>
+                  </div>
+                  <div class="prog-ends">
+                    <span id="progStart">—</span>
+                    <span id="progEnd">—</span>
+                  </div>
+                </div>
+                <div class="ov-card">
+                  <div class="slabel">Your referral code</div>
+                  <p class="ref-note">Share with fellow artists. When they complete their first order (min. €75) using your code, you earn <strong>2,500 pts</strong> automatically.</p>
+                  <div class="ref-code-wrap">
+                    <div class="slabel" style="margin-bottom:6px">Code</div>
+                    <div class="ref-code" id="refCode">—</div>
+                    <button class="btn-outline-teal" onclick="copyReferral()">Copy code</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slabel" id="missionsLabel">Monthly missions</div>
+              <div class="missions-grid" id="missionsGrid"></div>
+
+              <div class="slabel" style="margin-top:24px">How points work</div>
+              <div class="how-grid">
+                <div class="how-item"><strong>5 pts per €1 spent</strong><span>On every order, applied automatically</span></div>
+                <div class="how-item"><strong>+250 pts welcome bonus</strong><span>Awarded on your very first purchase</span></div>
+                <div class="how-item"><strong>+300 pts — Ink Haul</strong><span>Single order of €150 or more this month</span></div>
+                <div class="how-item"><strong>+2,500 pts per referral</strong><span>When your artist friend orders (min. €75)</span></div>
+              </div>
+              <div class="levels-strip">
+                <div class="lv" id="lv-apprentice"><div class="lv-n">Apprentice</div><div class="lv-p">0 pts</div></div>
+                <div class="lv" id="lv-journeyman"><div class="lv-n">Journeyman</div><div class="lv-p">1,000 pts</div></div>
+                <div class="lv" id="lv-artist"><div class="lv-n">Artist</div><div class="lv-p">5,000 pts</div></div>
+                <div class="lv" id="lv-master"><div class="lv-n">Master</div><div class="lv-p">10,000 pts</div></div>
+                <div class="lv" id="lv-legend"><div class="lv-n">Legend</div><div class="lv-p">15,000 pts</div></div>
+              </div>
+            </div>
+
+            <!-- REWARDS -->
+            <div class="tab-panel" id="tab-rewards" role="tabpanel">
+              <div class="bal-strip">
+                <div>
+                  <div class="bal-label">Available to spend</div>
+                  <div class="bal-pts" id="balPts">—</div>
+                </div>
+                <div class="bal-note">Points deducted on redemption</div>
+              </div>
+              <div class="rewards-grid" id="rewardsGrid">
+                <div class="rewards-loading">Loading rewards...</div>
+              </div>
+              <div class="coupon-reveal" id="couponReveal" style="display:none">
+                <div class="coupon-label">Coupon generated — use at checkout</div>
+                <div class="coupon-code" id="couponCode"></div>
+                <div class="coupon-note">Valid for one use only. Copy and apply at checkout.</div>
+                <button class="btn-outline-teal" style="margin-top:14px" onclick="copyCoupon()">Copy code</button>
+              </div>
+            </div>
+
+            <!-- HISTORY -->
+            <div class="tab-panel" id="tab-history" role="tabpanel">
+              <div class="slabel">Points transactions</div>
+              <div id="historyList">
+                <div class="list-loading">Loading history...</div>
+              </div>
+            </div>
+
+            <!-- ORDERS -->
+            <div class="tab-panel" id="tab-orders" role="tabpanel">
+              <div class="slabel">Order history</div>
+              <div id="ordersList">
+                <div class="list-loading">Loading orders...</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /dashboard -->
+
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script type="module" src="/js/toast.js"></script>
+  <script type="module" src="/js/global-cart.js"></script>
+  <script type="module" src="/js/mobile-header.js"></script>
+  <script type="module" src="/js/desktop-header.js"></script>
+  <script type="module" src="/js/cart-drawer.js"></script>
+  <script src="/js/account.js" defer></script>
+</body>
+</html>
