@@ -1416,6 +1416,9 @@ window.appliedDiscount = 0;
           customer_name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
           items_count: cart.length
         }
+        ,referral_code: document.getElementById('referralCode') 
+          ? (document.getElementById('referralCode').value || '').toUpperCase().trim() 
+          : ''
       };
       // Attach coupon info if present (frontend sends validated coupon data)
       if (window.appliedCoupon) {

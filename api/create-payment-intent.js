@@ -503,7 +503,8 @@ module.exports = async function handler(req, res) {
         shipping_cents: String(Math.round(totals.shipping * 100)),
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
         phone: (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || incomingMetadata.phone || '',
-        backend_validated: 'true'
+        backend_validated: 'true',
+        referral_code: String(req.body.referral_code || '').toUpperCase().trim()
       };
       metadata = metadataSanitized;
 

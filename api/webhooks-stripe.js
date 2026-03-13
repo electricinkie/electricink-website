@@ -802,7 +802,10 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           total: order.total,
           order_id: order.orderId,
           customer_name: order.customerName,
-          customer_email: order.customerEmail
+          customer_email: order.customerEmail,
+          referral_code: (paymentIntent.metadata && paymentIntent.metadata.referral_code)
+            ? paymentIntent.metadata.referral_code
+            : null
         };
         const saleRes = await fetch(`${internalApiUrl}/api/sales/website`, {
           method: 'POST',
