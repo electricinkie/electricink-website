@@ -177,7 +177,8 @@ async function loadDashboard() {
     renderHeader(data.customer);
     renderOverview(data.customer, data.missions || []);
     renderHistory(data.points_history || []);
-
+    renderActiveCoupons();
+    await loadAndRenderBadges();
     // Load rewards and orders in parallel
     loadRewards();
     loadOrders(data.customer.email);
@@ -342,6 +343,19 @@ async function redeemReward(rewardId) {
     reveal.style.display = 'block';
     reveal.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
+    // Persist coupon to localStorage
+    try {
+      const saved = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
+      saved.push({
+        code: data.coupon_code,
+        reward: data.reward_name,
+        points: data.points_spent,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem('inkpoints_coupons', JSON.stringify(saved));
+      renderActiveCoupons();
+    } catch {}
+
     // Update button
     btn.textContent = 'Redeemed';
     btn.className = 'r-btn redeemed';
@@ -368,6 +382,80 @@ function copyCoupon() {
 }
 
 // ── History ───────────────────────────────────────────────────────────────────
+// ── Active Coupons ────────────────────────────────────────────────────────────
+function renderActiveCoupons() {
+  const el = document.getElementById('activeCoupons');
+  if (!el) return;
+  try {
+    const saved = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
+    if (!saved.length) {
+      el.innerHTML = '<div class="list-empty">No active coupons.</div>';
+      return;
+    }
+    el.innerHTML = saved.map((c, i) => `
+      <div class="h-row" style="align-items:center;gap:12px;">
+        <div style="flex:1;">
+          <div class="h-action">${c.reward}</div>
+          <div class="h-desc" style="font-family:monospace;font-size:13px;letter-spacing:0.05em;color:#111;margin-top:2px;">${c.code}</div>
+          <div class="h-date" style="margin-top:2px;">${formatDate(c.date)}</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
+            onclick="navigator.clipboard.writeText('${c.code}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;color:#999;border-color:#ddd;"
+            onclick="removeActiveCoupon(${i})">Remove</button>
+        </div>
+      </div>
+    `).join('');
+  } catch {}
+}
+
+function removeActiveCoupon(index) {
+  try {
+    const saved = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
+    saved.splice(index, 1);
+    localStorage.setItem('inkpoints_coupons', JSON.stringify(saved));
+    renderActiveCoupons();
+  } catch {}
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+const ALL_BADGES = [
+  { key: 'first_session',     name: 'First Session',      desc: 'Made your first purchase' },
+  { key: 'voltage_rising',    name: 'Voltage Rising',     desc: '5+ orders in one year' },
+  { key: 'crew_builder',      name: 'Crew Builder',       desc: 'Referred 3+ artists' },
+  { key: 'studio_voice',      name: 'Studio Voice',       desc: '10+ verified reviews' },
+  { key: 'machine_head',      name: 'Machine Head',       desc: 'Purchased a machine €300+' },
+  { key: 'full_setup',        name: 'Full Setup',         desc: 'Bought from 5 categories' },
+  { key: 'black_cat_veteran', name: 'Black Cat Veteran',  desc: '1 year with Electric Ink' }
+];
+
+async function loadAndRenderBadges() {
+  const el = document.getElementById('badgesGrid');
+  if (!el) return;
+  try {
+    const res = await fetch(`${API}/api/loyalty/badges`, {
+      headers: { Authorization: `Bearer ${currentToken}` }
+    });
+    const earned = res.ok ? await res.json() : [];
+    const earnedKeys = new Set(earned.map(b => b.badge_key));
+    el.innerHTML = ALL_BADGES.map(b => {
+      const isEarned = earnedKeys.has(b.key);
+      const earnedBadge = earned.find(e => e.badge_key === b.key);
+      const dateStr = earnedBadge ? formatDate(earnedBadge.earned_at) : '';
+      return `
+        <div class="badge-card ${isEarned ? 'earned' : 'locked'}">
+          <div class="badge-icon">${isEarned ? '⚡' : '🔒'}</div>
+          <div class="badge-name">${b.name}</div>
+          <div class="badge-desc">${isEarned ? dateStr : b.desc}</div>
+        </div>
+      `;
+    }).join('');
+  } catch {
+    el.innerHTML = '<div class="list-empty">Could not load badges.</div>';
+  }
+}
+
 function renderHistory(history) {
   const el = document.getElementById('historyList');
   if (!history.length) {

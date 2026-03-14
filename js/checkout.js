@@ -180,6 +180,20 @@ window.appliedDiscount = 0;
     
     // Setup form handler
     setupFormHandler();
+    // Prefill referral code if customer is logged in via Ink Points
+    try {
+      const inkToken = localStorage.getItem('inkpoints_token');
+      if (inkToken) {
+        fetch(`${INTERNAL_API_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${inkToken}` }
+        }).then(r => r.ok ? r.json() : null).then(data => {
+          if (data && data.customer && data.customer.referral_code) {
+            const refInput = document.getElementById('referralCode');
+            if (refInput) refInput.value = data.customer.referral_code;
+          }
+        }).catch(() => {});
+      }
+    } catch {}
     // Pré-preencher email do usuário logado (se houver) e bloquear edição
     try {
       // Attempt immediate fill (fast path)

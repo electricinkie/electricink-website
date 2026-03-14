@@ -151,6 +151,8 @@
             <button class="tab active" role="tab" aria-selected="true" onclick="goTab('overview',this)">Overview</button>
             <button class="tab" role="tab" aria-selected="false" onclick="goTab('rewards',this)">Rewards</button>
             <button class="tab" role="tab" aria-selected="false" onclick="goTab('history',this)">History</button>
+            <button class="tab" role="tab" aria-selected="false" onclick="goTab('badges', this)">Badges</button>
+            <button class="tab" role="tab" aria-selected="false" onclick="goTab('coupons', this)">Coupons</button>
             <button class="tab" role="tab" aria-selected="false" onclick="goTab('orders',this)">Orders</button>
           </div>
 
@@ -234,6 +236,21 @@
               <div class="slabel">Points transactions</div>
               <div id="historyList">
                 <div class="list-loading">Loading history...</div>
+              </div>
+            </div>
+
+            <!-- BADGES -->
+            <div class="tab-panel" id="tab-badges" role="tabpanel">
+              <div class="slabel">Your badges</div>
+              <div class="badges-grid" id="badgesGrid">
+                <div class="list-loading">Loading badges...</div>
+              </div>
+            </div>
+            <!-- ACTIVE COUPONS -->
+            <div class="tab-panel" id="tab-coupons" role="tabpanel">
+              <div class="slabel">Active coupons</div>
+              <div id="activeCoupons">
+                <div class="list-loading">Loading coupons...</div>
               </div>
             </div>
 
