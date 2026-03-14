@@ -177,19 +177,19 @@
                 <div class="ov-card">
                   <div class="slabel">Ink Points balance</div>
                   <div class="pts-num" id="ptsNum">—</div>
-                  <div class="pts-sub">points available</div>
+                  <div class="pts-sub" id="ptsLabel">points available</div>
                   <div class="level-badge" id="levelBadge">
                     <span class="ldot" id="levelDot"></span>
                     <span id="levelName">—</span>
                   </div>
-                  <div class="prog-head">
+                  <div class="prog-head" id="progHead">
                     <span class="slabel" style="margin:0" id="progLabel">Progress</span>
                     <em class="prog-count" id="progCount"></em>
                   </div>
                   <div class="prog-bar">
                     <div class="prog-fill" id="progFill" style="width:0%"></div>
                   </div>
-                  <div class="prog-ends">
+                  <div class="prog-ends" id="progEnds">
                     <span id="progStart">—</span>
                     <span id="progEnd">—</span>
                   </div>
@@ -200,7 +200,7 @@
                   <div class="ref-code-wrap">
                     <div class="slabel" style="margin-bottom:6px">Code</div>
                     <div class="ref-code" id="refCode">—</div>
-                    <button class="btn-outline-teal" onclick="copyReferral()">Copy code</button>
+                    <button class="btn-outline-teal" id="refCopyBtn" onclick="copyReferral()">Copy code</button>
                   </div>
                 </div>
               </div>

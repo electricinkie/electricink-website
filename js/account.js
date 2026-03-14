@@ -13,7 +13,9 @@
  *   GET  /api/sales  (filtered by customer email)
  */
 
-const API = 'https://ei-internal-production.up.railway.app';
+const API = (typeof INTERNAL_API_URL !== 'undefined')
+  ? INTERNAL_API_URL
+  : 'https://ei-internal-production.up.railway.app';
 const TOKEN_KEY = 'ei_loyalty_token';
 
 // ── Level config ──────────────────────────────────────────────────────────────
@@ -348,7 +350,9 @@ function renderMissions(missions) {
 // ── Rewards ───────────────────────────────────────────────────────────────────
 async function loadRewards() {
   try {
-    const res = await fetch(`${API}/api/loyalty/rewards`);
+    const res = await fetch(`${API}/api/loyalty/rewards`, {
+      headers: { Authorization: `Bearer ${currentToken}` }
+    });
     const rewards = await res.json();
     allRewards = rewards;
     renderRewards(rewards);
@@ -545,7 +549,7 @@ async function loadOrders(email) {
   }
 
   try {
-    const res = await fetch(`${API}/api/sales`, {
+    const res = await fetch(`${API}/api/loyalty/my-orders`, {
       headers: { Authorization: `Bearer ${currentToken}` },
     });
 
