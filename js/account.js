@@ -267,9 +267,17 @@ async function loadDashboard() {
 // ── Header ────────────────────────────────────────────────────────────────────
 function renderHeader(customer) {
   const initial = (customer.name || 'U').charAt(0).toUpperCase();
+  // Hidden — kept for JS compatibility
   document.getElementById('acctAvatar').textContent = initial;
   document.getElementById('acctName').textContent = customer.name || '—';
   document.getElementById('acctEmail').textContent = customer.email || '—';
+  // Visible integrated header bar
+  const avatarBar = document.getElementById('acctAvatarBar');
+  if (avatarBar) {
+    avatarBar.textContent = initial;
+    document.getElementById('acctNameBar').textContent = customer.name || '—';
+    document.getElementById('acctEmailBar').textContent = customer.email || '—';
+  }
 }
 
 // ── Overview ──────────────────────────────────────────────────────────────────

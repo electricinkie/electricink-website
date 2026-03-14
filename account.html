@@ -135,7 +135,8 @@
       <!-- DASHBOARD -->
       <div id="dashboard" style="display:none">
 
-        <div class="acct-header">
+        <!-- Hidden: kept for JS compatibility only, invisible via CSS -->
+        <div class="acct-header" aria-hidden="true">
           <div class="acct-user">
             <div class="acct-avatar" id="acctAvatar">M</div>
             <div>
@@ -144,6 +145,18 @@
             </div>
           </div>
           <button class="btn-signout" onclick="handleSignout()">Sign out</button>
+        </div>
+
+        <!-- Visible user bar — integrated below site nav -->
+        <div class="acct-header-bar">
+          <div class="acct-user">
+            <div class="acct-avatar-bar" id="acctAvatarBar">M</div>
+            <div>
+              <div class="acct-name-bar" id="acctNameBar">—</div>
+              <div class="acct-email-bar" id="acctEmailBar">—</div>
+            </div>
+          </div>
+          <button class="btn-signout-bar" onclick="handleSignout()">Sign out</button>
         </div>
 
         <div class="tabs-shell">
@@ -195,7 +208,7 @@
               <div class="slabel" id="missionsLabel">Monthly missions</div>
               <div class="missions-grid" id="missionsGrid"></div>
 
-              <div class="slabel" style="margin-top:24px">How points work</div>
+              <div class="slabel" style="margin-top:32px">How points work</div>
               <div class="how-grid">
                 <div class="how-item"><strong>5 pts per €1 spent</strong><span>On every order, applied automatically</span></div>
                 <div class="how-item"><strong>+250 pts welcome bonus</strong><span>Awarded on your very first purchase</span></div>
@@ -224,7 +237,7 @@
                 <div class="rewards-loading">Loading rewards...</div>
               </div>
               <div class="coupon-reveal" id="couponReveal" style="display:none">
-                <div class="coupon-label">Coupon generated — use at checkout</div>
+                <div class="coupon-label">Your coupon code</div>
                 <div class="coupon-code" id="couponCode"></div>
                 <div class="coupon-note">Valid for one use only. Copy and apply at checkout.</div>
                 <button class="btn-outline-teal" style="margin-top:14px" onclick="copyCoupon()">Copy code</button>
@@ -246,6 +259,7 @@
                 <div class="list-loading">Loading badges...</div>
               </div>
             </div>
+
             <!-- ACTIVE COUPONS -->
             <div class="tab-panel" id="tab-coupons" role="tabpanel">
               <div class="slabel">Active coupons</div>
