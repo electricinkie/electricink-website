@@ -45,6 +45,81 @@ let currentCustomer = null;
 let currentPoints = 0;
 let allRewards = [];
 
+// ── Badges ────────────────────────────────────────────────────────────────────
+const ALL_BADGES = [
+  {
+    key: 'first_session',
+    name: 'First Session',
+    desc: 'Made your first purchase',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`
+  },
+  {
+    key: 'voltage_rising',
+    name: 'Voltage Rising',
+    desc: '5+ orders in one year',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`
+  },
+  {
+    key: 'crew_builder',
+    name: 'Crew Builder',
+    desc: 'Referred 3+ artists',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`
+  },
+  {
+    key: 'studio_voice',
+    name: 'Studio Voice',
+    desc: '10+ verified reviews',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`
+  },
+  {
+    key: 'machine_head',
+    name: 'Machine Head',
+    desc: 'Purchased a machine €300+',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>`
+  },
+  {
+    key: 'full_setup',
+    name: 'Full Setup',
+    desc: 'Bought from 5 categories',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`
+  },
+  {
+    key: 'black_cat_veteran',
+    name: 'Black Cat Veteran',
+    desc: '1 year with Electric Ink',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/><path d="M12 6v6l4 2"/></svg>`
+  }
+];
+
+async function loadAndRenderBadges() {
+  const el = document.getElementById('badgesGrid');
+  if (!el) return;
+  try {
+    const res = await fetch(`${API}/api/loyalty/badges`, {
+      headers: { Authorization: `Bearer ${currentToken}` }
+    });
+    const earned = res.ok ? await res.json() : [];
+    const earnedKeys = new Set(earned.map(b => b.badge_key));
+    el.innerHTML = ALL_BADGES.map(b => {
+      const isEarned = earnedKeys.has(b.key);
+      const earnedBadge = earned.find(e => e.badge_key === b.key);
+      const dateStr = earnedBadge ? formatDate(earnedBadge.earned_at) : '';
+      const iconColor = isEarned ? '#43BDAB' : '#ccc';
+      return `
+        <div class="badge-card ${isEarned ? 'earned' : 'locked'}">
+          <div class="badge-icon" style="color:${iconColor}">
+            ${b.icon}
+          </div>
+          <div class="badge-name">${b.name}</div>
+          <div class="badge-desc">${isEarned ? dateStr : b.desc}</div>
+        </div>
+      `;
+    }).join('');
+  } catch {
+    el.innerHTML = '<div class="list-empty">Could not load badges.</div>';
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   currentToken = localStorage.getItem(TOKEN_KEY);
@@ -84,7 +159,6 @@ function switchAuthTab(tab) {
     registerBtn.classList.add('active');
   }
 
-  // Clear errors
   document.getElementById('loginError').style.display = 'none';
   document.getElementById('registerError').style.display = 'none';
 }
@@ -203,16 +277,13 @@ function renderOverview(customer, missions) {
   const pts = customer.loyalty_points_total || 0;
   const level = getLevelData(customer.loyalty_level || 'apprentice');
 
-  // Points number
   document.getElementById('ptsNum').textContent = pts.toLocaleString();
   document.getElementById('balPts').textContent = `${pts.toLocaleString()} pts`;
 
-  // Level badge
   const badge = document.getElementById('levelBadge');
   badge.className = `level-badge lv-${level.key}`;
   document.getElementById('levelName').textContent = level.label;
 
-  // Progress bar
   const next = LEVELS.find(l => l.min > pts);
   const prev = getLevelData(customer.loyalty_level || 'apprentice');
 
@@ -224,7 +295,6 @@ function renderOverview(customer, missions) {
     document.getElementById('progStart').textContent = `${prev.label} · ${prev.min.toLocaleString()}`;
     document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()}`;
   } else {
-    // Legend — max level
     document.getElementById('progFill').style.width = '100%';
     document.getElementById('progCount').textContent = 'Max level reached';
     document.getElementById('progLabel').textContent = 'Legend status';
@@ -232,20 +302,16 @@ function renderOverview(customer, missions) {
     document.getElementById('progEnd').textContent = '';
   }
 
-  // Highlight current level in strip
   LEVELS.forEach(l => {
     const el = document.getElementById(`lv-${l.key}`);
     if (el) el.className = `lv${l.key === level.key ? ` lv-cur-${level.key}` : ''}`;
   });
 
-  // Referral code
   document.getElementById('refCode').textContent = customer.referral_code || '—';
 
-  // Missions label with month
   const monthName = new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
   document.getElementById('missionsLabel').textContent = `Monthly missions — ${monthName}`;
 
-  // Render missions
   renderMissions(missions);
 }
 
@@ -381,7 +447,6 @@ function copyCoupon() {
   });
 }
 
-// ── History ───────────────────────────────────────────────────────────────────
 // ── Active Coupons ────────────────────────────────────────────────────────────
 function renderActiveCoupons() {
   const el = document.getElementById('activeCoupons');
@@ -419,43 +484,7 @@ function removeActiveCoupon(index) {
   } catch {}
 }
 
-// ── Badges ────────────────────────────────────────────────────────────────────
-const ALL_BADGES = [
-  { key: 'first_session',     name: 'First Session',      desc: 'Made your first purchase' },
-  { key: 'voltage_rising',    name: 'Voltage Rising',     desc: '5+ orders in one year' },
-  { key: 'crew_builder',      name: 'Crew Builder',       desc: 'Referred 3+ artists' },
-  { key: 'studio_voice',      name: 'Studio Voice',       desc: '10+ verified reviews' },
-  { key: 'machine_head',      name: 'Machine Head',       desc: 'Purchased a machine €300+' },
-  { key: 'full_setup',        name: 'Full Setup',         desc: 'Bought from 5 categories' },
-  { key: 'black_cat_veteran', name: 'Black Cat Veteran',  desc: '1 year with Electric Ink' }
-];
-
-async function loadAndRenderBadges() {
-  const el = document.getElementById('badgesGrid');
-  if (!el) return;
-  try {
-    const res = await fetch(`${API}/api/loyalty/badges`, {
-      headers: { Authorization: `Bearer ${currentToken}` }
-    });
-    const earned = res.ok ? await res.json() : [];
-    const earnedKeys = new Set(earned.map(b => b.badge_key));
-    el.innerHTML = ALL_BADGES.map(b => {
-      const isEarned = earnedKeys.has(b.key);
-      const earnedBadge = earned.find(e => e.badge_key === b.key);
-      const dateStr = earnedBadge ? formatDate(earnedBadge.earned_at) : '';
-      return `
-        <div class="badge-card ${isEarned ? 'earned' : 'locked'}">
-          <div class="badge-icon">${isEarned ? '⚡' : '🔒'}</div>
-          <div class="badge-name">${b.name}</div>
-          <div class="badge-desc">${isEarned ? dateStr : b.desc}</div>
-        </div>
-      `;
-    }).join('');
-  } catch {
-    el.innerHTML = '<div class="list-empty">Could not load badges.</div>';
-  }
-}
-
+// ── History ───────────────────────────────────────────────────────────────────
 function renderHistory(history) {
   const el = document.getElementById('historyList');
   if (!history.length) {
@@ -469,6 +498,8 @@ function renderHistory(history) {
     mission: 'Mission completed',
     referral: 'Referral bonus',
     redemption: 'Redemption',
+    badge: 'Badge earned',
+    anniversary: 'Anniversary bonus',
   };
 
   el.innerHTML = history.map(h => {
@@ -501,7 +532,6 @@ async function loadOrders(email) {
   }
 
   try {
-    // Find customer id first, then get sales by email
     const res = await fetch(`${API}/api/sales`, {
       headers: { Authorization: `Bearer ${currentToken}` },
     });

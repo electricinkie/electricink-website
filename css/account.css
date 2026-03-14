@@ -1017,3 +1017,80 @@
   .auth-brand-footer { display: none; }
   .auth-form-panel { padding: 24px 22px; }
 }
+
+/* ── Badges ── */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.badge-card {
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: border-color .15s, background .15s;
+}
+
+.badge-card.earned {
+  background: #fff;
+  border-color: #43BDAB;
+}
+
+.badge-card.locked {
+  opacity: 0.5;
+}
+
+.badge-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+
+.badge-card.earned .badge-icon {
+  background: #e8faf6;
+}
+
+.badge-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.badge-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: -.1px;
+  margin-bottom: 4px;
+}
+
+.badge-desc {
+  font-size: 10px;
+  color: #aaa;
+  line-height: 1.55;
+}
+
+.badge-card.earned .badge-desc {
+  color: #43BDAB;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .badges-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 380px) {
+  .badges-grid { grid-template-columns: 1fr 1fr; }
+}
