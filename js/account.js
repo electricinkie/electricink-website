@@ -237,7 +237,7 @@ async function loadDashboard() {
       headers: { Authorization: `Bearer ${currentToken}` },
     });
 
-    if (res.status === 401) {
+    if (res.status === 401 || res.status === 404) {
       localStorage.removeItem(TOKEN_KEY);
       showAuthWall();
       return;
@@ -395,6 +395,11 @@ async function redeemReward(rewardId) {
       body: JSON.stringify({ reward_id: rewardId }),
     });
 
+    if (res.status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      showAuthWall();
+      return;
+    }
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Redemption failed');
 

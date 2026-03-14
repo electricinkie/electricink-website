@@ -359,7 +359,6 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
 module.exports = async function handler(req, res) {
   // CORS headers
   const ALLOWED_ORIGINS = [
-    'https://electricink-website.vercel.app',
     'https://electricink.ie',
     'http://localhost:3000',
     'http://127.0.0.1:3000'
