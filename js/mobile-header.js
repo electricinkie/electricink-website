@@ -174,129 +174,6 @@
 
   // Auth removed - getInitials helper removed
 
-  // ────────── Initialize Header ──────────
-  function initMobileHeader() {
-    // REMOVE any existing headers (prevents duplication)
-    document.querySelector('.site-header')?.remove();
-    document.querySelector('.mobile-menu')?.remove();
-    document.querySelector('.mobile-menu-backdrop')?.remove();
-
-    // Inject header at start of body
-    document.body.insertAdjacentHTML('afterbegin', headerHTML);
-
-    // Inject notifications CSS if not already loaded
-    if (!document.querySelector('link[href="/css/notifications.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/css/notifications.css';
-      document.head.appendChild(link);
-    }
-    initNotifications('mobile');
-
-    // Initialize functionality
-    setupMenuToggle();
-    setupSubmenu();
-    updateCartCount();
-    setActiveMenuItem();
-
-    // Auth removed - setupAuthHandlers and applyAuthStateImmediately removed
-  }
-
-  // Auth removed - applyAuthStateImmediately and updateMobileAuthUI functions removed
-
-  // ────────── Menu Toggle ──────────
-  function setupMenuToggle() {
-    const hamburger = document.querySelector('.hamburger-btn');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const backdrop = document.querySelector('.mobile-menu-backdrop');
-    const closeBtn = document.querySelector('.mobile-menu-close');
-
-    function openMenu() {
-      mobileMenu.classList.add('open');
-      backdrop.classList.add('show');
-      hamburger.classList.add('active');
-      hamburger.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeMenu() {
-      mobileMenu.classList.remove('open');
-      backdrop.classList.remove('show');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    }
-
-    hamburger?.addEventListener('click', openMenu);
-    closeBtn?.addEventListener('click', closeMenu);
-    backdrop?.addEventListener('click', closeMenu);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mobileMenu?.classList.contains('open')) {
-        closeMenu();
-      }
-    });
-  }
-
-  // ────────── Submenu Toggle ──────────
-  function setupSubmenu() {
-    const submenuTrigger = document.querySelector('.submenu-trigger');
-    submenuTrigger?.addEventListener('click', function() {
-      this.parentElement.classList.toggle('open');
-    });
-  }
-
-  // ────────── Update Cart Count ──────────
-  function updateCartCount() {
-    let totalItems = 0;
-    if (window.cart && typeof window.cart.getCartCount === 'function') {
-      try { totalItems = window.cart.getCartCount(); } catch (e) { totalItems = 0; }
-    } else {
-      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
-      totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    }
-
-    document.querySelectorAll('[data-cart-count]').forEach(badge => {
-      badge.textContent = totalItems;
-      badge.style.display = totalItems > 0 ? 'flex' : 'none';
-    });
-  }
-
-  // ────────── Set Active Menu Item ──────────
-  function setActiveMenuItem() {
-    const currentPath = window.location.pathname;
-    const menuLinks = document.querySelectorAll('.mobile-menu-link');
-    
-    menuLinks.forEach(link => {
-      const href = link.getAttribute('href');
-      link.classList.remove('active');
-      
-      if (href === currentPath || 
-          (href === '/' && (currentPath === '/' || currentPath === '/index.html')) ||
-          (href === '/howtousecosmetics.html' && currentPath.includes('howtouse')) ||
-          (href === '/about-us.html' && currentPath.includes('about')) ||
-          (href === '/contact-us.html' && currentPath.includes('contact'))) {
-        link.classList.add('active');
-      }
-    });
-
-    if (currentPath.includes('category.html') || currentPath.includes('products.html')) {
-      document.querySelector('.submenu-trigger')?.classList.add('active');
-    }
-  }
-
-  // ────────── Listen for Cart Updates ──────────
-  window.addEventListener('cart-updated', updateCartCount);
-
-  // ────────── Auto-Initialize ──────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileHeader);
-  } else {
-    initMobileHeader();
-  }
-
-  // Auth removed - auth observer and forceUpdateMobileAuthUI removed
-
   // ────────── Notification Center ──────────
   var NOTIF_API = (typeof INTERNAL_API_URL !== 'undefined')
     ? INTERNAL_API_URL
@@ -417,6 +294,129 @@
       markRead.addEventListener('click', () => markAllRead(prefix));
     }
   }
+
+  // ────────── Initialize Header ──────────
+  function initMobileHeader() {
+    // REMOVE any existing headers (prevents duplication)
+    document.querySelector('.site-header')?.remove();
+    document.querySelector('.mobile-menu')?.remove();
+    document.querySelector('.mobile-menu-backdrop')?.remove();
+
+    // Inject header at start of body
+    document.body.insertAdjacentHTML('afterbegin', headerHTML);
+
+    // Inject notifications CSS if not already loaded
+    if (!document.querySelector('link[href="/css/notifications.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/css/notifications.css';
+      document.head.appendChild(link);
+    }
+    initNotifications('mobile');
+
+    // Initialize functionality
+    setupMenuToggle();
+    setupSubmenu();
+    updateCartCount();
+    setActiveMenuItem();
+
+    // Auth removed - setupAuthHandlers and applyAuthStateImmediately removed
+  }
+
+  // Auth removed - applyAuthStateImmediately and updateMobileAuthUI functions removed
+
+  // ────────── Menu Toggle ──────────
+  function setupMenuToggle() {
+    const hamburger = document.querySelector('.hamburger-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const backdrop = document.querySelector('.mobile-menu-backdrop');
+    const closeBtn = document.querySelector('.mobile-menu-close');
+
+    function openMenu() {
+      mobileMenu.classList.add('open');
+      backdrop.classList.add('show');
+      hamburger.classList.add('active');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      backdrop.classList.remove('show');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    hamburger?.addEventListener('click', openMenu);
+    closeBtn?.addEventListener('click', closeMenu);
+    backdrop?.addEventListener('click', closeMenu);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu?.classList.contains('open')) {
+        closeMenu();
+      }
+    });
+  }
+
+  // ────────── Submenu Toggle ──────────
+  function setupSubmenu() {
+    const submenuTrigger = document.querySelector('.submenu-trigger');
+    submenuTrigger?.addEventListener('click', function() {
+      this.parentElement.classList.toggle('open');
+    });
+  }
+
+  // ────────── Update Cart Count ──────────
+  function updateCartCount() {
+    let totalItems = 0;
+    if (window.cart && typeof window.cart.getCartCount === 'function') {
+      try { totalItems = window.cart.getCartCount(); } catch (e) { totalItems = 0; }
+    } else {
+      const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
+      totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+
+    document.querySelectorAll('[data-cart-count]').forEach(badge => {
+      badge.textContent = totalItems;
+      badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    });
+  }
+
+  // ────────── Set Active Menu Item ──────────
+  function setActiveMenuItem() {
+    const currentPath = window.location.pathname;
+    const menuLinks = document.querySelectorAll('.mobile-menu-link');
+
+    menuLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      link.classList.remove('active');
+
+      if (href === currentPath ||
+          (href === '/' && (currentPath === '/' || currentPath === '/index.html')) ||
+          (href === '/howtousecosmetics.html' && currentPath.includes('howtouse')) ||
+          (href === '/about-us.html' && currentPath.includes('about')) ||
+          (href === '/contact-us.html' && currentPath.includes('contact'))) {
+        link.classList.add('active');
+      }
+    });
+
+    if (currentPath.includes('category.html') || currentPath.includes('products.html')) {
+      document.querySelector('.submenu-trigger')?.classList.add('active');
+    }
+  }
+
+  // ────────── Listen for Cart Updates ──────────
+  window.addEventListener('cart-updated', updateCartCount);
+
+  // ────────── Auto-Initialize ──────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileHeader);
+  } else {
+    initMobileHeader();
+  }
+
+  // Auth removed - auth observer and forceUpdateMobileAuthUI removed
 
   // ────────── Export ──────────
   window.MobileHeader = {

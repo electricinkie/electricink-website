@@ -181,44 +181,6 @@
     });
   }
 
-  // ────────── Initialize ──────────
-  function initDesktopHeader() {
-    // Check if already exists
-    const existingHeader = document.querySelector('.desktop-header');
-    if (existingHeader) {
-      existingHeader.remove();
-    }
-
-    // Inject notifications CSS if not already loaded
-    if (!document.querySelector('link[href="/css/notifications.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/css/notifications.css';
-      document.head.appendChild(link);
-    }
-
-    // Inject header at start of body
-    document.body.insertAdjacentHTML('afterbegin', headerHTML);
-
-    // Initialize functionality
-    setupDropdown();
-    updateCartCount();
-    setActiveMenuItem();
-    initNotifications('desktop');
-
-    // Auth removed - all auth UI interactions removed
-  }
-
-  // Auth removed - quick immediate check removed
-  // Auth removed - showSignedOutState and showSignedInState removed
-
-  // ────────── Auto Initialize ──────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDesktopHeader);
-  } else {
-    initDesktopHeader();
-  }
-
   // ────────── Notification Center ──────────
   var NOTIF_API = (typeof INTERNAL_API_URL !== 'undefined')
     ? INTERNAL_API_URL
@@ -340,6 +302,44 @@
     if (markRead) {
       markRead.addEventListener('click', () => markAllRead(prefix));
     }
+  }
+
+  // ────────── Initialize ──────────
+  function initDesktopHeader() {
+    // Check if already exists
+    const existingHeader = document.querySelector('.desktop-header');
+    if (existingHeader) {
+      existingHeader.remove();
+    }
+
+    // Inject notifications CSS if not already loaded
+    if (!document.querySelector('link[href="/css/notifications.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/css/notifications.css';
+      document.head.appendChild(link);
+    }
+
+    // Inject header at start of body
+    document.body.insertAdjacentHTML('afterbegin', headerHTML);
+
+    // Initialize functionality
+    setupDropdown();
+    updateCartCount();
+    setActiveMenuItem();
+    initNotifications('desktop');
+
+    // Auth removed - all auth UI interactions removed
+  }
+
+  // Auth removed - quick immediate check removed
+  // Auth removed - showSignedOutState and showSignedInState removed
+
+  // ────────── Auto Initialize ──────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDesktopHeader);
+  } else {
+    initDesktopHeader();
   }
 
   // ────────── Listen for cart updates ──────────
