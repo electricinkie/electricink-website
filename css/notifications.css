@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════
+   notifications.css — Ink Points Notification Center
+   Electric Ink Ireland
+═══════════════════════════════════════════ */
+
+.ei-notif-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+.ei-notif-btn:hover { opacity: 1; }
+.ei-notif-btn.hidden { display: none; }
+
+.ei-notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  background: #ff4444;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+  pointer-events: none;
+}
+.ei-notif-badge.hidden { display: none; }
+
+/* Dropdown */
+.ei-notif-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: -8px;
+  width: 320px;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  z-index: 9999;
+  overflow: hidden;
+  display: none;
+}
+.ei-notif-dropdown.open { display: block; }
+
+.ei-notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.ei-notif-header-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ei-notif-mark-read {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: #43BDAB;
+  font-weight: 600;
+  padding: 0;
+}
+.ei-notif-mark-read:hover { opacity: 0.7; }
+
+.ei-notif-list {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.ei-notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f8f8f8;
+  transition: background 0.15s;
+}
+.ei-notif-item:last-child { border-bottom: none; }
+.ei-notif-item:hover { background: #fafafa; }
+.ei-notif-item.unread { background: #f8fdfb; }
+.ei-notif-item.unread:hover { background: #f0faf7; }
+
+.ei-notif-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.ei-notif-icon.purchase { background: #f0faf7; }
+.ei-notif-icon.badge { background: #fff8f0; }
+.ei-notif-icon.mission { background: #f0f4ff; }
+.ei-notif-icon.redemption { background: #fff0f0; }
+.ei-notif-icon.welcome_bonus { background: #fffbf0; }
+
+.ei-notif-body { flex: 1; min-width: 0; }
+.ei-notif-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #111111;
+  font-weight: 500;
+  line-height: 1.4;
+  margin: 0 0 3px;
+}
+.ei-notif-time {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: #999999;
+  margin: 0;
+}
+.ei-notif-unread-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #43BDAB;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.ei-notif-unread-dot.hidden { visibility: hidden; }
+
+.ei-notif-empty {
+  padding: 32px 16px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #999999;
+}
+
+.ei-notif-footer {
+  padding: 10px 16px;
+  border-top: 1px solid #f0f0f0;
+  text-align: center;
+}
+.ei-notif-footer a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #43BDAB;
+  font-weight: 600;
+  text-decoration: none;
+}
+.ei-notif-footer a:hover { opacity: 0.7; }
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .ei-notif-dropdown {
+    width: 290px;
+    right: -16px;
+  }
+}

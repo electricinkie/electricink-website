@@ -47,6 +47,31 @@
         
         <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
+          <!-- Notification Center -->
+          <div class="ei-notif-wrap" style="position:relative;">
+            <button class="ei-notif-btn hidden" id="desktopNotifBtn"
+                    aria-label="Notifications">
+              <img src="/images/account/ink-points-coin.webp"
+                   width="26" height="26"
+                   style="border-radius:50%;object-fit:cover;"
+                   alt="Ink Points">
+              <span class="ei-notif-badge hidden" id="desktopNotifBadge"></span>
+            </button>
+            <div class="ei-notif-dropdown" id="desktopNotifDropdown">
+              <div class="ei-notif-header">
+                <span class="ei-notif-header-title">Ink Points</span>
+                <button class="ei-notif-mark-read" id="desktopMarkRead">
+                  Mark all read
+                </button>
+              </div>
+              <div class="ei-notif-list" id="desktopNotifList">
+                <div class="ei-notif-empty">Loading...</div>
+              </div>
+              <div class="ei-notif-footer">
+                <a href="/account.html">View all rewards →</a>
+              </div>
+            </div>
+          </div>
           <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"/>
@@ -164,6 +189,14 @@
       existingHeader.remove();
     }
 
+    // Inject notifications CSS if not already loaded
+    if (!document.querySelector('link[href="/css/notifications.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/css/notifications.css';
+      document.head.appendChild(link);
+    }
+
     // Inject header at start of body
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
@@ -171,6 +204,7 @@
     setupDropdown();
     updateCartCount();
     setActiveMenuItem();
+    initNotifications('desktop');
 
     // Auth removed - all auth UI interactions removed
   }
@@ -183,6 +217,129 @@
     document.addEventListener('DOMContentLoaded', initDesktopHeader);
   } else {
     initDesktopHeader();
+  }
+
+  // ────────── Notification Center ──────────
+  const NOTIF_API = (typeof INTERNAL_API_URL !== 'undefined')
+    ? INTERNAL_API_URL
+    : 'https://ei-internal-production.up.railway.app';
+  const NOTIF_TOKEN_KEY = 'ei_loyalty_token';
+
+  const ACTION_CONFIG = {
+    purchase:      { label: 'Points earned',    color: '#43BDAB', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
+    welcome_bonus: { label: 'Welcome bonus',    color: '#FFA300', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="#FFA300" stroke-width="1.8" stroke-linejoin="round"/></svg>' },
+    mission:       { label: 'Mission complete', color: '#0033C4', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#0033C4" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#0033C4" stroke-width="2" stroke-linecap="round"/></svg>' },
+    badge:         { label: 'Badge unlocked',   color: '#FFA300', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="#FFA300" stroke-width="1.8" stroke-linejoin="round"/></svg>' },
+    redemption:    { label: 'Coupon generated', color: '#ff4444', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="1" stroke="#ff4444" stroke-width="1.8"/><path d="M7 10h6M10 7v6" stroke="#ff4444" stroke-width="1.8" stroke-linecap="round"/></svg>' },
+    manual:        { label: 'Points added',     color: '#43BDAB', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
+  };
+
+  function formatTimeAgo(dateStr) {
+    const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+    return `${Math.floor(diff/86400)}d ago`;
+  }
+
+  function renderNotifList(notifications, listEl, badgeEl) {
+    if (!notifications.length) {
+      listEl.innerHTML = '<div class="ei-notif-empty">No activity yet.</div>';
+      return;
+    }
+    listEl.innerHTML = notifications.map(n => {
+      const cfg = ACTION_CONFIG[n.action] || ACTION_CONFIG.manual;
+      const isUnread = !n.read_at;
+      const pts = n.points > 0 ? `+${n.points.toLocaleString()} pts` : `${n.points.toLocaleString()} pts`;
+      const text = n.points < 0
+        ? `${cfg.label}: ${n.description || ''}`
+        : `${pts} — ${n.description || cfg.label}`;
+      return `
+        <div class="ei-notif-item ${isUnread ? 'unread' : ''}">
+          <div class="ei-notif-icon ${n.action}">${cfg.svg}</div>
+          <div class="ei-notif-body">
+            <p class="ei-notif-text">${text}</p>
+            <p class="ei-notif-time">${formatTimeAgo(n.created_at)}</p>
+          </div>
+          <span class="ei-notif-unread-dot ${isUnread ? '' : 'hidden'}"></span>
+        </div>`;
+    }).join('');
+  }
+
+  async function loadNotifications(prefix) {
+    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
+    const btn   = document.getElementById(`${prefix}NotifBtn`);
+    const badge = document.getElementById(`${prefix}NotifBadge`);
+    const list  = document.getElementById(`${prefix}NotifList`);
+    if (!btn || !badge || !list) return;
+
+    if (!token) { btn.classList.add('hidden'); return; }
+
+    btn.classList.remove('hidden');
+    try {
+      const res = await fetch(`${NOTIF_API}/api/loyalty/notifications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) { btn.classList.add('hidden'); return; }
+      const data = await res.json();
+      renderNotifList(data.notifications || [], list, badge);
+      if (data.unread_count > 0) {
+        badge.textContent = data.unread_count > 9 ? '9+' : data.unread_count;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    } catch {
+      btn.classList.add('hidden');
+    }
+  }
+
+  async function markAllRead(prefix) {
+    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
+    if (!token) return;
+    try {
+      await fetch(`${NOTIF_API}/api/loyalty/notifications/read`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const badge = document.getElementById(`${prefix}NotifBadge`);
+      const list  = document.getElementById(`${prefix}NotifList`);
+      if (badge) badge.classList.add('hidden');
+      if (list) {
+        list.querySelectorAll('.ei-notif-item.unread').forEach(el => {
+          el.classList.remove('unread');
+        });
+        list.querySelectorAll('.ei-notif-unread-dot').forEach(el => {
+          el.classList.add('hidden');
+        });
+      }
+    } catch {}
+  }
+
+  function initNotifications(prefix) {
+    const btn      = document.getElementById(`${prefix}NotifBtn`);
+    const dropdown = document.getElementById(`${prefix}NotifDropdown`);
+    const markRead = document.getElementById(`${prefix}MarkRead`);
+    if (!btn || !dropdown) return;
+
+    loadNotifications(prefix);
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.contains('open');
+      dropdown.classList.toggle('open');
+      if (!isOpen) markAllRead(prefix);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!btn.closest('.ei-notif-wrap').contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+
+    if (markRead) {
+      markRead.addEventListener('click', () => markAllRead(prefix));
+    }
   }
 
   // ────────── Listen for cart updates ──────────
