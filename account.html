@@ -39,30 +39,37 @@
 
           <!-- Left: brand panel -->
           <div class="auth-brand">
-            <div class="auth-brand-logo">
-              <img src="/images/logos/logo-white.png" alt="Electric Ink" onerror="this.style.display='none'">
+            <div class="auth-brand-logo" style="display:flex;align-items:center;gap:12px;">
+              <img src="/images/account/ink-points-coin.webp"
+                   width="40" height="40"
+                   style="border-radius:50%;object-fit:cover;flex-shrink:0;"
+                   alt="Ink Points">
+              <div class="auth-brand-title" style="margin:0;">Ink <span>Points</span></div>
             </div>
-            <div class="auth-brand-title">Ink<br><span>Points</span></div>
-            <div class="auth-brand-sub">The loyalty programme made by tattoo artists, for tattoo artists.</div>
+            <div class="auth-brand-sub">The Black Cat loyalty programme.</div>
             <div class="auth-perks">
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text"><strong>5 pts per €1 spent</strong> — every order counts</div>
+                <div class="auth-perk-text"><strong>5 pts per €1 spent</strong> — on every order, automatically</div>
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text"><strong>Free products & vouchers</strong> — redeem anytime</div>
+                <div class="auth-perk-text"><strong>+250 bonus points</strong> on your very first purchase</div>
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text"><strong>+2,500 pts</strong> when you refer a fellow artist</div>
+                <div class="auth-perk-text"><strong>Redeem for free products</strong>, vouchers and free shipping</div>
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text">Climb from <strong>Apprentice</strong> to <strong>Legend</strong></div>
+                <div class="auth-perk-text"><strong>+2,500 pts</strong> every time you refer a fellow artist</div>
+              </div>
+              <div class="auth-perk">
+                <div class="auth-perk-dot"></div>
+                <div class="auth-perk-text">Unlock <strong>permanent discounts</strong> as you level up</div>
               </div>
             </div>
-            <div class="auth-brand-footer">De tatuadores para tatuadores</div>
+            <div class="auth-brand-footer">From Tattoo Artists to Tattoo Artists</div>
           </div>
 
           <!-- Right: form panel -->
@@ -116,18 +123,18 @@
                   <div class="form-divider-line"></div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Referral code <span class="form-optional">(from a friend)</span></label>
-                  <div style="display:flex;align-items:center;gap:0;">
+                  <label class="form-label">Referred by a friend? <span class="form-optional">Enter their code</span></label>
+                  <div style="display:flex;align-items:center;">
                     <span style="padding:12px 14px;background:#f5f5f5;border:1px solid #e8e8e8;border-right:none;border-radius:9px 0 0 9px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#999;letter-spacing:0.04em;flex-shrink:0;">EI-</span>
-                    <input type="text" id="registerCustomCode" class="form-input"
-                           placeholder="YOURNAME" autocomplete="off"
-                           style="text-transform:uppercase;letter-spacing:.06em;border-radius:0 9px 9px 0;flex:1;"
+                    <input type="text" id="registerReferral" class="form-input"
+                           placeholder="FRIENDSCODE" autocomplete="off"
+                           style="text-transform:uppercase;letter-spacing:.06em;border-radius:0 9px 9px 0;border-left:none;flex:1;"
                            maxlength="20">
                   </div>
-                  <div id="codeCheckMsg" style="font-size:11px;margin-top:4px;display:none;"></div>
-                  <input type="hidden" id="registerReferral">
+                  <div class="referral-note" style="margin-top:8px;">
+                    Your friend earns <strong>2,500 pts</strong> when you place your first order. You get <strong>€15 off</strong> orders over €75.
+                  </div>
                 </div>
-                <div class="referral-note">If a fellow artist shared their code, enter it here. They earn <strong>2,500 pts</strong> when you place your first order.</div>
                 <div id="registerError" class="form-error" style="display:none"></div>
                 <button type="submit" class="btn-submit" id="registerSubmit">
                   <span class="btn-text">Create account — it's free</span>
@@ -307,5 +314,16 @@
   <script type="module" src="/js/desktop-header.js"></script>
   <script type="module" src="/js/cart-drawer.js"></script>
   <script src="/js/account.js" defer></script>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab === 'login') {
+        document.addEventListener('DOMContentLoaded', () => {
+          if (typeof switchAuthTab === 'function') switchAuthTab('login');
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

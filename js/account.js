@@ -243,9 +243,9 @@ async function handleRegister(e) {
   const name = document.getElementById('registerName').value.trim();
   const email = document.getElementById('registerEmail').value.trim();
   const password = document.getElementById('registerPassword').value;
-  const referral_code = document.getElementById('registerReferral').value.trim().toUpperCase() || undefined;
-  const customCodeRaw = document.getElementById('registerCustomCode')?.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '') || '';
-  const custom_code = customCodeRaw ? `EI-${customCodeRaw}` : undefined;
+  const referralRaw = document.getElementById('registerReferral')?.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '') || '';
+  const referral_code = referralRaw ? `EI-${referralRaw}` : undefined;
+  const custom_code = undefined;
 
   setLoading(btn, true);
   errorEl.style.display = 'none';
