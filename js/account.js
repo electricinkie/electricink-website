@@ -204,6 +204,38 @@ async function handleLogin(e) {
   }
 }
 
+// Real-time code availability check
+(function() {
+  const input = document.getElementById('registerCustomCode');
+  if (!input) return;
+  let timer = null;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const msgEl = document.getElementById('codeCheckMsg');
+    const val = input.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!val || val.length < 2) {
+      if (msgEl) msgEl.style.display = 'none';
+      return;
+    }
+    timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`${API}/api/auth/check-code?code=EI-${val}`);
+        const data = await res.json();
+        if (msgEl) {
+          msgEl.style.display = 'block';
+          if (data.available) {
+            msgEl.style.color = '#43BDAB';
+            msgEl.textContent = `EI-${val} is available ✓`;
+          } else {
+            msgEl.style.color = '#c0392b';
+            msgEl.textContent = `EI-${val} is already taken`;
+          }
+        }
+      } catch {}
+    }, 500);
+  });
+})();
+
 async function handleRegister(e) {
   e.preventDefault();
   const btn = document.getElementById('registerSubmit');
@@ -212,6 +244,8 @@ async function handleRegister(e) {
   const email = document.getElementById('registerEmail').value.trim();
   const password = document.getElementById('registerPassword').value;
   const referral_code = document.getElementById('registerReferral').value.trim().toUpperCase() || undefined;
+  const customCodeRaw = document.getElementById('registerCustomCode')?.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '') || '';
+  const custom_code = customCodeRaw ? `EI-${customCodeRaw}` : undefined;
 
   setLoading(btn, true);
   errorEl.style.display = 'none';
@@ -220,7 +254,7 @@ async function handleRegister(e) {
     const res = await fetch(`${API}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password, referral_code }),
+      body: JSON.stringify({ name, email, password, referral_code, custom_code }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Registration failed');
