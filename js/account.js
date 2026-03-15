@@ -103,20 +103,30 @@ async function loadAndRenderBadges() {
     const earned = res.ok ? await res.json() : [];
     const earnedKeys = new Set(earned.map(b => b.badge_key));
     el.innerHTML = ALL_BADGES.map(b => {
-      const isEarned = earnedKeys.has(b.key);
-      const earnedBadge = earned.find(e => e.badge_key === b.key);
-      const dateStr = earnedBadge ? formatDate(earnedBadge.earned_at) : '';
-      const iconColor = isEarned ? '#43BDAB' : '#ccc';
-      return `
-        <div class="badge-card ${isEarned ? 'earned' : 'locked'}">
-          <div class="badge-icon" style="color:${iconColor}">
-            ${b.icon}
+        const isEarned = earnedKeys.has(b.key);
+        const earnedBadge = earned.find(e => e.badge_key === b.key);
+        const dateStr = earnedBadge ? formatDate(earnedBadge.earned_at) : '';
+        const stateClass = isEarned ? 'earned' : 'locked';
+        const statusLabel = isEarned ? 'Unlocked' : 'Locked';
+        return `
+          <div class="badge-card ${stateClass}"
+               ontouchend="this.classList.toggle('flipped')">
+            <div class="badge-card-inner">
+              <div class="badge-front">
+                <div class="badge-icon">${b.icon}</div>
+                <div class="badge-name">${b.name}</div>
+                <div class="badge-desc">${isEarned ? dateStr : ''}</div>
+                <span class="badge-tap-hint">tap</span>
+              </div>
+              <div class="badge-back">
+                <div class="badge-back-title">${b.name}</div>
+                <div class="badge-back-desc">${b.desc}</div>
+                <span class="badge-back-status">${statusLabel}</span>
+              </div>
+            </div>
           </div>
-          <div class="badge-name">${b.name}</div>
-          <div class="badge-desc">${isEarned ? dateStr : b.desc}</div>
-        </div>
-      `;
-    }).join('');
+        `;
+      }).join('');
   } catch {
     el.innerHTML = '<div class="list-empty">Could not load badges.</div>';
   }

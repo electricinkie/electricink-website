@@ -270,6 +270,33 @@
   box-shadow: -2px -2px 6px rgba(6,11,15,0.03);
 }
 
+/* ────────── Right Actions ────────── */
+.desktop-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ────────── Notification Button ────────── */
+.ei-notif-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.ei-notif-btn:hover {
+  background: rgba(67, 189, 171, 0.1);
+}
+
+.ei-notif-btn.hidden {
+  display: none !important;
+}
+
 /* ────────── Cart Icon ────────── */
 .desktop-cart {
   position: relative;
