@@ -259,6 +259,34 @@ async function loadDashboard() {
     loadRewards();
     loadOrders(data.customer.email);
 
+    // ── Loyalty toasts ──────────────────────────────
+    const _pts   = data.customer.loyalty_points_total || 0;
+    const _level = data.customer.loyalty_level || 'apprentice';
+    const _prevLevel = localStorage.getItem('ei_last_level');
+    const _prevPts   = parseInt(localStorage.getItem('ei_last_pts') || '0', 10);
+
+    const _iconStar = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="#43BDAB" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>`;
+    const _iconArrow = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+    const _levelLabels = {
+      journeyman: 'Journeyman', artist: 'Artist',
+      master: 'Master', legend: 'Legend'
+    };
+
+    if (_prevLevel && _prevLevel !== _level && _levelLabels[_level]) {
+      if (window.toast) window.toast.success(
+        `${_iconStar} Level up — you reached ${_levelLabels[_level]}`, 6000
+      );
+    } else if (_pts > _prevPts && _prevPts > 0) {
+      const _earned = _pts - _prevPts;
+      if (window.toast) window.toast.success(
+        `${_iconArrow} +${_earned.toLocaleString()} Ink Points added`, 4000
+      );
+    }
+
+    localStorage.setItem('ei_last_level', _level);
+    localStorage.setItem('ei_last_pts', String(_pts));
+
   } catch (err) {
     console.error('loadDashboard error:', err);
     localStorage.removeItem(TOKEN_KEY);
