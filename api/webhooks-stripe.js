@@ -634,9 +634,10 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       // ── Ink Points block ──────────────────────────────────────────
       let pointsBlock = '';
       try {
-        if (order.customerEmail) {
+        const _internalApiUrl = process.env.INTERNAL_API_URL;
+        if (order.customerEmail && _internalApiUrl) {
           const ptsFetch = await fetch(
-            `${internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`
+            `${_internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`
           );
           if (ptsFetch.ok) {
             const ptsData = await ptsFetch.json();
