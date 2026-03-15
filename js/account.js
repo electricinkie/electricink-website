@@ -493,40 +493,77 @@ function copyCoupon() {
 }
 
 // ── Active Coupons ────────────────────────────────────────────────────────────
-function renderActiveCoupons() {
+async function renderActiveCoupons() {
   const el = document.getElementById('activeCoupons');
   if (!el) return;
+
+  // Immediate render from localStorage while fetch loads
   try {
-    const saved = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
-    if (!saved.length) {
+    const cached = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
+    if (cached.length) {
+      el.innerHTML = cached.map(c => `
+        <div class="h-row" style="align-items:center;gap:12px;">
+          <div style="flex:1;">
+            <div class="h-action">${c.reward}</div>
+            <div class="h-desc" style="font-family:monospace;font-size:13px;
+              letter-spacing:0.05em;color:#111;margin-top:2px;">${c.code}</div>
+            <div class="h-date" style="margin-top:2px;">${formatDate(c.date)}</div>
+          </div>
+          <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
+            onclick="navigator.clipboard.writeText('${c.code}').then(()=>{
+              this.textContent='Copied!';
+              setTimeout(()=>this.textContent='Copy',2000)
+            })">Copy</button>
+        </div>
+      `).join('');
+    }
+  } catch {}
+
+  // Fetch from backend and replace
+  if (!currentToken) return;
+  try {
+    const res = await fetch(`${API}/api/loyalty/redemptions`, {
+      headers: { Authorization: `Bearer ${currentToken}` }
+    });
+    if (!res.ok) return;
+    const rows = await res.json();
+
+    const active = rows.filter(r => r.status === 'active');
+
+    if (!active.length) {
       el.innerHTML = '<div class="list-empty">No active coupons.</div>';
+      localStorage.removeItem('inkpoints_coupons');
       return;
     }
-    el.innerHTML = saved.map((c, i) => `
+
+    // Sync localStorage with backend data
+    const synced = active.map(r => ({
+      code: r.stripe_coupon_id,
+      reward: r.reward_name,
+      points: r.points_spent,
+      date: r.created_at
+    }));
+    localStorage.setItem('inkpoints_coupons', JSON.stringify(synced));
+
+    el.innerHTML = active.map(r => `
       <div class="h-row" style="align-items:center;gap:12px;">
         <div style="flex:1;">
-          <div class="h-action">${c.reward}</div>
-          <div class="h-desc" style="font-family:monospace;font-size:13px;letter-spacing:0.05em;color:#111;margin-top:2px;">${c.code}</div>
-          <div class="h-date" style="margin-top:2px;">${formatDate(c.date)}</div>
+          <div class="h-action">${r.reward_name}</div>
+          <div class="h-desc" style="font-family:monospace;font-size:13px;
+            letter-spacing:0.05em;color:#111;margin-top:2px;">
+            ${r.stripe_coupon_id}</div>
+          <div class="h-date" style="margin-top:2px;">${formatDate(r.created_at)}</div>
         </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
-            onclick="navigator.clipboard.writeText('${c.code}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;color:#999;border-color:#ddd;"
-            onclick="removeActiveCoupon(${i})">Remove</button>
-        </div>
+        <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
+          onclick="navigator.clipboard.writeText('${r.stripe_coupon_id}').then(()=>{
+            this.textContent='Copied!';
+            setTimeout(()=>this.textContent='Copy',2000)
+          })">Copy</button>
       </div>
     `).join('');
-  } catch {}
-}
-
-function removeActiveCoupon(index) {
-  try {
-    const saved = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
-    saved.splice(index, 1);
-    localStorage.setItem('inkpoints_coupons', JSON.stringify(saved));
-    renderActiveCoupons();
-  } catch {}
+  } catch (err) {
+    console.warn('[InkPoints] renderActiveCoupons fetch failed', err);
+  }
 }
 
 // ── History ───────────────────────────────────────────────────────────────────
