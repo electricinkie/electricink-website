@@ -631,7 +631,66 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         `;
       }).join('');
 
-      const finalClientHtml = clientEmailHtml.replace(/{{itemsList}}/g, itemsHtml);
+      // ── Ink Points block ──────────────────────────────────────────
+      let pointsBlock = '';
+      try {
+        if (order.customerEmail) {
+          const ptsFetch = await fetch(
+            `${internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`
+          );
+          if (ptsFetch.ok) {
+            const ptsData = await ptsFetch.json();
+            if (ptsData.found && ptsData.points > 0) {
+              const earned = Math.round((order.total || 0) * 5);
+              const levelLabels = {
+                apprentice: 'Apprentice', journeyman: 'Journeyman',
+                artist: 'Artist', master: 'Master', legend: 'Legend'
+              };
+              const levelLabel = levelLabels[ptsData.level] || ptsData.level;
+              pointsBlock = `
+              <tr>
+                <td style="padding: 0 40px 0 40px;">
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8fafb;border-radius:8px;margin-bottom:30px;">
+                    <tr>
+                      <td style="padding:24px;">
+                        <p style="margin:0 0 4px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#999999;text-transform:uppercase;letter-spacing:0.06em;">Ink Points</p>
+                        <p style="margin:0 0 16px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:22px;font-weight:700;color:#43BDAB;">+${earned.toLocaleString()} pts earned</p>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;color:#666666;">Total balance</td>
+                            <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;">${ptsData.points.toLocaleString()} pts</td>
+                          </tr>
+                          <tr>
+                            <td style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;color:#666666;padding-top:6px;">Level</td>
+                            <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;padding-top:6px;">${levelLabel}</td>
+                          </tr>
+                        </table>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
+                          <tr>
+                            <td style="border-radius:4px;background-color:#000000;">
+                              <a href="https://electricink.ie/account.html"
+                                 style="display:inline-block;padding:10px 20px;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:0.04em;">
+                                View your rewards
+                              </a>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>`;
+            }
+          }
+        }
+      } catch (ptsErr) {
+        logger.warn('Points block fetch failed', { error: ptsErr.message });
+      }
+      // ─────────────────────────────────────────────────────────────
+
+      const finalClientHtml = clientEmailHtml
+        .replace(/{{itemsList}}/g, itemsHtml)
+        .replace(/{{pointsBlock}}/g, pointsBlock);
 
       const clientResult = await resend.emails.send({
         from: EMAIL_FROM,
