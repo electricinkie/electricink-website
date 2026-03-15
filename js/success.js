@@ -141,11 +141,65 @@ import { INTERNAL_API_URL } from './constants.js';
   }
 
   // ────────── Success Toast ──────────
-  // Após renderizar tudo, mostrar toast de sucesso
   setTimeout(() => {
     if (window.toast) {
       window.toast.success('Order confirmed! Check your email for details.', 5000);
     }
   }, 500);
+
+  // ────────── Ink Points Summary ──────────
+  if (orderData.email) {
+    setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `${INTERNAL_API_URL}/api/loyalty/points-summary?email=${encodeURIComponent(orderData.email)}`
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.found) return;
+
+        const card = document.getElementById('inkPointsCard');
+        const content = document.getElementById('inkPointsContent');
+        if (!card || !content) return;
+
+        const levelLabels = {
+          apprentice: 'Apprentice', journeyman: 'Journeyman',
+          artist: 'Artist', master: 'Master', legend: 'Legend'
+        };
+        const label = levelLabels[data.level] || data.level;
+        const earned = Math.round((orderData.totals?.total || 0) * 5);
+
+        content.innerHTML = `
+          <p style="margin:0 0 6px;font-family:'Montserrat',sans-serif;
+                    font-size:13px;color:#444;line-height:1.6;">
+            You earned <strong style="color:#43BDAB;">
+            +${earned.toLocaleString()} pts</strong> with this order.
+          </p>
+          <p style="margin:0;font-family:'Montserrat',sans-serif;
+                    font-size:13px;color:#444;line-height:1.6;">
+            Total balance: <strong>${data.points.toLocaleString()} pts</strong>
+            &nbsp;·&nbsp; Level: <strong>${label}</strong>
+          </p>
+          <a href="/account.html"
+             style="display:inline-block;margin-top:12px;
+                    font-family:'Montserrat',sans-serif;font-size:12px;
+                    color:#43BDAB;text-decoration:none;font-weight:600;
+                    letter-spacing:0.04em;">
+            View your rewards →
+          </a>
+        `;
+        card.style.display = '';
+
+        if (window.toast) {
+          window.toast.success(
+            `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> +${earned.toLocaleString()} Ink Points earned`,
+            5000
+          );
+        }
+      } catch (e) {
+        console.warn('[InkPoints] points-summary fetch failed', e);
+      }
+    }, 1500);
+  }
 
 })();
