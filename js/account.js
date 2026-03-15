@@ -367,14 +367,14 @@ function renderOverview(customer, missions) {
   document.getElementById('levelName').textContent = level.label;
 
   const next = LEVELS.find(l => l.min > pts);
-  const prev = getLevelData(customer.loyalty_level || 'apprentice');
+  const current = getLevelData(customer.loyalty_level || 'apprentice');
 
   if (next) {
-    const pct = Math.min(100, Math.round(((pts - prev.min) / (next.min - prev.min)) * 100));
+    const pct = Math.min(100, Math.round(((pts - current.min) / (next.min - current.min)) * 100));
     document.getElementById('progFill').style.width = `${pct}%`;
     document.getElementById('progCount').textContent = `${pts.toLocaleString()} / ${next.min.toLocaleString()} pts`;
     document.getElementById('progLabel').textContent = `Progress to ${next.label}`;
-    document.getElementById('progStart').textContent = `${prev.label} · ${prev.min.toLocaleString()}`;
+    document.getElementById('progStart').textContent = `${current.label} · ${current.min.toLocaleString()}`;
     document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()}`;
   } else {
     document.getElementById('progFill').style.width = '100%';
