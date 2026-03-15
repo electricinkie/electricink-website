@@ -20,11 +20,11 @@ const TOKEN_KEY = 'ei_loyalty_token';
 
 // ── Level config ──────────────────────────────────────────────────────────────
 const LEVELS = [
-  { key: 'apprentice', label: 'Apprentice', min: 0,     next: 1000  },
-  { key: 'journeyman', label: 'Journeyman', min: 1000,  next: 5000  },
-  { key: 'artist',     label: 'Artist',     min: 5000,  next: 10000 },
-  { key: 'master',     label: 'Master',     min: 10000, next: 15000 },
-  { key: 'legend',     label: 'Legend',     min: 15000, next: null  },
+  { key: 'apprentice', label: 'Apprentice', min: 0,     next: 1000,  benefits: ['Access to rewards shop', 'Earn 5 pts per €1 spent', 'Referral bonuses'] },
+  { key: 'journeyman', label: 'Journeyman', min: 1000,  next: 5000,  benefits: ['2% off all consumables', 'Earn 5 pts per €1 spent', 'Referral bonuses'] },
+  { key: 'artist',     label: 'Artist',     min: 5000,  next: 10000, benefits: ['5% off all consumables', 'Early access to new products', 'Referral bonuses'] },
+  { key: 'master',     label: 'Master',     min: 10000, next: 15000, benefits: ['7% off all consumables', 'Priority support', 'Early access to new products'] },
+  { key: 'legend',     label: 'Legend',     min: 15000, next: null,  benefits: ['10% off all consumables', 'VIP sourcing requests', 'Priority support'] },
 ];
 
 // Mission display config
@@ -295,7 +295,7 @@ async function loadDashboard() {
 
     showDashboard();
     renderHeader(data.customer);
-    renderOverview(data.customer, data.missions || []);
+    renderOverview(data.customer, data.missions || [], data.points_earned || 0);
     renderHistory(data.points_history || []);
     renderActiveCoupons();
     await loadAndRenderBadges();
@@ -355,8 +355,9 @@ function renderHeader(customer) {
 }
 
 // ── Overview ──────────────────────────────────────────────────────────────────
-function renderOverview(customer, missions) {
+function renderOverview(customer, missions, pointsEarned) {
   const pts = customer.loyalty_points_total || 0;
+  const earned = pointsEarned || pts;
   const level = getLevelData(customer.loyalty_level || 'apprentice');
 
   document.getElementById('ptsNum').textContent = pts.toLocaleString();
@@ -366,13 +367,13 @@ function renderOverview(customer, missions) {
   badge.className = `level-badge lv-${level.key}`;
   document.getElementById('levelName').textContent = level.label;
 
-  const next = LEVELS.find(l => l.min > pts);
+  // Progress bar uses total earned (never goes down)
+  const next = LEVELS.find(l => l.min > earned);
   const current = getLevelData(customer.loyalty_level || 'apprentice');
-
   if (next) {
-    const pct = Math.min(100, Math.round(((pts - current.min) / (next.min - current.min)) * 100));
+    const pct = Math.min(100, Math.round(((earned - current.min) / (next.min - current.min)) * 100));
     document.getElementById('progFill').style.width = `${pct}%`;
-    document.getElementById('progCount').textContent = `${pts.toLocaleString()} / ${next.min.toLocaleString()} pts`;
+    document.getElementById('progCount').textContent = `${earned.toLocaleString()} / ${next.min.toLocaleString()} pts earned`;
     document.getElementById('progLabel').textContent = `Progress to ${next.label}`;
     document.getElementById('progStart').textContent = `${current.label} · ${current.min.toLocaleString()}`;
     document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()}`;
@@ -382,6 +383,20 @@ function renderOverview(customer, missions) {
     document.getElementById('progLabel').textContent = 'Legend status';
     document.getElementById('progStart').textContent = '';
     document.getElementById('progEnd').textContent = '';
+  }
+
+  // Level benefits
+  const benefitsEl = document.getElementById('levelBenefits');
+  if (benefitsEl && level.benefits) {
+    benefitsEl.innerHTML = level.benefits.map(b => `
+      <div class="level-benefit">
+        <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/>
+          <path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>${b}</span>
+      </div>
+    `).join('');
   }
 
   LEVELS.forEach(l => {
