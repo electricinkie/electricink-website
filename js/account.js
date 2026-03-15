@@ -196,6 +196,7 @@ async function handleLogin(e) {
 
     localStorage.setItem(TOKEN_KEY, data.token);
     currentToken = data.token;
+    if (window.toast) window.toast.success('Welcome back!', 3000);
     await loadDashboard();
   } catch (err) {
     showError(errorEl, err.message);
@@ -261,6 +262,7 @@ async function handleRegister(e) {
 
     localStorage.setItem(TOKEN_KEY, data.token);
     currentToken = data.token;
+    if (window.toast) window.toast.success('Account created — +250 pts on your first purchase!', 5000);
     await loadDashboard();
   } catch (err) {
     showError(errorEl, err.message);
@@ -271,8 +273,11 @@ async function handleRegister(e) {
 
 function handleSignout() {
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem('ei_last_level');
+  localStorage.removeItem('ei_last_pts');
   currentToken = null;
   currentCustomer = null;
+  if (window.toast) window.toast.info('Signed out successfully', 3000);
   showAuthWall();
 }
 
@@ -375,8 +380,8 @@ function renderOverview(customer, missions, pointsEarned) {
     document.getElementById('progFill').style.width = `${pct}%`;
     document.getElementById('progCount').textContent = `${earned.toLocaleString()} / ${next.min.toLocaleString()} pts earned`;
     document.getElementById('progLabel').textContent = `Progress to ${next.label}`;
-    document.getElementById('progStart').textContent = `${current.label} · ${current.min.toLocaleString()}`;
-    document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()}`;
+    document.getElementById('progStart').textContent = current.label;
+    document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()} pts`;
   } else {
     document.getElementById('progFill').style.width = '100%';
     document.getElementById('progCount').textContent = 'Max level reached';
@@ -528,6 +533,9 @@ async function redeemReward(rewardId) {
 
     // Update button
     btn.textContent = 'Redeemed';
+    if (window.toast) window.toast.success(
+      `Coupon ${data.coupon_code} ready to use`, 5000
+    );
     btn.className = 'r-btn redeemed';
 
     // Refresh reward buttons
