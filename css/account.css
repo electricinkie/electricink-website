@@ -510,6 +510,27 @@
   background: var(--color-orange);
 }
 
+/* ── Level Benefits ── */
+.level-benefit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-gray-700);
+  line-height: 1.5;
+}
+
+.level-benefit svg {
+  flex-shrink: 0;
+}
+
+.level-badge.lv-journeyman ~ #levelBenefits .level-benefit,
+.level-badge.lv-artist ~ #levelBenefits .level-benefit,
+.level-badge.lv-master ~ #levelBenefits .level-benefit,
+.level-badge.lv-legend ~ #levelBenefits .level-benefit {
+  color: var(--color-text);
+}
+
 /* ── Progress ── */
 .prog-head {
   display: flex;
