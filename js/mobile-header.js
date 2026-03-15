@@ -298,10 +298,10 @@
   // Auth removed - auth observer and forceUpdateMobileAuthUI removed
 
   // ────────── Notification Center ──────────
-  const NOTIF_API = (typeof INTERNAL_API_URL !== 'undefined')
+  var NOTIF_API = (typeof INTERNAL_API_URL !== 'undefined')
     ? INTERNAL_API_URL
     : 'https://ei-internal-production.up.railway.app';
-  const NOTIF_TOKEN_KEY = 'ei_loyalty_token';
+  var NOTIF_TOKEN_KEY = 'ei_loyalty_token';
 
   const ACTION_CONFIG = {
     purchase:      { label: 'Points earned',    svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
