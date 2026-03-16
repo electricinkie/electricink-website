@@ -182,7 +182,7 @@ window.appliedDiscount = 0;
     setupFormHandler();
     // Prefill referral code if customer is logged in via Ink Points
     try {
-      const inkToken = localStorage.getItem('inkpoints_token');
+      const inkToken = localStorage.getItem('ei_loyalty_token');
       if (inkToken) {
         fetch(`${INTERNAL_API_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${inkToken}` }

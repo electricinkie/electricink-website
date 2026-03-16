@@ -211,7 +211,7 @@
       const cfg = ACTION_CONFIG[n.action] || ACTION_CONFIG.manual;
       const isUnread = !n.read_at;
       const pts = n.points > 0
-        ? `+${n.points.toLocaleString()} pts`
+          ? `+${n.points.toLocaleString()} Catokens`
         : `${n.points.toLocaleString()} pts`;
       const text = n.points < 0
         ? `${cfg.label}: ${n.description || ''}`

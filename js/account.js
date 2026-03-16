@@ -462,7 +462,7 @@ function renderHeader(customer) {
 // ── Overview ──────────────────────────────────────────────────────────────────
 function renderOverview(customer, missions, pointsEarned) {
   const pts = customer.loyalty_points_total || 0;
-  const earned = pointsEarned || pts;
+    const earned = (pointsEarned != null && pointsEarned !== undefined) ? pointsEarned : pts;
   const level = getLevelData(customer.loyalty_level || 'fresh_ink');
 
   document.getElementById('ptsNum').textContent = pts.toLocaleString();
@@ -758,9 +758,8 @@ async function renderActiveCoupons() {
       <div class="h-row" style="align-items:center;gap:12px;">
         <div style="flex:1;">
           <div class="h-action">${r.reward_name}</div>
-          <div class="h-desc" style="font-family:monospace;font-size:13px;
-            letter-spacing:0.05em;color:#111;margin-top:2px;">
-            ${r.stripe_coupon_id}</div>
+            <div class="h-desc" style="font-family:monospace;font-size:13px; letter-spacing:0.05em;color:#111;margin-top:2px;">
+              ${r.stripe_coupon_id}</div>
           <div class="h-date" style="margin-top:2px;">${formatDate(r.created_at)}</div>
         </div>
         <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
