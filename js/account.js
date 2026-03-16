@@ -54,43 +54,43 @@ const ALL_BADGES = [
     key: 'first_session',
     name: 'First Session',
     desc: 'Made your first purchase',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="3" rx="1"/><rect x="7" y="5" width="10" height="6" rx="1"/><path d="M10 5V4M14 5V4"/><path d="M9 11l-1 2-.5 1"/><path d="M7.5 14C6 14 5 15 5 16.5S6.5 19 8 18l1.5-1.5L11 18c1.5 1 3-.5 3-2s-1-2.5-2.5-2.5"/><path d="M15 11l1 2 .5 1"/><path d="M8 8h1M11 8h2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17 3h-1V2h-2v1h-4V2H8v1H7a1 1 0 00-1 1v2h12V4a1 1 0 00-1-1z"/><path d="M6 8v3h12V8H6z"/><path d="M9 13h6v1.5l1 1v1l-1 .5H9l-1-.5v-1l1-1V13z"/><path d="M10.5 17.5h3v1.5a1.5 1.5 0 01-3 0v-1.5z"/><rect x="5" y="6" width="14" height="2.5" rx="0.5"/></svg>`
   },
   {
     key: 'voltage_rising',
     name: 'Voltage Rising',
     desc: '5+ orders in one year',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l3-5 2 3"/><path d="M20 8l-3-5-2 3"/><path d="M8 3C5 4 3 7 3 10c0 4 3 7 5 7h8c2 0 5-3 5-7 0-3-2-6-5-7"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><path d="M10 14c0 0 1 1 2 1s2-1 2-1"/><path d="M2 16l3-4"/><path d="M22 16l-3-4"/><path d="M1 19l2-2"/><path d="M23 19l-2-2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C7.58 2 4 5.58 4 10c0 2.68 1.32 5.06 3.34 6.54L7 20h10l-.34-3.46A8 8 0 0020 10c0-4.42-3.58-8-8-8zm-2.5 9a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM9 17h6v1H9v-1z"/><path d="M2 9l2 2-2 2M22 9l-2 2 2 2M10 20h4v1.5a2 2 0 01-4 0V20z"/></svg>`
   },
   {
     key: 'crew_builder',
     name: 'Crew Builder',
     desc: 'Referred 3+ artists',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="6" r="2"/><path d="M1 20v-2a4 4 0 0 1 4-4h.5"/><path d="M23 20v-2a4 4 0 0 0-4-4h-.5"/><path d="M8 20v-2a4 4 0 0 1 4-4 4 4 0 0 1 4 4v2"/><path d="M9 8h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1l-2 2-2-2H9a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="2.5"/><path d="M8 13c0-2.21 1.79-4 4-4s4 1.79 4 4v1H8v-1z"/><circle cx="4.5" cy="7" r="2"/><path d="M1 14c0-1.66 1.34-3 3-3h2.5c-.31.57-.5 1.22-.5 1.9V15H1v-1z"/><circle cx="19.5" cy="7" r="2"/><path d="M23 14c0-1.66-1.34-3-3-3h-2.5c.31.57.5 1.22.5 1.9V15H23v-1z"/><rect x="7" y="14" width="10" height="7" rx="1"/><rect x="1" y="15" width="5" height="6" rx="1"/><rect x="18" y="15" width="5" height="6" rx="1"/></svg>`
   },
   {
     key: 'studio_voice',
     name: 'Studio Voice',
     desc: '10+ verified reviews',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M2 7l2-4h16l2 4"/><path d="M2 7h20"/><rect x="4" y="11" width="7" height="6" rx="1"/><path d="M6 14h3M6 12.5h1"/><rect x="14" y="13" width="4" height="9" rx="1"/><path d="M8 7V5M12 7V4M16 7V5"/><path d="M4 3h16"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 3L2 8h20L12 3z"/><path d="M2 9h1v12H2V9zm19 0h1v12h-1V9z"/><rect x="3" y="9" width="18" height="1.5"/><rect x="4" y="11" width="7" height="7" rx="1"/><rect x="13" y="14" width="5" height="7" rx="1"/><path d="M5.5 13.5h4v1h-4zM5.5 15.5h3v1h-3zM6 17.5h2v.5H6z"/><path d="M14 13h3l-1.5-1.5L14 13z"/></svg>`
   },
   {
     key: 'machine_head',
     name: 'Machine Head',
     desc: 'Purchased a machine €300+',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="11" height="9" rx="1"/><path d="M14 7h3.5a2.5 2.5 0 0 1 0 5H14"/><path d="M6 13v2M8 13v2M10 13v2"/><path d="M6 15h4"/><path d="M8 15v4"/><circle cx="8" cy="21" r="1"/><path d="M3 7h2M3 10h2"/><path d="M7 4V2M11 4V2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="5" width="13" height="10" rx="1.5"/><rect x="4" y="3" width="5" height="4" rx="1"/><rect x="10" y="3" width="5" height="4" rx="1"/><path d="M16 8.5h2.5a2 2 0 010 4H16v-4z"/><rect x="4.5" y="3.5" width="4" height="1"/><rect x="4.5" y="5" width="4" height="1"/><rect x="10.5" y="3.5" width="4" height="1"/><rect x="10.5" y="5" width="4" height="1"/><rect x="8" y="15" width="3" height="6" rx="1.5"/><rect x="7" y="13" width="5" height="3" rx="1"/><line x1="9.5" y1="21" x2="9.5" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
   },
   {
     key: 'full_setup',
     name: 'Full Setup',
     desc: 'Bought from 5 categories',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="17" width="20" height="4" rx="1"/><path d="M6 17V9l1-2h2l1 2v8"/><path d="M6 12h4"/><path d="M14 17v-6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"/><path d="M14 13h4"/><circle cx="10" cy="6" r="1"/><circle cx="16" cy="8" r="1"/><path d="M5 9h6M13 11h4"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="2" y="19" width="20" height="3" rx="1"/><rect x="4" y="10" width="4" height="9" rx="1"/><path d="M4 10h4l-1-3H5l-1 3z"/><circle cx="6" cy="6" r="1.5"/><rect x="10" y="12" width="4" height="7" rx="1"/><path d="M10 12h4l-1-4h-2l-1 4z"/><circle cx="12" cy="6.5" r="1.5"/><rect x="16" y="14" width="4" height="5" rx="1"/><path d="M16 14h4l-.5-3h-3l-.5 3z"/><circle cx="18" cy="9.5" r="1.5"/></svg>`
   },
   {
     key: 'old_scratch',
     name: 'Old Scratch',
     desc: '1 year with Electric Ink IE',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9C4 6 6 4 8 4L9 6c1-.5 3-.5 4 0l1-2c2 0 4 2 4 5v3c0 3-2 5-4 5.5V19h-6v-1.5C6 17 4 15 4 12V9z"/><path d="M4 9L2 6"/><path d="M20 9l2-3"/><circle cx="9.5" cy="10" r="1"/><circle cx="14.5" cy="10" r="1"/><path d="M10 14c0 0 1 1.5 2 1.5s2-1.5 2-1.5"/><path d="M8 20c-1 0-2 .5-2 1h12c0-.5-1-1-2-1"/><path d="M11 4c0-1.5 1-2.5 2-2 .5.3.5 1 0 2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 9C5 5.5 7.5 3 10 3l.5 2.5C11 5 12 5 12.5 5.5L13 3c2.5 0 5 2.5 5 6v3c0 3.5-2 5.5-4 6.5V21H9v-2.5C7 17.5 5 15.5 5 12V9z"/><path d="M5 9L2.5 6M19 9l2.5-3"/><ellipse cx="9.5" cy="10.5" rx="1.2" ry="1.5"/><ellipse cx="14.5" cy="10.5" rx="1.2" ry="1.5" fill="white" opacity="0.3"/><path d="M10.5 14.5Q12 16 13.5 14.5" stroke="white" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M9 21h6" stroke="white" stroke-width="1" stroke-linecap="round" fill="none"/></svg>`
   }
 ];
 

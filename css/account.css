@@ -1224,8 +1224,13 @@
 }
 
 .badge-card.earned .badge-icon {
-  background: #e8faf6;
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(67, 189, 171, 0.45);
+}
+
+.badge-card.earned .badge-icon svg {
+  filter: brightness(0) invert(1);
 }
 
 .badge-card.locked .badge-icon::after {
