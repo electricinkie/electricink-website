@@ -642,7 +642,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           if (ptsFetch.ok) {
             const ptsData = await ptsFetch.json();
             if (ptsData.found && ptsData.points > 0) {
-              const earned = Math.round((order.total || 0) * 5);
+              const multipliers = { fresh_ink: 4, steady_hand: 5, raw_talent: 6, nine_lives: 7, legend: 8, black_cat: 10 };
+              const lvl = ptsData?.level || 'fresh_ink';
+              const earned = Math.round((order.total || 0) * (multipliers[lvl] || 4));
               const levelLabels = {
                 apprentice: 'Apprentice', journeyman: 'Journeyman',
                 artist: 'Artist', master: 'Master', legend: 'Legend'
@@ -655,11 +657,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
                     <tr>
                       <td style="padding:24px;">
                         <p style="margin:0 0 4px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#999999;text-transform:uppercase;letter-spacing:0.06em;">Ink Points</p>
-                        <p style="margin:0 0 16px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:22px;font-weight:700;color:#43BDAB;">+${earned.toLocaleString()} pts earned</p>
+                        <p style="margin:0 0 16px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:22px;font-weight:700;color:#43BDAB;">+${earned.toLocaleString()} Catokens earned</p>
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                           <tr>
                             <td style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;color:#666666;">Total balance</td>
-                            <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;">${ptsData.points.toLocaleString()} pts</td>
+                            <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;">${ptsData.points.toLocaleString()} Catokens</td>
                           </tr>
                           <tr>
                             <td style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;color:#666666;padding-top:6px;">Level</td>

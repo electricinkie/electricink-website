@@ -1,5 +1,5 @@
 /**
- * account.js — Ink Points Dashboard
+ * account.js — Black Cat Rewards Dashboard
  * Electric Ink Ireland
  *
  * Connects to: https://ei-internal-production.up.railway.app
@@ -399,7 +399,7 @@ async function loadDashboard() {
 
     // ── Loyalty toasts ──────────────────────────────
     const _pts   = data.customer.loyalty_points_total || 0;
-    const _level = data.customer.loyalty_level || 'apprentice';
+    const _level = data.customer.loyalty_level || 'fresh_ink';
     const _prevLevel = localStorage.getItem('ei_last_level');
     const _prevPts   = parseInt(localStorage.getItem('ei_last_pts') || '0', 10);
 
@@ -657,7 +657,7 @@ async function redeemReward(rewardId) {
 
     // Persist coupon to localStorage
     try {
-      const saved = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
+      const saved = JSON.parse(localStorage.getItem('blackcat_coupons') || '[]');
       saved.push({
         code: data.coupon_code,
         reward: data.reward_name,
@@ -708,7 +708,7 @@ async function renderActiveCoupons() {
 
   // Immediate render from localStorage while fetch loads
   try {
-    const cached = JSON.parse(localStorage.getItem('inkpoints_coupons') || '[]');
+  const cached = JSON.parse(localStorage.getItem('blackcat_coupons') || '[]');
     if (cached.length) {
       el.innerHTML = cached.map(c => `
         <div class="h-row" style="align-items:center;gap:12px;">
@@ -752,7 +752,7 @@ async function renderActiveCoupons() {
       points: r.points_spent,
       date: r.created_at
     }));
-    localStorage.setItem('inkpoints_coupons', JSON.stringify(synced));
+    localStorage.setItem('blackcat_coupons', JSON.stringify(synced));
 
     el.innerHTML = active.map(r => `
       <div class="h-row" style="align-items:center;gap:12px;">

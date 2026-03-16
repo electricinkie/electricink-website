@@ -210,9 +210,9 @@
     listEl.innerHTML = notifications.map(n => {
       const cfg = ACTION_CONFIG[n.action] || ACTION_CONFIG.manual;
       const isUnread = !n.read_at;
-      const pts = n.points > 0
+        const pts = n.points > 0
           ? `+${n.points.toLocaleString()} Catokens`
-        : `${n.points.toLocaleString()} pts`;
+          : `${n.points.toLocaleString()} Catokens`;
       const text = n.points < 0
         ? `${cfg.label}: ${n.description || ''}`
         : `${pts} — ${n.description || cfg.label}`;
