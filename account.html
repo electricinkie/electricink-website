@@ -97,6 +97,9 @@
                   <span class="btn-text">Sign in</span>
                   <span class="btn-loader" style="display:none">...</span>
                 </button>
+                <div style="text-align:center;margin-top:14px;">
+                  <button type="button" onclick="showForgotPassword()" style="background:none;border:none;font-family:'Montserrat',sans-serif;font-size:11px;color:var(--color-gray-600);cursor:pointer;text-decoration:underline;padding:0;">Forgot password?</button>
+                </div>
               </form>
             </div>
 
@@ -306,6 +309,53 @@
 
     </div>
   </main>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgotModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);">
+    <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <!-- Step 1: Enter email -->
+      <div id="forgotStep1">
+        <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:#000;margin-bottom:6px;">Reset your password</div>
+        <p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#888;margin:0 0 20px;line-height:1.6;">Enter your account email and we'll send you a reset link.</p>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="forgotEmail" class="form-input" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div id="forgotError" class="form-error" style="display:none;margin-top:10px;"></div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+          <button onclick="closeForgotModal()" style="flex:1;padding:12px;border-radius:9px;border:1px solid #e0e0e0;background:#fff;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#555;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;">Cancel</button>
+          <button id="forgotSubmit" onclick="submitForgotPassword()" style="flex:1;padding:12px;border-radius:9px;border:none;background:#000;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;">Send link</button>
+        </div>
+      </div>
+      <!-- Step 2: Confirmation -->
+      <div id="forgotStep2" style="display:none;text-align:center;">
+        <div style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#e8faf6;margin:0 auto 16px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;color:#000;margin-bottom:8px;">Check your inbox</div>
+        <p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#888;margin:0 0 20px;line-height:1.6;">If an account exists for that email, a reset link is on its way.</p>
+        <button onclick="closeForgotModal()" style="width:100%;padding:12px;border-radius:9px;border:none;background:#000;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Password Modal (shown when ?reset= param is in URL) -->
+  <div id="resetModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);">
+    <div style="background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:#000;margin-bottom:6px;">Choose a new password</div>
+      <p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#888;margin:0 0 20px;line-height:1.6;">Pick a strong password — at least 6 characters.</p>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">New password</label>
+        <input type="password" id="resetPassword" class="form-input" placeholder="Min. 6 characters" minlength="6" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm password</label>
+        <input type="password" id="resetPasswordConfirm" class="form-input" placeholder="Repeat password" minlength="6" autocomplete="new-password">
+      </div>
+      <div id="resetError" class="form-error" style="display:none;margin-top:10px;"></div>
+      <button id="resetSubmit" onclick="submitResetPassword()" style="width:100%;margin-top:20px;padding:13px;border-radius:9px;border:none;background:#000;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;">Update password</button>
+    </div>
+  </div>
 
   <div id="footer-placeholder"></div>
 
