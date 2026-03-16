@@ -491,10 +491,11 @@
   flex-shrink: 0;
 }
 
-.level-badge.lv-journeyman ~ #levelBenefits .level-benefit,
-.level-badge.lv-artist ~ #levelBenefits .level-benefit,
-.level-badge.lv-master ~ #levelBenefits .level-benefit,
-.level-badge.lv-legend ~ #levelBenefits .level-benefit {
+.level-badge.lv-steady_hand ~ #levelBenefits .level-benefit,
+.level-badge.lv-raw_talent ~ #levelBenefits .level-benefit,
+.level-badge.lv-nine_lives ~ #levelBenefits .level-benefit,
+.level-badge.lv-legend ~ #levelBenefits .level-benefit,
+.level-badge.lv-black_cat ~ #levelBenefits .level-benefit {
   color: var(--color-text);
 }
 
@@ -1418,39 +1419,42 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 0 20px;
+  padding: 24px 28px;
   margin-bottom: 32px;
-  border-bottom: 1px solid var(--color-gray-200);
+  background: var(--color-black);
+  border-radius: 14px;
+  border: none;
 }
 
 .acct-avatar-bar {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--color-primary);
-  color: #fff;
+  color: #000;
   font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 17px;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   text-transform: uppercase;
+  box-shadow: 0 0 0 3px rgba(67,189,171,0.25);
 }
 
 .acct-name-bar {
   font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--color-text);
-  letter-spacing: -0.2px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-white);
+  letter-spacing: -0.3px;
 }
 
 .acct-email-bar {
   font-size: 11px;
-  color: var(--color-gray-500);
-  margin-top: 1px;
+  color: #555;
+  margin-top: 2px;
 }
 
 .btn-signout-bar {
