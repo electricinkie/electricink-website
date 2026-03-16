@@ -1419,11 +1419,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 28px;
+  padding: 24px 0 20px;
   margin-bottom: 32px;
-  background: var(--color-black);
-  border-radius: 14px;
-  border: none;
+  border-bottom: 1px solid var(--color-gray-200);
 }
 
 .acct-avatar-bar {
@@ -1447,13 +1445,13 @@
   font-family: 'Outfit', sans-serif;
   font-size: 16px;
   font-weight: 800;
-  color: var(--color-white);
+  color: var(--color-text);
   letter-spacing: -0.3px;
 }
 
 .acct-email-bar {
   font-size: 11px;
-  color: #555;
+  color: var(--color-gray-500);
   margin-top: 2px;
 }
 
