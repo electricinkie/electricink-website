@@ -449,6 +449,14 @@ function renderHeader(customer) {
     document.getElementById('acctNameBar').textContent = customer.name || '—';
     document.getElementById('acctEmailBar').textContent = customer.email || '—';
   }
+  // Sync level badge in header
+  const headerBadge = document.getElementById('headerLevelBadge');
+  const headerLevelName = document.getElementById('headerLevelName');
+  if (headerBadge && headerLevelName) {
+    const level = getLevelData(customer.loyalty_level || 'fresh_ink');
+    headerBadge.className = `level-badge lv-${level.key}`;
+    headerLevelName.textContent = level.label;
+  }
 }
 
 // ── Overview ──────────────────────────────────────────────────────────────────

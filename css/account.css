@@ -438,6 +438,31 @@
   margin-top: 6px;
 }
 
+/* ── Level badge base ── */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-top: 18px;
+  margin-bottom: 2px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.3s, color 0.3s;
+}
+
+.ldot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
 /* ── Level badge ── */
 .level-badge.lv-fresh_ink {
   background: var(--color-gray-100);
@@ -1419,9 +1444,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 0 20px;
+  padding: 20px 24px;
   margin-bottom: 32px;
-  border-bottom: 1px solid var(--color-gray-200);
+  background: var(--color-black);
+  border-radius: 14px;
+  border: none;
 }
 
 .acct-avatar-bar {
@@ -1445,13 +1472,13 @@
   font-family: 'Outfit', sans-serif;
   font-size: 16px;
   font-weight: 800;
-  color: var(--color-text);
+  color: var(--color-white);
   letter-spacing: -0.3px;
 }
 
 .acct-email-bar {
   font-size: 11px;
-  color: var(--color-gray-500);
+  color: #555;
   margin-top: 2px;
 }
 
