@@ -468,9 +468,7 @@ function renderOverview(customer, missions, pointsEarned) {
   document.getElementById('ptsNum').textContent = pts.toLocaleString();
   document.getElementById('balPts').textContent = `${pts.toLocaleString()} Catokens`;
 
-  const badge = document.getElementById('levelBadge');
-  badge.className = `level-badge lv-${level.key}`;
-  document.getElementById('levelName').textContent = level.label;
+  // Level badge now only in header bar (headerLevelBadge)
 
   // Progress bar uses total earned (never goes down)
   const next = LEVELS.find(l => l.min > earned);
