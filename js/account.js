@@ -175,6 +175,94 @@ function switchAuthTab(tab) {
   document.getElementById('registerError').style.display = 'none';
 }
 
+// ── Forgot / Reset Password ───────────────────────────────────────────────────
+function showForgotPassword() {
+  const modal = document.getElementById('forgotModal');
+  if (modal) { modal.style.display = 'flex'; }
+  document.getElementById('forgotStep1').style.display = 'block';
+  document.getElementById('forgotStep2').style.display = 'none';
+  document.getElementById('forgotEmail').value = '';
+  const err = document.getElementById('forgotError');
+  if (err) err.style.display = 'none';
+}
+
+function closeForgotModal() {
+  const modal = document.getElementById('forgotModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function submitForgotPassword() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  const err = document.getElementById('forgotError');
+  const btn = document.getElementById('forgotSubmit');
+  if (!email) {
+    if (err) { err.textContent = 'Please enter your email.'; err.style.display = 'block'; }
+    return;
+  }
+  if (btn) btn.disabled = true;
+  try {
+    await fetch(`${API}/api/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    document.getElementById('forgotStep1').style.display = 'none';
+    document.getElementById('forgotStep2').style.display = 'block';
+  } catch {
+    if (err) { err.textContent = 'Something went wrong. Please try again.'; err.style.display = 'block'; }
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function submitResetPassword() {
+  const password = document.getElementById('resetPassword').value;
+  const confirm  = document.getElementById('resetPasswordConfirm').value;
+  const err = document.getElementById('resetError');
+  const btn = document.getElementById('resetSubmit');
+  if (password.length < 6) {
+    if (err) { err.textContent = 'Password must be at least 6 characters.'; err.style.display = 'block'; }
+    return;
+  }
+  if (password !== confirm) {
+    if (err) { err.textContent = 'Passwords do not match.'; err.style.display = 'block'; }
+    return;
+  }
+  const token = new URLSearchParams(window.location.search).get('reset');
+  if (!token) return;
+  if (btn) btn.disabled = true;
+  try {
+    const res = await fetch(`${API}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    const modal = document.getElementById('resetModal');
+    if (modal) modal.style.display = 'none';
+    if (window.toast) window.toast.success('Password updated — please sign in.', 5000);
+    // Remove reset param from URL and show login
+    window.history.replaceState({}, '', '/account.html?tab=login');
+    switchAuthTab('login');
+  } catch (e) {
+    if (err) { err.textContent = e.message; err.style.display = 'block'; }
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// Check for reset token in URL on page load
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('reset')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('resetModal');
+      if (modal) modal.style.display = 'flex';
+    });
+  }
+})();
+
 async function handleLogin(e) {
   e.preventDefault();
   const btn = document.getElementById('loginSubmit');
