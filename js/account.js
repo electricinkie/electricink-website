@@ -20,24 +20,25 @@ const TOKEN_KEY = 'ei_loyalty_token';
 
 // ── Level config ──────────────────────────────────────────────────────────────
 const LEVELS = [
-  { key: 'apprentice', label: 'Apprentice', min: 0,     next: 1000,  benefits: ['5 pts per €1 on every order', 'Access to the full rewards shop', 'Earn 2,500 pts per successful referral'], next_teaser: 'Reach Journeyman to unlock 2% off all consumables' },
-  { key: 'journeyman', label: 'Journeyman', min: 1000,  next: 5000,  benefits: ['2% off all consumables on every order', '5 pts per €1 on every order', 'Earn 2,500 pts per successful referral'], next_teaser: 'Reach Artist to unlock 5% off consumables' },
-  { key: 'artist',     label: 'Artist',     min: 5000,  next: 10000, benefits: ['5% off all consumables on every order', 'Selected new product previews', 'Earn 2,500 pts per successful referral'], next_teaser: 'Reach Master to unlock 7% off consumables' },
-  { key: 'master',     label: 'Master',     min: 10000, next: 15000, benefits: ['7% off all consumables on every order', 'Faster email support — replies within 24h', 'Selected new product previews'], next_teaser: 'Reach Legend to unlock 10% off consumables' },
-  { key: 'legend',     label: 'Legend',     min: 15000, next: null,  benefits: ['10% off all consumables on every order', 'Direct line — WhatsApp support', 'Product requests considered for next restock'], next_teaser: null },
+  { key: 'fresh_ink',   label: 'Fresh Ink',   min: 0,     next: 1000,  multiplier: 4,  benefits: ['4 Catokens per €1 on every order', 'Full rewards shop access', 'Referral commissions on every friend order'], next_teaser: 'Reach Steady Hand to unlock 5× earning' },
+  { key: 'steady_hand', label: 'Steady Hand', min: 1000,  next: 3000,  multiplier: 5,  benefits: ['5 Catokens per €1 on every order', 'Full rewards shop access', 'Referral commissions on every friend order'], next_teaser: 'Reach Raw Talent to unlock 6× earning' },
+  { key: 'raw_talent',  label: 'Raw Talent',  min: 3000,  next: 5000,  multiplier: 6,  benefits: ['6 Catokens per €1 on every order', 'Full rewards shop access', 'Referral commissions on every friend order'], next_teaser: 'Reach Nine Lives to unlock 7× earning + exclusive missions' },
+  { key: 'nine_lives',  label: 'Nine Lives',  min: 5000,  next: 10000, multiplier: 7,  benefits: ['7 Catokens per €1 on every order', 'Exclusive monthly mission', 'Referral commissions on every friend order'], next_teaser: 'Reach Legend to unlock 8× earning + 3% off consumables' },
+  { key: 'legend',      label: 'Legend',      min: 10000, next: 15000, multiplier: 8,  benefits: ['8 Catokens per €1 on every order', '3% off all consumables', 'Surprise bonus missions'], next_teaser: 'Reach Black Cat to unlock 10× earning + 5% off consumables' },
+  { key: 'black_cat',   label: 'Black Cat',   min: 15000, next: null,  multiplier: 10, benefits: ['10 Catokens per €1 on every order', '5% off all consumables', 'Maximum surprise bonus missions'], next_teaser: null },
 ];
 
 // Mission display config
 const MISSION_CONFIG = {
   spend_threshold: {
-    name: 'Ink Haul',
-    desc: 'Place a single order of €150 or more this month and earn bonus points on top of your usual spend.',
-    pts: '+300 pts',
+    name: 'Ink Run',
+    desc: 'Place a single order of €150 or more this month and earn bonus Catokens on top of your usual earn.',
+    pts: '+300 Catokens',
   },
   category_focus: {
     name: 'Category Master',
     desc: 'Order 3 or more items from the same product category in a single purchase.',
-    pts: '+200 pts',
+    pts: '+200 Catokens',
   },
 };
 
@@ -86,9 +87,9 @@ const ALL_BADGES = [
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`
   },
   {
-    key: 'black_cat_veteran',
-    name: 'Black Cat Veteran',
-    desc: '1 year with Electric Ink',
+    key: 'old_scratch',
+    name: 'Old Scratch',
+    desc: '1 year with Electric Ink IE',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`
   }
 ];
@@ -350,7 +351,7 @@ async function handleRegister(e) {
 
     localStorage.setItem(TOKEN_KEY, data.token);
     currentToken = data.token;
-    if (window.toast) window.toast.success('Account created — +250 pts on your first purchase!', 5000);
+    if (window.toast) window.toast.success('Account created — +250 Catokens on your first purchase!', 5000);
     await loadDashboard();
   } catch (err) {
     showError(errorEl, err.message);
@@ -406,8 +407,11 @@ async function loadDashboard() {
     const _iconArrow = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
     const _levelLabels = {
-      journeyman: 'Journeyman', artist: 'Artist',
-      master: 'Master', legend: 'Legend'
+      steady_hand: 'Steady Hand',
+      raw_talent:  'Raw Talent',
+      nine_lives:  'Nine Lives',
+      legend:      'Legend',
+      black_cat:   'Black Cat',
     };
 
     if (_prevLevel && _prevLevel !== _level && _levelLabels[_level]) {
@@ -417,7 +421,7 @@ async function loadDashboard() {
     } else if (_pts > _prevPts && _prevPts > 0) {
       const _earned = _pts - _prevPts;
       if (window.toast) window.toast.success(
-        `${_iconArrow} +${_earned.toLocaleString()} Ink Points added`, 4000
+        `${_iconArrow} +${_earned.toLocaleString()} Catokens added`, 4000
       );
     }
 
@@ -451,10 +455,10 @@ function renderHeader(customer) {
 function renderOverview(customer, missions, pointsEarned) {
   const pts = customer.loyalty_points_total || 0;
   const earned = pointsEarned || pts;
-  const level = getLevelData(customer.loyalty_level || 'apprentice');
+  const level = getLevelData(customer.loyalty_level || 'fresh_ink');
 
   document.getElementById('ptsNum').textContent = pts.toLocaleString();
-  document.getElementById('balPts').textContent = `${pts.toLocaleString()} pts`;
+  document.getElementById('balPts').textContent = `${pts.toLocaleString()} Catokens`;
 
   const badge = document.getElementById('levelBadge');
   badge.className = `level-badge lv-${level.key}`;
@@ -462,18 +466,18 @@ function renderOverview(customer, missions, pointsEarned) {
 
   // Progress bar uses total earned (never goes down)
   const next = LEVELS.find(l => l.min > earned);
-  const current = getLevelData(customer.loyalty_level || 'apprentice');
+  const current = getLevelData(customer.loyalty_level || 'fresh_ink');
   if (next) {
     const pct = Math.min(100, Math.round(((earned - current.min) / (next.min - current.min)) * 100));
     document.getElementById('progFill').style.width = `${pct}%`;
-    document.getElementById('progCount').textContent = `${earned.toLocaleString()} / ${next.min.toLocaleString()} pts earned`;
+    document.getElementById('progCount').textContent = `${earned.toLocaleString()} / ${next.min.toLocaleString()} Catokens earned`;
     document.getElementById('progLabel').textContent = `Progress to ${next.label}`;
     document.getElementById('progStart').textContent = current.label;
-    document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()} pts`;
+    document.getElementById('progEnd').textContent = `${next.label} · ${next.min.toLocaleString()} Catokens`;
   } else {
     document.getElementById('progFill').style.width = '100%';
     document.getElementById('progCount').textContent = 'Max level reached';
-    document.getElementById('progLabel').textContent = 'Legend status';
+    document.getElementById('progLabel').textContent = 'Black Cat — max level';
     document.getElementById('progStart').textContent = '';
     document.getElementById('progEnd').textContent = '';
   }
@@ -566,11 +570,11 @@ function renderRewards(rewards) {
       <div class="r-card" id="rcard-${r.id}">
         <div class="r-name">${r.name}</div>
         <div class="r-type">${typeLabel}</div>
-        <div class="r-cost">${cost.toLocaleString()} <span>pts</span></div>
+        <div class="r-cost">${cost.toLocaleString()} <span>Catokens</span></div>
         <button
           class="r-btn ${canAfford ? 'can-afford' : 'cannot-afford'}"
           ${canAfford ? `onclick="redeemReward(${r.id})"` : 'disabled'}
-        >${canAfford ? 'Redeem' : 'Not enough pts'}</button>
+        >${canAfford ? 'Redeem' : 'Not enough Catokens'}</button>
       </div>
     `;
   }).join('');
@@ -637,7 +641,7 @@ async function redeemReward(rewardId) {
     // Update points
     currentPoints = data.points_remaining;
     document.getElementById('ptsNum').textContent = currentPoints.toLocaleString();
-    document.getElementById('balPts').textContent = `${currentPoints.toLocaleString()} pts`;
+    document.getElementById('balPts').textContent = `${currentPoints.toLocaleString()} Catokens`;
 
     // Show coupon
     document.getElementById('couponCode').textContent = data.coupon_code;
