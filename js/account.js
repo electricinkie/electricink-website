@@ -492,6 +492,38 @@ async function redeemReward(rewardId) {
   const btn = document.querySelector(`#rcard-${rewardId} .r-btn`);
   if (!btn || btn.disabled) return;
 
+  // Find reward name and cost for confirmation
+  const card = document.getElementById(`rcard-${rewardId}`);
+  const rewardName = card?.querySelector('.r-name')?.textContent || 'this reward';
+  const rewardCost = card?.querySelector('.r-cost')?.textContent || '';
+
+  // Confirmation modal
+  const confirmed = await new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);';
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:28px 32px;max-width:380px;width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="font-family:'Montserrat',sans-serif;text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#e8faf6;margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
+          <div style="font-size:16px;font-weight:700;color:#000;margin-bottom:8px;">Confirm Redemption</div>
+          <div style="font-size:13px;color:#555;margin-bottom:6px;">You are about to redeem</div>
+          <div style="font-size:15px;font-weight:700;color:#43BDAB;margin-bottom:4px;">${rewardName}</div>
+          <div style="font-size:12px;color:#888;margin-bottom:20px;">${rewardCost}</div>
+          <div style="font-size:11px;color:#aaa;margin-bottom:20px;">This action cannot be undone. Your coupon will be generated immediately.</div>
+          <div style="display:flex;gap:10px;">
+            <button id="redeem-cancel" style="flex:1;padding:12px;border-radius:9px;border:1px solid #e0e0e0;background:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#555;cursor:pointer;">Cancel</button>
+            <button id="redeem-confirm" style="flex:1;padding:12px;border-radius:9px;border:none;background:#43BDAB;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;">Confirm</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#redeem-confirm').onclick = () => { overlay.remove(); resolve(true); };
+    overlay.querySelector('#redeem-cancel').onclick  = () => { overlay.remove(); resolve(false); };
+    overlay.onclick = e => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
+  });
+
+  if (!confirmed) return;
+
   const originalText = btn.textContent;
   btn.textContent = '...';
   btn.disabled = true;
