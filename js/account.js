@@ -54,43 +54,43 @@ const ALL_BADGES = [
     key: 'first_session',
     name: 'First Session',
     desc: 'Made your first purchase',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l2 4H6L8 3z"/><rect x="6" y="7" width="12" height="7" rx="1"/><path d="M12 14v4"/><path d="M9 18h6"/><circle cx="12" cy="20" r="1"/><path d="M10 10h4M10 12h2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="3" rx="1"/><rect x="7" y="5" width="10" height="6" rx="1"/><path d="M10 5V4M14 5V4"/><path d="M9 11l-1 2-.5 1"/><path d="M7.5 14C6 14 5 15 5 16.5S6.5 19 8 18l1.5-1.5L11 18c1.5 1 3-.5 3-2s-1-2.5-2.5-2.5"/><path d="M15 11l1 2 .5 1"/><path d="M8 8h1M11 8h2"/></svg>`
   },
   {
     key: 'voltage_rising',
     name: 'Voltage Rising',
     desc: '5+ orders in one year',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2L6 13h7l-3 9 10-12h-7l3-8z"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l3-5 2 3"/><path d="M20 8l-3-5-2 3"/><path d="M8 3C5 4 3 7 3 10c0 4 3 7 5 7h8c2 0 5-3 5-7 0-3-2-6-5-7"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><path d="M10 14c0 0 1 1 2 1s2-1 2-1"/><path d="M2 16l3-4"/><path d="M22 16l-3-4"/><path d="M1 19l2-2"/><path d="M23 19l-2-2"/></svg>`
   },
   {
     key: 'crew_builder',
     name: 'Crew Builder',
     desc: 'Referred 3+ artists',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12c0 0-4-2-4-6 0-2 1.5-3 4-3s4 1 4 3c0 4-4 6-4 6z"/><path d="M7 22V15"/><path d="M7 15c0 0-3-1.5-3-4.5 0-1.5 1-2.5 3-2.5s3 1 3 2.5c0 3-3 4.5-3 4.5z"/><path d="M17 22V15"/><path d="M17 15c0 0-3-1.5-3-4.5 0-1.5 1-2.5 3-2.5s3 1 3 2.5c0 3-3 4.5-3 4.5z"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="6" r="2"/><path d="M1 20v-2a4 4 0 0 1 4-4h.5"/><path d="M23 20v-2a4 4 0 0 0-4-4h-.5"/><path d="M8 20v-2a4 4 0 0 1 4-4 4 4 0 0 1 4 4v2"/><path d="M9 8h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1l-2 2-2-2H9a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/></svg>`
   },
   {
     key: 'studio_voice',
     name: 'Studio Voice',
     desc: '10+ verified reviews',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L12 14.3l-4.8 2.5.9-5.3L4.2 7.7l5.4-.8L12 2z"/><path d="M12 7v5M9.5 10h5"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="1"/><path d="M2 7l2-4h16l2 4"/><path d="M2 7h20"/><rect x="4" y="11" width="7" height="6" rx="1"/><path d="M6 14h3M6 12.5h1"/><rect x="14" y="13" width="4" height="9" rx="1"/><path d="M8 7V5M12 7V4M16 7V5"/><path d="M4 3h16"/></svg>`
   },
   {
     key: 'machine_head',
     name: 'Machine Head',
     desc: 'Purchased a machine €300+',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="10" height="8" rx="1"/><path d="M14 6h3a2 2 0 0 1 0 4h-3"/><path d="M8 12v3"/><path d="M6 15h4"/><path d="M8 15v3"/><circle cx="8" cy="20" r="1"/><path d="M4 8h2M4 10h2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="11" height="9" rx="1"/><path d="M14 7h3.5a2.5 2.5 0 0 1 0 5H14"/><path d="M6 13v2M8 13v2M10 13v2"/><path d="M6 15h4"/><path d="M8 15v4"/><circle cx="8" cy="21" r="1"/><path d="M3 7h2M3 10h2"/><path d="M7 4V2M11 4V2"/></svg>`
   },
   {
     key: 'full_setup',
     name: 'Full Setup',
     desc: 'Bought from 5 categories',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 3H8L9 3z"/><path d="M7 6h10l1 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L7 6z"/><path d="M10 11c0 1.1.9 2 2 2s2-.9 2-2"/><path d="M8 9h8"/><path d="M15 16l2-2"/><path d="M17 16a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="17" width="20" height="4" rx="1"/><path d="M6 17V9l1-2h2l1 2v8"/><path d="M6 12h4"/><path d="M14 17v-6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v6"/><path d="M14 13h4"/><circle cx="10" cy="6" r="1"/><circle cx="16" cy="8" r="1"/><path d="M5 9h6M13 11h4"/></svg>`
   },
   {
     key: 'old_scratch',
     name: 'Old Scratch',
     desc: '1 year with Electric Ink IE',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6c0 0 1-3 4-3l1 2c1-.5 2-.5 3 0l1-2c3 0 4 3 4 3v3c0 3-2 5-4 6v2h-6v-2c-2-1-3-3-3-6V6z"/><path d="M9 15c0 1 .5 2 1.5 2h3c1 0 1.5-1 1.5-2"/><path d="M4 6l-1-2"/><path d="M20 6l1-2"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9C4 6 6 4 8 4L9 6c1-.5 3-.5 4 0l1-2c2 0 4 2 4 5v3c0 3-2 5-4 5.5V19h-6v-1.5C6 17 4 15 4 12V9z"/><path d="M4 9L2 6"/><path d="M20 9l2-3"/><circle cx="9.5" cy="10" r="1"/><circle cx="14.5" cy="10" r="1"/><path d="M10 14c0 0 1 1.5 2 1.5s2-1.5 2-1.5"/><path d="M8 20c-1 0-2 .5-2 1h12c0-.5-1-1-2-1"/><path d="M11 4c0-1.5 1-2.5 2-2 .5.3.5 1 0 2"/></svg>`
   }
 ];
 
