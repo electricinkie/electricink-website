@@ -413,6 +413,13 @@ function renderOverview(customer, missions, pointsEarned) {
 
   const monthName = new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
   document.getElementById('missionsLabel').textContent = `Monthly missions — ${monthName}`;
+  const resetEl = document.getElementById('missionsReset');
+  if (resetEl) {
+    const now = new Date();
+    const nextReset = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const daysLeft = Math.ceil((nextReset - now) / (1000 * 60 * 60 * 24));
+    resetEl.textContent = `Resets in ${daysLeft} day${daysLeft !== 1 ? 's' : ''} · 1st of every month`;
+  }
 
   renderMissions(missions);
 }
@@ -534,8 +541,13 @@ async function redeemReward(rewardId) {
     // Update button
     btn.textContent = 'Redeemed';
     if (window.toast) window.toast.success(
-      `Coupon ${data.coupon_code} ready to use`, 5000
+      `Coupon ${data.coupon_code} ready to use — check your Coupons tab`, 5000
     );
+    // Navigate to Coupons tab after short delay
+    setTimeout(() => {
+      const couponsBtn = document.querySelector('[onclick*="goTab(\'coupons\'"]');
+      if (couponsBtn) goTab('coupons', couponsBtn);
+    }, 1500);
     btn.className = 'r-btn redeemed';
 
     // Refresh reward buttons
