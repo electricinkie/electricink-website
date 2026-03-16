@@ -64,6 +64,9 @@
     .hero-stat-num { font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 800; color: var(--teal); line-height: 1; margin-bottom: 4px; }
     .hero-stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
 
+    /* Keep stat subtitles on a single line on larger screens */
+    .hero-stat-label { white-space: nowrap; }
+
     /* ── SECTIONS ── */
     section { padding: 80px 40px; }
     .container { max-width: 1080px; margin: 0 auto; }
@@ -178,6 +181,8 @@
       .levels-track { flex-direction: row; flex-wrap: wrap; }
       .level-card { flex: 1 1 calc(50% - 1px); min-width: calc(50% - 1px); }
       .rewards-grid { grid-template-columns: repeat(2, 1fr); }
+      /* allow stat labels to wrap on smaller screens */
+      .hero-stat-label { white-space: normal; }
       .badges-grid { grid-template-columns: repeat(2, 1fr); }
       .referral-card { grid-template-columns: 1fr; gap: 32px; padding: 36px 28px; }
       .section-header { grid-template-columns: 1fr; gap: 12px; }
@@ -242,7 +247,7 @@
       <div style="width:1px;height:36px;background:var(--gray-200)"></div>
       <div>
         <div class="hero-stat-num">+10%</div>
-        <div class="hero-stat-label">per friend order, forever</div>
+        <div class="hero-stat-label">in Catokens per referral order</div>
       </div>
       <div style="width:1px;height:36px;background:var(--gray-200)"></div>
       <div>
@@ -252,7 +257,7 @@
       <div style="width:1px;height:36px;background:var(--gray-200)"></div>
       <div>
         <div class="hero-stat-num">5%</div>
-        <div class="hero-stat-label">off at Black Cat</div>
+        <div class="hero-stat-label">off at Black Cat level</div>
       </div>
     </div>
   </div>
