@@ -439,79 +439,43 @@
 }
 
 /* ── Level badge ── */
-.level-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 999px;
-  margin-top: 18px;
-  margin-bottom: 2px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: background 0.3s, color 0.3s, transform 0.15s;
-}
-
-.level-badge:hover {
-  transform: translateY(-2px);
-}
-
-.ldot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: background 0.3s;
-}
-
-.level-badge.lv-apprentice {
+.level-badge.lv-fresh_ink {
   background: var(--color-gray-100);
   color: var(--color-gray-700);
 }
+.level-badge.lv-fresh_ink .ldot { background: var(--color-gray-500); }
 
-.level-badge.lv-apprentice .ldot {
-  background: var(--color-gray-500);
-}
-
-.level-badge.lv-journeyman {
+.level-badge.lv-steady_hand {
   background: var(--color-black);
   color: var(--color-white);
 }
+.level-badge.lv-steady_hand .ldot { background: var(--color-primary); }
 
-.level-badge.lv-journeyman .ldot {
-  background: var(--color-primary);
+.level-badge.lv-raw_talent {
+  background: #9b59b6;
+  color: var(--color-white);
 }
+.level-badge.lv-raw_talent .ldot { background: rgba(255,255,255,0.6); }
 
-.level-badge.lv-artist {
+.level-badge.lv-nine_lives {
   background: var(--color-primary);
   color: var(--color-white);
 }
+.level-badge.lv-nine_lives .ldot { background: rgba(255,255,255,0.6); }
 
-.level-badge.lv-artist .ldot {
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.level-badge.lv-master {
+.level-badge.lv-legend {
   background: var(--color-orange);
   color: var(--color-black);
 }
+.level-badge.lv-legend .ldot { background: var(--color-black); }
 
-.level-badge.lv-master .ldot {
+.level-badge.lv-black_cat {
   background: var(--color-black);
+  color: #c0392b;
+  box-shadow: 0 0 12px rgba(192, 57, 43, 0.2);
 }
+.level-badge.lv-black_cat .ldot { background: #c0392b; }
 
-.level-badge.lv-legend {
-  background: var(--color-black);
-  color: var(--color-orange);
-  box-shadow: 0 0 12px rgba(255, 163, 0, 0.2);
-}
-
-.level-badge.lv-legend .ldot {
-  background: var(--color-orange);
-}
 
 /* ── Level Benefits ── */
 .level-benefit {
@@ -811,66 +775,32 @@
   margin-top: 4px;
 }
 
-.lv.lv-cur-apprentice {
-  background: var(--color-gray-100);
-}
+.lv.lv-cur-fresh_ink { background: var(--color-gray-100); }
+.lv.lv-cur-fresh_ink .lv-n { color: var(--color-gray-700); }
+.lv.lv-cur-fresh_ink .lv-p { color: var(--color-gray-600); }
 
-.lv.lv-cur-apprentice .lv-n {
-  color: var(--color-gray-700);
-}
+.lv.lv-cur-steady_hand { background: var(--color-black); }
+.lv.lv-cur-steady_hand .lv-n { color: var(--color-primary); }
+.lv.lv-cur-steady_hand .lv-p { color: #444; }
 
-.lv.lv-cur-apprentice .lv-p {
-  color: var(--color-gray-600);
-}
+.lv.lv-cur-raw_talent { background: #9b59b6; }
+.lv.lv-cur-raw_talent .lv-n { color: var(--color-white); }
+.lv.lv-cur-raw_talent .lv-p { color: rgba(255,255,255,0.65); }
 
-.lv.lv-cur-journeyman {
+.lv.lv-cur-nine_lives { background: var(--color-primary); }
+.lv.lv-cur-nine_lives .lv-n { color: var(--color-white); }
+.lv.lv-cur-nine_lives .lv-p { color: rgba(255,255,255,0.65); }
+
+.lv.lv-cur-legend { background: var(--color-orange); }
+.lv.lv-cur-legend .lv-n { color: var(--color-black); }
+.lv.lv-cur-legend .lv-p { color: #664200; }
+
+.lv.lv-cur-black_cat {
   background: var(--color-black);
+  box-shadow: inset 0 0 12px rgba(192,57,43,0.15);
 }
-
-.lv.lv-cur-journeyman .lv-n {
-  color: var(--color-primary);
-}
-
-.lv.lv-cur-journeyman .lv-p {
-  color: #444;
-}
-
-.lv.lv-cur-artist {
-  background: var(--color-primary);
-}
-
-.lv.lv-cur-artist .lv-n {
-  color: var(--color-white);
-}
-
-.lv.lv-cur-artist .lv-p {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.lv.lv-cur-master {
-  background: var(--color-orange);
-}
-
-.lv.lv-cur-master .lv-n {
-  color: var(--color-black);
-}
-
-.lv.lv-cur-master .lv-p {
-  color: #664200;
-}
-
-.lv.lv-cur-legend {
-  background: var(--color-black);
-  box-shadow: inset 0 0 12px rgba(255, 163, 0, 0.15);
-}
-
-.lv.lv-cur-legend .lv-n {
-  color: var(--color-orange);
-}
-
-.lv.lv-cur-legend .lv-p {
-  color: #666;
-}
+.lv.lv-cur-black_cat .lv-n { color: #c0392b; }
+.lv.lv-cur-black_cat .lv-p { color: #666; }
 
 /* ── Rewards tab ── */
 .bal-strip {
