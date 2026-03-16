@@ -20,11 +20,11 @@ const TOKEN_KEY = 'ei_loyalty_token';
 
 // ── Level config ──────────────────────────────────────────────────────────────
 const LEVELS = [
-  { key: 'apprentice', label: 'Apprentice', min: 0,     next: 1000,  benefits: ['Access to rewards shop', 'Earn 5 pts per €1 spent', 'Referral bonuses'] },
-  { key: 'journeyman', label: 'Journeyman', min: 1000,  next: 5000,  benefits: ['2% off all consumables', 'Earn 5 pts per €1 spent', 'Referral bonuses'] },
-  { key: 'artist',     label: 'Artist',     min: 5000,  next: 10000, benefits: ['5% off all consumables', 'Early access to new products', 'Referral bonuses'] },
-  { key: 'master',     label: 'Master',     min: 10000, next: 15000, benefits: ['7% off all consumables', 'Priority support', 'Early access to new products'] },
-  { key: 'legend',     label: 'Legend',     min: 15000, next: null,  benefits: ['10% off all consumables', 'VIP sourcing requests', 'Priority support'] },
+  { key: 'apprentice', label: 'Apprentice', min: 0,     next: 1000,  benefits: ['5 pts per €1 on every order', 'Access to the full rewards shop', 'Earn 2,500 pts per successful referral'], next_teaser: 'Reach Journeyman to unlock 2% off all consumables' },
+  { key: 'journeyman', label: 'Journeyman', min: 1000,  next: 5000,  benefits: ['2% off all consumables on every order', '5 pts per €1 on every order', 'Earn 2,500 pts per successful referral'], next_teaser: 'Reach Artist to unlock 5% off consumables' },
+  { key: 'artist',     label: 'Artist',     min: 5000,  next: 10000, benefits: ['5% off all consumables on every order', 'Selected new product previews', 'Earn 2,500 pts per successful referral'], next_teaser: 'Reach Master to unlock 7% off consumables' },
+  { key: 'master',     label: 'Master',     min: 10000, next: 15000, benefits: ['7% off all consumables on every order', 'Faster email support — replies within 24h', 'Selected new product previews'], next_teaser: 'Reach Legend to unlock 10% off consumables' },
+  { key: 'legend',     label: 'Legend',     min: 15000, next: null,  benefits: ['10% off all consumables on every order', 'Direct line — WhatsApp support', 'Product requests considered for next restock'], next_teaser: null },
 ];
 
 // Mission display config
