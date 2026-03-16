@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Account | Electric Ink IE</title>
-  <meta name="description" content="Manage your Ink Points, rewards and orders at Electric Ink Ireland.">
+  <meta name="description" content="Manage your Black Cat Rewards, Catokens and orders at Electric Ink Ireland.">
   <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
   <link rel="shortcut icon" href="/images/favicons/favicon.ico">
@@ -40,21 +40,21 @@
           <!-- Left: brand panel -->
           <div class="auth-brand">
             <div class="auth-brand-logo" style="display:flex;align-items:center;gap:12px;">
-              <img src="/images/account/ink-points-coin.webp"
-                   width="40" height="40"
-                   style="border-radius:50%;object-fit:cover;flex-shrink:0;"
-                   alt="Ink Points">
-              <div class="auth-brand-title" style="margin:0;">Ink <span>Points</span></div>
+                  <img src="/images/account/ink-points-coin.webp"
+                    width="40" height="40"
+                    style="border-radius:50%;object-fit:cover;flex-shrink:0;"
+                    alt="Black Cat Rewards">
+                  <div class="auth-brand-title" style="margin:0;">Black Cat <span>Rewards</span></div>
             </div>
             <div class="auth-brand-sub">The Black Cat loyalty programme.</div>
             <div class="auth-perks">
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text"><strong>5 pts per €1 spent</strong> — on every order, automatically</div>
+                <div class="auth-perk-text"><strong>4–10 Catokens per €1</strong> — rate grows with your rank</div>
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text"><strong>+250 bonus points</strong> on your very first purchase</div>
+                <div class="auth-perk-text"><strong>+250 Catokens</strong> on your very first purchase</div>
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
@@ -62,11 +62,11 @@
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text"><strong>+2,500 pts</strong> every time you refer a fellow artist</div>
+                <div class="auth-perk-text"><strong>Referral bonus + 10% commission</strong> on every friend order, forever</div>
               </div>
               <div class="auth-perk">
                 <div class="auth-perk-dot"></div>
-                <div class="auth-perk-text">Unlock <strong>exclusive discounts</strong> as you level up</div>
+                <div class="auth-perk-text">Unlock <strong>discounts and exclusive missions</strong> at higher ranks</div>
               </div>
             </div>
             <div class="auth-brand-footer">From Tattoo Artists to Tattoo Artists</div>
@@ -135,7 +135,7 @@
                            maxlength="20">
                   </div>
                   <div class="referral-note" style="margin-top:8px;">
-                    Your friend earns <strong>2,500 pts</strong> when you place your first order. You get <strong>€15 off</strong> orders over €75.
+                    Your friend earns <strong>1,000 Catokens</strong> when you place your first order (min. €75). You get <strong>€15 off</strong> your first order over €75.
                   </div>
                 </div>
                 <div id="registerError" class="form-error" style="display:none"></div>
@@ -193,14 +193,14 @@
             <div class="tab-panel active" id="tab-overview" role="tabpanel">
               <div class="ov-grid">
                 <div class="ov-card">
-                  <div class="slabel">Ink Points balance</div>
+                  <div class="slabel">Black Cat Rewards balance</div>
                   <div class="pts-num" id="ptsNum">—</div>
                   <div class="pts-sub" id="ptsLabel" style="display:flex;align-items:center;gap:6px;">
                     <img src="/images/account/ink-points-coin.webp" 
                          width="16" height="16" 
                          style="border-radius:50%;object-fit:cover;flex-shrink:0;"
                          alt="">
-                    points available
+                    Catokens available
                   </div>
                   <div class="level-badge" id="levelBadge">
                     <span class="ldot" id="levelDot"></span>
@@ -221,7 +221,7 @@
                 </div>
                 <div class="ov-card">
                   <div class="slabel">Your referral code</div>
-                  <p class="ref-note">Share with fellow artists. When they complete their first order (min. €75) using your code, you earn <strong>2,500 pts</strong> automatically.</p>
+                  <p class="ref-note">Share with fellow artists. When they order for the first time (min. €75) using your code, you earn <strong>1,000 Catokens</strong>. Then earn <strong>10% of their Catokens</strong> on every future order — forever.</p>
                   <div class="ref-code-wrap">
                     <div class="slabel" style="margin-bottom:6px">Code</div>
                     <div class="ref-code" id="refCode">—</div>
@@ -242,11 +242,12 @@
                 <div class="how-item"><strong>+2,500 pts per referral</strong><span>When your artist friend orders (min. €75)</span></div>
               </div>
               <div class="levels-strip">
-                <div class="lv" id="lv-apprentice"><div class="lv-n">Apprentice</div><div class="lv-p">0 pts</div></div>
-                <div class="lv" id="lv-journeyman"><div class="lv-n">Journeyman</div><div class="lv-p">1,000 pts</div></div>
-                <div class="lv" id="lv-artist"><div class="lv-n">Artist</div><div class="lv-p">5,000 pts</div></div>
-                <div class="lv" id="lv-master"><div class="lv-n">Master</div><div class="lv-p">10,000 pts</div></div>
-                <div class="lv" id="lv-legend"><div class="lv-n">Legend</div><div class="lv-p">15,000 pts</div></div>
+                <div class="lv" id="lv-fresh_ink"><div class="lv-n">Fresh Ink</div><div class="lv-p">0</div></div>
+                <div class="lv" id="lv-steady_hand"><div class="lv-n">Steady Hand</div><div class="lv-p">1,000</div></div>
+                <div class="lv" id="lv-raw_talent"><div class="lv-n">Raw Talent</div><div class="lv-p">3,000</div></div>
+                <div class="lv" id="lv-nine_lives"><div class="lv-n">Nine Lives</div><div class="lv-p">5,000</div></div>
+                <div class="lv" id="lv-legend"><div class="lv-n">Legend</div><div class="lv-p">10,000</div></div>
+                <div class="lv" id="lv-black_cat"><div class="lv-n">Black Cat</div><div class="lv-p">15,000</div></div>
               </div>
             </div>
 
