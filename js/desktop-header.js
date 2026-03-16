@@ -61,7 +61,7 @@
             </button>
             <div class="ei-notif-dropdown" id="desktopNotifDropdown">
               <div class="ei-notif-header">
-                <span class="ei-notif-header-title">Black Cat Rewards</span>
+                <span class="ei-notif-header-title">Notifications</span>
                 <button class="ei-notif-mark-read" id="desktopMarkRead">
                   Mark all read
                 </button>

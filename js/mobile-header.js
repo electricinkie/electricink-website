@@ -44,7 +44,7 @@
             </button>
             <div class="ei-notif-dropdown" id="mobileNotifDropdown">
               <div class="ei-notif-header">
-                <span class="ei-notif-header-title">Black Cat Rewards</span>
+                <span class="ei-notif-header-title">Notifications</span>
                 <button class="ei-notif-mark-read" id="mobileMarkRead">
                   Mark all read
                 </button>
