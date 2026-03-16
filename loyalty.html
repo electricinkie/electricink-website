@@ -60,12 +60,9 @@
     .hero-title .teal { color: var(--teal); }
     .hero-sub { font-size: 16px; color: var(--text2); line-height: 1.7; max-width: 500px; margin: 0 auto 40px; }
     .hero-cta-group { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .hero-stats { display: flex; align-items: center; justify-content: center; gap: 40px; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--gray-200); flex-wrap: nowrap; }
+    .hero-stats { display: flex; align-items: center; justify-content: center; gap: 40px; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--gray-200); flex-wrap: wrap; }
     .hero-stat-num { font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 800; color: var(--teal); line-height: 1; margin-bottom: 4px; }
     .hero-stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
-
-    /* Keep stat subtitles on a single line on larger screens */
-    .hero-stat-label { white-space: nowrap; }
 
     /* ── SECTIONS ── */
     section { padding: 80px 40px; }
@@ -91,18 +88,31 @@
 
     /* ── LEVELS ── */
     .levels-section { background: var(--gray-50); }
-    .levels-section .section-title { color: var(--black); }
-    .levels-section .section-sub { color: var(--text2); }
-    .levels-section .section-eyebrow { color: var(--teal); }
-    .levels-track { display: flex; gap: 1px; background: var(--gray-200); border: 1px solid var(--gray-200); border-radius: 16px; overflow: hidden; }
-    .level-card { flex: 1; padding: 28px 18px; background: var(--white); transition: background 0.2s; }
-    .level-card:hover { background: var(--gray-50); }
-    .level-dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: 14px; }
-    .level-name { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; margin-bottom: 3px; color: var(--black); }
-    .level-threshold { font-size: 11px; color: var(--text3); margin-bottom: 18px; font-weight: 600; }
-    .level-benefit { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; color: var(--text2); margin-bottom: 7px; line-height: 1.4; }
-    .level-benefit-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--teal); margin-top: 4px; flex-shrink: 0; }
-    .level-power { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+    .levels-path { position: relative; padding: 8px 0 0; }
+    .levels-path-line { position: absolute; top: 28px; left: 28px; right: 28px; height: 2px; background: var(--gray-200); z-index: 0; }
+    .levels-nodes { display: flex; justify-content: space-between; position: relative; z-index: 2; margin-bottom: 28px; }
+    .level-node { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; cursor: pointer; }
+    .level-node-dot { width: 56px; height: 56px; border-radius: 50%; border: 3px solid var(--gray-200); background: var(--white); display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 900; color: var(--gray-400); }
+    .level-node.active .level-node-dot { transform: scale(1.1); box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+    .level-node:hover .level-node-dot { transform: scale(1.08); }
+    .level-node-label { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 800; color: var(--text2); text-align: center; line-height: 1.2; }
+    .level-node-threshold { font-size: 10px; color: var(--text3); font-weight: 600; }
+    .level-node[data-level="fresh_ink"].active .level-node-dot   { border-color: #888; color: #888; background: #f8f8f8; }
+    .level-node[data-level="steady_hand"].active .level-node-dot { border-color: var(--blue); color: var(--blue); background: rgba(74,143,224,0.06); }
+    .level-node[data-level="raw_talent"].active .level-node-dot  { border-color: var(--purple); color: var(--purple); background: rgba(155,89,182,0.06); }
+    .level-node[data-level="nine_lives"].active .level-node-dot  { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+    .level-node[data-level="legend"].active .level-node-dot      { border-color: var(--amber); color: var(--amber); background: rgba(255,163,0,0.06); }
+    .level-node[data-level="black_cat"].active .level-node-dot   { border-color: var(--red); color: var(--red); background: rgba(192,57,43,0.06); }
+    .level-node[data-level="black_cat"] .level-node-label        { color: var(--red); }
+    .level-detail { background: var(--white); border: 1px solid var(--gray-200); border-radius: 16px; padding: 28px 32px; display: grid; grid-template-columns: 80px 1fr; gap: 24px; align-items: start; transition: border-color 0.2s; }
+    .level-detail-left { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; }
+    .level-detail-mult { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; line-height: 1; }
+    .level-detail-mult-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .level-detail-name { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .level-detail-threshold { font-size: 12px; color: var(--text3); font-weight: 600; margin-bottom: 14px; }
+    .level-detail-benefits { display: flex; flex-direction: column; gap: 8px; }
+    .level-detail-benefit { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text2); }
+    .level-detail-benefit::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
 
     /* ── REWARDS ── */
     .rewards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -111,7 +121,8 @@
     .reward-card:hover { border-color: var(--teal-border); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
     .reward-card:hover::before { opacity: 1; }
     .reward-pts { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; color: var(--teal); line-height: 1; margin-bottom: 2px; letter-spacing: -0.02em; }
-    .reward-pts-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+    .reward-pts-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .reward-value { display: inline-block; font-size: 11px; font-weight: 700; color: var(--teal); background: var(--teal-light); border: 1px solid var(--teal-border); border-radius: 5px; padding: 2px 8px; margin-bottom: 10px; }
     .reward-name { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 4px; }
     .reward-type { font-size: 11px; color: var(--text3); }
 
@@ -178,11 +189,12 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .levels-track { flex-direction: row; flex-wrap: wrap; }
-      .level-card { flex: 1 1 calc(50% - 1px); min-width: calc(50% - 1px); }
+      .levels-nodes { gap: 4px; }
+      .level-node-dot { width: 44px; height: 44px; font-size: 12px; }
+      .level-node-label { font-size: 10px; }
+      .level-node-threshold { display: none; }
+      .level-detail { grid-template-columns: 1fr; gap: 16px; padding: 20px; }
       .rewards-grid { grid-template-columns: repeat(2, 1fr); }
-      /* allow stat labels to wrap on smaller screens */
-      .hero-stat-label { white-space: normal; }
       .badges-grid { grid-template-columns: repeat(2, 1fr); }
       .referral-card { grid-template-columns: 1fr; gap: 32px; padding: 36px 28px; }
       .section-header { grid-template-columns: 1fr; gap: 12px; }
@@ -222,7 +234,7 @@
   </div>
 </header>
 
-<!-- HERO — dark, bold -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-eyebrow">
@@ -230,10 +242,10 @@
       The Black Cat Rewards Programme
     </div>
     <h1 class="hero-title">
-      Every order<br>earns your <span class="teal">place.</span>
+      Built for tattoo artists.<br><span class="teal">Earned by order.</span>
     </h1>
     <p class="hero-sub">
-      Spend. Earn Catokens. Rise through the ranks — from Fresh Ink to Black Cat. Built for working tattoo artists in Ireland.
+      Every purchase earns Catokens. Every Catoken earns your rank. From Fresh Ink to Black Cat — the only loyalty programme made for working artists in Ireland.
     </p>
     <div class="hero-cta-group">
       <a href="/account.html?tab=register" class="btn-teal-lg">Join free — start earning now</a>
@@ -316,7 +328,7 @@
   </div>
 </section>
 
-<!-- LEVELS — dark section -->
+<!-- LEVELS -->
 <section class="levels-section" id="levels">
   <div class="container">
     <div class="section-header">
@@ -325,60 +337,57 @@
         <h2 class="section-title">From Fresh Ink to Black Cat.</h2>
       </div>
       <div class="section-header-right">
-        <p class="section-sub" style="color:#555;">Lifetime Catokens never go down. Every rank stacks new powers on top of everything you already have.</p>
+        <p class="section-sub">Lifetime Catokens never go down. Every rank stacks new powers on top of everything you already have. Click a rank to explore.</p>
       </div>
     </div>
-    <div class="levels-track fade-up">
-      <div class="level-card">
-        <div class="level-dot" style="background:#444"></div>
-        <div class="level-name">Fresh Ink</div>
-        <div class="level-threshold">0 Catokens</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>4 Catokens per €1</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Full rewards shop</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Referral commissions</div>
-        <div class="level-power">4×</div>
+    <div class="levels-path fade-up">
+      <div class="levels-path-line"></div>
+      <div class="levels-nodes">
+        <div class="level-node active" data-level="fresh_ink" onclick="selectLevel(this)">
+          <div class="level-node-dot">4×</div>
+          <div class="level-node-label">Fresh Ink</div>
+          <div class="level-node-threshold">0</div>
+        </div>
+        <div class="level-node" data-level="steady_hand" onclick="selectLevel(this)">
+          <div class="level-node-dot">5×</div>
+          <div class="level-node-label">Steady Hand</div>
+          <div class="level-node-threshold">1,000</div>
+        </div>
+        <div class="level-node" data-level="raw_talent" onclick="selectLevel(this)">
+          <div class="level-node-dot">6×</div>
+          <div class="level-node-label">Raw Talent</div>
+          <div class="level-node-threshold">3,000</div>
+        </div>
+        <div class="level-node" data-level="nine_lives" onclick="selectLevel(this)">
+          <div class="level-node-dot">7×</div>
+          <div class="level-node-label">Nine Lives</div>
+          <div class="level-node-threshold">5,000</div>
+        </div>
+        <div class="level-node" data-level="legend" onclick="selectLevel(this)">
+          <div class="level-node-dot">8×</div>
+          <div class="level-node-label">Legend</div>
+          <div class="level-node-threshold">10,000</div>
+        </div>
+        <div class="level-node" data-level="black_cat" onclick="selectLevel(this)">
+          <div class="level-node-dot">10×</div>
+          <div class="level-node-label">Black Cat</div>
+          <div class="level-node-threshold">15,000</div>
+        </div>
       </div>
-      <div class="level-card">
-        <div class="level-dot" style="background:var(--blue)"></div>
-        <div class="level-name">Steady Hand</div>
-        <div class="level-threshold">1,000 Catokens</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>5 Catokens per €1</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Everything in Fresh Ink</div>
-        <div class="level-power" style="background:rgba(74,143,224,0.1);color:var(--blue);border-color:rgba(74,143,224,0.2)">5×</div>
-      </div>
-      <div class="level-card">
-        <div class="level-dot" style="background:var(--purple)"></div>
-        <div class="level-name">Raw Talent</div>
-        <div class="level-threshold">3,000 Catokens</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>6 Catokens per €1</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Everything in Steady Hand</div>
-        <div class="level-power" style="background:rgba(155,89,182,0.1);color:var(--purple);border-color:rgba(155,89,182,0.2)">6×</div>
-      </div>
-      <div class="level-card">
-        <div class="level-dot" style="background:var(--teal)"></div>
-        <div class="level-name">Nine Lives</div>
-        <div class="level-threshold">5,000 Catokens</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>7 Catokens per €1</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Exclusive monthly mission</div>
-        <div class="level-power">7× + exclusive mission</div>
-      </div>
-      <div class="level-card">
-        <div class="level-dot" style="background:var(--amber)"></div>
-        <div class="level-name" style="color:var(--amber)">Legend</div>
-        <div class="level-threshold">10,000 Catokens</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>8 Catokens per €1</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>3% off consumables</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Surprise missions</div>
-        <div class="level-power" style="background:rgba(255,163,0,0.1);color:var(--amber);border-color:rgba(255,163,0,0.2)">8× + 3% off</div>
-      </div>
-      <div class="level-card">
-        <div class="level-dot" style="background:var(--red)"></div>
-        <div class="level-name" style="color:var(--red)">Black Cat</div>
-        <div class="level-threshold">15,000 Catokens</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>10 Catokens per €1</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>5% off consumables</div>
-        <div class="level-benefit"><div class="level-benefit-dot"></div>Max surprise missions</div>
-        <div class="level-power" style="background:rgba(192,57,43,0.1);color:var(--red);border-color:rgba(192,57,43,0.2)">10× + 5% off</div>
+      <div class="level-detail" id="levelDetail">
+        <div class="level-detail-left">
+          <div class="level-detail-mult" id="levelMult">4×</div>
+          <div class="level-detail-mult-label">per €1</div>
+        </div>
+        <div>
+          <div class="level-detail-name" id="levelName">Fresh Ink</div>
+          <div class="level-detail-threshold" id="levelThreshold">Starts at 0 Catokens</div>
+          <div class="level-detail-benefits" id="levelBenefits">
+            <div class="level-detail-benefit">4 Catokens per €1 spent</div>
+            <div class="level-detail-benefit">Full rewards shop access</div>
+            <div class="level-detail-benefit">Referral commissions on every friend order</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -400,36 +409,42 @@
       <div class="reward-card">
         <div class="reward-pts">450</div>
         <div class="reward-pts-label">Catokens</div>
+        <div class="reward-value">≈ €4.50 value</div>
         <div class="reward-name">Free Shipping</div>
         <div class="reward-type">Coupon · 30 day validity</div>
       </div>
       <div class="reward-card">
         <div class="reward-pts">894</div>
         <div class="reward-pts-label">Catokens</div>
+        <div class="reward-value">≈ €8.94 value</div>
         <div class="reward-name">Tattoo Balm</div>
         <div class="reward-type">Free product · added to order</div>
       </div>
       <div class="reward-card">
         <div class="reward-pts">1,138</div>
         <div class="reward-pts-label">Catokens</div>
+        <div class="reward-value">≈ €11.38 value</div>
         <div class="reward-name">Slimer Tattoo Gel</div>
         <div class="reward-type">Free product · added to order</div>
       </div>
       <div class="reward-card">
         <div class="reward-pts">1,500</div>
         <div class="reward-pts-label">Catokens</div>
+        <div class="reward-value">€10 value</div>
         <div class="reward-name">€10 Voucher</div>
         <div class="reward-type">Discount coupon · use at checkout</div>
       </div>
       <div class="reward-card">
         <div class="reward-pts">2,114</div>
         <div class="reward-pts-label">Catokens</div>
+        <div class="reward-value">≈ €21.14 value</div>
         <div class="reward-name">Easy Glow 30ml</div>
         <div class="reward-type">Free product · added to order</div>
       </div>
       <div class="reward-card">
         <div class="reward-pts">3,750</div>
         <div class="reward-pts-label">Catokens</div>
+        <div class="reward-value">€25 value</div>
         <div class="reward-name">€25 Voucher</div>
         <div class="reward-type">Discount coupon · use at checkout</div>
       </div>
@@ -559,7 +574,7 @@
   </div>
 </section>
 
-<!-- REFERRAL — dark section -->
+<!-- REFERRAL -->
 <section class="referral-section" id="referral">
   <div class="container">
     <div class="referral-card fade-up">
@@ -654,6 +669,31 @@
 </footer>
 
 <script>
+  const LEVELS = {
+    fresh_ink:   { name: 'Fresh Ink',   threshold: '0',      mult: '4×', color: '#888',    benefits: ['4 Catokens per €1 spent','Full rewards shop access','Referral commissions on every friend order'] },
+    steady_hand: { name: 'Steady Hand', threshold: '1,000',  mult: '5×', color: '#4a8fe0', benefits: ['5 Catokens per €1 spent','Everything in Fresh Ink','Higher earning rate unlocked'] },
+    raw_talent:  { name: 'Raw Talent',  threshold: '3,000',  mult: '6×', color: '#9b59b6', benefits: ['6 Catokens per €1 spent','Everything in Steady Hand','Growing faster with every order'] },
+    nine_lives:  { name: 'Nine Lives',  threshold: '5,000',  mult: '7×', color: '#43BDAB', benefits: ['7 Catokens per €1 spent','Exclusive monthly mission unlocked','Higher stakes, bigger rewards'] },
+    legend:      { name: 'Legend',      threshold: '10,000', mult: '8×', color: '#FFA300', benefits: ['8 Catokens per €1 spent','3% off all consumables at checkout','Surprise bonus missions — triggered without warning'] },
+    black_cat:   { name: 'Black Cat',   threshold: '15,000', mult: '10×',color: '#c0392b', benefits: ['10 Catokens per €1 spent','5% off all consumables at checkout','Maximum surprise missions — more, more often'] },
+  };
+
+  function selectLevel(el) {
+    document.querySelectorAll('.level-node').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    const key = el.dataset.level;
+    const lv = LEVELS[key];
+    const mult = document.getElementById('levelMult');
+    const name = document.getElementById('levelName');
+    mult.textContent = lv.mult;
+    mult.style.color = lv.color;
+    name.textContent = lv.name;
+    name.style.color = lv.color;
+    document.getElementById('levelThreshold').textContent = `Starts at ${lv.threshold} Catokens`;
+    document.getElementById('levelBenefits').innerHTML = lv.benefits.map(b => `<div class="level-detail-benefit">${b}</div>`).join('');
+    document.getElementById('levelDetail').style.borderColor = lv.color + '55';
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
