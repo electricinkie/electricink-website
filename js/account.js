@@ -475,7 +475,17 @@ function renderOverview(customer, missions, pointsEarned) {
   const current = getLevelData(customer.loyalty_level || 'fresh_ink');
   if (next) {
     const pct = Math.min(100, Math.round(((earned - current.min) / (next.min - current.min)) * 100));
-    document.getElementById('progFill').style.width = `${pct}%`;
+    const levelColors = {
+      fresh_ink:   'linear-gradient(90deg, #888, #aaa)',
+      steady_hand: 'linear-gradient(90deg, #4a8fe0, #6ba8f0)',
+      raw_talent:  'linear-gradient(90deg, #9b59b6, #b07fd0)',
+      nine_lives:  'linear-gradient(90deg, #43BDAB, #5dd6c4)',
+      legend:      'linear-gradient(90deg, #FFA300, #ffbe44)',
+      black_cat:   'linear-gradient(90deg, #c0392b, #e05444)',
+    };
+    const progFill = document.getElementById('progFill');
+    progFill.style.width = `${pct}%`;
+    progFill.style.background = levelColors[current.key] || levelColors.fresh_ink;
     document.getElementById('progCount').textContent = `${earned.toLocaleString()} / ${next.min.toLocaleString()} Catokens earned`;
     document.getElementById('progLabel').textContent = `Progress to ${next.label}`;
     document.getElementById('progStart').textContent = current.label;
