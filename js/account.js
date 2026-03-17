@@ -674,7 +674,7 @@ async function redeemReward(rewardId) {
         points: data.points_spent,
         date: new Date().toISOString()
       });
-      localStorage.setItem('inkpoints_coupons', JSON.stringify(saved));
+      localStorage.setItem('blackcat_coupons', JSON.stringify(saved));
       renderActiveCoupons();
     } catch {}
 
@@ -751,7 +751,7 @@ async function renderActiveCoupons() {
 
     if (!active.length) {
       el.innerHTML = '<div class="list-empty">No active coupons.</div>';
-      localStorage.removeItem('inkpoints_coupons');
+      localStorage.removeItem('blackcat_coupons');
       return;
     }
 
