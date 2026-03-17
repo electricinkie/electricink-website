@@ -427,7 +427,21 @@ async function loadDashboard() {
 
     localStorage.setItem('ei_last_level', _level);
     localStorage.setItem('ei_last_pts', String(_pts));
-
+      // ── "Close to next rank" notification ──────────────
+      const _earned = data.points_earned || 0;
+      const _nextLevel = LEVELS.find(l => l.min > _earned);
+      if (_nextLevel) {
+        const _gap = _nextLevel.min - _earned;
+        if (_gap > 0 && _gap <= 200) {
+          const _iconRocket = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0"><path d="M10 2c0 0 4 2 4 8l-4 4-4-4c0-6 4-8 4-8z" stroke="#FFA300" stroke-width="1.8" stroke-linejoin="round"/><circle cx="10" cy="10" r="1.5" fill="#FFA300"/><path d="M7 15l-2 3M13 15l2 3" stroke="#FFA300" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+          const _eurosNeeded = Math.ceil(_gap / (_nextLevel.multiplier || 4));
+          setTimeout(() => {
+            if (window.toast) window.toast.info(
+              `${_iconRocket} Only €${_eurosNeeded} away from ${_nextLevel.label}`, 6000
+            );
+          }, 2000);
+        }
+      }
   } catch (err) {
     console.error('loadDashboard error:', err);
     localStorage.removeItem(TOKEN_KEY);
