@@ -631,7 +631,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         `;
       }).join('');
 
-      // ── Ink Points block ──────────────────────────────────────────
+      // ── Black Cat Rewards block ───────────────────────────────────
       let pointsBlock = '';
       try {
         const _internalApiUrl = process.env.INTERNAL_API_URL;
@@ -646,8 +646,12 @@ async function handlePaymentIntentSucceeded(event, requestId) {
               const lvl = ptsData?.level || 'fresh_ink';
               const earned = Math.round((order.total || 0) * (multipliers[lvl] || 4));
               const levelLabels = {
-                apprentice: 'Apprentice', journeyman: 'Journeyman',
-                artist: 'Artist', master: 'Master', legend: 'Legend'
+                fresh_ink:   'Fresh Ink',
+                steady_hand: 'Steady Hand',
+                raw_talent:  'Raw Talent',
+                nine_lives:  'Nine Lives',
+                legend:      'Legend',
+                black_cat:   'Black Cat',
               };
               const levelLabel = levelLabels[ptsData.level] || ptsData.level;
               pointsBlock = `
@@ -656,7 +660,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
                   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8fafb;border-radius:8px;margin-bottom:30px;">
                     <tr>
                       <td style="padding:24px;">
-                        <p style="margin:0 0 4px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#999999;text-transform:uppercase;letter-spacing:0.06em;">Ink Points</p>
+                        <p style="margin:0 0 4px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#999999;text-transform:uppercase;letter-spacing:0.06em;">Black Cat Rewards</p>
                         <p style="margin:0 0 16px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:22px;font-weight:700;color:#43BDAB;">+${earned.toLocaleString()} Catokens earned</p>
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                           <tr>
