@@ -391,6 +391,16 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     let items = [];
     try {
       items = JSON.parse(paymentIntent.metadata.items || '[]');
+      // Warn if webhook received fewer items than what was originally in the cart.
+      // This can happen when the items JSON was truncated to fit Stripe's 500-char metadata limit.
+      const itemsCount = parseInt(paymentIntent.metadata.items_count || '0', 10);
+      if (itemsCount > 0 && items.length < itemsCount) {
+        logger.warn('items metadata was truncated — email will show partial item list', {
+          orderId,
+          itemsInMeta: items.length,
+          itemsCount
+        });
+      }
     } catch (e) {
       logger.error(JSON.stringify({
         msg: 'Failed to parse items from metadata',

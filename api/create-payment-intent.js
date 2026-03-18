@@ -490,14 +490,29 @@ module.exports = async function handler(req, res) {
       const idempotencyKey = `pi_${emailHash}_${cartHash}`;
 
       // Build a sanitized metadata object (whitelist) to avoid client-side injection
-      const itemsSnapshot = JSON.stringify(items.map(i => ({ id: i.id, q: i.quantity })));
       const incomingMetadata = req.body.metadata || {};
+      // Build compact items JSON — Stripe metadata values are capped at 500 chars.
+      // Slice items array until the serialised string fits safely within 490 chars.
+      const buildItemsMeta = (itemsArr) => {
+        const full = JSON.stringify(itemsArr.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity })));
+        if (full.length <= 490) return full;
+        // Drop items from the end until it fits
+        for (let len = itemsArr.length - 1; len > 0; len--) {
+          const candidate = JSON.stringify(itemsArr.slice(0, len).map(it => ({ id: it.id, v: it.variant || '', q: it.quantity })));
+          if (candidate.length <= 490) {
+            logger.warn('items metadata truncated to fit Stripe 500-char limit', { original: itemsArr.length, kept: len });
+            return candidate;
+          }
+        }
+        return '[]';
+      };
+
       const metadataSanitized = {
         // allow only minimal, non-sensitive fields from client
         customer_email: incomingMetadata.customer_email || incomingMetadata.email || '',
         customer_name: incomingMetadata.customer_name || incomingMetadata.name || '',
-        // Store compact items representation to avoid Stripe metadata limits
-        items: JSON.stringify(items.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity }))),
+        // Store compact items representation — guarded against Stripe 500-char value limit
+        items: buildItemsMeta(items),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
