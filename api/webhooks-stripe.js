@@ -864,15 +864,17 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
           items: enrichedItems.map(it => ({
             ...it,
+            // price_ex = price excluding VAT. Site JSON prices include 23% VAT,
+            // so divide by 1.23 to get the ex-VAT value the internal system expects.
             price_ex: (() => {
               const resolved = resolveCatalogItem(it.id);
+              let grossPrice = 0;
               if (resolved && resolved.variant) {
-                return resolved.variant.price || resolved.product?.basic?.price || 0;
+                grossPrice = resolved.variant.price || resolved.product?.basic?.price || 0;
+              } else if (resolved && resolved.product) {
+                grossPrice = resolved.product.basic?.price || resolved.product.price || 0;
               }
-              if (resolved && resolved.product) {
-                return resolved.product.basic?.price || resolved.product.price || 0;
-              }
-              return 0;
+              return grossPrice > 0 ? parseFloat((grossPrice / 1.23).toFixed(4)) : 0;
             })()
           })),
           total: order.total,

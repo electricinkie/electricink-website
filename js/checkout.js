@@ -572,8 +572,19 @@ window.appliedDiscount = 0;
           debugLog('   Payer:', ev.payerName, ev.payerEmail);
           debugLog('   Shipping:', ev.shippingAddress);
           debugLog('   Shipping option:', ev.shippingOption);
-          
+
           try {
+            // Temporarily populate form fields with Payment Request data
+            // so createPaymentIntent can read them (form may be empty in express flow)
+            const _prevEmail     = elements.form.email?.value;
+            const _prevFirstName = elements.form.firstName?.value;
+            const _prevLastName  = elements.form.lastName?.value;
+            const _prevPhone     = elements.form.phone?.value;
+            if (elements.form.email     && !elements.form.email.value)     elements.form.email.value     = ev.payerEmail || '';
+            if (elements.form.firstName && !elements.form.firstName.value) elements.form.firstName.value = ev.payerName ? ev.payerName.split(' ')[0] : '';
+            if (elements.form.lastName  && !elements.form.lastName.value)  elements.form.lastName.value  = ev.payerName ? ev.payerName.split(' ').slice(1).join(' ') : '';
+            if (elements.form.phone     && !elements.form.phone.value)     elements.form.phone.value     = ev.payerPhone || '';
+
             // Create payment intent — pass Apple Pay / Payment Request shipping data as override
             const clientSecret = await createPaymentIntent({
               method: ev.shippingOption && ev.shippingOption.id ? ev.shippingOption.id : shippingMethod,
@@ -587,12 +598,19 @@ window.appliedDiscount = 0;
               firstName: ev.payerName ? ev.payerName.split(' ')[0] : '',
               lastName: ev.payerName ? ev.payerName.split(' ').slice(1).join(' ') : ''
             });
-            
-            // Confirm payment
+
+            // Restore original form values
+            if (elements.form.email)     elements.form.email.value     = _prevEmail     || elements.form.email.value;
+            if (elements.form.firstName) elements.form.firstName.value = _prevFirstName || elements.form.firstName.value;
+            if (elements.form.lastName)  elements.form.lastName.value  = _prevLastName  || elements.form.lastName.value;
+            if (elements.form.phone)     elements.form.phone.value     = _prevPhone     || elements.form.phone.value;
+
+            // Confirm payment — use handleActions:false for Payment Request (Google/Apple Pay)
+            // then complete the event BEFORE handling any required actions
             const {error: confirmError} = await stripe.confirmCardPayment(
               clientSecret,
               {payment_method: ev.paymentMethod.id},
-              {handleActions: true}
+              {handleActions: false}
             );
 
             if (confirmError) {
@@ -603,9 +621,9 @@ window.appliedDiscount = 0;
                 window.toast.error(confirmError.message);
               }
             } else {
-              // Success
-              debugLog('✅ Express payment succeeded!');
+              // Complete the Payment Request sheet immediately
               ev.complete('success');
+              debugLog('✅ Express payment succeeded!');
               
               // Get payment intent ID from clientSecret
               const paymentIntentId = clientSecret.split('_secret')[0];
