@@ -7,6 +7,16 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
 (function() {
   'use strict';
 
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   // ────────── Constants ──────────
   const CART_KEY = 'electricink_cart';
   // 🔧 FIX: SHIPPING_COST movido para checkout.js (não usado no cart)
@@ -158,41 +168,41 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     
     // Renderiza items
     cartItemsContainer.innerHTML = cart.map(item => `
-      <div class="cart-item" data-item-id="${item.id}">
-        
+      <div class="cart-item" data-item-id="${escHtml(item.id)}">
+
         <!-- Image -->
         <div class="cart-item-image">
-          <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+          <img src="${escHtml(item.image || '/images/placeholder.jpg')}" alt="${escHtml(item.name)}">
         </div>
-        
+
         <!-- Info -->
         <div class="cart-item-info">
-          <h3 class="cart-item-name">${item.name}</h3>
-          ${item.variant ? `<p class="cart-item-variant">${item.variant}</p>` : ''}
+          <h3 class="cart-item-name">${escHtml(item.name)}</h3>
+          ${item.variant ? `<p class="cart-item-variant">${escHtml(item.variant)}</p>` : ''}
           <p class="cart-item-price">€${item.price.toFixed(2)}</p>
         </div>
-        
+
         <!-- Actions -->
         <div class="cart-item-actions">
-          
+
           <!-- Quantity Controls -->
           <div class="quantity-controls">
-            <button class="quantity-btn" data-action="decrease" data-item-id="${item.id}">
+            <button class="quantity-btn" data-action="decrease" data-item-id="${escHtml(item.id)}">
               −
             </button>
-            <span class="quantity-value">${item.quantity}</span>
-            <button class="quantity-btn" data-action="increase" data-item-id="${item.id}">
+            <span class="quantity-value">${escHtml(String(item.quantity))}</span>
+            <button class="quantity-btn" data-action="increase" data-item-id="${escHtml(item.id)}">
               +
             </button>
           </div>
-          
+
           <!-- Remove Button -->
-          <button class="remove-btn" data-item-id="${item.id}">
+          <button class="remove-btn" data-item-id="${escHtml(item.id)}">
             Remove
           </button>
-          
+
         </div>
-        
+
       </div>
     `).join('');
     

@@ -93,7 +93,8 @@ async function checkRateLimit(key) {
 
       if (!doc.exists) {
         const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        tx.set(docRef, { count: 1, resetAt });
+        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
+        tx.set(docRef, { count: 1, resetAt, expiresAt });
         return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
       }
 
@@ -102,7 +103,8 @@ async function checkRateLimit(key) {
 
       if (now > resetAtMillis) {
         const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        tx.set(docRef, { count: 1, resetAt });
+        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
+        tx.set(docRef, { count: 1, resetAt, expiresAt });
         return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
       }
 
@@ -306,7 +308,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
             initFirestore();
             const db = admin.firestore();
             const ordersSnap = await db.collection('orders')
-              .where('email', '==', customerEmail)
+              .where('customerEmail', '==', customerEmail)
               .where('status', '==', 'paid')
               .limit(1)
               .get();
@@ -381,6 +383,20 @@ module.exports = async function handler(req, res) {
   }
 
   // Zod schema de validação
+  const shippingAddressSchema = z.object({
+    line1:       z.string().max(200).optional(),
+    line2:       z.string().max(200).optional(),
+    city:        z.string().max(100).optional(),
+    state:       z.string().max(100).optional(),
+    postalCode:  z.string().max(20).optional(),
+    country:     z.string().max(2).optional(),
+    phone:       z.string().max(30).optional(),
+    phoneNumber: z.string().max(30).optional(),
+    firstName:   z.string().max(100).optional(),
+    lastName:    z.string().max(100).optional(),
+    method:      z.enum(['standard', 'pickup', 'same-day']).optional(),
+  }).optional();
+
   const checkoutSchema = z.object({
     items: z.array(
       z.object({
@@ -395,7 +411,8 @@ module.exports = async function handler(req, res) {
       errorMap: () => ({ message: 'Invalid shipping method' })
     }),
     email: z.string().email('Invalid email').optional(),
-    name: z.string().min(2).max(100).optional()
+    name: z.string().min(2).max(100).optional(),
+    shippingAddress: shippingAddressSchema
   });
 
   let items, shippingMethod, metadata, shippingAddress;
@@ -449,7 +466,14 @@ module.exports = async function handler(req, res) {
 
     // Rate limiting (per IP) using Firestore
     try {
-      const ip = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : (req.socket && req.socket.remoteAddress) || 'unknown';
+      // On Vercel, x-real-ip is set by infrastructure and is not client-spoofable.
+      // x-forwarded-for is used as fallback but validated against IPv4/IPv6 format
+      // to prevent attackers from forging arbitrary document keys in Firestore.
+      const rawIp = req.headers['x-real-ip']
+        || (req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : null)
+        || (req.socket && req.socket.remoteAddress)
+        || 'unknown';
+      const ip = /^[\w.:[\]-]{3,45}$/.test(rawIp) ? rawIp : 'unknown';
       const rateKey = `ip_${ip}`;
       const rl = await checkRateLimit(rateKey);
       if (!rl.allowed) {

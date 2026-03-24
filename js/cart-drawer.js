@@ -5,6 +5,16 @@
 (function () {
   'use strict';
 
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function getCart() {
     try { return JSON.parse(localStorage.getItem('electricink_cart') || '[]'); } catch { return []; }
   }
@@ -59,15 +69,15 @@
 
     itemsEl.innerHTML = cart.map((item, idx) => `
       <div class="cart-drawer-item">
-        <img class="cart-drawer-item-img" src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+        <img class="cart-drawer-item-img" src="${escHtml(item.image || '/images/placeholder.jpg')}" alt="${escHtml(item.name)}">
         <div class="cart-drawer-item-info">
-          <p class="cart-drawer-item-name">${item.name}</p>
-          ${item.variant ? `<p class="cart-drawer-item-variant">${item.variant}</p>` : ''}
+          <p class="cart-drawer-item-name">${escHtml(item.name)}</p>
+          ${item.variant ? `<p class="cart-drawer-item-variant">${escHtml(item.variant)}</p>` : ''}
           <div class="cart-drawer-item-row">
             <span class="cart-drawer-item-price">€${(item.price * item.quantity).toFixed(2)}</span>
             <div class="cart-drawer-item-qty">
               <button class="cart-drawer-qty-btn" onclick="cartDrawer.updateQty(${idx}, -1)">−</button>
-              <span class="cart-drawer-qty-num">${item.quantity}</span>
+              <span class="cart-drawer-qty-num">${escHtml(String(item.quantity))}</span>
               <button class="cart-drawer-qty-btn" onclick="cartDrawer.updateQty(${idx}, 1)">+</button>
             </div>
           </div>
@@ -94,9 +104,9 @@
     if (!el) return;
     el.innerHTML = `
       <div class="bs-added-row">
-        <img class="bs-added-img" src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+        <img class="bs-added-img" src="${escHtml(item.image || '/images/placeholder.jpg')}" alt="${escHtml(item.name)}">
         <div class="bs-added-info">
-          <p class="bs-added-name">${item.name}</p>
+          <p class="bs-added-name">${escHtml(item.name)}</p>
           <p class="bs-added-check">✓ Added to cart</p>
         </div>
         <span class="bs-added-price">€${item.price.toFixed(2)}</span>

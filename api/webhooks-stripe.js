@@ -424,7 +424,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     const subtotal_cents = parseInt(paymentIntent.metadata.subtotal_cents || '0', 10);
     const shipping_cents = parseInt(paymentIntent.metadata.shipping_cents || '0', 10);
 
-    const customerEmail = paymentIntent.metadata.customer_email || paymentIntent.receipt_email || 'no-email@electricink.ie';
+    const customerEmail = (paymentIntent.metadata.customer_email || paymentIntent.receipt_email || 'no-email@electricink.ie').toLowerCase().trim();
     const customerName = paymentIntent.metadata.customer_name || 'Customer';
     const order = {
       orderId,
@@ -462,9 +462,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     }
 
     // Fast path: save order without inventory checks
+    let orderAlreadyExists = false;
     await db.runTransaction(async (transaction) => {
       const orderDoc = await transaction.get(orderRef);
       if (orderDoc.exists) {
+        orderAlreadyExists = true;
         logger.info(JSON.stringify({
           msg: 'Order already processed (idempotent)',
           orderId,
@@ -477,6 +479,9 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       const cleanOrder = removeUndefined(order);
       transaction.set(orderRef, cleanOrder);
     });
+    if (orderAlreadyExists) {
+      return { success: true, orderId, emailStatus: 'skipped_duplicate', requestId };
+    }
     logger.info('Order created successfully in Firestore (inventory checks disabled)');
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
@@ -945,6 +950,7 @@ async function handlePaymentIntentFailed(paymentIntent, requestId) {
       failureReason: paymentIntent.last_payment_error?.message || 'Unknown error',
       failureCode: paymentIntent.last_payment_error?.code || null,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      expiresAt: admin.firestore.Timestamp.fromMillis(Date.now() + 90 * 24 * 60 * 60 * 1000),
       metadata: paymentIntent.metadata || {}
     });
 

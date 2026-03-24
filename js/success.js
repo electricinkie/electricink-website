@@ -7,6 +7,16 @@ import { INTERNAL_API_URL } from './constants.js';
 (function() {
   'use strict';
 
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   // ────────── Get Payment Intent ID from URL ──────────
   const urlParams = new URLSearchParams(window.location.search);
   const paymentIntentId = urlParams.get('payment_intent');
@@ -46,12 +56,12 @@ import { INTERNAL_API_URL } from './constants.js';
     orderItemsContainer.innerHTML = orderData.items.map(item => `
       <div class="order-item">
         <div class="order-item-image">
-          <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}">
+          <img src="${escHtml(item.image || '/images/placeholder.jpg')}" alt="${escHtml(item.name)}">
         </div>
         <div class="order-item-info">
-          <div class="order-item-name">${item.name}</div>
-          ${item.variant ? `<div class="order-item-variant">${item.variant}</div>` : ''}
-          <div class="order-item-qty">Quantity: ${item.quantity}</div>
+          <div class="order-item-name">${escHtml(item.name)}</div>
+          ${item.variant ? `<div class="order-item-variant">${escHtml(item.variant)}</div>` : ''}
+          <div class="order-item-qty">Quantity: ${escHtml(String(item.quantity))}</div>
         </div>
         <div class="order-item-price">€${(item.price * item.quantity).toFixed(2)}</div>
       </div>
@@ -81,12 +91,12 @@ import { INTERNAL_API_URL } from './constants.js';
     const s = orderData.shipping;
     shippingContainer.innerHTML = `
       <p style="margin: 0; line-height: 1.6; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #666;">
-        ${s.firstName} ${s.lastName}<br>
-        ${s.address}<br>
-        ${s.address2 ? s.address2 + '<br>' : ''}
-        ${s.city}, ${s.postalCode}<br>
-        ${s.country}<br>
-        ${s.phone}
+        ${escHtml(s.firstName)} ${escHtml(s.lastName)}<br>
+        ${escHtml(s.address)}<br>
+        ${s.address2 ? escHtml(s.address2) + '<br>' : ''}
+        ${escHtml(s.city)}, ${escHtml(s.postalCode)}<br>
+        ${escHtml(s.country)}<br>
+        ${escHtml(s.phone)}
       </p>
     `;
   }
@@ -134,7 +144,8 @@ import { INTERNAL_API_URL } from './constants.js';
   } catch {}
 
   localStorage.removeItem('electricink_cart');
-  
+  localStorage.removeItem('electricink_last_order');
+
   // Atualiza cart count no header (se função existir)
   if (window.cart && window.cart.updateCartCount) {
     window.cart.updateCartCount();
