@@ -7,10 +7,7 @@
       "maxDuration": 30
     }
   },
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/404.html", "status": 404 }
-  ],
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/.well-known/apple-developer-merchantid-domain-association",
