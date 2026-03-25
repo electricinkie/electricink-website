@@ -250,7 +250,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     }
 
     const quantity = parseInt(item.quantity, 10);
-    if (isNaN(quantity) || quantity <= 0 || quantity > 999) {
+    if (isNaN(quantity) || quantity <= 0 || quantity > 100) {
       throw new Error(`Invalid quantity for ${item.id}: ${item.quantity}`);
     }
 
