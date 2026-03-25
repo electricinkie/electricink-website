@@ -437,12 +437,13 @@ module.exports = async function handler(req, res) {
     shippingAddress = req.body.shippingAddress || {};
   } catch (error) {
     if (error instanceof z.ZodError) {
-      logger.warn('Invalid request data', { errors: error.errors });
+      const zodErrors = Array.isArray(error.errors) ? error.errors : [];
+      logger.warn('Invalid request data', { errors: zodErrors });
       return res.status(400).json({
         error: 'Invalid request data',
-        details: error.errors.map(e => ({
-          field: e.path.join('.'),
-          message: e.message
+        details: zodErrors.map(e => ({
+          field: Array.isArray(e.path) ? e.path.join('.') : '',
+          message: e.message || 'Invalid value'
         }))
       });
     }
