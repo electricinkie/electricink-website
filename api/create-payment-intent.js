@@ -418,8 +418,12 @@ module.exports = async function handler(req, res) {
   let items, shippingMethod, metadata, shippingAddress;
   try {
     // Aceitar ambos formatos: { items: [...] } (server) ou { cartItems: [...] } (frontend)
+    const rawItems = req.body.items || req.body.cartItems;
+    if (!rawItems || !Array.isArray(rawItems) || rawItems.length === 0) {
+      return res.status(400).json({ error: 'Invalid request data', details: [{ field: 'items', message: 'Cart cannot be empty' }] });
+    }
     const payload = {
-      items: req.body.items || req.body.cartItems,
+      items: rawItems,
       shippingMethod: req.body.shippingMethod || (req.body.shippingAddress && req.body.shippingAddress.method) || 'standard',
       customer_email: req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email),
       name: req.body.name || (req.body.metadata && req.body.metadata.customer_name)
