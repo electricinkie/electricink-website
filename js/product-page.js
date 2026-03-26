@@ -1141,22 +1141,28 @@ function checkProductAvailability(product) {
 
   // Star input interaction
   const starBtns = document.querySelectorAll('.star-btn');
-  starBtns.forEach(star => {
-    function renderStars(val) {
-      starBtns.forEach(s => {
-        s.innerHTML = Number(s.dataset.value) <= val
-          ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="#43BDAB" stroke="#43BDAB" stroke-width="1.5"><polygon points="12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9"/></svg>'
-          : '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.5"><polygon points="12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9"/></svg>';
-        s.classList.toggle('active', Number(s.dataset.value) <= val);
-      });
-    }
-    star.addEventListener('mouseover', () => {
-      const val = Number(star.dataset.value);
-      renderStars(val);
+  const starContainer = document.getElementById('reviewStarsInput');
+
+  function renderStars(val) {
+    starBtns.forEach(s => {
+      s.innerHTML = Number(s.dataset.value) <= val
+        ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="#43BDAB" stroke="#43BDAB" stroke-width="1.5" style="pointer-events:none"><polygon points="12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9"/></svg>'
+        : '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.5" style="pointer-events:none"><polygon points="12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9"/></svg>';
+      s.classList.toggle('active', Number(s.dataset.value) <= val);
     });
-    star.addEventListener('mouseleave', () => {
+  }
+
+  if (starContainer) {
+    starContainer.addEventListener('mousemove', (e) => {
+      const star = e.target.closest('.star-btn');
+      if (star) renderStars(Number(star.dataset.value));
+    });
+    starContainer.addEventListener('mouseleave', () => {
       renderStars(selectedRating);
     });
+  }
+
+  starBtns.forEach(star => {
     star.addEventListener('click', () => {
       selectedRating = Number(star.dataset.value);
       renderStars(selectedRating);
@@ -1275,7 +1281,7 @@ function checkProductAvailability(product) {
               </div>
               <div class="review-stars">${[...Array(5)].map((_,i)=>i<selectedRating?'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>':'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>').join('')}</div>
               ${comment ? `<p class=\"review-comment\">${comment.replace(/</g,'&lt;')}</p>` : ''}
-              <p class=\"review-note\" style=\"margin-top:12px;display:flex;align-items:center;gap:6px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/></svg> Your review will appear after a quick check — usually within 24h.</p>
+              <p class=\"review-note\" style=\"margin-top:12px;display:flex;align-items:center;gap:6px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/></svg> Your review will appear on the site once approved — thanks for sharing!</p>
             </div>
           `;
           setTimeout(loadReviews, 1200);
