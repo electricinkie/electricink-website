@@ -26,45 +26,69 @@ logger.info('Environment check', {
 
 // Load and merge all JSON product files from `data/` so the backend
 // has a single `stripeProducts` object even if `stripe-products.json` is missing.
-function loadProducts() {
-  const dataDir = path.join(__dirname, '..', 'data');
-  let merged = {};
+async function loadProducts() {
+  const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+  const INTERNAL_KEY = process.env.CRM_SECRET || '';
   try {
-    const files = fs.readdirSync(dataDir).filter((f) => f.endsWith('.json'));
-    for (const file of files) {
-      try {
-        const obj = require(path.join('..', 'data', file));
-        if (obj && typeof obj === 'object') merged = { ...merged, ...obj };
-      } catch (e) {
-        logger.warn('Failed to load data file', { file, error: e && e.message });
+    const res = await fetch(`${INTERNAL_URL}/api/products`, {
+      headers: { 'x-crm-secret': INTERNAL_KEY, 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(5000)
+    });
+    if (!res.ok) throw new Error(`Internal API returned ${res.status}`);
+    const rows = await res.json();
+
+    // rows is an array of flat rows: { id, name, category, variant_id, label, price_ex, stock }
+    // Build the same shape the rest of the file expects:
+    // { [productId]: { basic: { price }, variants: [{ id, price, label }] } }
+    const merged = {};
+    for (const row of rows) {
+      const pid = row.id;
+      const priceGross = parseFloat((parseFloat(row.price_ex) * 1.23).toFixed(2));
+      if (!merged[pid]) {
+        merged[pid] = { basic: { price: priceGross }, variants: [] };
       }
+      merged[pid].variants.push({
+        id: row.variant_id,
+        label: row.label,
+        price: priceGross,
+        stock: row.stock
+      });
     }
+    return merged;
+  } catch (err) {
+    logger.warn('Failed to fetch live prices from internal — falling back to local JSON', { error: err && err.message });
 
-    // Normalize product shape to support legacy files that use top-level `price`
-    // and ensure `product.basic.price` exists as the backend expects.
-    for (const [id, product] of Object.entries(merged)) {
-      if (!product || typeof product !== 'object') continue;
-
-      // If product has `price` but no `basic`, create `basic` structure
-      if (!product.basic && typeof product.price === 'number') {
-        merged[id].basic = { price: product.price };
-      }
-
-      // If product has variants but no `price`, use the first variant
-      if (!product.price && product.variants && product.variants[0]) {
-        merged[id].price = product.variants[0].price;
-        if (!merged[id].basic) {
-          merged[id].basic = { price: product.variants[0].price };
+    // Fallback: local JSON files
+    const dataDir = path.join(__dirname, '..', 'data');
+    let merged = {};
+    try {
+      const files = fs.readdirSync(dataDir).filter((f) => f.endsWith('.json'));
+      for (const file of files) {
+        try {
+          const obj = require(path.join('..', 'data', file));
+          if (obj && typeof obj === 'object') merged = { ...merged, ...obj };
+        } catch (e) {
+          logger.warn('Failed to load data file', { file, error: e && e.message });
         }
       }
+      for (const [id, product] of Object.entries(merged)) {
+        if (!product || typeof product !== 'object') continue;
+        if (!product.basic && typeof product.price === 'number') {
+          merged[id].basic = { price: product.price };
+        }
+        if (!product.price && product.variants && product.variants[0]) {
+          merged[id].price = product.variants[0].price;
+          if (!merged[id].basic) merged[id].basic = { price: product.variants[0].price };
+        }
+      }
+    } catch (e) {
+      logger.warn('Data directory not found or unreadable', { error: e && e.message });
     }
-  } catch (err) {
-    logger.warn('Data directory not found or unreadable', { error: err && err.message });
+    return merged;
   }
-  return merged;
 }
 
-const stripeProducts = loadProducts();
+let stripeProducts = {};
 const { getFirestore, admin } = require('./lib/firebase-admin');
 
 // Delegate Firestore initialization to the shared module
@@ -223,6 +247,9 @@ function resolveProductById(itemId) {
 }
 
 async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
+  if (!stripeProducts || Object.keys(stripeProducts).length === 0) {
+    stripeProducts = loadProducts();
+  }
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
   }

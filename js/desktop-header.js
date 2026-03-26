@@ -47,6 +47,20 @@
         
         <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
+          <!-- Loyalty Button -->
+          <div id="desktopLoyaltyBtn" style="display:none;">
+            <a href="/account.html" id="desktopLoyaltyLoggedIn"
+               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span id="desktopLoyaltyLabel">0 ✦</span>
+            </a>
+            <a href="/loyalty.html" id="desktopLoyaltyGuest"
+               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Black Cat Rewards
+            </a>
+          </div>
+
           <!-- Notification Center -->
           <div class="ei-notif-wrap" style="position:relative;">
             <button class="ei-notif-btn hidden" id="desktopNotifBtn"
@@ -332,6 +346,7 @@
     setupDropdown();
     updateCartCount();
     setActiveMenuItem();
+    initLoyaltyBtn();
     initNotifications('desktop');
 
     // Auth removed - all auth UI interactions removed

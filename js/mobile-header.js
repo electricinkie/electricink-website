@@ -30,6 +30,20 @@
         
         <!-- Cart (Right) - sempre visível -->
         <div class="mobile-right-actions">
+          <!-- Loyalty Button -->
+          <div id="mobileLoyaltyBtn" style="display:none;">
+            <a href="/account.html" id="mobileLoyaltyLoggedIn"
+               style="display:none;align-items:center;gap:4px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:5px 8px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span id="mobileLoyaltyLabel">0 ✦</span>
+            </a>
+            <a href="/loyalty.html" id="mobileLoyaltyGuest"
+               style="display:none;align-items:center;gap:4px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:5px 8px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Rewards
+            </a>
+          </div>
+
           <!-- Notification Center -->
           <div class="ei-notif-wrap" style="position:relative;">
             <button class="ei-notif-btn hidden" id="mobileNotifBtn"
@@ -317,6 +331,7 @@
       link.href = '/css/notifications.css';
       document.head.appendChild(link);
     }
+      initLoyaltyBtn();
     initNotifications('mobile');
 
     // Initialize functionality
