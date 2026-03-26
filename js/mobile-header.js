@@ -30,20 +30,6 @@
         
         <!-- Cart (Right) - sempre visível -->
         <div class="mobile-right-actions">
-          <!-- Loyalty Button -->
-          <div id="mobileLoyaltyBtn" style="display:none;">
-            <a href="/account.html" id="mobileLoyaltyLoggedIn"
-               style="display:none;align-items:center;gap:4px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:5px 8px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span id="mobileLoyaltyLabel">0 ✦</span>
-            </a>
-            <a href="/loyalty.html" id="mobileLoyaltyGuest"
-               style="display:none;align-items:center;gap:4px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:5px 8px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
-              Rewards
-            </a>
-          </div>
-
           <!-- Notification Center -->
           <div class="ei-notif-wrap" style="position:relative;">
             <button class="ei-notif-btn hidden" id="mobileNotifBtn"
@@ -169,7 +155,22 @@
         
         <!-- Divider -->
         <li class="menu-divider"></li>
-        
+
+        <!-- Black Cat Rewards -->
+        <li id="mobileLoyaltyItem">
+          <a href="/loyalty.html" id="mobileLoyaltyGuest" class="mobile-menu-link" style="color:#FFA300;display:flex;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFA300" stroke="none"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" font-size="11" fill="#000" font-family="serif">✦</text></svg>
+            Black Cat Rewards
+          </a>
+          <a href="/account.html" id="mobileLoyaltyLoggedIn" class="mobile-menu-link" style="color:#FFA300;display:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFA300" stroke="none"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" font-size="11" fill="#000" font-family="serif">✦</text></svg>
+            <span id="mobileLoyaltyLabel">My Rewards</span>
+          </a>
+        </li>
+
+        <!-- Divider -->
+        <li class="menu-divider"></li>
+
         <!-- Shopping Cart -->
         <li>
           <a href="/cart.html" class="mobile-menu-link mobile-menu-link-highlight">
@@ -285,6 +286,27 @@
         list.querySelectorAll('.ei-notif-unread-dot')
           .forEach(el => el.classList.add('hidden'));
       }
+    } catch {}
+  }
+
+  async function initLoyaltyBtn() {
+    const guest    = document.getElementById('mobileLoyaltyGuest');
+    const loggedIn = document.getElementById('mobileLoyaltyLoggedIn');
+    const label    = document.getElementById('mobileLoyaltyLabel');
+    if (!guest || !loggedIn) return;
+    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
+    if (!token) return;
+    try {
+      const res = await fetch(`${NOTIF_API}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const name = (data.name || '').split(' ')[0];
+      const pts  = (data.loyalty_points_total || 0).toLocaleString();
+      if (label) label.textContent = `${name} · ${pts} ✦`;
+      guest.style.display = 'none';
+      loggedIn.style.display = 'flex';
     } catch {}
   }
 

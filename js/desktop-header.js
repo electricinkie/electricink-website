@@ -297,6 +297,33 @@
     } catch {}
   }
 
+  async function initLoyaltyBtn() {
+    const wrap     = document.getElementById('desktopLoyaltyBtn');
+    const loggedIn = document.getElementById('desktopLoyaltyLoggedIn');
+    const guest    = document.getElementById('desktopLoyaltyGuest');
+    const label    = document.getElementById('desktopLoyaltyLabel');
+    if (!wrap) return;
+    wrap.style.display = 'flex';
+    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
+    if (!token) {
+      guest.style.display = 'flex';
+      return;
+    }
+    try {
+      const res = await fetch(`${NOTIF_API}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) { guest.style.display = 'flex'; return; }
+      const data = await res.json();
+      const name = (data.name || '').split(' ')[0];
+      const pts  = (data.loyalty_points_total || 0).toLocaleString();
+      label.textContent = `${name} · ${pts} ✦`;
+      loggedIn.style.display = 'flex';
+    } catch {
+      guest.style.display = 'flex';
+    }
+  }
+
   function initNotifications(prefix) {
     const btn      = document.getElementById(`${prefix}NotifBtn`);
     const dropdown = document.getElementById(`${prefix}NotifDropdown`);
