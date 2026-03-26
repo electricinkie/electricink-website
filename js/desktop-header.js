@@ -48,16 +48,15 @@
         <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
           <!-- Loyalty Button -->
-          <div id="desktopLoyaltyBtn" style="display:none;">
+          <div id="desktopLoyaltyBtn" style="display:none;align-items:center;">
             <a href="/account.html" id="desktopLoyaltyLoggedIn"
-               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;">
+               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;white-space:nowrap;">
               <img src="/images/account/ink-points-coin.webp" width="18" height="18" alt="" style="border-radius:50%;">
-              <span id="desktopLoyaltyLabel">0 pts</span>
+              <span id="desktopLoyaltyLabel"></span>
             </a>
-            <a href="/loyalty.html" id="desktopLoyaltyGuest"
-               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;">
-              <img src="/images/account/ink-points-coin.webp" width="18" height="18" alt="" style="border-radius:50%;">
-              Black Cat Rewards
+            <a href="/account.html" id="desktopLoyaltyGuest"
+               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;white-space:nowrap;">
+              Sign in
             </a>
           </div>
 
@@ -303,9 +302,9 @@
     const guest    = document.getElementById('desktopLoyaltyGuest');
     const label    = document.getElementById('desktopLoyaltyLabel');
     if (!wrap) return;
-    wrap.style.display = 'flex';
     const token = localStorage.getItem(NOTIF_TOKEN_KEY);
     if (!token) {
+      wrap.style.display = 'flex';
       guest.style.display = 'flex';
       return;
     }
@@ -313,13 +312,19 @@
       const res = await fetch(`${NOTIF_API}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (!res.ok) { guest.style.display = 'flex'; return; }
+      if (!res.ok) {
+        wrap.style.display = 'flex';
+        guest.style.display = 'flex';
+        return;
+      }
       const data = await res.json();
       const name = (data.name || '').split(' ')[0];
       const pts  = (data.loyalty_points_total || 0).toLocaleString();
-      label.textContent = `${name} · ${pts} pts`;
+      label.textContent = `${name} · ${pts} ✦`;
+      wrap.style.display = 'flex';
       loggedIn.style.display = 'flex';
     } catch {
+      wrap.style.display = 'flex';
       guest.style.display = 'flex';
     }
   }
