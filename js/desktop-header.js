@@ -51,12 +51,12 @@
           <div id="desktopLoyaltyBtn" style="display:none;">
             <a href="/account.html" id="desktopLoyaltyLoggedIn"
                style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <span id="desktopLoyaltyLabel">0 ✦</span>
+              <img src="/images/account/ink-points-coin.webp" width="18" height="18" alt="" style="border-radius:50%;">
+              <span id="desktopLoyaltyLabel">0 pts</span>
             </a>
             <a href="/loyalty.html" id="desktopLoyaltyGuest"
                style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFA300" stroke="#FFA300" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <img src="/images/account/ink-points-coin.webp" width="18" height="18" alt="" style="border-radius:50%;">
               Black Cat Rewards
             </a>
           </div>
@@ -317,7 +317,7 @@
       const data = await res.json();
       const name = (data.name || '').split(' ')[0];
       const pts  = (data.loyalty_points_total || 0).toLocaleString();
-      label.textContent = `${name} · ${pts} ✦`;
+      label.textContent = `${name} · ${pts} pts`;
       loggedIn.style.display = 'flex';
     } catch {
       guest.style.display = 'flex';

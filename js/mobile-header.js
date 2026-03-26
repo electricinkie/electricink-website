@@ -159,11 +159,11 @@
         <!-- Black Cat Rewards -->
         <li id="mobileLoyaltyItem">
           <a href="/loyalty.html" id="mobileLoyaltyGuest" class="mobile-menu-link" style="color:#FFA300;display:flex;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFA300" stroke="none"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" font-size="11" fill="#000" font-family="serif">✦</text></svg>
+            <img src="/images/account/ink-points-coin.webp" width="20" height="20" alt="" style="border-radius:50%;">
             Black Cat Rewards
           </a>
           <a href="/account.html" id="mobileLoyaltyLoggedIn" class="mobile-menu-link" style="color:#FFA300;display:none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFA300" stroke="none"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" font-size="11" fill="#000" font-family="serif">✦</text></svg>
+            <img src="/images/account/ink-points-coin.webp" width="20" height="20" alt="" style="border-radius:50%;">
             <span id="mobileLoyaltyLabel">My Rewards</span>
           </a>
         </li>
@@ -304,7 +304,7 @@
       const data = await res.json();
       const name = (data.name || '').split(' ')[0];
       const pts  = (data.loyalty_points_total || 0).toLocaleString();
-      if (label) label.textContent = `${name} · ${pts} ✦`;
+      if (label) label.textContent = `${name} · ${pts} pts`;
       guest.style.display = 'none';
       loggedIn.style.display = 'flex';
     } catch {}
