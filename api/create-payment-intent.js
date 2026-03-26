@@ -248,7 +248,7 @@ function resolveProductById(itemId) {
 
 async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
   if (!stripeProducts || Object.keys(stripeProducts).length === 0) {
-    stripeProducts = loadProducts();
+    stripeProducts = await loadProducts();
   }
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
