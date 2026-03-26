@@ -21,7 +21,7 @@ function forwardGet(path, apiKey) {
     path,
     method: 'GET',
     headers: {
-      'x-api-key': apiKey,
+      'x-crm-secret': apiKey,
       'Accept': 'application/json'
     }
   };
@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY || '';
+  const INTERNAL_API_KEY = process.env.CRM_SECRET || '';
   if (!INTERNAL_API_KEY) {
     res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
