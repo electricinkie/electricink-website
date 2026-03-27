@@ -255,7 +255,6 @@
 
     if (!token) { btn.classList.add('hidden'); return; }
 
-    btn.classList.remove('hidden');
     try {
       const res = await fetch(`${NOTIF_API}/api/loyalty/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -269,6 +268,7 @@
       } else {
         badge.classList.add('hidden');
       }
+      btn.classList.remove('hidden');
     } catch {
       btn.classList.add('hidden');
     }
@@ -396,5 +396,22 @@
 
   // ────────── Listen for cart updates ──────────
   window.addEventListener('cart-updated', updateCartCount);
+
+  // Re-render loyalty button and notifications when login/logout happens
+  window.addEventListener('storage', (e) => {
+    if (e.key === NOTIF_TOKEN_KEY) {
+      // Reset visibility before re-initialising
+      const wrap     = document.getElementById('desktopLoyaltyBtn');
+      const loggedIn = document.getElementById('desktopLoyaltyLoggedIn');
+      const guest    = document.getElementById('desktopLoyaltyGuest');
+      const label    = document.getElementById('desktopLoyaltyLabel');
+      if (wrap) wrap.style.display = 'none';
+      if (loggedIn) loggedIn.style.display = 'none';
+      if (guest) guest.style.display = 'none';
+      if (label) label.textContent = '';
+      initLoyaltyBtn();
+      loadNotifications('desktop');
+    }
+  });
 
   // Auth removed - showSignedOutState and showSignedInState functions removed
