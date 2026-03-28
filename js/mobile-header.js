@@ -333,7 +333,7 @@
       localStorage.removeItem(NOTIF_TOKEN_KEY);
       window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
       item.style.display = 'none';
-      if (window.location.pathname === '/account.html') window.location.href = '/';
+      if (window.location.pathname.startsWith('/account')) window.location.href = '/';
     };
   }
 

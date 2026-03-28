@@ -334,7 +334,7 @@
       localStorage.removeItem('ei_last_pts');
       window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
       if (window.toast) window.toast.info('Signed out successfully', 3000);
-      if (window.location.pathname === '/account.html') {
+      if (window.location.pathname.startsWith('/account')) {
         setTimeout(() => { window.location.href = '/'; }, 1200);
       }
     };
@@ -417,11 +417,6 @@
   // ────────── Initialize ──────────
   async function initDesktopHeader() {
     // Check if already exists
-    const existingHeader = document.querySelector('.desktop-header');
-    if (existingHeader) {
-      existingHeader.remove();
-    }
-
     // Inject notifications CSS and wait for it to load before rendering header
     await new Promise((resolve) => {
       if (document.querySelector('link[href="/css/notifications.css"]')) {
@@ -436,7 +431,9 @@
       document.head.appendChild(link);
     });
 
-    // Inject header at start of body
+    // Remove existing header only after CSS is ready, then inject new one
+    const existingHeader = document.querySelector('.desktop-header');
+    if (existingHeader) existingHeader.remove();
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
 
     // Initialize functionality
