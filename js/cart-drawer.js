@@ -86,12 +86,29 @@
     `).join('');
 
     const total = getTotal(cart);
+    const sub = parseFloat(total);
+    const milestones = [
+      { threshold: 50,  label: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>Add €{gap} more to activate your referral bonus' },
+      { threshold: 120, label: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Add €{gap} more for free shipping' },
+      { threshold: 150, label: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Add €{gap} more to earn +300 Catokens (Ink Run)' },
+    ];
+    const next = milestones.find(m => sub < m.threshold);
+    const progressHtml = next ? `
+      <div style="margin-bottom:12px;">
+        <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#43BDAB;margin:0 0 6px 0;display:flex;align-items:center;">
+          ${next.label.replace('{gap}', `€${(next.threshold - sub).toFixed(2)}`)}
+        </p>
+        <div style="background:#f0f0f0;border-radius:99px;height:5px;overflow:hidden;">
+          <div style="height:100%;background:#43BDAB;border-radius:99px;transition:width 0.4s ease;width:${Math.min(100, Math.round((sub / next.threshold) * 100))}%;"></div>
+        </div>
+      </div>` : '';
+
     footerEl.innerHTML = `
       <div class="cart-drawer-subtotal">
         <span class="cart-drawer-subtotal-label">Subtotal</span>
         <span class="cart-drawer-subtotal-value">€${total}</span>
       </div>
-      <p class="cart-drawer-shipping-note">Shipping calculated at checkout</p>
+      ${progressHtml}
       <button class="cart-drawer-btn-checkout" onclick="window.location.href='/checkout.html'">Checkout →</button>
       <button class="cart-drawer-btn-continue" onclick="cartDrawer.close()">Continue shopping</button>
     `;
