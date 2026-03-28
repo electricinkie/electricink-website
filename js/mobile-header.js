@@ -302,9 +302,10 @@
       });
       if (!res.ok) return;
       const data = await res.json();
-      const name = (data.name || '').split(' ')[0];
-      const pts  = (data.loyalty_points_total || 0).toLocaleString();
-      if (label) label.textContent = `${name} · ${pts} pts`;
+      const customer = data.customer || data;
+      const name = (customer.name || '').split(' ')[0];
+      const pts  = (customer.loyalty_points_total || 0).toLocaleString();
+      if (label) label.textContent = `${name} · ${pts}`;
       guest.style.display = 'none';
       loggedIn.style.display = 'flex';
     } catch {}

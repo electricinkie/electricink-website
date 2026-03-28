@@ -318,8 +318,9 @@
         return;
       }
       const data = await res.json();
-      const name = (data.name || '').split(' ')[0];
-      const pts  = (data.loyalty_points_total || 0).toLocaleString();
+      const customer = data.customer || data;
+      const name = (customer.name || '').split(' ')[0];
+      const pts  = (customer.loyalty_points_total || 0).toLocaleString();
       label.textContent = `${name} · ${pts}`;
       wrap.style.display = 'flex';
       loggedIn.style.display = 'flex';
