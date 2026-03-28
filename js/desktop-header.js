@@ -332,8 +332,13 @@
       });
       if (!confirmed) return;
       localStorage.removeItem(NOTIF_TOKEN_KEY);
+      localStorage.removeItem('ei_last_level');
+      localStorage.removeItem('ei_last_pts');
       window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
-      if (window.location.pathname === '/account.html') window.location.href = '/';
+      if (window.toast) window.toast.info('Signed out successfully', 3000);
+      if (window.location.pathname === '/account.html') {
+        setTimeout(() => { window.location.href = '/'; }, 1200);
+      }
     };
   }
 
