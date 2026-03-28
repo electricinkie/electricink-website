@@ -280,9 +280,7 @@
         badge.classList.add('hidden');
       }
       btn.classList.remove('hidden');
-    } catch {
-      btn.classList.add('hidden');
-    }
+    } catch (err) { console.warn('[mobile] loadNotifications error:', err); }
   }
 
   async function markAllRead(prefix) {
@@ -302,7 +300,7 @@
         list.querySelectorAll('.ei-notif-unread-dot')
           .forEach(el => el.classList.add('hidden'));
       }
-    } catch {}
+    } catch (err) { console.warn('[mobile] markAllRead error:', err); }
   }
 
   function updateMobileSignOut() {
@@ -355,7 +353,7 @@
         guest.style.display = 'none';
         loggedIn.style.display = 'flex';
       }
-    } catch {}
+    } catch (err) { console.warn('[mobile] initLoyaltyBtn JWT parse error:', err); }
     // Update with fresh points from API in background
     try {
       const res = await fetch(`${NOTIF_API}/api/auth/me`, {
@@ -369,7 +367,7 @@
       if (label) label.textContent = `${name} · ${pts}`;
       guest.style.display = 'none';
       loggedIn.style.display = 'flex';
-    } catch {}
+    } catch (err) { console.warn('[mobile] initLoyaltyBtn fetch error:', err); }
   }
 
   function initNotifications(prefix) {

@@ -278,9 +278,7 @@
         badge.classList.add('hidden');
       }
       btn.classList.remove('hidden');
-    } catch {
-      btn.classList.add('hidden');
-    }
+    } catch (err) { console.warn('[desktop] loadNotifications error:', err); }
   }
 
   async function markAllRead(prefix) {
@@ -302,7 +300,7 @@
           el.classList.add('hidden');
         });
       }
-    } catch {}
+    } catch (err) { console.warn('[desktop] markAllRead error:', err); }
   }
 
   function updateDesktopSignOut() {
@@ -363,7 +361,7 @@
         wrap.style.display = 'flex';
         loggedIn.style.display = 'flex';
       }
-    } catch {}
+    } catch (err) { console.warn('[desktop] initLoyaltyBtn JWT parse error:', err); }
     // Update with fresh points from API in background
     try {
       const res = await fetch(`${NOTIF_API}/api/auth/me`, {
@@ -383,7 +381,7 @@
       wrap.style.display = 'flex';
       loggedIn.style.display = 'flex';
       guest.style.display = 'none';
-    } catch {
+    } catch (err) { console.warn('[desktop] initLoyaltyBtn fetch error:', err);
       wrap.style.display = 'flex';
       guest.style.display = 'flex';
       loggedIn.style.display = 'none';
