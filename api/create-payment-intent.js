@@ -246,9 +246,29 @@ function resolveProductById(itemId) {
   return null;
 }
 
-async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
+async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '', customerToken = '') {
   if (!stripeProducts || Object.keys(stripeProducts).length === 0) {
     stripeProducts = await loadProducts();
+  }
+
+  // Fetch rank discount if customer is logged in
+  let rankDiscount = 0;
+  let rankConsumableCategories = [];
+  if (customerToken) {
+    try {
+      const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+      const rdRes = await fetch(`${INTERNAL_URL}/api/loyalty/rank-discount`, {
+        headers: { Authorization: `Bearer ${customerToken}` },
+        signal: AbortSignal.timeout(3000)
+      });
+      if (rdRes.ok) {
+        const rdData = await rdRes.json();
+        rankDiscount = rdData.discount || 0;
+        rankConsumableCategories = rdData.consumable_categories || [];
+      }
+    } catch (rdErr) {
+      logger.warn('Rank discount fetch failed', { error: rdErr && rdErr.message });
+    }
   }
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
@@ -294,8 +314,17 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
       throw new Error(`Invalid product data for: ${item.id}`);
     }
 
+    // Apply rank discount for consumable categories
+    let itemPrice = price;
+    if (rankDiscount > 0 && rankConsumableCategories.length > 0) {
+      const productCategory = (resolved.product.category || '').toLowerCase();
+      if (rankConsumableCategories.includes(productCategory)) {
+        itemPrice = parseFloat((price * (1 - rankDiscount)).toFixed(2));
+      }
+    }
+
     // Use BACKEND price (not frontend!)
-    subtotal += price * quantity;
+    subtotal += itemPrice * quantity;
   }
 
   // Calculate shipping from backend

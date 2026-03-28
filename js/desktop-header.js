@@ -48,21 +48,29 @@
         <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
           <!-- Loyalty Button -->
-          <div id="desktopLoyaltyBtn" style="display:none;align-items:center;gap:8px;">
-            <a href="/account.html" id="desktopLoyaltyLoggedIn"
-               style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;white-space:nowrap;">
+          <div id="desktopLoyaltyBtn" style="display:none;align-items:center;position:relative;">
+            <!-- Logged in — dropdown trigger -->
+            <button id="desktopLoyaltyLoggedIn"
+               style="display:none;align-items:center;gap:6px;color:#fff;background:none;border:1px solid rgba(255,255,255,0.15);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border-radius:8px;transition:all 0.2s;white-space:nowrap;">
               <img src="/images/account/ink-points-coin.webp" width="18" height="18" alt="" style="border-radius:50%;">
               <span id="desktopLoyaltyLabel"></span>
-            </a>
-            <button id="desktopSignOutBtn"
-               style="display:none;align-items:center;gap:6px;color:rgba(255,255,255,0.6);background:none;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;transition:all 0.2s;white-space:nowrap;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              Sign out
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="opacity:0.6;"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
+            <!-- Dropdown menu -->
+            <div id="desktopAccountDropdown"
+               style="display:none;position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid #eee;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);min-width:180px;overflow:hidden;z-index:9999;">
+              <a href="/account.html"
+                 style="display:flex;align-items:center;gap:8px;padding:12px 16px;color:#111;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;border-bottom:1px solid #f0f0f0;transition:background 0.15s;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                My Account
+              </a>
+              <button id="desktopSignOutBtn"
+                 style="display:flex;align-items:center;gap:8px;width:100%;padding:12px 16px;color:#c0392b;background:none;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;text-align:left;transition:background 0.15s;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign out
+              </button>
+            </div>
+            <!-- Guest — sign in link -->
             <a href="/account.html" id="desktopLoyaltyGuest"
                style="display:none;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;transition:all 0.2s;white-space:nowrap;">
               Sign in
@@ -303,11 +311,25 @@
     } catch (err) { console.warn('[desktop] markAllRead error:', err); }
   }
 
+  function initAccountDropdown() {
+    const trigger  = document.getElementById('desktopLoyaltyLoggedIn');
+    const dropdown = document.getElementById('desktopAccountDropdown');
+    if (!trigger || !dropdown) return;
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.style.display === 'block';
+      dropdown.style.display = isOpen ? 'none' : 'block';
+    });
+    document.addEventListener('click', (e) => {
+      if (!trigger.closest('#desktopLoyaltyBtn').contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  }
+
   function updateDesktopSignOut() {
     const btn = document.getElementById('desktopSignOutBtn');
     if (!btn) return;
-    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
-    btn.style.display = token ? 'flex' : 'none';
     btn.onclick = async () => {
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);';
@@ -359,7 +381,7 @@
       if (quickName) {
         label.textContent = `${quickName} · ...`;
         wrap.style.display = 'flex';
-        loggedIn.style.display = 'flex';
+        loggedIn.style.display = 'inline-flex';
       }
     } catch (err) { console.warn('[desktop] initLoyaltyBtn JWT parse error:', err); }
     // Update with fresh points from API in background
@@ -379,7 +401,7 @@
       const pts  = (customer.loyalty_points_total || 0).toLocaleString();
       label.textContent = `${name} · ${pts}`;
       wrap.style.display = 'flex';
-      loggedIn.style.display = 'flex';
+      loggedIn.style.display = 'inline-flex';
       guest.style.display = 'none';
     } catch (err) { console.warn('[desktop] initLoyaltyBtn fetch error:', err);
       wrap.style.display = 'flex';
@@ -442,6 +464,7 @@
     setActiveMenuItem();
     initLoyaltyBtn();
     updateDesktopSignOut();
+    initAccountDropdown();
     initNotifications('desktop');
 
     // Auth removed - all auth UI interactions removed

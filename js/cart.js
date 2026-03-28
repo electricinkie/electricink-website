@@ -80,11 +80,34 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
   // ────────── Update Summary ──────────
   function updateSummary() {
     const totals = calculateTotals();
-    
+
     summarySubtotal.textContent = `€${totals.subtotal.toFixed(2)}`;
-    // 🔧 FIX: Shipping line removida - não existe mais no cart
     summaryVAT.textContent = `€${totals.vat.toFixed(2)}`;
     summaryTotal.textContent = `€${totals.total.toFixed(2)}`;
+
+    // Progress bar — show nearest milestone
+    const progressEl = document.getElementById('cartProgressBar');
+    const progressTextEl = document.getElementById('cartProgressText');
+    const progressFillEl = document.getElementById('cartProgressFill');
+    if (!progressEl || !progressTextEl || !progressFillEl) return;
+
+    const sub = totals.subtotal;
+    const milestones = [
+      { threshold: 50,  label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> Add €{gap} more to activate your referral bonus' },
+      { threshold: 120, label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Add €{gap} more for free shipping' },
+      { threshold: 150, label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Add €{gap} more to earn +300 Catokens (Ink Run mission)' },
+    ];
+
+    const next = milestones.find(m => sub < m.threshold);
+    if (next) {
+      const gap = (next.threshold - sub).toFixed(2);
+      const pct = Math.min(100, Math.round((sub / next.threshold) * 100));
+      progressTextEl.innerHTML = next.label.replace('{gap}', `€${gap}`);
+      progressFillEl.style.width = `${pct}%`;
+      progressEl.style.display = 'block';
+    } else {
+      progressEl.style.display = 'none';
+    }
   }
 
   // ────────── Update Quantity ──────────

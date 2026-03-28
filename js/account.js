@@ -59,19 +59,19 @@ const ALL_BADGES = [
   {
     key: 'voltage_rising',
     name: 'Voltage Rising',
-    desc: '5+ orders in one year',
+    desc: 'Place 5 orders',
     icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C7.58 2 4 5.58 4 10c0 2.68 1.32 5.06 3.34 6.54L7 20h10l-.34-3.46A8 8 0 0020 10c0-4.42-3.58-8-8-8zm-2.5 9a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM9 17h6v1H9v-1z"/><path d="M2 9l2 2-2 2M22 9l-2 2 2 2M10 20h4v1.5a2 2 0 01-4 0V20z"/></svg>`
   },
   {
     key: 'crew_builder',
     name: 'Crew Builder',
-    desc: 'Referred 3+ artists',
+    desc: 'Refer 3 fellow artists',
     icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="2.5"/><path d="M8 13c0-2.21 1.79-4 4-4s4 1.79 4 4v1H8v-1z"/><circle cx="4.5" cy="7" r="2"/><path d="M1 14c0-1.66 1.34-3 3-3h2.5c-.31.57-.5 1.22-.5 1.9V15H1v-1z"/><circle cx="19.5" cy="7" r="2"/><path d="M23 14c0-1.66-1.34-3-3-3h-2.5c.31.57.5 1.22.5 1.9V15H23v-1z"/><rect x="7" y="14" width="10" height="7" rx="1"/><rect x="1" y="15" width="5" height="6" rx="1"/><rect x="18" y="15" width="5" height="6" rx="1"/></svg>`
   },
   {
     key: 'studio_voice',
     name: 'Studio Voice',
-    desc: '10+ verified reviews',
+    desc: 'Leave 10 approved reviews',
     icon: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 3L2 8h20L12 3z"/><path d="M2 9h1v12H2V9zm19 0h1v12h-1V9z"/><rect x="3" y="9" width="18" height="1.5"/><rect x="4" y="11" width="7" height="7" rx="1"/><rect x="13" y="14" width="5" height="7" rx="1"/><path d="M5.5 13.5h4v1h-4zM5.5 15.5h3v1h-3zM6 17.5h2v.5H6z"/><path d="M14 13h3l-1.5-1.5L14 13z"/></svg>`
   },
   {
