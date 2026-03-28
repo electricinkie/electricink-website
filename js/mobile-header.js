@@ -156,11 +156,14 @@
         <!-- Divider -->
         <li class="menu-divider"></li>
 
-        <!-- Black Cat Rewards -->
+        <!-- Sign In / Account -->
         <li id="mobileLoyaltyItem">
-          <a href="/loyalty.html" id="mobileLoyaltyGuest" class="mobile-menu-link" style="color:#FFA300;display:flex;">
-            <img src="/images/account/ink-points-coin.webp" width="20" height="20" alt="" style="border-radius:50%;">
-            Black Cat Rewards
+          <a href="/account.html" id="mobileLoyaltyGuest" class="mobile-menu-link" style="display:flex;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Sign in
           </a>
           <a href="/account.html" id="mobileLoyaltyLoggedIn" class="mobile-menu-link" style="color:#FFA300;display:none;">
             <img src="/images/account/ink-points-coin.webp" width="20" height="20" alt="" style="border-radius:50%;">
