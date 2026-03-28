@@ -308,6 +308,17 @@
       guest.style.display = 'flex';
       return;
     }
+    // Show immediately from JWT payload — no network wait
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const quickName = (payload.name || '').split(' ')[0];
+      if (quickName) {
+        label.textContent = `${quickName} · ...`;
+        wrap.style.display = 'flex';
+        loggedIn.style.display = 'flex';
+      }
+    } catch {}
+    // Update with fresh points from API in background
     try {
       const res = await fetch(`${NOTIF_API}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -315,6 +326,7 @@
       if (!res.ok) {
         wrap.style.display = 'flex';
         guest.style.display = 'flex';
+        loggedIn.style.display = 'none';
         return;
       }
       const data = await res.json();
@@ -324,9 +336,11 @@
       label.textContent = `${name} · ${pts}`;
       wrap.style.display = 'flex';
       loggedIn.style.display = 'flex';
+      guest.style.display = 'none';
     } catch {
       wrap.style.display = 'flex';
       guest.style.display = 'flex';
+      loggedIn.style.display = 'none';
     }
   }
 

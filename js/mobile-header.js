@@ -296,6 +296,17 @@
     if (!guest || !loggedIn) return;
     const token = localStorage.getItem(NOTIF_TOKEN_KEY);
     if (!token) return;
+    // Show immediately from JWT payload — no network wait
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const quickName = (payload.name || '').split(' ')[0];
+      if (quickName) {
+        if (label) label.textContent = `${quickName} · ...`;
+        guest.style.display = 'none';
+        loggedIn.style.display = 'flex';
+      }
+    } catch {}
+    // Update with fresh points from API in background
     try {
       const res = await fetch(`${NOTIF_API}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
