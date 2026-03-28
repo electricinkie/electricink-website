@@ -476,15 +476,19 @@
     }
   });
 
-  window.addEventListener('ei:auth-change', () => {
+  window.addEventListener('ei:auth-change', (e) => {
     const wrap     = document.getElementById('desktopLoyaltyBtn');
     const loggedIn = document.getElementById('desktopLoyaltyLoggedIn');
     const guest    = document.getElementById('desktopLoyaltyGuest');
     const label    = document.getElementById('desktopLoyaltyLabel');
+    const signOut  = document.getElementById('desktopSignOutBtn');
     if (wrap) wrap.style.display = 'none';
     if (loggedIn) loggedIn.style.display = 'none';
     if (guest) guest.style.display = 'none';
     if (label) label.textContent = '';
+    if (signOut) signOut.style.display = 'none';
+    const notifBtn = document.getElementById('desktopNotifBtn');
+    if (notifBtn) notifBtn.classList.add('hidden');
     initLoyaltyBtn();
     updateDesktopSignOut();
     loadNotifications('desktop');
