@@ -320,7 +320,7 @@
       const data = await res.json();
       const name = (data.name || '').split(' ')[0];
       const pts  = (data.loyalty_points_total || 0).toLocaleString();
-      label.textContent = `${name} · ${pts} ✦`;
+      label.textContent = `${name} · ${pts}`;
       wrap.style.display = 'flex';
       loggedIn.style.display = 'flex';
     } catch {
@@ -356,20 +356,26 @@
   }
 
   // ────────── Initialize ──────────
-  function initDesktopHeader() {
+  async function initDesktopHeader() {
     // Check if already exists
     const existingHeader = document.querySelector('.desktop-header');
     if (existingHeader) {
       existingHeader.remove();
     }
 
-    // Inject notifications CSS if not already loaded
-    if (!document.querySelector('link[href="/css/notifications.css"]')) {
+    // Inject notifications CSS and wait for it to load before rendering header
+    await new Promise((resolve) => {
+      if (document.querySelector('link[href="/css/notifications.css"]')) {
+        resolve();
+        return;
+      }
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = '/css/notifications.css';
+      link.onload = resolve;
+      link.onerror = resolve;
       document.head.appendChild(link);
-    }
+    });
 
     // Inject header at start of body
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
@@ -400,7 +406,6 @@
   // Re-render loyalty button and notifications when login/logout happens
   window.addEventListener('storage', (e) => {
     if (e.key === NOTIF_TOKEN_KEY) {
-      // Reset visibility before re-initialising
       const wrap     = document.getElementById('desktopLoyaltyBtn');
       const loggedIn = document.getElementById('desktopLoyaltyLoggedIn');
       const guest    = document.getElementById('desktopLoyaltyGuest');
@@ -412,6 +417,19 @@
       initLoyaltyBtn();
       loadNotifications('desktop');
     }
+  });
+
+  window.addEventListener('ei:auth-change', () => {
+    const wrap     = document.getElementById('desktopLoyaltyBtn');
+    const loggedIn = document.getElementById('desktopLoyaltyLoggedIn');
+    const guest    = document.getElementById('desktopLoyaltyGuest');
+    const label    = document.getElementById('desktopLoyaltyLabel');
+    if (wrap) wrap.style.display = 'none';
+    if (loggedIn) loggedIn.style.display = 'none';
+    if (guest) guest.style.display = 'none';
+    if (label) label.textContent = '';
+    initLoyaltyBtn();
+    loadNotifications('desktop');
   });
 
   // Auth removed - showSignedOutState and showSignedInState functions removed

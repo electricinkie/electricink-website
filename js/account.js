@@ -284,6 +284,7 @@ async function handleLogin(e) {
     if (!res.ok) throw new Error(data.error || 'Login failed');
 
     localStorage.setItem(TOKEN_KEY, data.token);
+    window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: true } }));
     currentToken = data.token;
     if (window.toast) window.toast.success('Welcome back!', 3000);
     await loadDashboard();
@@ -350,6 +351,7 @@ async function handleRegister(e) {
     if (!res.ok) throw new Error(data.error || 'Registration failed');
 
     localStorage.setItem(TOKEN_KEY, data.token);
+    window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: true } }));
     currentToken = data.token;
     if (window.toast) window.toast.success('Account created — +250 Catokens on your first purchase!', 5000);
     await loadDashboard();
@@ -362,6 +364,7 @@ async function handleRegister(e) {
 
 function handleSignout() {
   localStorage.removeItem(TOKEN_KEY);
+  window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
   localStorage.removeItem('ei_last_level');
   localStorage.removeItem('ei_last_pts');
   currentToken = null;
