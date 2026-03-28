@@ -250,7 +250,6 @@
     const list     = document.getElementById(`${prefix}NotifList`);
     if (!btn || !badge || !list) return;
     if (!token) { btn.classList.add('hidden'); return; }
-    btn.classList.remove('hidden');
     try {
       const res = await fetch(`${NOTIF_API}/api/loyalty/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -264,6 +263,7 @@
       } else {
         badge.classList.add('hidden');
       }
+      btn.classList.remove('hidden');
     } catch {
       btn.classList.add('hidden');
     }
@@ -349,22 +349,28 @@
   }
 
   // ────────── Initialize Header ──────────
-  function initMobileHeader() {
+  async function initMobileHeader() {
     // REMOVE any existing headers (prevents duplication)
     document.querySelector('.site-header')?.remove();
     document.querySelector('.mobile-menu')?.remove();
     document.querySelector('.mobile-menu-backdrop')?.remove();
 
-    // Inject header at start of body
-    document.body.insertAdjacentHTML('afterbegin', headerHTML);
-
-    // Inject notifications CSS if not already loaded
-    if (!document.querySelector('link[href="/css/notifications.css"]')) {
+    // Inject notifications CSS and wait for it to load before rendering header
+    await new Promise((resolve) => {
+      if (document.querySelector('link[href="/css/notifications.css"]')) {
+        resolve();
+        return;
+      }
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = '/css/notifications.css';
+      link.onload = resolve;
+      link.onerror = resolve;
       document.head.appendChild(link);
-    }
+    });
+
+    // Inject header at start of body
+    document.body.insertAdjacentHTML('afterbegin', headerHTML);
       initLoyaltyBtn();
     initNotifications('mobile');
 
