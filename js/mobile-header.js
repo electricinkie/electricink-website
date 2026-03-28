@@ -171,6 +171,22 @@
         <!-- Divider -->
         <li class="menu-divider"></li>
 
+        <!-- Sign Out -->
+        <li id="mobileSignOutItem" style="display:none;">
+          <button id="mobileSignOutBtn" class="mobile-menu-link"
+                  style="width:100%;background:none;border:none;cursor:pointer;text-align:left;color:#c0392b;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Sign Out
+          </button>
+        </li>
+
+        <!-- Divider -->
+        <li class="menu-divider"></li>
+
         <!-- Shopping Cart -->
         <li>
           <a href="/cart.html" class="mobile-menu-link mobile-menu-link-highlight">
@@ -289,6 +305,40 @@
     } catch {}
   }
 
+  function updateMobileSignOut() {
+    const item = document.getElementById('mobileSignOutItem');
+    const btn  = document.getElementById('mobileSignOutBtn');
+    if (!item || !btn) return;
+    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
+    item.style.display = token ? 'block' : 'none';
+    btn.onclick = async () => {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);';
+      overlay.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:28px 32px;max-width:340px;width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+          <div style="font-family:'Montserrat',sans-serif;text-align:center;">
+            <div style="font-size:16px;font-weight:700;color:#000;margin-bottom:8px;">Sign out?</div>
+            <div style="font-size:13px;color:#555;margin-bottom:24px;">You'll need to sign in again to access your Catokens and rewards.</div>
+            <div style="display:flex;gap:10px;">
+              <button id="so-cancel" style="flex:1;padding:12px;border-radius:9px;border:1px solid #e0e0e0;background:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#555;cursor:pointer;">Cancel</button>
+              <button id="so-confirm" style="flex:1;padding:12px;border-radius:9px;border:none;background:#c0392b;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;">Sign Out</button>
+            </div>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      const confirmed = await new Promise(resolve => {
+        overlay.querySelector('#so-confirm').onclick = () => { overlay.remove(); resolve(true); };
+        overlay.querySelector('#so-cancel').onclick  = () => { overlay.remove(); resolve(false); };
+        overlay.onclick = e => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
+      });
+      if (!confirmed) return;
+      localStorage.removeItem(NOTIF_TOKEN_KEY);
+      window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
+      item.style.display = 'none';
+      if (window.location.pathname === '/account.html') window.location.href = '/';
+    };
+  }
+
   async function initLoyaltyBtn() {
     const guest    = document.getElementById('mobileLoyaltyGuest');
     const loggedIn = document.getElementById('mobileLoyaltyLoggedIn');
@@ -372,6 +422,7 @@
     // Inject header at start of body
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
       initLoyaltyBtn();
+    updateMobileSignOut();
     initNotifications('mobile');
 
     // Initialize functionality
@@ -468,6 +519,19 @@
 
   // ────────── Listen for Cart Updates ──────────
   window.addEventListener('cart-updated', updateCartCount);
+
+  // ────────── Listen for Auth Changes ──────────
+  window.addEventListener('ei:auth-change', () => {
+    const guest    = document.getElementById('mobileLoyaltyGuest');
+    const loggedIn = document.getElementById('mobileLoyaltyLoggedIn');
+    const label    = document.getElementById('mobileLoyaltyLabel');
+    if (guest) guest.style.display = 'flex';
+    if (loggedIn) loggedIn.style.display = 'none';
+    if (label) label.textContent = 'My Rewards';
+    initLoyaltyBtn();
+    updateMobileSignOut();
+    loadNotifications('mobile');
+  });
 
   // ────────── Auto-Initialize ──────────
   if (document.readyState === 'loading') {
