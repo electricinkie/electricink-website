@@ -1239,15 +1239,15 @@ function checkProductAvailability(product) {
         return;
       }
       if (!reviewerName) {
-        alert('Please enter your name.');
+        alert('Please enter your name or Instagram handle.');
         return;
       }
       if (reviewerName.length > 32) {
         alert('Name too long (max 32 chars).');
         return;
       }
-      if (!/^[\w\s\-'.À-ÿ]+$/i.test(reviewerName)) {
-        alert('Name contains invalid characters.');
+      if (!/^[\w\s\-'.À-ÿ@\/.]+$/i.test(reviewerName)) {
+        alert('Name/Instagram contains invalid characters.');
         return;
       }
       if (comment.length > 400) {
