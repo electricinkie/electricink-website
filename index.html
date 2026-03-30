@@ -933,11 +933,16 @@
         grid.style.gridTemplateColumns = data.reviews.length < 3
           ? `repeat(${data.reviews.length},1fr)` : 'repeat(3,1fr)';
         grid.innerHTML = data.reviews.map(r => `
-          <div style="background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:24px;">
-            <div style="color:#43BDAB;font-size:16px;letter-spacing:2px;margin-bottom:10px;">${stars(r.rating)}</div>
-            ${r.comment ? `<p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#444;line-height:1.6;margin:0 0 14px;">"${r.comment.replace(/</g,'&lt;')}"</p>` : ''}
-            <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:#0a0a0a;">${r.reviewer_name.replace(/</g,'&lt;')}</div>
-            <div style="font-size:11px;color:#999;margin-top:2px;">${new Date(r.created_at).toLocaleDateString('en-IE',{year:'numeric',month:'short'})}</div>
+          <div style="background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="color:#43BDAB;font-size:16px;letter-spacing:2px;margin-bottom:10px;">${stars(r.rating)}</div>
+              ${r.comment ? `<p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#444;line-height:1.6;margin:0 0 14px;">"${r.comment.replace(/</g,'&lt;')}"</p>` : ''}
+            </div>
+            <div>
+              <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:#0a0a0a;">${r.reviewer_name.replace(/</g,'&lt;')}</div>
+              <div style="font-size:11px;color:#999;margin-top:2px;">${new Date(r.created_at).toLocaleDateString('en-IE',{year:'numeric',month:'short'})}</div>
+              ${r.product_id ? `<a href="/products.html?id=${encodeURIComponent(r.product_id)}" style="display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#43BDAB;text-decoration:none;border:1px solid rgba(67,189,171,0.3);border-radius:6px;padding:3px 8px;">${(r.product_name || r.product_id).replace(/</g,'&lt;')}</a>` : ''}
+            </div>
           </div>
         `).join('');
       } catch (e) {
