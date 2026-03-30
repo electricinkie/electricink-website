@@ -1223,6 +1223,10 @@ function checkProductAvailability(product) {
 
     } catch (err) {
       console.warn('Could not load reviews:', err);
+      const listEl = document.getElementById('reviewsList');
+      if (listEl && !listEl.innerHTML.trim()) {
+        listEl.innerHTML = '<p class="reviews-empty">Reviews unavailable right now.</p>';
+      }
     }
   }
 
