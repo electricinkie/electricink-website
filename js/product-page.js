@@ -1172,7 +1172,15 @@ function checkProductAvailability(product) {
   // Load and render reviews
   async function loadReviews() {
     try {
-      const res = await fetch(`${REVIEWS_API}/api/reviews?product_id=${encodeURIComponent(productId)}`);
+      const LINKED_PRODUCTS = {
+        'clean-up': ['clean-up', 'clean-up-refill'],
+        'clean-up-refill': ['clean-up', 'clean-up-refill'],
+      };
+      const ids = LINKED_PRODUCTS[productId] || [productId];
+      const queryParam = ids.length > 1
+        ? `product_ids=${ids.map(encodeURIComponent).join(',')}`
+        : `product_id=${encodeURIComponent(productId)}`;
+      const res = await fetch(`${REVIEWS_API}/api/reviews?${queryParam}`);
       if (!res.ok) return;
       const data = await res.json();
 

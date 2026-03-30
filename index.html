@@ -819,6 +819,19 @@
 
   </main>
 
+  <!-- Reviews Section -->
+  <section class="homepage-reviews" style="padding:64px 40px;background:#f8f8f8;border-top:1px solid #e8e8e8;">
+    <div style="max-width:1080px;margin:0 auto;">
+      <div style="margin-bottom:36px;">
+        <p style="font-size:11px;font-weight:700;color:#43BDAB;text-transform:uppercase;letter-spacing:.12em;margin:0 0 8px;">From the community</p>
+        <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-.02em;color:#0a0a0a;margin:0;">What our community is saying.</h2>
+      </div>
+      <div id="homepageReviewsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div style="text-align:center;padding:40px;color:#999;font-size:13px;grid-column:1/-1;">Loading reviews...</div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">
@@ -906,6 +919,34 @@
   <script type="module" src="js/bestsellers.js"></script>
 
   <script src="/js/pro-team-animate.js"></script>
+  <script type="module">
+    import { INTERNAL_API_URL } from '/js/constants.js';
+    async function loadHomepageReviews() {
+      const grid = document.getElementById('homepageReviewsGrid');
+      if (!grid) return;
+      try {
+        const res = await fetch(`${INTERNAL_API_URL}/api/reviews?limit=6`);
+        if (!res.ok) { grid.innerHTML = ''; return; }
+        const data = await res.json();
+        if (!data.reviews || !data.reviews.length) { grid.innerHTML = ''; return; }
+        const stars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+        grid.style.gridTemplateColumns = data.reviews.length < 3
+          ? `repeat(${data.reviews.length},1fr)` : 'repeat(3,1fr)';
+        grid.innerHTML = data.reviews.map(r => `
+          <div style="background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:24px;">
+            <div style="color:#43BDAB;font-size:16px;letter-spacing:2px;margin-bottom:10px;">${stars(r.rating)}</div>
+            ${r.comment ? `<p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#444;line-height:1.6;margin:0 0 14px;">"${r.comment.replace(/</g,'&lt;')}"</p>` : ''}
+            <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:#0a0a0a;">${r.reviewer_name.replace(/</g,'&lt;')}</div>
+            <div style="font-size:11px;color:#999;margin-top:2px;">${new Date(r.created_at).toLocaleDateString('en-IE',{year:'numeric',month:'short'})}</div>
+          </div>
+        `).join('');
+      } catch (e) {
+        const grid = document.getElementById('homepageReviewsGrid');
+        if (grid) grid.innerHTML = '';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadHomepageReviews);
+  </script>
 
   <!-- Vercel Speed Insights -->
   <script>
