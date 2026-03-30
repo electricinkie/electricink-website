@@ -11,7 +11,6 @@ import { initFirebase } from './firebase-config.js';
 // Debug flag - ativo apenas em localhost ou com ?debug=true
 const DEBUG = typeof window !== 'undefined' && (
   window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  || (window.location && window.location.search && window.location.search.includes('debug=true'))
 );
 const debugLog = (...args) => { if (DEBUG) console.log(...args); };
 
@@ -1507,10 +1506,10 @@ window.appliedDiscount = 0;
         debugLog('✅ Backend price validation:', data.calculatedTotals);
 
         // Update frontend totals with backend values (backend is source of truth)
-        totals.subtotal = Number(data.calculatedTotals.subtotal || totals.subtotal);
-        totals.shipping = Number(data.calculatedTotals.shipping || totals.shipping);
-        totals.vat = Number(data.calculatedTotals.vat || totals.vat);
-        totals.total = Number(data.calculatedTotals.total || totals.total);
+        totals.subtotal = data.calculatedTotals.subtotal != null ? Number(data.calculatedTotals.subtotal) : totals.subtotal;
+        totals.shipping = data.calculatedTotals.shipping != null ? Number(data.calculatedTotals.shipping) : totals.shipping;
+        totals.vat = data.calculatedTotals.vat != null ? Number(data.calculatedTotals.vat) : totals.vat;
+        totals.total = data.calculatedTotals.total != null ? Number(data.calculatedTotals.total) : totals.total;
         totals.discountPercent = Number(data.calculatedTotals.discountPercent || 0);
         totals.discount = Number(data.calculatedTotals.discount || 0);
         // Re-render summary with authoritative values
