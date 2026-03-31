@@ -140,6 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDashboard();
   } else {
     showAuthWall();
+    const tabParam = new URLSearchParams(window.location.search).get('tab');
+    if (tabParam === 'register') {
+      switchAuthTab('register');
+    } else {
+      switchAuthTab('login');
+    }
   }
 });
 
@@ -382,7 +388,13 @@ async function loadDashboard() {
 
     if (res.status === 401 || res.status === 404) {
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem('ei_last_level');
+      localStorage.removeItem('ei_last_pts');
+      currentToken = null;
+      currentCustomer = null;
       showAuthWall();
+      switchAuthTab('login');
+      if (window.toast) window.toast.info('Your session expired. Please sign in again.', 4000);
       return;
     }
 

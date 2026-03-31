@@ -75,12 +75,12 @@
           <!-- Right: form panel -->
           <div class="auth-form-panel">
             <div class="auth-tabs">
-              <button class="auth-tab" id="tabLoginBtn" onclick="switchAuthTab('login')">Sign in</button>
-              <button class="auth-tab active" id="tabRegisterBtn" onclick="switchAuthTab('register')">Join now</button>
+              <button class="auth-tab active" id="tabLoginBtn" onclick="switchAuthTab('login')">Sign in</button>
+              <button class="auth-tab" id="tabRegisterBtn" onclick="switchAuthTab('register')">Join now</button>
             </div>
 
             <!-- Login -->
-            <div id="loginFormWrap" style="display:none">
+            <div id="loginFormWrap" style="display:block">
               <div class="auth-form-heading">Welcome back.</div>
               <p class="auth-form-desc">Sign in to check your Catokens, redeem rewards and track your orders.</p>
               <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
@@ -104,7 +104,7 @@
             </div>
 
             <!-- Register -->
-              <div id="registerFormWrap">
+              <div id="registerFormWrap" style="display:none">
               <div class="auth-form-heading">Start earning.</div>
               <p class="auth-form-desc">Create your free account and get <strong>+250 Catokens</strong> on your first purchase.</p>
               <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
@@ -118,7 +118,11 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label">Password</label>
-                  <input type="password" id="registerPassword" class="form-input" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                  <input type="password" id="registerPassword" class="form-input" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password" oninput="updatePasswordStrength(this.value)">
+                  <div id="passwordStrengthBar" style="height:3px;border-radius:3px;margin-top:6px;background:#e8e8e8;overflow:hidden;display:none;">
+                    <div id="passwordStrengthFill" style="height:100%;width:0%;border-radius:3px;transition:width 0.3s,background 0.3s;"></div>
+                  </div>
+                  <div id="passwordStrengthLabel" style="font-size:10px;font-weight:600;margin-top:4px;display:none;"></div>
                 </div>
                 <div class="form-divider">
                   <div class="form-divider-line"></div>
@@ -378,5 +382,34 @@
       }
     })();
   </script>
+<script>
+function updatePasswordStrength(val) {
+  const bar = document.getElementById('passwordStrengthBar');
+  const fill = document.getElementById('passwordStrengthFill');
+  const label = document.getElementById('passwordStrengthLabel');
+  if (!bar || !fill || !label) return;
+  if (!val) { bar.style.display = 'none'; label.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  label.style.display = 'block';
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const levels = [
+    { pct: '20%', color: '#e74c3c', text: 'Too weak' },
+    { pct: '40%', color: '#e67e22', text: 'Weak' },
+    { pct: '60%', color: '#f1c40f', text: 'Fair' },
+    { pct: '80%', color: '#2ecc71', text: 'Good' },
+    { pct: '100%', color: '#27ae60', text: 'Strong' },
+  ];
+  const level = levels[Math.min(score - 1, 4)] || levels[0];
+  fill.style.width = level.pct;
+  fill.style.background = level.color;
+  label.style.color = level.color;
+  label.textContent = level.text;
+}
+</script>
 </body>
 </html>
