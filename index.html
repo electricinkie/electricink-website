@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="css/new-arrivals.css">
   <link rel="stylesheet" href="css/ultra-pen.css">
   <link rel="stylesheet" href="css/bestsellers.css">
+  <link rel="stylesheet" href="css/homepage-reviews.css">
   <link rel="stylesheet" href="css/cta-footer.css">
   <link rel="stylesheet" href="css/footer.css">
   </head>
@@ -781,6 +782,7 @@
         <div id="homepageReviewsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
           <div style="text-align:center;padding:40px;color:#999;font-size:13px;grid-column:1/-1;">Loading reviews...</div>
         </div>
+        <div id="homepageReviewsDots" class="reviews-dots"></div>
       </div>
     </section>
 
@@ -921,6 +923,38 @@
   <script src="/js/pro-team-animate.js"></script>
   <script type="module">
     import { INTERNAL_API_URL } from '/js/constants.js';
+
+    function initReviewsCarousel() {
+      const grid = document.getElementById('homepageReviewsGrid');
+      const dotsContainer = document.getElementById('homepageReviewsDots');
+      if (!grid || !dotsContainer) return;
+      const cards = Array.from(grid.children);
+      if (!cards.length) return;
+
+      dotsContainer.innerHTML = cards.map((_, i) =>
+        `<button class="reviews-dot${i === 0 ? ' active' : ''}" aria-label="Go to review ${i + 1}"></button>`
+      ).join('');
+
+      const dots = dotsContainer.querySelectorAll('.reviews-dot');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            const index = cards.indexOf(entry.target);
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+          }
+        });
+      }, { root: grid, threshold: 0.6 });
+
+      cards.forEach(card => observer.observe(card));
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          cards[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        });
+      });
+    }
+
     async function loadHomepageReviews() {
       const grid = document.getElementById('homepageReviewsGrid');
       if (!grid) return;
@@ -945,6 +979,7 @@
             </div>
           </div>
         `).join('');
+        initReviewsCarousel();
       } catch (e) {
         const grid = document.getElementById('homepageReviewsGrid');
         if (grid) grid.innerHTML = '';

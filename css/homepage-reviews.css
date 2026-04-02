@@ -1,0 +1,67 @@
+/* ===================================
+   Homepage Reviews Carousel
+   =================================== */
+
+/* Dots — hidden on desktop, visible on mobile */
+.reviews-dots {
+  display: none;
+}
+
+.reviews-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(67, 189, 171, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0;
+  outline: none;
+}
+
+.reviews-dot:hover {
+  background-color: rgba(67, 189, 171, 0.6);
+  transform: scale(1.2);
+}
+
+.reviews-dot.active {
+  background-color: #43BDAB;
+  width: 10px;
+  height: 10px;
+}
+
+/* Mobile carousel */
+@media (max-width: 768px) {
+  .homepage-reviews {
+    padding: 48px 20px !important;
+  }
+
+  #homepageReviewsGrid {
+    display: flex !important;
+    gap: 12px;
+    margin: 0 -20px;
+    padding: 4px 20px 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  #homepageReviewsGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  #homepageReviewsGrid > div {
+    flex: 0 0 calc(100% - 40px);
+    min-width: calc(100% - 40px);
+    scroll-snap-align: start;
+  }
+
+  .reviews-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+}
