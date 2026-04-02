@@ -1,92 +1,90 @@
 {
-
   "tattoo-balm": {
     "id": "tattoo-balm",
-  "name": "Tattoo Balm",
-  "category": "Cosmetics",
-  "subcategory": "Aftercare",
-  "description": "Tattoo Balm for tattoo aftercare. Soothes and supports healing. Professional formula.",
-  "features": [
-    "15 natural active ingredients",
-    "Fast absorption",
-    "Vegan & paraben-free",
-    "Dermatologically tested"
-  ],
-  "stripe": {
-    "productId": "prod_TjU7b8nxU1sNzc",
-    "priceId": "price_1Sm19RAiq7NBxfpwp4mtau1V"
+    "name": "Tattoo Balm",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Tattoo Balm for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "features": [
+      "15 natural active ingredients",
+      "Fast absorption",
+      "Vegan & paraben-free",
+      "Dermatologically tested"
+    ],
+    "stripe": {
+      "productId": "prod_TjU7b8nxU1sNzc",
+      "priceId": "price_1Sm19RAiq7NBxfpwp4mtau1V"
+    },
+    "price": 10.0,
+    "variants": [],
+    "size": "25g",
+    "image": "/images/products/cosmetics/tattoo-balm-25g.webp",
+    "images": [
+      "/images/products/cosmetics/tattoo-balm-25g.webp",
+      "/images/products/cosmetics/tattoo-balm-2.webp",
+      "/images/products/cosmetics/tattoo-balm-3.webp",
+      "/images/products/cosmetics/tattoo-balm-4.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply 2-3 times daily for 14 days."
+    },
+    "inventory": {
+      "stock_quantity": 50,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
+    },
+    "wholesale": {
+      "enabled": true,
+      "description": "Exclusive pricing for tattoo studios and resellers. Fixed packages, no minimum commitment beyond the selected tier.",
+      "tiers": [
+        {
+          "id": "balm-wholesale-intro",
+          "label": "Intro",
+          "quantity": 30,
+          "price": 270.0,
+          "unit_price": 9.0,
+          "stripe_price_id": "price_1T6Z66Aiq7NBxfpwhi3vlJAt"
+        },
+        {
+          "id": "balm-wholesale-s",
+          "label": "S",
+          "quantity": 50,
+          "price": 425.0,
+          "unit_price": 8.5,
+          "stripe_price_id": "price_1T6Z6aAiq7NBxfpwQpUpwLGW"
+        },
+        {
+          "id": "balm-wholesale-m",
+          "label": "M",
+          "quantity": 100,
+          "price": 800.0,
+          "unit_price": 8.0,
+          "stripe_price_id": "price_1T6Z8AAiq7NBxfpw82skVBqs"
+        },
+        {
+          "id": "balm-wholesale-l",
+          "label": "L",
+          "quantity": 150,
+          "price": 1050.0,
+          "unit_price": 7.0,
+          "stripe_price_id": "price_1T6Z93Aiq7NBxfpwXux6d41B"
+        }
+      ]
+    },
+    "seo": {
+      "meta_title": "Tattoo Balm | Electric Ink Ireland",
+      "meta_description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
+      "keywords": [
+        "cosmetics",
+        "aftercare",
+        "tattoo balm",
+        "post-tattoo care"
+      ]
+    },
+    "inStock": true,
+    "featured": true,
+    "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
   },
-  "price": 10.0,
-  "variants": [],
-  "size": "25g",
-  "image": "/images/products/cosmetics/tattoo-balm-25g.webp",
-  "images": [
-    "/images/products/cosmetics/tattoo-balm-25g.webp",
-    "/images/products/cosmetics/tattoo-balm-2.webp",
-    "/images/products/cosmetics/tattoo-balm-3.webp",
-    "/images/products/cosmetics/tattoo-balm-4.webp"
-  ],
-  "content": {
-    "usage_instructions": "Apply 2-3 times daily for 14 days."
-  },
-  "inventory": {
-    "stock_quantity": 50,
-    "stock_status": "in_stock",
-    "low_stock_threshold": 2
-  },
-  "wholesale": {
-    "enabled": true,
-    "description": "Exclusive pricing for tattoo studios and resellers. Fixed packages, no minimum commitment beyond the selected tier.",
-    "tiers": [
-      {
-        "id": "balm-wholesale-intro",
-        "label": "Intro",
-        "quantity": 30,
-        "price": 270.00,
-        "unit_price": 9.00,
-        "stripe_price_id": "price_1T6Z66Aiq7NBxfpwhi3vlJAt"
-      },
-      {
-        "id": "balm-wholesale-s",
-        "label": "S",
-        "quantity": 50,
-        "price": 425.00,
-        "unit_price": 8.50,
-        "stripe_price_id": "price_1T6Z6aAiq7NBxfpwQpUpwLGW"
-      },
-      {
-        "id": "balm-wholesale-m",
-        "label": "M",
-        "quantity": 100,
-        "price": 800.00,
-        "unit_price": 8.00,
-        "stripe_price_id": "price_1T6Z8AAiq7NBxfpw82skVBqs"
-      },
-      {
-        "id": "balm-wholesale-l",
-        "label": "L",
-        "quantity": 150,
-        "price": 1050.00,
-        "unit_price": 7.00,
-        "stripe_price_id": "price_1T6Z93Aiq7NBxfpwXux6d41B"
-      }
-    ]
-  },
-  "seo": {
-    "meta_title": "Tattoo Balm | Electric Ink Ireland",
-    "meta_description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
-    "keywords": [
-      "cosmetics",
-      "aftercare",
-      "tattoo balm",
-      "post-tattoo care"
-    ]
-  },
-  "inStock": true,
-  "featured": true,
-  "stripe_price_id": "price_1Sm19RAiq7NBxfpwp4mtau1V"
-},
-  
   "tattoo-cream": {
     "id": "tattoo-cream",
     "name": "Tattoo Cream Derma",
@@ -325,7 +323,7 @@
         "id": "gloo-120",
         "size": "120mL",
         "label": "120mL",
-        "price": 32.0,
+        "price": 35.0,
         "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
         "stripe_price_id": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
         "quantity": 15,
@@ -736,14 +734,14 @@
       "productId": "prod_TjUk5X0HS4DDOR",
       "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
     },
-    "price": 10.0,
+    "price": 9.0,
     "size": "90g",
     "variants": [
       {
         "id": "vas-90",
         "size": "90g",
         "label": "90g",
-        "price": 10.0,
+        "price": 9.0,
         "priceId": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
         "stripe_price_id": "price_1Sm1kqAiq7NBxfpwXaSneQFu",
         "quantity": 2,

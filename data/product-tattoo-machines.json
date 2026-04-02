@@ -16,13 +16,13 @@
       "productId": "prod_TkwOadafeLFuIO",
       "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6"
     },
-    "price": 162.5,
+    "price": 162.0,
     "variants": [
       {
         "id": "grip-38",
         "label": "38mm",
         "size": "38mm",
-        "price": 162.5,
+        "price": 162.0,
         "priceId": "price_1SnQVjAiq7NBxfpwZM72NAC6",
         "image": "/images/products/tattoo-machines/grip-ultra-pen-balance-flex-38mm.webp",
         "stripe_price_id": "price_1SnQVjAiq7NBxfpwZM72NAC6",
@@ -142,77 +142,88 @@
         "color": "Black",
         "label": "Black",
         "image": "/images/products/tattoo-machines/electra-pop-black-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-blue",
         "color": "Blue",
         "label": "Blue",
         "image": "/images/products/tattoo-machines/electra-pop-blue-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-pink",
         "color": "Pink",
         "label": "Pink",
         "image": "/images/products/tattoo-machines/electra-pop-pink-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-white",
         "color": "White",
         "label": "White",
         "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-lilac",
         "color": "Lilac",
         "label": "Lilac",
         "image": "/images/products/tattoo-machines/electra-pop-lilac-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-silver",
         "color": "Silver",
         "label": "Silver",
         "image": "/images/products/tattoo-machines/electra-pop-silver-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-bordeaux",
         "color": "Bordeaux",
         "label": "Bordeaux",
         "image": "/images/products/tattoo-machines/electra-pop-bordeaux-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-smoke-grey",
         "color": "Smoke Grey",
         "label": "Smoke Grey",
         "image": "/images/products/tattoo-machines/electra-pop-smoke-grey-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-neon-coral",
         "color": "Neon Coral",
         "label": "Neon Coral",
         "image": "/images/products/tattoo-machines/electra-pop-neon-coral-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-neon-yellow",
         "color": "Neon Yellow",
         "label": "Neon Yellow",
         "image": "/images/products/tattoo-machines/electra-pop-neon-yellow-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       },
       {
         "id": "electra-pop-neon-orange",
         "color": "Neon Orange",
         "label": "Neon Orange",
         "image": "/images/products/tattoo-machines/electra-pop-neon-orange-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 146.0
       }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-white-1.webp",
@@ -356,14 +367,16 @@
         "color": "Black",
         "label": "Black",
         "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 182.0
       },
       {
         "id": "electra-pop-pro-pink",
         "color": "Pink",
         "label": "Pink",
         "image": "/images/products/tattoo-machines/electra-pop-pro-pink-1.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 182.0
       }
     ],
     "image": "/images/products/tattoo-machines/electra-pop-pro-black-1.webp",

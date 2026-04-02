@@ -29,13 +29,13 @@
       "productId": "prod_TjWlEPhxpYZOlC",
       "priceId": "price_1Sm3heAiq7NBxfpwKkRuPLEv"
     },
-    "price": 33.0,
+    "price": 29.0,
     "variants": [
       {
         "id": "rl-022-01",
         "configuration": "RL01",
         "label": "RL01 - 1 Needle",
-        "price": 33.0,
+        "price": 29.0,
         "quantity": 0,
         "priceId": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
         "stripe_price_id": "price_1Sm3heAiq7NBxfpwKkRuPLEv",
@@ -45,7 +45,7 @@
         "id": "rl-022-03",
         "configuration": "RL03",
         "label": "RL03 - 3 Needles",
-        "price": 35.5,
+        "price": 31.0,
         "priceId": "price_1Sm3heAiq7NBxfpwaJYhlcu5",
         "stripe_price_id": "price_1Sm3heAiq7NBxfpwaJYhlcu5",
         "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp",
@@ -55,7 +55,7 @@
         "id": "rl-022-05",
         "configuration": "RL05",
         "label": "RL05 - 5 Needles",
-        "price": 37.5,
+        "price": 33.0,
         "priceId": "price_1Sm3heAiq7NBxfpwwFhwDmzs",
         "stripe_price_id": "price_1Sm3heAiq7NBxfpwwFhwDmzs",
         "image": "/images/products/cartridges/rl-0.22/0.22-rl-cover.webp",

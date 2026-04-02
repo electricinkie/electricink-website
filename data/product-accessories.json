@@ -23,42 +23,48 @@
         "label": "Turquoise",
         "colour": "Turquoise",
         "image": "/images/products/accessories/turquoise-grip.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 4.0
       },
       {
         "id": "grips-black",
         "label": "Black",
         "colour": "Black",
         "image": "/images/products/accessories/black-grip.webp",
-        "quantity": 5
+        "quantity": 5,
+        "price": 4.0
       },
       {
         "id": "grips-purple",
         "label": "Purple",
         "colour": "Purple",
         "image": "/images/products/accessories/purple-grip.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 4.0
       },
       {
         "id": "grips-red",
         "label": "Red",
         "colour": "Red",
         "image": "/images/products/accessories/red-grip.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 4.0
       },
       {
         "id": "grips-blue",
         "label": "Blue",
         "colour": "Blue",
         "image": "/images/products/accessories/blue-grip.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 4.0
       },
       {
         "id": "grips-beige",
         "label": "Beige",
         "colour": "Beige",
         "image": "/images/products/accessories/beige-grip.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 4.0
       }
     ],
     "image": "/images/products/accessories/all-grips.webp",
@@ -114,7 +120,8 @@
         "colour": "Pink",
         "label": "S - 500 x 0.5mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-small.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       },
       {
         "id": "cups-s-blue",
@@ -122,7 +129,8 @@
         "colour": "Blue",
         "label": "S - 500 x 0.5mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-small.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       },
       {
         "id": "cups-m-pink",
@@ -130,7 +138,8 @@
         "colour": "Pink",
         "label": "M - 300 x 1mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-medium.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       },
       {
         "id": "cups-m-blue",
@@ -138,7 +147,8 @@
         "colour": "Blue",
         "label": "M - 300 x 1mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-medium.webp",
-        "quantity": 20
+        "quantity": 20,
+        "price": 14.0
       },
       {
         "id": "cups-l-pink",
@@ -146,7 +156,8 @@
         "colour": "Pink",
         "label": "L - 200 x 2mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-large.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       },
       {
         "id": "cups-l-blue",
@@ -154,7 +165,8 @@
         "colour": "Blue",
         "label": "L - 200 x 2mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-large.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       },
       {
         "id": "cups-xl-pink",
@@ -162,7 +174,8 @@
         "colour": "Pink",
         "label": "XL - 100 x 4mL (Pink)",
         "image": "/images/products/accessories/ink-cap-pink-extra-large.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       },
       {
         "id": "cups-xl-blue",
@@ -170,7 +183,8 @@
         "colour": "Blue",
         "label": "XL - 100 x 4mL (Blue)",
         "image": "/images/products/accessories/ink-cap-blue-extra-large.webp",
-        "quantity": 0
+        "quantity": 0,
+        "price": 14.0
       }
     ],
     "image": "/images/products/accessories/blue-and-pink-ink-cap-cover.webp",
@@ -208,57 +222,55 @@
     "featured": false,
     "stripe_price_id": "price_1SnKwAAiq7NBxfpwImUZw2aS"
   },
-
- "cleaning-cap-(box-of-20)": {
-  "id": "cleaning-cap-(box-of-20)",
-  "name": "Cleaning Cap (Box of 20)",
-  "category": "Accessories",
-  "subcategory": "",
-  "description": "Special foam to clean needle tips during the tattoo procedure. Pigments or paper residue can accumulate and prevent ink from flowing properly — the Cleaning Cap removes any residue and avoids new accumulation, keeping your work clean and precise.",
-  "features": [
-    "Box of 20 units",
-    "Removes pigment and paper residue from needle tips",
-    "Prevents ink flow blockage",
-    "Safe and effective needle maintenance",
-    "Easy to use during sessions"
-  ],
-  "stripe": {
-    "productId": "prod_U4lm1JPKftJokx",
-    "priceId": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
+  "cleaning-cap-(box-of-20)": {
+    "id": "cleaning-cap-(box-of-20)",
+    "name": "Cleaning Cap (Box of 20)",
+    "category": "Accessories",
+    "subcategory": "",
+    "description": "Special foam to clean needle tips during the tattoo procedure. Pigments or paper residue can accumulate and prevent ink from flowing properly — the Cleaning Cap removes any residue and avoids new accumulation, keeping your work clean and precise.",
+    "features": [
+      "Box of 20 units",
+      "Removes pigment and paper residue from needle tips",
+      "Prevents ink flow blockage",
+      "Safe and effective needle maintenance",
+      "Easy to use during sessions"
+    ],
+    "stripe": {
+      "productId": "prod_U4lm1JPKftJokx",
+      "priceId": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
+    },
+    "price": 9.0,
+    "variants": [],
+    "size": "20 units",
+    "image": "/images/products/accessories/cleaning-cap-box-of-20.webp",
+    "images": [
+      "/images/products/accessories/cleaning-cap-box-of-20.webp",
+      "/images/products/accessories/cleaning-cap-box-of-20-1.webp",
+      "/images/products/accessories/cleaning-cap-box-of-20-2.webp"
+    ],
+    "content": {
+      "usage_instructions": "Add a few drops of distilled water to the Cleaning Cap.\nMix and use whenever necessary during the procedure to clean needle tips."
+    },
+    "inventory": {
+      "stock_quantity": 4,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
+    },
+    "seo": {
+      "meta_title": "Cleaning Cap (Box of 20) | Electric Ink Ireland",
+      "meta_description": "Special foam to clean needle tips during tattooing. Removes pigment and paper residue, prevents ink flow blockage. Box of 20 units. Shop now at Electric Ink Ireland.",
+      "keywords": [
+        "accessories",
+        "cleaning cap",
+        "needle cleaning",
+        "ink caps",
+        "tattoo hygiene"
+      ]
+    },
+    "inStock": true,
+    "featured": false,
+    "stripe_price_id": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
   },
-  "price": 9.00,
-  "variants": [],
-  "size": "20 units",
-  "image": "/images/products/accessories/cleaning-cap-box-of-20.webp",
-  "images": [
-    "/images/products/accessories/cleaning-cap-box-of-20.webp",
-    "/images/products/accessories/cleaning-cap-box-of-20-1.webp",
-    "/images/products/accessories/cleaning-cap-box-of-20-2.webp"
-  ],
-  "content": {
-    "usage_instructions": "Add a few drops of distilled water to the Cleaning Cap.\nMix and use whenever necessary during the procedure to clean needle tips."
-  },
-  "inventory": {
-    "stock_quantity": 4,
-    "stock_status": "in_stock",
-    "low_stock_threshold": 2
-  },
-  "seo": {
-    "meta_title": "Cleaning Cap (Box of 20) | Electric Ink Ireland",
-    "meta_description": "Special foam to clean needle tips during tattooing. Removes pigment and paper residue, prevents ink flow blockage. Box of 20 units. Shop now at Electric Ink Ireland.",
-    "keywords": [
-      "accessories",
-      "cleaning cap",
-      "needle cleaning",
-      "ink caps",
-      "tattoo hygiene"
-    ]
-  },
-  "inStock": true,
-  "featured": false,
-  "stripe_price_id": "price_1T6cEfAiq7NBxfpw3lbVZ2RX"
-},
-
   "medical-bibs": {
     "id": "medical-bibs",
     "name": "Black Medical Bibs",
@@ -275,14 +287,14 @@
       "productId": "prod_Tkt0XymbQwrzqj",
       "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW"
     },
-    "price": 11.5,
+    "price": 11.0,
     "size": "Pack options",
     "variants": [
       {
         "id": "bibs-100",
         "label": "100 units",
         "quantity": 1,
-        "price": 11.5,
+        "price": 11.0,
         "priceId": "price_1SnNEiAiq7NBxfpwiednGFMW",
         "stripe_price_id": "price_1SnNEiAiq7NBxfpwiednGFMW",
         "image": "/images/products/accessories/black-medical-bibs.webp"
@@ -291,7 +303,7 @@
         "id": "bibs-500",
         "label": "500 units",
         "quantity": 1,
-        "price": 26.5,
+        "price": 26.0,
         "priceId": "price_1SnNEiAiq7NBxfpwp7bxikIz",
         "stripe_price_id": "price_1SnNEiAiq7NBxfpwp7bxikIz",
         "image": "/images/products/accessories/black-medical-bibs.webp"
@@ -404,7 +416,7 @@
         "colour": "White",
         "size": "XS",
         "label": "White - XS",
-        "price": 9.5,
+        "price": 9.0,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -415,7 +427,7 @@
         "colour": "White",
         "size": "S",
         "label": "White - S",
-        "price": 9.5,
+        "price": 9.0,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -426,7 +438,7 @@
         "colour": "White",
         "size": "M",
         "label": "White - M",
-        "price": 9.5,
+        "price": 9.0,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -437,7 +449,7 @@
         "colour": "White",
         "size": "L",
         "label": "White - L",
-        "price": 9.5,
+        "price": 9.0,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -448,7 +460,7 @@
         "colour": "White",
         "size": "XL",
         "label": "White - XL",
-        "price": 9.5,
+        "price": 9.0,
         "priceId": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "stripe_price_id": "price_1SnNZQAiq7NBxfpwYttfnxYa",
         "image": "/images/products/accessories/white-latex-gloves.webp",
@@ -500,7 +512,7 @@
       "productId": "prod_TktK33s5t8Afm0",
       "priceId": "price_1SnNXSAiq7NBxfpwZNtkZfvM"
     },
-    "price": 9.5,
+    "price": 9.0,
     "size": "Multiple sizes",
     "variants": [
       {
@@ -508,35 +520,40 @@
         "label": "XS",
         "size": "XS",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 9.0
       },
       {
         "id": "nitrile-s",
         "label": "S",
         "size": "S",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 9.0
       },
       {
         "id": "nitrile-m",
         "label": "M",
         "size": "M",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 9.0
       },
       {
         "id": "nitrile-l",
         "label": "L",
         "size": "L",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 9.0
       },
       {
         "id": "nitrile-xl",
         "label": "XL",
         "size": "XL",
         "image": "/images/products/accessories/black-nitrile-gloves.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 9.0
       }
     ],
     "image": "/images/products/accessories/black-nitrile-gloves.webp",
@@ -631,7 +648,7 @@
       "productId": "prod_TkqfxykNa8l2B1",
       "priceId": "price_1SnKxpAiq7NBxfpw1LpEDszI"
     },
-    "price": 18,
+    "price": 18.08,
     "size": "60mm x 700mm",
     "variants": [
       {
@@ -639,28 +656,32 @@
         "label": "Red",
         "colour": "Red",
         "image": "/images/products/accessories/clip-cord-protector-red.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 18.08
       },
       {
         "id": "clip-pink",
         "label": "Pink",
         "colour": "Pink",
         "image": "/images/products/accessories/clip-cord-protector-pink.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 18.08
       },
       {
         "id": "clip-blue",
         "label": "Blue",
         "colour": "Blue",
         "image": "/images/products/accessories/clip-cord-protector-blue.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 18.08
       },
       {
         "id": "clip-transparent",
         "label": "Transparent",
         "colour": "Transparent",
         "image": "/images/products/accessories/clip-cord-protector-transparent.webp",
-        "quantity": 1
+        "quantity": 1,
+        "price": 18.08
       }
     ],
     "image": "/images/products/accessories/clip-cord-protector-transparent.webp",
@@ -707,14 +728,14 @@
       "productId": "prod_Tkqhoc5rBVgt10",
       "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs"
     },
-    "price": 4.5,
+    "price": 4.3,
     "size": "Multiple",
     "variants": [
       {
         "id": "wash-250",
         "size": "250mL",
         "label": "250mL",
-        "price": 4.5,
+        "price": 4.3,
         "priceId": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
         "stripe_price_id": "price_1SnL0BAiq7NBxfpwWtDAoTQs",
         "image": "/images/products/accessories/wash-bottle-200ml.webp",
@@ -724,7 +745,7 @@
         "id": "wash-500",
         "size": "500mL",
         "label": "500mL",
-        "price": 5.5,
+        "price": 5.54,
         "priceId": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
         "stripe_price_id": "price_1SnL0BAiq7NBxfpwVJYoPSj3",
         "image": "/images/products/accessories/wash-bottle-500ml.webp",

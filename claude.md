@@ -97,3 +97,36 @@ vercel.json                  — rewrites, headers CSP, maxDuration
 - Não modificar vercel.json sem testar CSP e rewrites localmente
 - Não alterar o schema Firestore sem atualizar firebase-admin.js
 - Não usar `console.log` nas API routes — sempre o logger estruturado
+
+## Fluxos críticos — testar após qualquer mudança
+1. Adicionar produto ao carrinho → checkout → pagamento Stripe
+2. Google Pay / Apple Pay → confirmação → success page
+3. Cupom de desconto → aplicado correctamente no total
+4. Login → dashboard → Catokens visíveis
+5. Registo com referral code → +500 Catokens atribuídos
+6. Redeem Catokens → cupom Stripe gerado e visível
+7. Webhook Stripe → idempotente (segunda chamada não duplica)
+8. Free shipping threshold → visível no carrinho e checkout
+
+## Endpoints críticos do internal que o site consome
+- POST /api/sales/website — registo de venda após pagamento
+- GET /api/loyalty/rank-discount — desconto Legend/Black Cat
+- GET /api/reviews — reviews de produtos
+- POST /api/reviews — submissão de review
+- GET /api/loyalty/points-summary — pontos após compra
+
+## Historial de mudanças críticas
+- 2026-03: CORS adicionado www.electricink.ie (fix Safari)
+- 2026-03: Free shipping fix — 0 || x falsy bug corrigido
+- 2026-03: cart-drawer.js deve ser type="module" em todas as páginas
+- 2026-03: Tab default alterado para Sign in (não Join now)
+- 2026-03: Debug via ?debug=true URL param removido
+- 2026-03: PayPal/Klarna removidos dos ícones de pagamento aceites
+- 2026-04: JWT expirado → signout automático com toast
+- 2026-04: Indicador de força de password no registo
+
+## Integration check — correr antes de qualquer deploy
+Sempre que mudares auth, middleware ou endpoints:
+- Verifica que todos os fetches ao internal têm o header correcto
+- Verifica que cart-drawer.js tem type="module" em todas as páginas
+- Verifica que preços no checkout batem com o catálogo
