@@ -782,11 +782,23 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização (admin)
       const productCatalogForAdmin = PRODUCT_CATALOG_CACHE || loadProductCatalog();
       const itemsForEmailAdmin = (order.items || []).map(item => {
-        const product = productCatalogForAdmin.find(p => p.id === item.id);
-        return Object.assign({}, item, {
-          name: (product && (product.name || product.title)) ? (product.name || product.title) : (item.name || item.id),
-          price: (product && (product.price !== undefined && product.price !== null)) ? Number(product.price) : (item.price !== undefined ? Number(item.price) : 0)
-        });
+        const resolved = resolveCatalogItem(item.id);
+        let name = item.name || item.id;
+        let price = 0;
+        if (resolved && resolved.product) {
+          name = (resolved.product.name || resolved.product.title) || name;
+          if (resolved.variant) {
+            price = (typeof resolved.variant.price === 'number') ? Number(resolved.variant.price) : (resolved.product.basic && typeof resolved.product.basic.price === 'number' ? Number(resolved.product.basic.price) : (resolved.product.price !== undefined ? Number(resolved.product.price) : 0));
+            if (resolved.variant.label) {
+              name = `${name} - ${resolved.variant.label}`;
+            }
+          } else {
+            price = (resolved.product.basic && typeof resolved.product.basic.price === 'number') ? Number(resolved.product.basic.price) : (resolved.product.price !== undefined ? Number(resolved.product.price) : 0);
+          }
+        } else {
+          price = (item.price !== undefined ? Number(item.price) : 0);
+        }
+        return Object.assign({}, item, { name, price });
       });
 
       const adminItemsHtml = (itemsForEmailAdmin || []).map(item => {
