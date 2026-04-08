@@ -541,15 +541,15 @@ window.appliedDiscount = 0;
 
       debugLog('✅ Payment Request created, checking availability...');
 
-      console.log("🔍 Checking Payment Request availability...");
+      debugLog("🔍 Checking Payment Request availability...");
 
       // Check if Payment Request is available (Apple Pay / Google Pay)
       const canMakePayment = await paymentRequest.canMakePayment();
 
-      console.log("✅ Payment Request result:", canMakePayment);
+      debugLog("✅ Payment Request result:", canMakePayment);
 
       if (canMakePayment) {
-        console.log("✅ Payment method disponível:", canMakePayment.applePay ? "Apple Pay" : canMakePayment.googlePay ? "Google Pay" : "Outro");
+        debugLog("✅ Payment method disponível:", canMakePayment.applePay ? "Apple Pay" : canMakePayment.googlePay ? "Google Pay" : "Outro");
         debugLog('✅ Express Checkout available! Showing buttons...');
         
         // Show Express Checkout container
@@ -1043,7 +1043,7 @@ window.appliedDiscount = 0;
         if (discountInput) discountInput.disabled = true;
         if (applyBtn) applyBtn.textContent = 'Applied';
 
-        console.log('[COUPON] Applied:', result.coupon && result.coupon.code, '- Discount:', result.discount);
+        debugLog('[COUPON] Applied:', result.coupon && result.coupon.code, '- Discount:', result.discount);
       } else {
         showDiscountMessage((result && result.message) || 'Invalid coupon', 'error');
         window.appliedCoupon = null;
@@ -1481,13 +1481,14 @@ window.appliedDiscount = 0;
       //   console.warn('Failed to obtain idToken for checkout:', e && e.message);
       // }
 
+      const _inkToken = localStorage.getItem('ei_loyalty_token') || '';
       const response = await fetch(PAYMENT_INTENT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...authHeader
         },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify({ ...orderData, customerToken: _inkToken })
       });
 
       if (!response.ok) {
@@ -1600,7 +1601,7 @@ window.appliedDiscount = 0;
     }
 
     // Send confirmation emails
-    sendOrderEmails(orderInfo, paymentIntent.id);
+    sendOrderEmails(orderInfo, paymentIntent.id).catch(err => console.error('sendOrderEmails failed:', err));
 
     // Clear cart
     try {
