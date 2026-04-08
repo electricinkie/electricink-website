@@ -263,7 +263,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
       });
       if (rdRes.ok) {
         const rdData = await rdRes.json();
-        rankDiscount = rdData.discount || 0;
+        rankDiscount = Math.min(Math.max(Number(rdData.discount) || 0, 0), 1);
         rankConsumableCategories = rdData.consumable_categories || [];
       }
     } catch (rdErr) {
@@ -379,7 +379,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
         }
 
         // Calculate discount amount based on coupon
-        if (!discount) {
+        if (discount === null || discount === undefined) {
           if (coupon.percent_off) {
             discount = subtotal * (coupon.percent_off / 100);
           } else if (coupon.amount_off) {
@@ -553,7 +553,8 @@ module.exports = async function handler(req, res) {
         shippingAddress,
         req.body.couponCode || req.body.coupon || null,
         Number(req.body.discount || 0),
-        req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email) || ''
+        req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email) || '',
+        req.body.customerToken || req.headers.authorization?.replace('Bearer ', '') || ''
       );
       logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
