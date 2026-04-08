@@ -652,7 +652,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         const _internalApiUrl = process.env.INTERNAL_API_URL;
         if (order.customerEmail && _internalApiUrl) {
           const ptsFetch = await fetch(
-            `${_internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`
+            `${_internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`,
+            {
+              headers: { 'x-crm-secret': process.env.CRM_SECRET || '' },
+              signal: AbortSignal.timeout(8000)
+            }
           );
           if (ptsFetch.ok) {
             const ptsData = await ptsFetch.json();
@@ -908,7 +912,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
             'Content-Type': 'application/json',
             'x-webhook-secret': internalSecret
           },
-          body: JSON.stringify(salePayload)
+          body: JSON.stringify(salePayload),
+          signal: AbortSignal.timeout(8000)
         });
         if (!saleRes.ok) {
           logger.warn('Failed to register sale in internal system', { orderId, status: saleRes.status });
