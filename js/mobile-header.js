@@ -334,6 +334,9 @@
       });
       if (!confirmed) return;
       localStorage.removeItem(NOTIF_TOKEN_KEY);
+      localStorage.removeItem('ei_last_level');
+      localStorage.removeItem('ei_last_pts');
+      localStorage.removeItem('blackcat_coupons');
       window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
       item.style.display = 'none';
       if (window.location.pathname.startsWith('/account')) window.location.href = '/';
@@ -362,7 +365,11 @@
       const res = await fetch(`${NOTIF_API}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        guest.style.display = 'flex';
+        loggedIn.style.display = 'none';
+        return;
+      }
       const data = await res.json();
       const customer = data.customer || data;
       const name = (customer.name || '').split(' ')[0];
