@@ -65,7 +65,8 @@ module.exports = async (req, res) => {
 <body></body>
 </html>`;
 
+  res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
-  res.status(200).send(html);
+  res.end(html);
 };
