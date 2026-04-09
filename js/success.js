@@ -30,10 +30,11 @@ import { INTERNAL_API_URL } from './constants.js';
       window.toast.warning('No order found. Redirecting to home...', 2000);
     }
     
+    localStorage.removeItem('electricink_last_order');
     setTimeout(() => {
       window.location.href = '/';
     }, 2000);
-    
+
     return;
   }
 
@@ -163,7 +164,8 @@ import { INTERNAL_API_URL } from './constants.js';
     setTimeout(async () => {
       try {
         const res = await fetch(
-          `${INTERNAL_API_URL}/api/loyalty/points-summary?email=${encodeURIComponent(orderData.email)}`
+          `${INTERNAL_API_URL}/api/loyalty/points-summary?email=${encodeURIComponent(orderData.email)}`,
+          { headers: { 'x-crm-secret': window.EI_CRM_SECRET || '' } }
         );
         if (!res.ok) return;
         const data = await res.json();
