@@ -367,10 +367,11 @@ import { INTERNAL_API_URL } from '/js/constants.js';
 
     shareBtn.addEventListener('click', async () => {
       try {
+        const _ogUrl = `https://electricink.ie/og?id=${encodeURIComponent(new URLSearchParams(window.location.search).get('id') || '')}`;
         if (navigator.share) {
-          await navigator.share({ title: name, url: window.location.href });
+          await navigator.share({ title: name, url: _ogUrl });
         } else {
-          await navigator.clipboard.writeText(window.location.href);
+          await navigator.clipboard.writeText(_ogUrl);
           shareBtn.title = 'Link copied!';
           setTimeout(() => { shareBtn.title = 'Share this product'; }, 2000);
         }

@@ -8,6 +8,12 @@
     }
   },
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/og",
+      "destination": "/api/og"
+    }
+  ],
   "headers": [
     {
       "source": "/.well-known/apple-developer-merchantid-domain-association",
