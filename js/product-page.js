@@ -172,8 +172,8 @@ import { INTERNAL_API_URL } from '/js/constants.js';
       return false;
     }
 
-    // 3. Variant explicitamente marcado out of stock?
-    if (variant.stock_status === 'out_of_stock') {
+    // 3. Variant explicitamente marcado out of stock ou available_soon?
+    if (variant.stock_status === 'out_of_stock' || variant.stock_status === 'available_soon') {
       return false;
     }
 
@@ -242,7 +242,7 @@ import { INTERNAL_API_URL } from '/js/constants.js';
   // SEO — JSON-LD structured data
   let jsonLd = document.getElementById('product-jsonld');
   if (!jsonLd) { jsonLd = document.createElement('script'); jsonLd.id = 'product-jsonld'; jsonLd.type = 'application/ld+json'; document.head.appendChild(jsonLd); }
-  const price = productData.price || productData.variants?.[0]?.price || 0;
+  const price = productData.price || productData.variants?.[0]?.price || null;
   jsonLd.textContent = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Product',
