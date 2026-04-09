@@ -29,8 +29,13 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed', requestId });
   }
 
+  const crypto = require('crypto');
   const secret = req.headers['x-webhook-secret'];
-  if (!process.env.INTERNAL_WEBHOOK_SECRET || !secret || secret !== process.env.INTERNAL_WEBHOOK_SECRET) {
+  const expectedSecret = process.env.INTERNAL_WEBHOOK_SECRET || '';
+  const secretValid = secret && expectedSecret &&
+    secret.length === expectedSecret.length &&
+    crypto.timingSafeEqual(Buffer.from(secret), Buffer.from(expectedSecret));
+  if (!secretValid) {
     logger.warn('Unauthorized ship-notify request', { requestId });
     res.setHeader('x-request-id', requestId);
     return res.status(401).json({ error: 'Unauthorized', requestId });

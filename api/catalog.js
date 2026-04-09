@@ -127,6 +127,6 @@ module.exports = async (req, res) => {
     // Network or other error contacting internal API
     res.statusCode = 502;
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'Error contacting internal API', details: err.message }));
+    res.end(JSON.stringify({ error: 'Error contacting internal API' }));
   }
 };
