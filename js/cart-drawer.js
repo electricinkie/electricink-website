@@ -72,6 +72,7 @@
         <img class="cart-drawer-item-img" src="${escHtml(item.image || '/images/placeholder.jpg')}" alt="${escHtml(item.name)}">
         <div class="cart-drawer-item-info">
           <p class="cart-drawer-item-name">${escHtml(item.name)}</p>
+          ${item.available_on_request ? `<p class="cart-drawer-item-variant" style="color:#43BDAB;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Order on Request</p>` : ''}
           ${item.variant ? `<p class="cart-drawer-item-variant">${escHtml(item.variant)}</p>` : ''}
           <div class="cart-drawer-item-row">
             <span class="cart-drawer-item-price">€${(item.price * item.quantity).toFixed(2)}</span>

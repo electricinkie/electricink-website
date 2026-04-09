@@ -729,9 +729,9 @@ window.appliedDiscount = 0;
    * Amounts are in cents (for Payment Request compatibility).
    */
   function getAvailableShippingOptions(subtotal) {
-    // Always return all shipping options; pricing and visibility rules are applied elsewhere
+    const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1150;
     const allOptions = [
-      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: 'Ireland-wide delivery', amount: 1150 },
+      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free delivery — Ireland-wide' : 'Ireland-wide delivery', amount: standardAmount },
       { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 750 },
       { id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 }
     ];

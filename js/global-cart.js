@@ -87,7 +87,8 @@
         image: item.image || '/images/placeholder.jpg',
         variant: item.variant || null,
         stripe_price_id: normalizedPriceId,
-        quantity: 1
+        quantity: 1,
+        available_on_request: item.available_on_request === true || item.orderOnRequest === true
       });
     }
     
