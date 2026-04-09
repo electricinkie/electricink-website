@@ -7,6 +7,7 @@
   'use strict';
 
   let activeModal = null;
+  let activeEscHandler = null;
 
   // ────────── Modal Types Config ──────────
   const MODAL_TYPES = {
@@ -160,16 +161,15 @@
     }
 
     // Close on ESC key
-    const escHandler = (e) => {
+    activeEscHandler = (e) => {
       if (e.key === 'Escape') {
         try { closeModal(); } catch (err) { /* ignore */ }
         if (typeof onCancel === 'function') {
           try { onCancel(); } catch (e) { console.error('modal:onCancel handler failed', e); }
         }
-        document.removeEventListener('keydown', escHandler);
       }
     };
-    document.addEventListener('keydown', escHandler);
+    document.addEventListener('keydown', activeEscHandler);
 
     // Focus primary button (if present)
     setTimeout(() => {
@@ -186,13 +186,19 @@
     if (!activeModal) return;
 
     activeModal.classList.remove('show');
-    
+    if (activeEscHandler) {
+      document.removeEventListener('keydown', activeEscHandler);
+      activeEscHandler = null;
+    }
+
+    const modalToRemove = activeModal;
+    activeModal = null;
+    document.body.style.overflow = '';
+
     setTimeout(() => {
-      if (activeModal && activeModal.parentNode) {
-        activeModal.remove();
+      if (modalToRemove && modalToRemove.parentNode) {
+        modalToRemove.remove();
       }
-      activeModal = null;
-      document.body.style.overflow = '';
     }, 300);
   }
 

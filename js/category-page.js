@@ -206,11 +206,14 @@
         if (Array.isArray(apiJson)) apiProducts = apiJson;
       } else if (apiRes && apiRes._error) {
         console.warn('Could not fetch internal catalog:', apiRes._error);
+        if (window.toast) window.toast.info('Prices may not reflect the latest updates.', 4000);
       } else if (apiRes && apiRes.ok === false) {
         console.warn('Internal catalog returned non-OK status');
+        if (window.toast) window.toast.info('Prices may not reflect the latest updates.', 4000);
       }
     } catch (e) {
       console.warn('Could not fetch internal catalog:', e);
+      if (window.toast) window.toast.info('Prices may not reflect the latest updates.', 4000);
     }
 
     if (apiProducts && Array.isArray(apiProducts)) {
