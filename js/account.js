@@ -101,6 +101,7 @@ async function loadAndRenderBadges() {
     const res = await fetch(`${API}/api/loyalty/badges`, {
       headers: { Authorization: `Bearer ${currentToken}` }
     });
+    if (res.status === 401) { handleSignout(); return; }
     const earned = res.ok ? await res.json() : [];
     const earnedKeys = new Set(earned.map(b => b.badge_key));
     el.innerHTML = ALL_BADGES.map(b => {
@@ -373,6 +374,7 @@ function handleSignout() {
   window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
   localStorage.removeItem('ei_last_level');
   localStorage.removeItem('ei_last_pts');
+  localStorage.removeItem('blackcat_coupons');
   currentToken = null;
   currentCustomer = null;
   if (window.toast) window.toast.info('Signed out successfully', 3000);
@@ -459,8 +461,7 @@ async function loadDashboard() {
       }
   } catch (err) {
     console.error('loadDashboard error:', err);
-    localStorage.removeItem(TOKEN_KEY);
-    showAuthWall();
+    if (window.toast) window.toast.info('Could not load your account. Please try again.', 4000);
   }
 }
 
@@ -589,6 +590,7 @@ async function loadRewards() {
     const res = await fetch(`${API}/api/loyalty/rewards`, {
       headers: { Authorization: `Bearer ${currentToken}` }
     });
+    if (res.status === 401) { handleSignout(); return; }
     const rewards = await res.json();
     allRewards = rewards;
     renderRewards(rewards);
@@ -677,6 +679,11 @@ async function redeemReward(rewardId) {
 
     if (res.status === 401) {
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem('ei_last_level');
+      localStorage.removeItem('ei_last_pts');
+      localStorage.removeItem('blackcat_coupons');
+      currentToken = null;
+      currentCustomer = null;
       showAuthWall();
       return;
     }
@@ -773,6 +780,7 @@ async function renderActiveCoupons() {
     const res = await fetch(`${API}/api/loyalty/redemptions`, {
       headers: { Authorization: `Bearer ${currentToken}` }
     });
+    if (res.status === 401) { handleSignout(); return; }
     if (!res.ok) return;
     const rows = await res.json();
 
@@ -865,6 +873,7 @@ async function loadOrders(email) {
       headers: { Authorization: `Bearer ${currentToken}` },
     });
 
+    if (res.status === 401) { handleSignout(); return; }
     if (!res.ok) throw new Error('Failed');
 
     const allSales = await res.json();
