@@ -40,6 +40,11 @@ const MISSION_CONFIG = {
     desc: 'Order 3 or more items from the same product category in a single purchase.',
     pts: '+200 Catokens',
   },
+  nine_lives_trinity: {
+    name: 'Ink Trinity',
+    desc: 'Purchase from 3 different product categories this month. Available to Nine Lives, Legend, and Black Cat members.',
+    pts: '+500 Catokens',
+  },
 };
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -559,12 +564,14 @@ function renderOverview(customer, missions, pointsEarned) {
     resetEl.textContent = `Resets in ${daysLeft} day${daysLeft !== 1 ? 's' : ''} · 1st of every month`;
   }
 
-  renderMissions(missions);
+  renderMissions(missions, customer.loyalty_level || 'fresh_ink');
 }
 
-function renderMissions(missions) {
+function renderMissions(missions, loyaltyLevel) {
   const grid = document.getElementById('missionsGrid');
+  const eligibleForTrinity = ['nine_lives', 'legend', 'black_cat'].includes(loyaltyLevel);
   const missionTypes = ['spend_threshold', 'category_focus'];
+  if (eligibleForTrinity) missionTypes.push('nine_lives_trinity');
 
   grid.innerHTML = missionTypes.map(type => {
     const cfg = MISSION_CONFIG[type] || { name: type, desc: '', pts: '' };
