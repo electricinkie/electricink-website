@@ -913,7 +913,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
             'x-webhook-secret': internalSecret
           },
           body: JSON.stringify(salePayload),
-          signal: AbortSignal.timeout(8000)
+          signal: AbortSignal.timeout(25000)
         });
         if (!saleRes.ok) {
           logger.warn('Failed to register sale in internal system', { orderId, status: saleRes.status });
