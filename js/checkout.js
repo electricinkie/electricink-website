@@ -152,7 +152,27 @@ window.appliedDiscount = 0;
     }
 
     // Attempt restore from token before loading cart
-    await restoreFromToken();
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('restore')) {
+        // Provide minimal UX feedback while restore is in progress
+        try {
+          setLoading(true);
+          if (window.toast && typeof window.toast.info === 'function') {
+            window.toast.info('Restoring cart...');
+          }
+        } catch (e) { /* ignore toast failures */ }
+
+        await restoreFromToken();
+      }
+    } catch (e) {
+      // Log restore detection/fetch errors for observability
+      console.warn('Abandoned cart restore attempt failed:', e);
+    } finally {
+      // Ensure loading state is cleared
+      try { setLoading(false); } catch (e) {}
+    }
+
     // Load cart
     loadCart();
 
