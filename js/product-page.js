@@ -1049,7 +1049,8 @@ function checkProductAvailability(product) {
             price: resolvedVariantPrice,
             stripe_price_id: resolvedPriceId,
             image: selectedVariant.image || mainImage,
-            variant: selectedVariant.id || selectedVariant.label || null
+            variant: selectedVariant.id || selectedVariant.label || null,
+            available_on_request: productData?.orderOnRequest === true || productData?.inventory?.stock_status === 'available_on_request'
           };
         } else {
           // Simple product
@@ -1076,7 +1077,8 @@ function checkProductAvailability(product) {
             name: name,
             price: price,
             stripe_price_id: resolvedPriceId,
-            image: mainImage
+            image: mainImage,
+            available_on_request: productData?.orderOnRequest === true || productData?.inventory?.stock_status === 'available_on_request'
           };
         }
         
