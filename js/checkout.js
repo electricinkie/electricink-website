@@ -74,6 +74,25 @@ window.appliedDiscount = 0;
     summaryTotal: document.getElementById('summaryTotal')
   };
 
+  // Restore abandoned cart from email link if present
+  async function restoreFromToken() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('restore');
+      if (!token) return;
+      const email = atob(decodeURIComponent(token));
+      const res = await fetch(`${INTERNAL_API_URL}/api/abandoned-cart/restore?email=${encodeURIComponent(email)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data.items || !data.items.length) return;
+      localStorage.setItem('electricink_cart', JSON.stringify(data.items));
+      if (typeof updateCartCount === 'function') updateCartCount();
+    } catch (e) {
+      // swallow errors; restore is best-effort
+      debugLog('restoreFromToken failed:', e);
+    }
+  }
+
   // ============================================
   // INITIALIZATION
   // ============================================
@@ -132,6 +151,8 @@ window.appliedDiscount = 0;
       return;
     }
 
+    // Attempt restore from token before loading cart
+    await restoreFromToken();
     // Load cart
     loadCart();
 
@@ -958,21 +979,7 @@ window.appliedDiscount = 0;
     attachAbandonedCartTrigger();
   }
 
-  // Restore abandoned cart from email link
-  (async () => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('restore');
-    if (!token) return;
-    try {
-      const email = atob(decodeURIComponent(token));
-      const res = await fetch(`${INTERNAL_API_URL}/api/abandoned-cart/restore?email=${encodeURIComponent(email)}`);
-      if (!res.ok) return;
-      const data = await res.json();
-      if (!data.items || !data.items.length) return;
-      localStorage.setItem('electricink_cart', JSON.stringify(data.items));
-      if (typeof updateCartCount === 'function') updateCartCount();
-    } catch {}
-  })();
+  // (restore handled via restoreFromToken called from init)
 
   async function applyDiscountCode(codeArg) {
     const discountInput = document.getElementById('discountCode');
