@@ -201,6 +201,7 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
         <!-- Info -->
         <div class="cart-item-info">
           <h3 class="cart-item-name">${escHtml(item.name)}</h3>
+          ${item.available_on_request ? `<p class="cart-item-variant" style="color:#f97316;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Order on Request</p>` : ''}
           ${item.variant ? `<p class="cart-item-variant">${escHtml(item.variant)}</p>` : ''}
           <p class="cart-item-price">€${item.price.toFixed(2)}</p>
         </div>
