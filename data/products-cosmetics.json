@@ -320,9 +320,9 @@
         "image": "/images/products/cosmetics/gloo-30g.webp"
       },
       {
-        "id": "gloo-120",
-        "size": "120mL",
-        "label": "120mL",
+        "id": "gloo-240",
+        "size": "240mL",
+        "label": "240mL",
         "price": 35.0,
         "priceId": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
         "stripe_price_id": "price_1Sm1OJAiq7NBxfpwupVkCAvf",
