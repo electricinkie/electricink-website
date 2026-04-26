@@ -615,20 +615,21 @@
     "stripe_price_id": "price_1SnQhsAiq7NBxfpwUAuFyaRa",
     "orderOnRequest": true
   },
-  "pen-pop-2-deluxe": {
-    "id": "pen-pop-2-deluxe",
-    "name": "Pen Pop 2 Deluxe - Combo",
+  "pen-pop-2-standard": {
+    "id": "pen-pop-2-standard",
+    "name": "Pen Pop 2",
     "category": "Tattoo Machines",
     "subcategory": "Rotary Machines",
-    "description": "Pen Pop 2 Deluxe — rotary tattoo machine built to order. Configure motor, stroke, damping, and grip to match your technique. Built for artists who demand power and precision in a single machine.",
+    "description": "The Pen Pop 2 is a lightweight rotary tattoo machine developed in Brazil by engineers and tattoo artists. Featuring a Mabuchi motor, MC2 magnetic coupling for wireless connection, and a 3.2mm stroke — built for professionals who demand precision and comfort in every session.",
     "features": [
-      "Configurable setup: motor, stroke, damping, and grip",
-      "Mabuchi DC motor — high-performance, exclusively developed for Electric Ink",
-      "Industrial polymer body — lightweight and durable",
-      "Adjustable damping system for precise stroke control",
-      "Compatible exclusively with Power Pop wireless power supply",
-      "Universal cartridge compatibility",
-      "Blue ring finish"
+      "Mabuchi motor — reliable, high-performance",
+      "MC2 magnetic coupling — compatible with Power 3 and Power Pop wireless power supplies",
+      "3.2mm stroke",
+      "34mm grip — universal cartridge compatibility",
+      "Adjustable needle exposure: 0 to 5mm",
+      "Lightweight and ergonomic design — developed in Brazil by engineers and tattoo artists",
+      "ANVISA registered — Reg. 80485730005",
+      "1 year manufacturer warranty"
     ],
     "stripe": {
       "productId": "prod_U6iKxHHOJywGAB",
@@ -643,29 +644,24 @@
     ],
     "content": {
       "specifications": {
-        "motor": "Mabuchi DC motor",
-        "stroke_length": "Adjustable (3.0mm or 3.3mm)",
-        "damping": "Adjustable (11H or personalised setup)",
-        "connection": "RCA (cable not included)",
-        "diameter": "32mm",
-        "length": "122mm",
-        "weight": "~120g",
-        "power_supply": "Power Pop (exclusive, not included)"
+        "motor": "Mabuchi",
+        "voltage": "6.5 to 11V",
+        "max_power": "5W",
+        "connection": "MC2 Magnetic Coupling",
+        "compatible_power_supplies": "Power 3 and Power Pop",
+        "stroke": "3.2mm",
+        "grip": "34mm — universal cartridge compatibility",
+        "needle_exposure": "0 to 5mm (adjustable)",
+        "weight_without_grip": "~88g",
+        "weight_with_grip": "~141g",
+        "length_with_power_supply": "134mm",
+        "diameter": "87mm",
+        "anvisa": "80485730005"
       },
-      "customisation_options": [
-        "Motor type",
-        "Stroke length",
-        "Damping setting",
-        "Grip style"
-      ],
       "included_items": [
-        "1 Pen Pop 2 Deluxe Machine",
-        "1 Power Pop Wireless Power Supply (32mm)",
-        "2 Rechargeable Batteries (32mm)",
-        "1 Electric Ink Charger with Cable",
-        "1 Electric Ink Carrying Case"
+        "1 Pen Pop 2 Machine"
       ],
-      "warranty": "Machine & Power Supply: 1 year. Charger & Batteries: 90 days."
+      "warranty": "1 year manufacturer warranty."
     },
     "inventory": {
       "stock_quantity": 1,
@@ -673,14 +669,14 @@
       "low_stock_threshold": 1
     },
     "seo": {
-      "meta_title": "Pen Pop 2 Deluxe | Electric Ink Ireland",
-      "meta_description": "Configurable Pen Pop 2 Deluxe rotary tattoo machine. Choose motor, stroke, damping and grip. Built to order for your technique, with blue finish. Available on request.",
+      "meta_title": "Pen Pop 2 | Electric Ink Ireland",
+      "meta_description": "Pen Pop 2 rotary tattoo machine — Mabuchi motor, MC2 magnetic coupling, 3.2mm stroke, 34mm grip. Developed in Brazil for professional tattoo artists. Available at Electric Ink Ireland.",
       "keywords": [
-        "Pen Pop 2 Deluxe",
-        "premium tattoo machine",
-        "rotary machine",
+        "Pen Pop 2",
+        "rotary tattoo machine",
         "Mabuchi motor",
-        "Electric Ink"
+        "MC2 magnetic coupling",
+        "Electric Ink Ireland"
       ]
     },
     "inStock": true,
