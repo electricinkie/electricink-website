@@ -174,6 +174,13 @@
     },
     openOnAdd(item) {
       buildDOM();
+      if (typeof fbq === 'function') {
+        fbq('track', 'AddToCart', {
+          content_name: item.name,
+          currency: 'EUR',
+          value: item.price
+        });
+      }
       const isMobile = window.innerWidth <= 768;
       if (isMobile) {
         renderBottomSheet(item);

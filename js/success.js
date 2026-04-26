@@ -83,6 +83,12 @@ import { INTERNAL_API_URL } from './constants.js';
     }
 
     document.getElementById('orderTotal').textContent = `€${(t.total || 0).toFixed(2)}`;
+    if (typeof fbq === 'function') {
+      fbq('track', 'Purchase', {
+        currency: 'EUR',
+        value: t.total || 0
+      });
+    }
   }
 
   // ────────── Render Shipping Address ──────────

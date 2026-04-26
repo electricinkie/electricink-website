@@ -195,6 +195,14 @@ import { INTERNAL_API_URL } from '/js/constants.js';
 
   // EXTRACT values with fallbacks (supports old and new structure)
   const name = productData.basic?.name || productData.name || 'Unnamed Product';
+  if (typeof fbq === 'function') {
+    fbq('track', 'ViewContent', {
+      content_name: name,
+      content_type: 'product',
+      currency: 'EUR',
+      value: productData.basic?.price || productData.price || 0
+    });
+  }
   const tagline = productData.basic?.tagline || null;
   const shortDesc = productData.basic?.short_description || productData.description || '';
   const fullDesc = productData.content?.full_description || productData.description || shortDesc;

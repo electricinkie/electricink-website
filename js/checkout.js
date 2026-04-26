@@ -175,6 +175,9 @@ window.appliedDiscount = 0;
 
     // Load cart
     loadCart();
+    if (typeof fbq === 'function') {
+      fbq('track', 'InitiateCheckout');
+    }
 
     // If logged in, fetch discount percent from Firestore so totals include it
     try {
