@@ -2,10 +2,14 @@
   "version": 2,
   "outputDirectory": ".",
   "functions": {
-    "api/**/*.js": {
-      "memory": 1024,
-      "maxDuration": 30
-    }
+    "api/catalog.js": { "memory": 1024, "maxDuration": 30 },
+    "api/config.js": { "memory": 1024, "maxDuration": 30 },
+    "api/convention-apply.js": { "memory": 1024, "maxDuration": 30 },
+    "api/create-payment-intent.js": { "memory": 1024, "maxDuration": 30 },
+    "api/emails.js": { "memory": 1024, "maxDuration": 30 },
+    "api/ship-notify.js": { "memory": 1024, "maxDuration": 30 },
+    "api/validate-coupon.js": { "memory": 1024, "maxDuration": 30 },
+    "api/webhooks-stripe.js": { "memory": 1024, "maxDuration": 30 }
   },
   "cleanUrls": true,
   "headers": [
