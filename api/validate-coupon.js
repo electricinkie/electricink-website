@@ -1,6 +1,54 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getFirestore } = require('./lib/firebase-admin');
+const { getFirestore, admin } = require('./lib/firebase-admin');
 const logger = require('./lib/logger');
+
+async function checkRateLimit(key) {
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) return { allowed: true };
+  try { getFirestore(); } catch (e) { return { allowed: true }; }
+  if (!admin.apps || !admin.apps.length) return { allowed: true };
+
+  const db = admin.firestore();
+  const LIMIT = 30;
+  const WINDOW_SECONDS = 60;
+  const docRef = db.collection('rate_limits').doc(key);
+
+  try {
+    const result = await db.runTransaction(async (tx) => {
+      const doc = await tx.get(docRef);
+      const now = Date.now();
+
+      if (!doc.exists) {
+        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
+        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
+        tx.set(docRef, { count: 1, resetAt, expiresAt });
+        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
+      }
+
+      const data = doc.data() || {};
+      const resetAtMillis = (data.resetAt && typeof data.resetAt.toMillis === 'function') ? data.resetAt.toMillis() : (data.resetAt || 0);
+
+      if (now > resetAtMillis) {
+        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
+        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
+        tx.set(docRef, { count: 1, resetAt, expiresAt });
+        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
+      }
+
+      if ((data.count || 0) >= LIMIT) {
+        return { allowed: false, remaining: 0, resetAt: new Date(resetAtMillis) };
+      }
+
+      tx.update(docRef, { count: admin.firestore.FieldValue.increment(1) });
+      return { allowed: true, remaining: LIMIT - ((data.count || 0) + 1), resetAt: new Date(resetAtMillis) };
+    });
+
+    return result;
+  } catch (err) {
+    logger.error('Rate limit transaction failed', err);
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+    return { allowed: !isProduction };
+  }
+}
 
 module.exports = async (req, res) => {
   // ═══════════════════════════════════════════════════════════
@@ -30,6 +78,21 @@ module.exports = async (req, res) => {
   // ═══════════════════════════════════════════════════════════
   // VALIDATE INPUT
   // ═══════════════════════════════════════════════════════════
+  const rawIp = req.headers['x-real-ip']
+    || (req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : null)
+    || (req.socket && req.socket.remoteAddress)
+    || 'unknown';
+  const ip = /^[\w.:[\]-]{3,45}$/.test(rawIp) ? rawIp : 'unknown';
+  const rateKey = `coupon_${ip}`;
+  try {
+    const rl = await checkRateLimit(rateKey);
+    if (!rl.allowed) {
+      const retryAfter = rl.resetAt ? Math.ceil((new Date(rl.resetAt).getTime() - Date.now()) / 1000) : 60;
+      return res.status(429).json({ error: 'Too many requests', retryAfter });
+    }
+  } catch (e) {
+    logger.error('Rate limit check failed, allowing request', e);
+  }
   try {
     const { code, email, subtotal } = req.body;
     
