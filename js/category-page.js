@@ -1,3 +1,13 @@
+function escHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 (async function() {
   'use strict';
 
@@ -104,11 +114,10 @@
 
       const notice = document.createElement('div');
       notice.className = 'category-notice';
-      // Use message text directly (may contain an embedded WhatsApp link).
       notice.innerHTML = `
         <div class="notice-inner">
-          <strong class="notice-title">${msg.title}</strong>
-          <p class="notice-text">${msg.text}</p>
+          <strong class="notice-title">${escHtml(msg.title)}</strong>
+          <p class="notice-text">${escHtml(msg.text)}</p>
         </div>
       `;
 

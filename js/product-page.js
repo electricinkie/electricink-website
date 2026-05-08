@@ -685,8 +685,7 @@ import { INTERNAL_API_URL } from '/js/constants.js';
 
     const warningP = document.createElement('p');
     warningP.className = 'warning-text';
-    // HTML formatting required for IMPORTANT notices - content controlled by admin
-    warningP.innerHTML = bodyText;
+    warningP.textContent = bodyText;
 
     warningContentDiv.appendChild(warningTopDiv);
     warningContentDiv.appendChild(warningP);
