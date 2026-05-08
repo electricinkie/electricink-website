@@ -133,6 +133,7 @@
         <img class="bs-added-img" src="${escHtml(item.image || '/images/placeholder.jpg')}" alt="${escHtml(item.name)}">
         <div class="bs-added-info">
           <p class="bs-added-name">${escHtml(item.name)}</p>
+          ${item.available_on_request ? `<p style="color:#43BDAB;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin:2px 0 0;">Order on Request</p>` : ''}
           <p class="bs-added-check">✓ Added to cart</p>
         </div>
         <span class="bs-added-price">€${item.price.toFixed(2)}</span>
