@@ -2,3 +2,4 @@
 # Only top-level api/*.js files should be deployed as functions
 api/handlers/**
 api/oms/**
+api/lib/**
