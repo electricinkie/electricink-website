@@ -6,5 +6,5 @@ module.exports = (req, res) => {
     STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY || ''
   };
   
-  res.send(`window.STRIPE_PUBLISHABLE_KEY = "${config.STRIPE_PUBLISHABLE_KEY}";`);
+  res.send(`window.STRIPE_PUBLISHABLE_KEY = ${JSON.stringify(config.STRIPE_PUBLISHABLE_KEY)};`);
 };
