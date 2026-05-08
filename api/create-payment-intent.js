@@ -173,8 +173,8 @@ function calculateShipping(subtotal, address = {}) {
   // Same-day Dublin delivery (D01-D08) — order by 2PM cutoff
   if (address.method === 'same-day' && address.postalCode) {
     const isDublinCentral = /^D0[1-8]/i.test(address.postalCode.trim());
-    const nowHour = new Date().getHours();
-    if (isDublinCentral && nowHour < 14) {
+    const nowHour = new Date().toLocaleString('en-IE', { timeZone: 'Europe/Dublin', hour: 'numeric', hour12: false });
+    if (isDublinCentral && Number(nowHour) < 14) {
       return SAMEDAY_RATE;
     }
   }
