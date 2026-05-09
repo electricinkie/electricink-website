@@ -1,0 +1,484 @@
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #43BDAB;
+      --accent-dim: rgba(67,189,171,0.12);
+      --black: #000000;
+      --white: #ffffff;
+      --text: #111111;
+      --text-dim: #666666;
+      --border: #e5e5e5;
+      --surface: #f8f8f8;
+    }
+
+    body {
+      font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Hero ── */
+    .conv-hero {
+      background: var(--black);
+      padding: 140px 24px 120px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .conv-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(67,189,171,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .conv-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(67,189,171,0.3), transparent);
+    }
+    .conv-hero-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+    .conv-hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .conv-hero-label::before,
+    .conv-hero-label::after {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+    .conv-hero h1 {
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.0;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    .conv-hero h1 span { color: var(--accent); }
+    .conv-hero p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.55);
+      max-width: 480px;
+      margin: 0 auto 44px;
+      line-height: 1.75;
+    }
+    .conv-hero-cta {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--black);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .conv-hero-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── Section base ── */
+    .conv-section {
+      padding: 96px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .conv-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .conv-section h2 {
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--black);
+      line-height: 1.08;
+      margin-bottom: 52px;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Pillars — 4 in a row desktop ── */
+    .conv-pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .conv-pillars { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .conv-pillars { grid-template-columns: 1fr; }
+    }
+    .conv-pillar {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 24px;
+      background: var(--white);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .conv-pillar:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(67,189,171,0.08);
+    }
+    .conv-pillar-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-dim);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .conv-pillar-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .conv-pillar h3 { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 10px; }
+    .conv-pillar p { font-size: 13px; color: var(--text-dim); line-height: 1.75; }
+
+    /* ── Convention History ── */
+    .conv-history {
+      background: var(--surface);
+      padding: 96px 24px;
+    }
+    .conv-history-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .conv-history-inner .conv-section-label { color: var(--accent); }
+    .conv-history-inner h2 { color: var(--black); }
+
+    .conv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .conv-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .conv-grid { grid-template-columns: 1fr; }
+    }
+
+    /* First card spans 2 columns on desktop */
+    .conv-card:first-child {
+      grid-column: span 2;
+    }
+    @media (max-width: 900px) {
+      .conv-card:first-child { grid-column: span 2; }
+    }
+    @media (max-width: 560px) {
+      .conv-card:first-child { grid-column: span 1; }
+    }
+
+    .conv-card {
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .conv-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    }
+    .conv-card-img {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+      background: #111;
+      overflow: hidden;
+    }
+    .conv-card-img img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* Placeholder when no image */
+    .conv-card-img-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+      gap: 10px;
+    }
+    .conv-card-img-placeholder svg {
+      width: 32px;
+      height: 32px;
+      stroke: rgba(67,189,171,0.4);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .conv-card-img-placeholder span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+    .conv-card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
+    }
+    .conv-card-body {
+      padding: 20px 24px 24px;
+    }
+    .conv-card-date {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .conv-card-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .conv-card-location {
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .conv-card-location svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--text-dim);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* ── Dark strip — packages ── */
+    .conv-strip {
+      background: var(--black);
+      padding: 96px 24px;
+    }
+    .conv-strip-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .conv-strip .conv-section-label { color: var(--accent); }
+    .conv-strip h2 { color: var(--white); margin-bottom: 52px; }
+
+    .conv-packages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .conv-packages { grid-template-columns: 1fr; }
+    }
+    .conv-package {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 36px 28px;
+      background: rgba(255,255,255,0.03);
+      transition: border-color 0.2s;
+    }
+    .conv-package:hover { border-color: rgba(67,189,171,0.3); }
+    .conv-package.featured {
+      border-color: var(--accent);
+      background: rgba(67,189,171,0.05);
+    }
+    .conv-package-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(67,189,171,0.12);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .conv-package h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .conv-package ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .conv-package ul li {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .conv-package ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ── Form ── */
+    .conv-form-section {
+      padding: 96px 24px;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    .conv-form-section .conv-section-label { text-align: center; }
+    .conv-form-section h2 {
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 800;
+      margin-bottom: 12px;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+    .conv-form-section > p {
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    .conv-form { display: flex; flex-direction: column; gap: 16px; }
+    .conv-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { .conv-form-row { grid-template-columns: 1fr; } }
+
+    .conv-field { display: flex; flex-direction: column; gap: 7px; }
+    .conv-field label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .conv-field input {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .conv-field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(67,189,171,0.1);
+    }
+    .conv-field input::placeholder { color: #bbb; }
+
+    .conv-submit {
+      background: var(--accent);
+      color: var(--black);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      margin-top: 8px;
+      width: 100%;
+      font-family: inherit;
+    }
+    .conv-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    .conv-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .conv-form-note {
+      font-size: 12px;
+      color: #bbb;
+      text-align: center;
+      margin-top: 4px;
+      line-height: 1.6;
+    }
+
+    .conv-success {
+      display: none;
+      text-align: center;
+      padding: 52px 32px;
+      border: 1.5px solid var(--accent);
+      border-radius: 12px;
+      background: var(--accent-dim);
+    }
+    .conv-success-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .conv-success-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--black);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .conv-success h3 { font-size: 22px; font-weight: 700; color: var(--black); margin-bottom: 10px; }
+    .conv-success p { font-size: 15px; color: var(--text-dim); line-height: 1.7; }
+
+    /* ── Bundoran card 9:16 aspect ratio ── */
+    .conv-card:nth-child(2) .conv-card-img {
+      padding-top: 177.78%; /* 9:16 */
+    }
+
+    /* ── Mobile global ── */
+    @media (max-width: 768px) {
+      .conv-hero { padding: 100px 20px 80px; }
+      .conv-section { padding: 64px 20px; }
+      .conv-history { padding: 64px 20px; }
+      .conv-strip { padding: 64px 20px; }
+      .conv-form-section { padding: 64px 20px; }
+    }
