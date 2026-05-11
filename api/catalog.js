@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
   const ip = /^[\w.:[\]-]{3,45}$/.test(rawIp) ? rawIp : 'unknown';
   const rateKey = `catalog_${ip}`;
   try {
-    const rl = await checkRateLimit(rateKey);
+    const rl = checkRateLimit(rateKey);
     if (!rl.allowed) {
       const retryAfter = rl.resetAt ? Math.ceil((new Date(rl.resetAt).getTime() - Date.now()) / 1000) : 60;
       return res.status(429).json({ error: 'Too many requests', retryAfter });
