@@ -1,5 +1,4 @@
 const https = require('https');
-const logger = require('./lib/logger');
 
 const _rl = new Map();
 function checkRateLimit(ip) {
@@ -68,7 +67,7 @@ module.exports = async (req, res) => {
       return res.status(429).json({ error: 'Too many requests', retryAfter });
     }
   } catch (e) {
-    logger.error('Rate limit check failed, allowing request', e);
+    console.error('Rate limit check failed, allowing request', e);
   }
   setCorsHeaders(req, res);
 
