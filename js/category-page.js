@@ -192,7 +192,11 @@ function escHtml(str) {
     // Fetch local product files
     const localFetches = productFiles.map(p => fetch(p).catch(e => ({ ok: false, error: e })));
     // Fetch internal catalog in parallel
-    const apiFetch = fetch('/api/catalog?type=products').catch(e => ({ ok: false, _error: e }));
+    const apiFetch = fetch('/api/catalog?type=products').catch(() =>
+      new Promise(resolve => setTimeout(() =>
+        fetch('/api/catalog?type=products').catch(e => ({ ok: false, _error: e })).then(resolve)
+      , 2000))
+    );
 
     const responses = await Promise.all(localFetches);
     for (let i = 0; i < responses.length; i++) {
