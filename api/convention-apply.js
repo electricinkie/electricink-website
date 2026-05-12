@@ -1,4 +1,4 @@
-const logger = require('./lib/logger');
+const logger = { info: console.log, warn: console.warn, error: console.error };
 
 const _rl = new Map();
 function checkRateLimit(key) {
