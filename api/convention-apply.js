@@ -86,7 +86,7 @@ module.exports = async (req, res) => {
         'x-webhook-secret': WEBHOOK_SECRET || '',
       },
       body: JSON.stringify({ organizer_name, email, convention_name, event_date, location }),
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(25000),
     });
 
     if (!response.ok) {
