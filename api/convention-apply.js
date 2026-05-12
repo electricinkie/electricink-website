@@ -95,8 +95,14 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: 'Failed to submit application' });
     }
 
-    const data = await response.json();
-    return res.status(201).json({ success: true, id: data.id });
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (parseErr) {
+      logger.warn('Convention apply: invalid JSON from internal', { status: response.status, error: parseErr && parseErr.message });
+      data = {};
+    }
+    return res.status(201).json({ success: true, id: data && data.id ? data.id : null });
 
   } catch (err) {
     logger.error('Convention apply fetch error', err);
