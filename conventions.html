@@ -174,10 +174,21 @@
         <label for="convention_name">Convention Name</label>
         <input type="text" id="convention_name" name="convention_name" placeholder="Dublin Tattoo Convention" required>
       </div>
-      <div class="conv-form-row">
+      <div class="conv-form-row conv-form-row--bottom">
         <div class="conv-field">
-          <label for="event_date">Event Date</label>
-          <input type="month" id="event_date" name="event_date" min="2025-01">
+          <label>Event Dates</label>
+          <div class="conv-date-range">
+            <div class="conv-date-range-field">
+              <span class="conv-date-range-label">From</span>
+              <input type="date" id="event_date_start" name="event_date_start" min="2025-01-01">
+            </div>
+            <div class="conv-date-range-sep">→</div>
+            <div class="conv-date-range-field">
+              <span class="conv-date-range-label">To</span>
+              <input type="date" id="event_date_end" name="event_date_end" min="2025-01-01">
+            </div>
+          </div>
+          <input type="hidden" id="event_date" name="event_date">
         </div>
         <div class="conv-field">
           <label for="location">Location / City</label>

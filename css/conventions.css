@@ -381,14 +381,65 @@
       .conv-form-section { padding: 64px 20px; }
     }
 
-/* date picker */
-input[type="month"] {
-  appearance: none;
-  -webkit-appearance: none;
-  color: inherit;
-  cursor: pointer;
+/* row with date range + location — align both columns to bottom so inputs line up */
+.conv-form-row--bottom {
+  align-items: end;
 }
-input[type="month"]::-webkit-calendar-picker-indicator {
-  filter: invert(1) opacity(0.4);
+
+/* event date range */
+.conv-date-range {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.conv-date-range-field {
+  flex: 1;
+  min-width: 0; /* prevents flex child overflow on narrow screens */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.conv-date-range-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.conv-date-range-sep {
+  font-size: 14px;
+  color: var(--text-dim);
+  opacity: 0.5;
+  flex-shrink: 0;
+  padding-bottom: 14px; /* centres arrow against input height */
+}
+.conv-date-range input[type="date"] {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
   cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  color-scheme: light;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.conv-date-range input[type="date"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(67,189,171,0.1);
+}
+@media (max-width: 520px) {
+  .conv-form-row--bottom {
+    align-items: stretch;
+  }
+  .conv-date-range {
+    align-items: stretch;
+  }
+  .conv-date-range-sep { display: none; }
 }

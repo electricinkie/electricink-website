@@ -43,6 +43,11 @@ const WEBHOOK_SECRET = process.env.INTERNAL_WEBHOOK_SECRET;
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://electricink.ie');
+  res.setHeader('Vary', 'Origin');
+  const reqOrigin = req.headers.origin;
+  if (reqOrigin === 'https://www.electricink.ie') {
+    res.setHeader('Access-Control-Allow-Origin', 'https://www.electricink.ie');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -67,6 +72,9 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Invalid email address' });
   }
   if (organizer_name.length > 100 || convention_name.length > 150 || email.length > 150) {
+    return res.status(400).json({ error: 'One or more fields exceed maximum length' });
+  }
+  if ((location && location.length > 150) || (event_date && event_date.length > 50)) {
     return res.status(400).json({ error: 'One or more fields exceed maximum length' });
   }
 
