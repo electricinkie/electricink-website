@@ -1,41 +1,16 @@
 const logger = require('./lib/logger');
-const { getFirestore, admin } = require('./lib/firebase-admin');
 
-async function checkRateLimit(key) {
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT) return { allowed: true };
-  try { getFirestore(); } catch (e) { return { allowed: true }; }
-  if (!admin.apps || !admin.apps.length) return { allowed: true };
-  const db = admin.firestore();
-  const LIMIT = 10;
-  const WINDOW_SECONDS = 60;
-  const docRef = db.collection('rate_limits').doc(key);
-  try {
-    const result = await db.runTransaction(async (tx) => {
-      const doc = await tx.get(docRef);
-      const now = Date.now();
-      if (!doc.exists) {
-        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
-        tx.set(docRef, { count: 1, resetAt, expiresAt });
-        return { allowed: true };
-      }
-      const data = doc.data() || {};
-      const resetAtMillis = (data.resetAt && typeof data.resetAt.toMillis === 'function') ? data.resetAt.toMillis() : (data.resetAt || 0);
-      if (now > resetAtMillis) {
-        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
-        tx.set(docRef, { count: 1, resetAt, expiresAt });
-        return { allowed: true };
-      }
-      if ((data.count || 0) >= LIMIT) return { allowed: false };
-      tx.update(docRef, { count: admin.firestore.FieldValue.increment(1) });
-      return { allowed: true };
-    });
-    return result;
-  } catch (err) {
-    logger.error('Rate limit transaction failed', err);
+const _rl = new Map();
+function checkRateLimit(key) {
+  const now = Date.now();
+  const entry = _rl.get(key);
+  if (!entry || now > entry.resetAt) {
+    _rl.set(key, { count: 1, resetAt: now + 60000 });
     return { allowed: true };
   }
+  if (entry.count >= 10) return { allowed: false };
+  entry.count++;
+  return { allowed: true };
 }
 
 const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
