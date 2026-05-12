@@ -175,9 +175,6 @@ window.appliedDiscount = 0;
 
     // Load cart
     loadCart();
-    if (typeof fbq === 'function') {
-      fbq('track', 'InitiateCheckout');
-    }
 
     // If logged in, fetch discount percent from Firestore so totals include it
     try {
@@ -202,7 +199,15 @@ window.appliedDiscount = 0;
 
     // Calculate totals (uses any discountPercent fetched earlier)
     calculateTotals();
-    
+
+    // META PIXEL: InitiateCheckout — disparado após totals calculados (value correcto)
+    if (typeof fbq === 'function') {
+      fbq('track', 'InitiateCheckout', {
+        value: totals.total,
+        currency: 'EUR'
+      });
+    }
+
     // Render order summary
     renderOrderSummary();
     
@@ -720,9 +725,20 @@ window.appliedDiscount = 0;
               
               // Send emails (non-blocking)
               sendOrderEmails(orderInfo, paymentIntentId).catch(console.error);
-              
-              // Redirect to success
-              window.location.href = `/success.html?payment_intent=${paymentIntentId}`;
+
+              // META PIXEL: Purchase — antes do redirect (dedup com server event via transaction_id)
+              if (typeof fbq === 'function') {
+                fbq('track', 'Purchase', {
+                  value: totals.total,
+                  currency: 'EUR',
+                  transaction_id: paymentIntentId
+                });
+              }
+
+              // Redirect to success — delay garante que fbq dispara antes de sair
+              setTimeout(() => {
+                window.location.href = `/success.html?payment_intent=${paymentIntentId}`;
+              }, 100);
             }
           } catch (error) {
             console.error('❌ Express checkout error:', error);
@@ -1643,8 +1659,19 @@ window.appliedDiscount = 0;
       console.error('Error clearing cart:', error);
     }
 
-    // Redirect to success page
-    window.location.href = `/success.html?payment_intent=${paymentIntent.id}`;
+    // META PIXEL: Purchase — antes do redirect (dedup com server event via transaction_id)
+    if (typeof fbq === 'function') {
+      fbq('track', 'Purchase', {
+        value: totals.total,
+        currency: 'EUR',
+        transaction_id: paymentIntent.id
+      });
+    }
+
+    // Redirect to success page — delay garante que fbq dispara antes de sair
+    setTimeout(() => {
+      window.location.href = `/success.html?payment_intent=${paymentIntent.id}`;
+    }, 100);
   }
 
   // ============================================

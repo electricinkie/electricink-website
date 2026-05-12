@@ -86,7 +86,8 @@ import { INTERNAL_API_URL } from './constants.js';
     if (typeof fbq === 'function') {
       fbq('track', 'Purchase', {
         currency: 'EUR',
-        value: t.total || 0
+        value: t.total || 0,
+        transaction_id: paymentIntentId
       });
     }
   }

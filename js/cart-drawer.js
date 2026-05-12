@@ -179,7 +179,7 @@
         fbq('track', 'AddToCart', {
           content_name: item.name,
           currency: 'EUR',
-          value: item.price
+          value: parseFloat(getTotal(getCart()))
         });
       }
       const isMobile = window.innerWidth <= 768;
