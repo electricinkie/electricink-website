@@ -380,3 +380,15 @@
       .conv-strip { padding: 64px 20px; }
       .conv-form-section { padding: 64px 20px; }
     }
+
+/* date picker */
+input[type="month"] {
+  appearance: none;
+  -webkit-appearance: none;
+  color: inherit;
+  cursor: pointer;
+}
+input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.4);
+  cursor: pointer;
+}
