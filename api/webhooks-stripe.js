@@ -110,12 +110,6 @@ const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
 
     return validated;
   }
-// Validar Firestore em produção
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT is required in production');
-  }
-}
 
 /**
  * STRIPE WEBHOOKS HANDLER (Vercel Serverless)
@@ -125,12 +119,9 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'product
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const captureException = (err, ctx) => { console.error('[sentry-stub]', err && err.message, ctx); };
-const { getFirestore, admin } = require('./lib/firebase-admin');
 const { v4: uuidv4 } = require('uuid');
-
-// Resend client helper
-const { getResend } = require('./lib/resend');
-const resend = getResend();
+const { Resend } = require('resend');
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 function escapeHtml(str) {
   if (str == null) return '';
@@ -361,7 +352,6 @@ function removeUndefined(obj) {
   // (duplicate removed) validateMetadata consolidated at top of file
 
 async function handlePaymentIntentSucceeded(event, requestId) {
-  const db = getFirestore();
   const paymentIntent = event.data.object;
   const validatedMetadata = validateMetadata(paymentIntent.metadata);
   // Prefer structured shipping phone when available (Stripe paymentIntent.shipping.phone)
@@ -448,41 +438,15 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       shippingCost: (shipping_cents / 100),
       subtotal: (subtotal_cents / 100),
       total: (paymentIntent.amount / 100),
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      paidAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: new Date().toISOString(),
+      paidAt: new Date().toISOString(),
       createdAtMillis: Date.now(),
       paidAtMillis: Date.now(),
       source: 'webhook',
       webhookEventId: event.id
     };
-    // Tentar criar document com ID específico (atomicidade)
-    const orderRef = db.collection('orders').doc(orderId);
-    if (process.env.NODE_ENV === 'development') {
-      logger.debug('Starting inventory-aware transaction', { orderId, refPath: orderRef.path });
-    }
-
-    // Fast path: save order without inventory checks
-    let orderAlreadyExists = false;
-    await db.runTransaction(async (transaction) => {
-      const orderDoc = await transaction.get(orderRef);
-      if (orderDoc.exists) {
-        orderAlreadyExists = true;
-        logger.info(JSON.stringify({
-          msg: 'Order already processed (idempotent)',
-          orderId,
-          requestId,
-          timestamp: new Date().toISOString(),
-          status: 'idempotent'
-        }));
-        return;
-      }
-      const cleanOrder = removeUndefined(order);
-      transaction.set(orderRef, cleanOrder);
-    });
-    if (orderAlreadyExists) {
-      return { success: true, orderId, emailStatus: 'skipped_duplicate', requestId };
-    }
-    logger.info('Order created successfully in Firestore (inventory checks disabled)');
+    // Idempotência garantida pelo internal via ON CONFLICT (order_id)
+    logger.info('Processing order', { orderId, requestId });
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
 
@@ -494,22 +458,53 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         timestamp: new Date().toISOString(),
         status: 'warn'
       }));
-      // Atualizar order status para indicar falha
-      if (db) {
-        await db.collection('orders').doc(orderId).update({
-          emailStatus: 'failed',
-          emailError: 'Resend not configured',
-          emailAdminStatus: 'skipped',
-          emailAdminTimestamp: new Date().toISOString()
-        });
-      }
       return;
     }
 
     // ═══════════════════════════════════════════════════════════════
     // SEND EMAILS (AWAITED) — run inline so webhook waits for completion
     // ═══════════════════════════════════════════════════════════════
-    const emailLog = { orderId, requestId, timestamp: new Date().toISOString() };
+
+    // Resolve catalog item for email enrichment (client + admin)
+    const productCatalog = loadProductCatalog();
+    function resolveCatalogItem(itemId) {
+      if (!itemId || typeof itemId !== 'string') return null;
+      let prod = productCatalog.find(p => p.id === itemId);
+      if (prod) return { product: prod, variant: null };
+      for (const p of productCatalog) {
+        if (p.variants && Array.isArray(p.variants)) {
+          const v = p.variants.find(vv => vv.id === itemId || vv.priceId === itemId || vv.stripe_price_id === itemId);
+          if (v) return { product: p, variant: v };
+        }
+      }
+      const tokens = itemId.split('-');
+      for (let k = 1; k <= Math.floor(tokens.length / 2); k++) {
+        let repeated = true;
+        for (let i = 0; i < k; i++) {
+          if (tokens[i] !== tokens[i + k]) { repeated = false; break; }
+        }
+        if (repeated) {
+          const candidate = tokens.slice(k).join('-');
+          const pmatch = productCatalog.find(p => p.id === candidate);
+          if (pmatch) return { product: pmatch, variant: null };
+          for (const p of productCatalog) {
+            if (p.variants && Array.isArray(p.variants)) {
+              const v = p.variants.find(vv => vv.id === candidate || vv.priceId === candidate || vv.stripe_price_id === candidate);
+              if (v) return { product: p, variant: v };
+            }
+          }
+        }
+      }
+      for (let i = 1; i <= Math.min(3, tokens.length - 1); i++) {
+        const suffix = tokens.slice(tokens.length - i).join('-');
+        for (const p of productCatalog) {
+          if (p.variants && p.variants.find(vv => vv.id === suffix)) {
+            return { product: p, variant: p.variants.find(vv => vv.id === suffix) };
+          }
+        }
+      }
+      return null;
+    }
 
     // CLIENT EMAIL
     if (process.env.NODE_ENV === 'development') {
@@ -545,61 +540,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY);
-
-      // Carregar catálogo APENAS para email e criar versão enriquecida só para renderização
-      const productCatalog = loadProductCatalog();
-
-      // Heurística para resolver produto/variante a partir de ids que podem conter
-      // prefixos duplicados (ex: "diluent-diluent-240ml") ou serem ids de variante.
-      function resolveCatalogItem(itemId) {
-        if (!itemId || typeof itemId !== 'string') return null;
-
-        // exact product id
-        let prod = productCatalog.find(p => p.id === itemId);
-        if (prod) return { product: prod, variant: null };
-
-        // variant exact match or priceId match
-        for (const p of productCatalog) {
-          if (p.variants && Array.isArray(p.variants)) {
-            const v = p.variants.find(vv => vv.id === itemId || vv.priceId === itemId || vv.stripe_price_id === itemId);
-            if (v) return { product: p, variant: v };
-          }
-        }
-
-        // Remove duplicated prefix (e.g. "diluent-diluent-240ml" -> "diluent-240ml")
-        const tokens = itemId.split('-');
-        for (let k = 1; k <= Math.floor(tokens.length / 2); k++) {
-          let repeated = true;
-          for (let i = 0; i < k; i++) {
-            if (tokens[i] !== tokens[i + k]) { repeated = false; break; }
-          }
-          if (repeated) {
-            const candidate = tokens.slice(k).join('-');
-            // product match
-            const pmatch = productCatalog.find(p => p.id === candidate);
-            if (pmatch) return { product: pmatch, variant: null };
-            // variant match
-            for (const p of productCatalog) {
-              if (p.variants && Array.isArray(p.variants)) {
-                const v = p.variants.find(vv => vv.id === candidate || vv.priceId === candidate || vv.stripe_price_id === candidate);
-                if (v) return { product: p, variant: v };
-              }
-            }
-          }
-        }
-
-        // Try suffix matching of last 1..3 tokens against variant ids
-        for (let i = 1; i <= Math.min(3, tokens.length - 1); i++) {
-          const suffix = tokens.slice(tokens.length - i).join('-');
-          for (const p of productCatalog) {
-            if (p.variants && p.variants.find(vv => vv.id === suffix)) {
-              return { product: p, variant: p.variants.find(vv => vv.id === suffix) };
-            }
-          }
-        }
-
-        return null;
-      }
 
       const itemsForEmail = (order.items || []).map(item => {
         const resolved = resolveCatalogItem(item.id);
@@ -726,26 +666,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       });
 
       logger.info('[CLIENT] Email sent successfully', { orderId, emailId: clientResult.id });
-
-      if (db) {
-        await db.collection('orders').doc(orderId).update({
-          emailStatus: 'sent',
-          emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
-          emailId: clientResult.id
-        }).catch(err => {
-          logger.error('[CLIENT] Failed to update Firestore', { orderId, error: err && err.message });
-        });
-      }
     } catch (clientErr) {
       logger.error('[CLIENT] Email failed', { orderId, error: clientErr && clientErr.message });
-      if (db) {
-        await db.collection('orders').doc(orderId).update({
-          emailStatus: 'failed',
-          emailError: clientErr?.message
-        }).catch(err => {
-          logger.error('[CLIENT] Failed to update error in Firestore', { orderId, error: err && err.message });
-        });
-      }
     }
 
     // ADMIN EMAIL
@@ -839,27 +761,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       });
 
       logger.info('[ADMIN-EMAIL] Sent successfully', { orderId, emailId: adminEmailResult.id });
-
-      if (db) {
-        await db.collection('orders').doc(orderId).update({
-          adminEmailStatus: 'sent',
-          adminEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
-          adminEmailId: adminEmailResult.id
-        }).catch(err => {
-          logger.error('[ADMIN-EMAIL] Failed to update Firestore', { orderId, error: err && err.message });
-        });
-      }
     } catch (adminErr) {
       logger.error('[ADMIN-EMAIL] Failed to send', { orderId, error: adminErr && adminErr.message });
-      if (db) {
-        await db.collection('orders').doc(orderId).update({
-          adminEmailStatus: 'failed',
-          adminEmailError: adminErr?.message,
-          adminEmailErrorAt: admin.firestore.FieldValue.serverTimestamp()
-        }).catch(err => {
-          logger.error('[ADMIN-EMAIL] Failed to update Firestore error', { orderId, error: err && err.message });
-        });
-      }
     }
 
     if (process.env.NODE_ENV === 'development') {
@@ -957,25 +860,13 @@ async function handlePaymentIntentFailed(paymentIntent, requestId) {
     requestId
   });
 
-  try {
-    const db = getFirestore();
-    await db.collection('failed_payments').doc(paymentIntent.id).set({
-      paymentIntentId: paymentIntent.id,
-      amount: paymentIntent.amount,
-      currency: paymentIntent.currency,
-      customerEmail: paymentIntent.metadata?.customer_email || paymentIntent.receipt_email || 'unknown',
-      failureReason: paymentIntent.last_payment_error?.message || 'Unknown error',
-      failureCode: paymentIntent.last_payment_error?.code || null,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      expiresAt: admin.firestore.Timestamp.fromMillis(Date.now() + 90 * 24 * 60 * 60 * 1000),
-      metadata: paymentIntent.metadata || {}
-    });
-
-    logger.info('Failed payment recorded', { paymentIntentId: paymentIntent.id, requestId });
-  } catch (error) {
-    logger.error('Error recording failed payment', error, { paymentIntentId: paymentIntent.id, requestId });
-    // Do not fail the webhook on logging error
-  }
+  logger.warn('Failed payment', {
+    paymentIntentId: paymentIntent.id,
+    amount: paymentIntent.amount,
+    customerEmail: paymentIntent.metadata?.customer_email || paymentIntent.receipt_email || 'unknown',
+    failureReason: paymentIntent.last_payment_error?.message || 'Unknown error',
+    requestId
+  });
 
   return { processed: true };
 }
@@ -997,28 +888,26 @@ async function handleChargeRefunded(charge, requestId) {
   }
 
   try {
-    const db = getFirestore();
-    const orderRef = db.collection('orders').doc(charge.payment_intent);
-    const orderSnap = await orderRef.get();
-
-    if (!orderSnap.exists) {
-      logger.warn('Order not found for refunded charge', { paymentIntentId: charge.payment_intent, requestId });
-      return { processed: true };
-    }
-
-    await orderRef.update({
-      status: 'refunded',
-      paymentStatus: 'refunded',
-      refundedAt: admin.firestore.FieldValue.serverTimestamp(),
-      refundAmount: charge.amount_refunded,
-      refundReason: (charge.refunds && charge.refunds.data && charge.refunds.data[0] && charge.refunds.data[0].reason) || 'Not specified',
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+    const refundRes = await fetch(`${INTERNAL_URL}/api/sales/refund/${charge.payment_intent}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-webhook-secret': process.env.INTERNAL_WEBHOOK_SECRET || ''
+      },
+      body: JSON.stringify({
+        refund_amount: charge.amount_refunded,
+        refund_reason: (charge.refunds && charge.refunds.data && charge.refunds.data[0] && charge.refunds.data[0].reason) || 'Not specified'
+      }),
+      signal: AbortSignal.timeout(10000)
     });
-
-    logger.info('Order status updated to refunded', { orderId: charge.payment_intent, requestId });
+    if (!refundRes.ok) {
+      logger.warn('Failed to update refund in internal', { paymentIntentId: charge.payment_intent, status: refundRes.status, requestId });
+    } else {
+      logger.info('Order status updated to refunded in internal', { orderId: charge.payment_intent, requestId });
+    }
   } catch (error) {
-    logger.error('Error updating refunded order', error, { chargeId: charge.id, requestId });
-    throw error; // Stripe will retry
+    logger.error('Error updating refunded order', { error: error && error.message, chargeId: charge.id, requestId });
   }
 
   return { processed: true };

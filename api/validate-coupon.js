@@ -1,53 +1,17 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getFirestore, admin } = require('./lib/firebase-admin');
-const logger = require('./lib/logger');
+const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
-async function checkRateLimit(key) {
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT) return { allowed: true };
-  try { getFirestore(); } catch (e) { return { allowed: true }; }
-  if (!admin.apps || !admin.apps.length) return { allowed: true };
-
-  const db = admin.firestore();
-  const LIMIT = 30;
-  const WINDOW_SECONDS = 60;
-  const docRef = db.collection('rate_limits').doc(key);
-
-  try {
-    const result = await db.runTransaction(async (tx) => {
-      const doc = await tx.get(docRef);
-      const now = Date.now();
-
-      if (!doc.exists) {
-        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
-        tx.set(docRef, { count: 1, resetAt, expiresAt });
-        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
-      }
-
-      const data = doc.data() || {};
-      const resetAtMillis = (data.resetAt && typeof data.resetAt.toMillis === 'function') ? data.resetAt.toMillis() : (data.resetAt || 0);
-
-      if (now > resetAtMillis) {
-        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
-        tx.set(docRef, { count: 1, resetAt, expiresAt });
-        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
-      }
-
-      if ((data.count || 0) >= LIMIT) {
-        return { allowed: false, remaining: 0, resetAt: new Date(resetAtMillis) };
-      }
-
-      tx.update(docRef, { count: admin.firestore.FieldValue.increment(1) });
-      return { allowed: true, remaining: LIMIT - ((data.count || 0) + 1), resetAt: new Date(resetAtMillis) };
-    });
-
-    return result;
-  } catch (err) {
-    logger.error('Rate limit transaction failed', err);
-    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
-    return { allowed: !isProduction };
+const _rlMap = new Map();
+function checkRateLimit(key) {
+  const now = Date.now();
+  const entry = _rlMap.get(key);
+  if (!entry || now > entry.resetAt) {
+    _rlMap.set(key, { count: 1, resetAt: now + 60000 });
+    return { allowed: true };
   }
+  if (entry.count >= 30) return { allowed: false };
+  entry.count++;
+  return { allowed: true };
 }
 
 module.exports = async (req, res) => {
@@ -185,27 +149,24 @@ module.exports = async (req, res) => {
     // ═══════════════════════════════════════════════════════════
     
     if (coupon.metadata && coupon.metadata.first_order_only === 'true') {
-      if (process.env.NODE_ENV === 'development') {
-        logger.debug('[COUPON] Checking first order', { email });
-      }
-      
-      const db = getFirestore();
-      const ordersSnapshot = await db.collection('orders')
-        .where('customerEmail', '==', email.toLowerCase())
-        .where('status', '==', 'paid')
-        .limit(1)
-        .get();
-      
-      if (!ordersSnapshot.empty) {
-        logger.warn('[COUPON] Not first order', { email });
-        return res.json({ 
-          valid: false, 
-          message: 'Coupon valid only for first order' 
-        });
-      }
-      
-      if (process.env.NODE_ENV === 'development') {
-        logger.debug('[COUPON] First order confirmed', { email });
+      try {
+        const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+        const checkRes = await fetch(
+          `${INTERNAL_URL}/api/sales/website/has-orders?email=${encodeURIComponent(email.toLowerCase())}`,
+          {
+            headers: { 'x-webhook-secret': process.env.INTERNAL_WEBHOOK_SECRET || '' },
+            signal: AbortSignal.timeout(3000)
+          }
+        );
+        if (checkRes.ok) {
+          const checkData = await checkRes.json();
+          if (checkData.has_orders) {
+            logger.warn('[COUPON] Not first order', { email });
+            return res.json({ valid: false, message: 'Coupon valid only for first order' });
+          }
+        }
+      } catch (err) {
+        logger.warn('[COUPON] First order check failed, allowing', { error: err && err.message });
       }
     }
 

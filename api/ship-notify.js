@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const logger = require('./lib/logger');
-const { getResend } = require('./lib/resend');
-const { getFirestore, admin } = require('./lib/firebase-admin');
-
-const resend = getResend();
+const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
+const { Resend } = require('resend');
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 function escapeHtml(str) {
   if (str == null) return '';
@@ -48,16 +46,17 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const db = getFirestore();
-    const orderRef = db.collection('orders').doc(sale_id);
-    const snap = await orderRef.get();
-    if (!snap.exists) {
+    const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+    const saleRes = await fetch(`${INTERNAL_URL}/api/sales/${sale_id}`, {
+      headers: { 'x-crm-secret': process.env.CRM_SECRET || '' },
+      signal: AbortSignal.timeout(5000)
+    });
+    if (!saleRes.ok) {
       res.setHeader('x-request-id', requestId);
       return res.status(404).json({ error: 'Order not found', requestId });
     }
-
-    const order = snap.data() || {};
-    if (order.shippedAt) {
+    const order = await saleRes.json();
+    if (order.shipped_at) {
       res.setHeader('x-request-id', requestId);
       return res.status(200).json({ success: true, skipped: true, requestId });
     }
@@ -151,17 +150,7 @@ module.exports = async function handler(req, res) {
 
       logger.info('Ship notification email sent', { orderId: ORDER_NUMBER, emailId: result.id, requestId });
 
-      // Update Firestore (best-effort)
-      try {
-        await orderRef.update({
-          shippedAt: admin.firestore.FieldValue.serverTimestamp(),
-          trackingNumber: TRACKING_NUMBER,
-          carrier: CARRIER,
-          estimatedDelivery: ESTIMATED_DELIVERY
-        });
-      } catch (updateErr) {
-        logger.warn('Failed to update order shipped fields in Firestore', { orderId: ORDER_NUMBER, error: updateErr && updateErr.message, requestId });
-      }
+      // Firestore removed — shipped_at already updated in internal via PATCH /api/sales/:id/ship
 
       res.setHeader('x-request-id', requestId);
       return res.status(200).json({ success: true, requestId });
