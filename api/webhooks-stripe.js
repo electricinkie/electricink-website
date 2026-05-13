@@ -124,7 +124,7 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'product
 
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const { captureException } = require('./lib/sentry');
+const captureException = (err, ctx) => { console.error('[sentry-stub]', err && err.message, ctx); };
 const { getFirestore, admin } = require('./lib/firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 

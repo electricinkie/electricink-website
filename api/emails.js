@@ -1,5 +1,5 @@
 // Minimal stub - webhook handles all email logic
-const logger = require('./lib/logger');
+const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
 module.exports = async function handler(req, res) {
   if (process.env.NODE_ENV === 'development') {
