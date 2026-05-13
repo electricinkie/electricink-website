@@ -10,7 +10,7 @@ if (fs.existsSync(envLocalPath)) {
 }
 
 // Import logger early (needed for startup logs)
-const logger = require('./lib/logger');
+const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
 // Load email templates once at startup (used for client/admin emails)
 let clientTemplateHtml = '';
