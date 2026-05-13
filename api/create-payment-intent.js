@@ -1,5 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { captureException } = require('./lib/sentry');
+const captureException = (err, ctx) => { console.error('[sentry-stub]', err && err.message, ctx); };
 const { z } = require('zod');
 const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
