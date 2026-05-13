@@ -1,28 +1,4 @@
 {
-  "test-product": {
-    "id": "test-product",
-    "name": "Test Product",
-    "category": "Cosmetics",
-    "subcategory": "Aftercare",
-    "description": "Test product for checkout validation. Do not purchase.",
-    "features": [],
-    "stripe": {
-      "productId": "prod_Tlw3Y2Nb3ZEW8S",
-      "priceId": "price_1SoOBLALQaxEXnEzcZHjeW90"
-    },
-    "price": 1.00,
-    "variants": [],
-    "image": "/images/products/cosmetics/tattoo-balm-25g.webp",
-    "images": ["/images/products/cosmetics/tattoo-balm-25g.webp"],
-    "inventory": {
-      "stock_quantity": 99,
-      "stock_status": "in_stock",
-      "low_stock_threshold": 1
-    },
-    "inStock": true,
-    "featured": false,
-    "stripe_price_id": "price_1SoOBLALQaxEXnEzcZHjeW90"
-  },
   "tattoo-balm": {
     "id": "tattoo-balm",
     "name": "Tattoo Balm",
