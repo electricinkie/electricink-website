@@ -1,14 +1,7 @@
-// Validar Firestore em produção
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT is required in production');
-  }
-}
-
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { captureException } = require('./lib/sentry');
 const { z } = require('zod');
-const logger = require('./lib/logger');
+const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
 // Conditional debug logging helper
 const debug = process.env.NODE_ENV === 'development' 
@@ -89,64 +82,18 @@ async function loadProducts() {
 }
 
 let stripeProducts = {};
-const { getFirestore, admin } = require('./lib/firebase-admin');
 
-// Delegate Firestore initialization to the shared module
-function initFirestore() {
-  return getFirestore();
-}
-
-/**
- * Simple Firestore-backed rate limiter per key (e.g., IP).
- * Limits to LIMIT requests per WINDOW_SECONDS window.
- */
-async function checkRateLimit(key) {
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT) return { allowed: true };
-  initFirestore();
-  if (!admin.apps || !admin.apps.length) return { allowed: true };
-
-  const db = admin.firestore();
-  const LIMIT = 30; // requests
-  const WINDOW_SECONDS = 60; // seconds
-  const docRef = db.collection('rate_limits').doc(key);
-
-  try {
-    const result = await db.runTransaction(async (tx) => {
-      const doc = await tx.get(docRef);
-      const now = Date.now();
-
-      if (!doc.exists) {
-        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
-        tx.set(docRef, { count: 1, resetAt, expiresAt });
-        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
-      }
-
-      const data = doc.data() || {};
-      const resetAtMillis = (data.resetAt && typeof data.resetAt.toMillis === 'function') ? data.resetAt.toMillis() : (data.resetAt || 0);
-
-      if (now > resetAtMillis) {
-        const resetAt = admin.firestore.Timestamp.fromMillis(now + WINDOW_SECONDS * 1000);
-        const expiresAt = admin.firestore.Timestamp.fromMillis(now + 24 * 60 * 60 * 1000);
-        tx.set(docRef, { count: 1, resetAt, expiresAt });
-        return { allowed: true, remaining: LIMIT - 1, resetAt: resetAt.toDate() };
-      }
-
-      if ((data.count || 0) >= LIMIT) {
-        return { allowed: false, remaining: 0, resetAt: new Date(resetAtMillis) };
-      }
-
-      tx.update(docRef, { count: admin.firestore.FieldValue.increment(1) });
-      return { allowed: true, remaining: LIMIT - ((data.count || 0) + 1), resetAt: new Date(resetAtMillis) };
-    });
-
-    return result;
-  } catch (err) {
-    logger.error('Rate limit transaction failed', err);
-    // Fail closed in production for security, fail open in development for convenience
-    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
-    return { allowed: !isProduction };
+const _rlMap = new Map();
+function checkRateLimit(key) {
+  const now = Date.now();
+  const entry = _rlMap.get(key);
+  if (!entry || now > entry.resetAt) {
+    _rlMap.set(key, { count: 1, resetAt: now + 60000 });
+    return { allowed: true };
   }
+  if (entry.count >= 30) return { allowed: false };
+  entry.count++;
+  return { allowed: true };
 }
 
 /**
@@ -362,19 +309,19 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
         const firstOrderOnly = coupon.metadata && coupon.metadata.first_order_only === 'true';
         if (firstOrderOnly && customerEmail) {
           try {
-            initFirestore();
-            const db = admin.firestore();
-            const ordersSnap = await db.collection('orders')
-              .where('customerEmail', '==', customerEmail)
-              .where('status', '==', 'paid')
-              .limit(1)
-              .get();
-            if (!ordersSnap.empty) {
-              // Customer already has orders; ignore coupon
-              discount = 0;
+            const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+            const checkRes = await fetch(
+              `${INTERNAL_URL}/api/sales/website/has-orders?email=${encodeURIComponent(customerEmail)}`,
+              {
+                headers: { 'x-webhook-secret': process.env.INTERNAL_WEBHOOK_SECRET || '' },
+                signal: AbortSignal.timeout(3000)
+              }
+            );
+            if (checkRes.ok) {
+              const checkData = await checkRes.json();
+              if (checkData.has_orders) discount = 0;
             }
           } catch (err) {
-            // Firestore check failed; fail-safe: ignore first-order restriction and continue
             logger.warn('First-order check failed', err && err.message);
           }
         }
