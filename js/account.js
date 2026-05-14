@@ -975,7 +975,13 @@ function showError(el, msg) {
   el.style.display = 'block';
 }
 async function handleRequestDeletion() {
-  if (!confirm('Are you sure you want to delete your account? This cannot be undone after 30 days.')) return;
+  const confirmed = await window.modal.delete({
+    title: 'Delete your account?',
+    message: 'All your data will be permanently removed after 30 days. Orders are kept for legal compliance but your personal details will be anonymised. This cannot be undone.',
+    confirmText: 'Yes, request deletion',
+    cancelText: 'Cancel'
+  });
+  if (!confirmed) return;
   const token = localStorage.getItem('ei_loyalty_token');
   if (!token) return;
   const btn = document.getElementById('btn-request-deletion');
@@ -987,15 +993,24 @@ async function handleRequestDeletion() {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (res.ok) {
-      alert('Account deletion requested. You will receive a confirmation. Your account will be deleted within 30 days.');
+      await window.modal.success({
+        title: 'Deletion requested',
+        message: 'Your account will be deleted within 30 days. You have been signed out.'
+      });
       handleSignout();
     } else {
       const data = await res.json().catch(() => ({}));
-      alert(data.error || 'Something went wrong. Please try again.');
+      await window.modal.alert({
+        title: 'Something went wrong',
+        message: data.error || 'Please try again or contact us at hello@electricink.ie'
+      });
       if (btn) { btn.disabled = false; btn.textContent = 'Request account deletion'; }
     }
   } catch (err) {
-    alert('Something went wrong. Please try again.');
+    await window.modal.alert({
+      title: 'Something went wrong',
+      message: 'Please try again or contact us at hello@electricink.ie'
+    });
     if (btn) { btn.disabled = false; btn.textContent = 'Request account deletion'; }
   }
 }
