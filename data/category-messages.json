@@ -3,7 +3,8 @@
     "availability_notice": true,
     "message": {
       "title": "Available on Request",
-      "text": "Available to order. <a href='https://wa.me/353831473502'>Message us on WhatsApp</a> to arrange.",
+      "text": "Available to order. Message us on WhatsApp to arrange.",
+      "whatsapp_text": "Message us on WhatsApp",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }
@@ -12,7 +13,8 @@
     "availability_notice": true,
     "message": {
       "title": "Available on Request",
-      "text": "Available to order. <a href='https://wa.me/353831473502'>Message us on WhatsApp</a> to arrange.",
+      "text": "Available to order. Message us on WhatsApp to arrange.",
+      "whatsapp_text": "Message us on WhatsApp",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }
@@ -21,7 +23,8 @@
     "availability_notice": true,
     "message": {
       "title": "Available on Request",
-      "text": "Available to order. <a href='https://wa.me/353831473502'>Message us on WhatsApp</a> to arrange.",
+      "text": "Available to order. Message us on WhatsApp to arrange.",
+      "whatsapp_text": "Message us on WhatsApp",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }
@@ -30,7 +33,8 @@
     "availability_notice": true,
     "message": {
       "title": "Limited Stock",
-      "text": "Raven Black and Ghost White in stock. Other colours available — <a href='https://wa.me/353831473502'>WhatsApp us</a> for delivery time.",
+      "text": "Raven Black and Ghost White in stock. Other colours available — WhatsApp us for delivery time.",
+      "whatsapp_text": "WhatsApp us",
       "whatsapp_link": "https://wa.me/353831473502",
       "display_position": "top"
     }

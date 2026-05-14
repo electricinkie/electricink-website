@@ -114,12 +114,35 @@ function escHtml(str) {
 
       const notice = document.createElement('div');
       notice.className = 'category-notice';
-      notice.innerHTML = `
-        <div class="notice-inner">
-          <strong class="notice-title">${escHtml(msg.title)}</strong>
-          <p class="notice-text">${escHtml(msg.text)}</p>
-        </div>
-      `;
+
+      const inner = document.createElement('div');
+      inner.className = 'notice-inner';
+
+      const title = document.createElement('strong');
+      title.className = 'notice-title';
+      title.textContent = msg.title;
+
+      const textPara = document.createElement('p');
+      textPara.className = 'notice-text';
+
+      if (msg.whatsapp_link && msg.whatsapp_text) {
+        const textBeforeLink = msg.text.split(msg.whatsapp_text)[0];
+        const textAfterLink = msg.text.split(msg.whatsapp_text)[1] || '';
+
+        textPara.textContent = textBeforeLink;
+        const link = document.createElement('a');
+        link.href = msg.whatsapp_link;
+        link.textContent = msg.whatsapp_text;
+        link.target = '_blank';
+        textPara.appendChild(link);
+        textPara.appendChild(document.createTextNode(textAfterLink));
+      } else {
+        textPara.textContent = msg.text;
+      }
+
+      inner.appendChild(title);
+      inner.appendChild(textPara);
+      notice.appendChild(inner);
 
       const productCountEl = document.getElementById('productCount');
       header.insertBefore(notice, productCountEl);
