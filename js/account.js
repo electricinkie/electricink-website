@@ -164,6 +164,8 @@ function showAuthWall() {
 function showDashboard() {
   document.getElementById('authWall').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
+  const dz = document.getElementById('deletion-zone');
+  if (dz) dz.style.display = 'block';
 }
 
 function switchAuthTab(tab) {
@@ -971,4 +973,29 @@ function setLoading(btn, loading) {
 function showError(el, msg) {
   el.textContent = msg;
   el.style.display = 'block';
+}
+async function handleRequestDeletion() {
+  if (!confirm('Are you sure you want to delete your account? This cannot be undone after 30 days.')) return;
+  const token = localStorage.getItem('ei_loyalty_token');
+  if (!token) return;
+  const btn = document.getElementById('btn-request-deletion');
+  if (btn) { btn.disabled = true; btn.textContent = 'Requesting…'; }
+  try {
+    const INTERNAL_URL = 'https://ei-internal-production.up.railway.app';
+    const res = await fetch(`${INTERNAL_URL}/api/auth/account/request-deletion`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      alert('Account deletion requested. You will receive a confirmation. Your account will be deleted within 30 days.');
+      handleSignout();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Something went wrong. Please try again.');
+      if (btn) { btn.disabled = false; btn.textContent = 'Request account deletion'; }
+    }
+  } catch (err) {
+    alert('Something went wrong. Please try again.');
+    if (btn) { btn.disabled = false; btn.textContent = 'Request account deletion'; }
+  }
 }
