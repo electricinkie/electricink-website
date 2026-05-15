@@ -5,7 +5,6 @@
  */
 
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_METHODS, INTERNAL_API_URL } from './constants.js';
-import { initFirebase } from './firebase-config.js';
 // Auth removed - guest checkout only
 
 // Debug flag - ativo apenas em localhost ou com ?debug=true
@@ -329,21 +328,7 @@ window.appliedDiscount = 0;
 
   // Fetch user discount percent from Firestore (non-blocking but awaited by init)
   async function fetchUserDiscountPercent() {
-    try {
-      // Auth removed - guest checkout only
-      // Make auth optional: getCurrentUser may throw if Firebase not configured.
-      let user = null;
-      if (!user) return;
-      const { db } = await initFirebase();
-      const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-      const snap = await getDoc(doc(db, 'users', user.uid));
-      const data = snap?.data();
-      if (data && (typeof data.discount === 'number' || data.discount)) {
-        totals.discountPercent = Number(data.discount) || 0;
-      }
-    } catch (err) {
-      console.warn('fetchUserDiscountPercent failed:', err);
-    }
+    // Firebase removed — discount handled via internal loyalty rank
   }
 
   // ============================================
