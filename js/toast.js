@@ -100,7 +100,7 @@
         <div class="toast-icon">
           ${toastConfig.icon}
         </div>
-        <span class="toast-message">${opts.message}</span>
+        <span class="toast-message">${String(opts.message||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</span>
         <button class="toast-close" aria-label="Close notification">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>

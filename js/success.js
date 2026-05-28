@@ -210,7 +210,7 @@ import { INTERNAL_API_URL } from './constants.js';
             <span style="display:flex;align-items:center;flex-shrink:0;">${eventIcons[e.type] || eventIcons.fallback}</span>
             <span style="font-family:'Montserrat',sans-serif;font-size:12px;color:#333;
                          font-weight:${e.type === 'level_up' ? '700' : '500'};">
-              ${e.label}
+              ${String(e.label||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
             </span>
           </div>
         `).join('');
