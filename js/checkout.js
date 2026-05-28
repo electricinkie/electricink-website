@@ -512,7 +512,7 @@ window.appliedDiscount = 0;
         let shippingAmount = shippingOptions.length ? shippingOptions[0].amount : 0;
         if (totals.subtotal >= FREE_SHIPPING_THRESHOLD) {
           shippingAmount = 0;
-          shippingOptions = shippingOptions.map(opt => ({ ...opt, amount: 0, detail: opt.id === 'pickup' ? opt.detail : `FREE - Subtotal over €${FREE_SHIPPING_THRESHOLD}` }));
+          shippingOptions = shippingOptions.map(opt => ({ ...opt, amount: 0, detail: opt.id === 'pickup' ? opt.detail : `FREE - Orders over €${FREE_SHIPPING_THRESHOLD}` }));
         }
         
         const newTotal = Math.round((totals.subtotal - (totals.discount || 0) + (shippingAmount / 100)) * 100);
@@ -776,7 +776,7 @@ window.appliedDiscount = 0;
   function getAvailableShippingOptions(subtotal) {
     const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1150;
     const allOptions = [
-      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free delivery — Ireland-wide' : 'Ireland-wide delivery', amount: standardAmount },
+      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free delivery on orders over €150 — Ireland-wide' : 'Ireland-wide delivery', amount: standardAmount },
       { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 750 },
       { id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 }
     ];
@@ -806,7 +806,7 @@ window.appliedDiscount = 0;
     if (freeNotice) {
       const textSpan = freeNotice.querySelector('span');
       if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-        if (textSpan) textSpan.textContent = 'Free shipping applied — pickup optional';
+        if (textSpan) textSpan.textContent = 'Free shipping applied on orders over €150';
         freeNotice.style.display = 'flex';
       } else {
         freeNotice.style.display = 'none';

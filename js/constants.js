@@ -6,7 +6,7 @@ export const SHIPPING_METHODS = {
 
 // Must match backend `api/lib/constants.js` value
 // This controls UI displays and client-side shipping calculations
-export const FREE_SHIPPING_THRESHOLD = 120;
+export const FREE_SHIPPING_THRESHOLD = 150;
 
 export const PRODUCT_FIELDS = {
   ID: 'id',

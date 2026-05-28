@@ -103,7 +103,7 @@ function checkRateLimit(key) {
  * @returns {number} Shipping cost in EUR
  */
 function calculateShipping(subtotal, address = {}) {
-  const FREE_SHIPPING_THRESHOLD = 120;
+  const FREE_SHIPPING_THRESHOLD = 150;
   const STANDARD_RATE = 11.50;
   const SAMEDAY_RATE = 7.50;
   const PICKUP_RATE = 0;
@@ -603,7 +603,7 @@ module.exports = async function handler(req, res) {
       });
       logger.error('Error creating payment intent', error.message);
       if (error.message.includes('Invalid')) {
-        return res.status(400).json({ error: error.message });
+        return res.status(400).json({ error: 'Invalid payment details. Please check your information and try again.' });
       }
       return res.status(500).json({ error: 'Failed to create payment intent' });
     }
