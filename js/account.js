@@ -13,6 +13,11 @@
  *   GET  /api/sales  (filtered by customer email)
  */
 
+function escHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+}
+
 const API = (typeof INTERNAL_API_URL !== 'undefined')
   ? INTERNAL_API_URL
   : 'https://ei-internal-production.up.railway.app';
@@ -261,7 +266,7 @@ async function submitResetPassword() {
     window.history.replaceState({}, '', '/account.html?tab=login');
     switchAuthTab('login');
   } catch (e) {
-    if (err) { err.textContent = e.message; err.style.display = 'block'; }
+    if (err) { err.textContent = 'Something went wrong. Please try again.'; err.style.display = 'block'; }
   } finally {
     if (btn) btn.disabled = false;
   }
@@ -303,7 +308,7 @@ async function handleLogin(e) {
     if (window.toast) window.toast.success('Welcome back!', 3000);
     await loadDashboard();
   } catch (err) {
-    showError(errorEl, err.message);
+    showError(errorEl, 'Login failed. Please check your email and password.');
   } finally {
     setLoading(btn, false);
   }
@@ -370,7 +375,7 @@ async function handleRegister(e) {
     if (window.toast) window.toast.success('Account created — +250 Catokens on your first purchase!', 5000);
     await loadDashboard();
   } catch (err) {
-    showError(errorEl, err.message);
+    showError(errorEl, 'Registration failed. Please try again.');
   } finally {
     setLoading(btn, false);
   }
@@ -624,8 +629,8 @@ function renderRewards(rewards) {
 
     return `
       <div class="r-card" id="rcard-${r.id}">
-        <div class="r-name">${r.name}</div>
-        <div class="r-type">${typeLabel}</div>
+        <div class="r-name">${escHtml(r.name)}</div>
+        <div class="r-type">${escHtml(typeLabel)}</div>
         <div class="r-cost">${cost.toLocaleString()} <span>Catokens</span></div>
         <button
           class="r-btn ${canAfford ? 'can-afford' : 'cannot-afford'}"
@@ -655,8 +660,8 @@ async function redeemReward(rewardId) {
           <div style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#e8faf6;margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
           <div style="font-size:16px;font-weight:700;color:#000;margin-bottom:8px;">Confirm Redemption</div>
           <div style="font-size:13px;color:#555;margin-bottom:6px;">You are about to redeem</div>
-          <div style="font-size:15px;font-weight:700;color:#43BDAB;margin-bottom:4px;">${rewardName}</div>
-          <div style="font-size:12px;color:#888;margin-bottom:20px;">${rewardCost}</div>
+          <div style="font-size:15px;font-weight:700;color:#43BDAB;margin-bottom:4px;">${escHtml(rewardName)}</div>
+          <div style="font-size:12px;color:#888;margin-bottom:20px;">${escHtml(rewardCost)}</div>
           <div style="font-size:11px;color:#aaa;margin-bottom:20px;">This action cannot be undone. Your coupon will be generated immediately.</div>
           <div style="display:flex;gap:10px;">
             <button id="redeem-cancel" style="flex:1;padding:12px;border-radius:9px;border:1px solid #e0e0e0;background:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#555;cursor:pointer;">Cancel</button>
@@ -741,7 +746,8 @@ async function redeemReward(rewardId) {
   } catch (err) {
     btn.textContent = originalText;
     btn.disabled = false;
-    alert(err.message);
+    if (window.toast) window.toast.error('Failed to redeem reward. Please try again.');
+    else alert('Failed to redeem reward. Please try again.');
   }
 }
 
@@ -768,9 +774,9 @@ async function renderActiveCoupons() {
       el.innerHTML = cached.map(c => `
         <div class="h-row" style="align-items:center;gap:12px;">
           <div style="flex:1;">
-            <div class="h-action">${c.reward}</div>
+            <div class="h-action">${escHtml(c.reward)}</div>
             <div class="h-desc" style="font-family:monospace;font-size:13px;
-              letter-spacing:0.05em;color:#111;margin-top:2px;">${c.code}</div>
+              letter-spacing:0.05em;color:#111;margin-top:2px;">${escHtml(c.code)}</div>
             <div class="h-date" style="margin-top:2px;">${formatDate(c.date)}</div>
           </div>
           <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
@@ -813,9 +819,9 @@ async function renderActiveCoupons() {
     el.innerHTML = active.map(r => `
       <div class="h-row" style="align-items:center;gap:12px;">
         <div style="flex:1;">
-          <div class="h-action">${r.reward_name}</div>
+          <div class="h-action">${escHtml(r.reward_name)}</div>
             <div class="h-desc" style="font-family:monospace;font-size:13px; letter-spacing:0.05em;color:#111;margin-top:2px;">
-              ${r.stripe_coupon_id}</div>
+              ${escHtml(r.stripe_coupon_id)}</div>
           <div class="h-date" style="margin-top:2px;">${formatDate(r.created_at)}</div>
         </div>
         <button class="btn-outline-teal" style="font-size:12px;padding:6px 12px;"
@@ -857,8 +863,8 @@ function renderHistory(history) {
     return `
       <div class="h-row">
         <div>
-          <div class="h-action">${label}</div>
-          <div class="h-desc">${h.description || ''}</div>
+          <div class="h-action">${escHtml(label)}</div>
+          <div class="h-desc">${escHtml(h.description || '')}</div>
         </div>
         <div class="h-right">
           <div class="${pos ? 'h-pos' : 'h-neg'}">${pos ? '+' : ''}${pts.toLocaleString()}</div>
@@ -982,7 +988,7 @@ async function handleRequestDeletion() {
     cancelText: 'Cancel'
   });
   if (!confirmed) return;
-  const token = localStorage.getItem('ei_loyalty_token');
+  const token = localStorage.getItem(TOKEN_KEY);
   if (!token) return;
   const btn = document.getElementById('btn-request-deletion');
   if (btn) { btn.disabled = true; btn.textContent = 'Requesting…'; }
