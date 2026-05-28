@@ -249,12 +249,14 @@
       const cfg = ACTION_CONFIG[n.action] || ACTION_CONFIG.manual;
       const isUnread = !n.read_at;
       const pts = n.points > 0 ? `+${n.points.toLocaleString()} Catokens` : `${n.points.toLocaleString()} Catokens`;
+      const _escN = (s) => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
       const text = n.points < 0
-        ? `${cfg.label}: ${n.description || ''}`
-        : `${pts} — ${n.description || cfg.label}`;
+        ? `${cfg.label}: ${_escN(n.description)}`
+        : `${pts} — ${_escN(n.description) || cfg.label}`;
+      const safeAction = _escN(n.action);
       return `
         <div class="ei-notif-item ${isUnread ? 'unread' : ''}">
-          <div class="ei-notif-icon ${n.action}">${cfg.svg}</div>
+          <div class="ei-notif-icon ${safeAction}">${cfg.svg}</div>
           <div class="ei-notif-body">
             <p class="ei-notif-text">${text}</p>
             <p class="ei-notif-time">${formatTimeAgo(n.created_at)}</p>

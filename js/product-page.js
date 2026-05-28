@@ -1230,11 +1230,11 @@ function checkProductAvailability(product) {
       listEl.innerHTML = data.reviews.map(r => `
         <div class="review-card">
           <div class="review-card-header">
-            <span class="review-author">${r.reviewer_name.replace(/</g, '&lt;')}</span>
+            <span class="review-author">${r.reviewer_name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</span>
             <span class="review-date">${new Date(r.created_at).toLocaleDateString('en-IE', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
           </div>
           <div class="review-stars">${[...Array(5)].map((_,i)=>i<r.rating?'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>':'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>').join('')}</div>
-          ${r.comment ? `<p class="review-comment">${r.comment.replace(/</g, '&lt;')}</p>` : ''}
+          ${r.comment ? `<p class="review-comment">${r.comment.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</p>` : ''}
         </div>
       `).join('');
 
@@ -1297,11 +1297,11 @@ function checkProductAvailability(product) {
           document.getElementById('reviewsFormWrap').innerHTML = `
             <div class="review-card" style="border-top:1px solid #f0f0f0;opacity:0.6;">
               <div class="review-card-header">
-                <span class="review-author">${reviewerName.replace(/</g,'&lt;')}</span>
+                <span class="review-author">${reviewerName.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</span>
                 <span class="review-date">Just now</span>
               </div>
               <div class="review-stars">${[...Array(5)].map((_,i)=>i<selectedRating?'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#43BDAB\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>':'<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"1.5\"><polygon points=\"12,2 15,9 22,9.5 17,15 18.5,22 12,18.5 5.5,22 7,15 2,9.5 9,9\"/></svg>').join('')}</div>
-              ${comment ? `<p class=\"review-comment\">${comment.replace(/</g,'&lt;')}</p>` : ''}
+              ${comment ? `<p class=\"review-comment\">${comment.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</p>` : ''}
               <p class=\"review-note\" style=\"margin-top:12px;display:flex;align-items:center;gap:6px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#43BDAB\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 2\"/></svg> Your review will appear on the site once approved — thanks for sharing!</p>
             </div>
           `;
