@@ -47,7 +47,7 @@ try {
           });
         };
 
-        // Sanitize request headers & query_string
+        // Sanitize request headers, query_string, and body
         if (event.request) {
           if (event.request.headers) {
             delete event.request.headers.authorization;
@@ -58,6 +58,9 @@ try {
             event.request.query_string = event.request.query_string
               .replace(/token=[^&]*/gi, 'token=[REDACTED]')
               .replace(/key=[^&]*/gi, 'key=[REDACTED]');
+          }
+          if (event.request.data) {
+            delete event.request.data;
           }
         }
 
@@ -144,8 +147,13 @@ try {
  * Set user context
  */
 function setUser(user) {
-  if (Sentry) {
-    Sentry.setUser(user);
+  if (Sentry && user) {
+    const safe = { id: user.id || user.customer_id || undefined };
+    if (user.email && typeof user.email === 'string') {
+      const parts = user.email.split('@');
+      if (parts.length === 2) safe.email = `***@${parts[1]}`;
+    }
+    Sentry.setUser(safe);
   }
 }
 
