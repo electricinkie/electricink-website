@@ -1,6 +1,6 @@
 (function () {
   const STORAGE_KEY = 'ei_newsletter_seen';
-  const DELAY_MS = 25000; // 25 seconds
+  const DELAY_MS = 45000; // 45 seconds
 
   function hasSeenModal() {
     try { return !!localStorage.getItem(STORAGE_KEY); } catch { return false; }
@@ -83,20 +83,20 @@
       } else {
         const data = await res.json().catch(() => ({}));
         if (errorEl) errorEl.textContent = data.error || 'Something went wrong. Please try again.';
-        if (btn) { btn.textContent = 'Get my 10% off'; btn.disabled = false; }
+        if (btn) { btn.textContent = 'Get my 5% off'; btn.disabled = false; }
       }
     } catch {
       if (errorEl) errorEl.textContent = 'Connection error. Please try again.';
-      if (btn) { btn.textContent = 'Get my 10% off'; btn.disabled = false; }
+      if (btn) { btn.textContent = 'Get my 5% off'; btn.disabled = false; }
     }
   };
 
   window.copyNewsletterCode = function (btn) {
-    navigator.clipboard.writeText('WELCOME10').then(() => {
+    navigator.clipboard.writeText('BLACKCAT5').then(() => {
       btn.textContent = '✓ Copied!';
       setTimeout(() => { btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy code'; }, 2000);
     }).catch(() => {
-      btn.textContent = 'WELCOME10';
+      btn.textContent = 'BLACKCAT5';
     });
   };
 })();

@@ -366,6 +366,7 @@
   }
 
   async function initLoyaltyBtn() {
+    return; // temporarily disabled
     const wrap     = document.getElementById('desktopLoyaltyBtn');
     const loggedIn = document.getElementById('desktopLoyaltyLoggedIn');
     const guest    = document.getElementById('desktopLoyaltyGuest');

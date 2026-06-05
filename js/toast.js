@@ -68,6 +68,7 @@
       opts.type = message.type || 'success';
       opts.duration = (typeof message.duration === 'number') ? message.duration : 3000;
       opts.actions = Array.isArray(message.actions) ? message.actions : [];
+      opts._rawHtml = !!message._rawHtml;
     } else {
       opts.message = String(message || '');
       opts.type = type || 'success';
@@ -100,7 +101,7 @@
         <div class="toast-icon">
           ${toastConfig.icon}
         </div>
-        <span class="toast-message">${String(opts.message||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</span>
+        <span class="toast-message">${opts._rawHtml ? opts.message : String(opts.message||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</span>
         <button class="toast-close" aria-label="Close notification">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -210,7 +211,8 @@
       if (localStorage.getItem('cookieConsent')) return;
       // show toast and keep a reference so we can style/position it as a cookie banner
       const t = toast.show({
-        message: 'This site uses cookies to improve your experience. By continuing to browse you agree to our <a href="/cookie-policy.html" target="_blank">Cookie Policy</a>.',
+        message: 'We use cookies to improve your experience. By continuing to browse you agree to our <a href="/cookie-policy.html" target="_blank">Cookie Policy</a>.',
+        _rawHtml: true,
         type: 'info',
         duration: 0,
         actions: [
