@@ -42,7 +42,7 @@
             <li><a href="/howtousecosmetics.html" class="desktop-menu-link">How to Use</a></li>
             <li><a href="/about-us.html" class="desktop-menu-link">About</a></li>
             <li><a href="/contact-us.html" class="desktop-menu-link">Contact</a></li>
-          <li><a href="/loyalty.html" class="desktop-menu-link">Rewards</a></li>
+          <li style="display:none !important;"><a href="/loyalty.html" class="desktop-menu-link">Rewards</a></li>
           </ul>
         </nav>
         
