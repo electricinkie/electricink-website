@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
     let promoCodeId = null;
     
     try {
-      // First try: Promotion Code lookup (e.g., BLACKCAT5)
+      // First try: Promotion Code lookup (e.g., BLACKCAT10)
       const promotions = await stripe.promotionCodes.list({ 
         code: upperCode,
         active: true,
