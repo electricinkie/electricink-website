@@ -157,7 +157,7 @@
         <li class="menu-divider"></li>
 
         <!-- Sign In / Account -->
-        <li id="mobileLoyaltyItem">
+        <li id="mobileLoyaltyItem" style="display:none !important;">
           <a href="/account.html" id="mobileLoyaltyGuest" class="mobile-menu-link" style="display:flex;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>

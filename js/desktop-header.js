@@ -49,7 +49,7 @@
         <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
           <!-- Loyalty Button -->
-          <div id="desktopLoyaltyBtn" style="display:none;align-items:center;position:relative;">
+          <div id="desktopLoyaltyBtn" style="display:none !important;align-items:center;position:relative;">
             <!-- Logged in — dropdown trigger -->
             <button id="desktopLoyaltyLoggedIn"
                style="display:none;align-items:center;gap:6px;color:#fff;background:none;border:1px solid rgba(255,255,255,0.15);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border-radius:8px;transition:all 0.2s;white-space:nowrap;">

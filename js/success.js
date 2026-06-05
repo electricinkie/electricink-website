@@ -166,8 +166,8 @@ import { INTERNAL_API_URL } from './constants.js';
     }
   }, 500);
 
-  // ────────── Ink Points Summary ──────────
-  if (orderData.email) {
+  // ────────── Ink Points Summary (temporarily disabled) ──────────
+  if (false && orderData.email) {
     setTimeout(async () => {
       try {
         const res = await fetch(
