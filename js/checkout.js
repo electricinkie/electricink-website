@@ -1462,13 +1462,6 @@ window.appliedDiscount = 0;
       // Attach authUid when available so backend can associate orders to UID
       // Auth is optional — callers should continue as guest when no user available
       let currentUser = null;
-      // try {
-      //   currentUser = await getCurrentUser();
-      //   debugLog('🔐 [CHECKOUT] Current user:', currentUser ? currentUser.uid : 'GUEST');
-      // } catch (e) {
-      //   debugLog('🔐 [CHECKOUT] No user (guest)');
-      //   currentUser = null;
-      // }
       const orderData = {
         cartItems: cartItems,
         shippingAddress: shippingAddress,
@@ -1503,14 +1496,6 @@ window.appliedDiscount = 0;
       // Auth removed - guest checkout only
       // Include server-trusted ID token when available so backend can stamp user UID
       let authHeader = {};
-      // try {
-      //   if (currentUser && typeof currentUser.getIdToken === 'function') {
-      //     const idToken = await currentUser.getIdToken();
-      //     if (idToken) authHeader.Authorization = `Bearer ${idToken}`;
-      //   }
-      // } catch (e) {
-      //   console.warn('Failed to obtain idToken for checkout:', e && e.message);
-      // }
 
       const _inkToken = localStorage.getItem('ei_loyalty_token') || '';
       const response = await fetch(PAYMENT_INTENT_URL, {

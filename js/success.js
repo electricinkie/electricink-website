@@ -111,7 +111,7 @@ import { INTERNAL_API_URL } from './constants.js';
 
   // ────────── Render Customer Email ──────────
   if (orderData.email) {
-    document.getElementById('customerEmail').textContent = orderData.email;
+    document.getElementById('customerEmail').textContent = escHtml(orderData.email);
   }
 
   // ────────── Render Card Last 4 (se disponível) ──────────
@@ -166,7 +166,7 @@ import { INTERNAL_API_URL } from './constants.js';
     }
   }, 500);
 
-  // ────────── Ink Points Summary (temporarily disabled) ──────────
+  // ────────── Ink Points Summary (disabled — reactivate on Black Cat Rewards relaunch) ──────────
   if (false && orderData.email) {
     setTimeout(async () => {
       try {

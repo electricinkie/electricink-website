@@ -254,7 +254,7 @@ module.exports = async function handler(req, res) {
       timestamp: new Date().toISOString(),
       status: 'error'
     }));
-    return res.status(400).json({ error: `Webhook Error: ${err.message}`, requestId });
+    return res.status(400).json({ error: 'Webhook signature verification failed', requestId });
   }
 
   // Handle the event
