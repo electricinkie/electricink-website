@@ -175,20 +175,6 @@ window.appliedDiscount = 0;
     // Load cart
     loadCart();
 
-    // If logged in, fetch discount percent from Firestore so totals include it
-    try {
-      await fetchUserDiscountPercent();
-    } catch (err) {
-      console.warn('Could not fetch user discount:', err);
-      // UX: if Firebase unavailable (CSP/CDN), show discrete notice and continue
-      const note = document.getElementById('accountNotice');
-      if (note) {
-          note.textContent = 'Account features unavailable right now; checkout continues.';
-        note.style.display = 'block';
-      } else if (window.toast && typeof window.toast.info === 'function') {
-        window.toast.info('Account features unavailable; checkout continues.');
-      }
-    }
     
     // Check if cart has items
     if (cart.length === 0) {
@@ -326,10 +312,6 @@ window.appliedDiscount = 0;
     totals.total = subtotalAfterDiscount + totals.shipping;
   }
 
-  // Fetch user discount percent from Firestore (non-blocking but awaited by init)
-  async function fetchUserDiscountPercent() {
-    // Firebase removed — discount handled via internal loyalty rank
-  }
 
   // ============================================
   // ORDER SUMMARY
