@@ -543,8 +543,10 @@ window.appliedDiscount = 0;
       });
 
       // Create Payment Request Button Element
-      const elements = stripe.elements();
-      const prButton = elements.create('paymentRequestButton', {
+      // NOTE: must not be named `elements` — that would shadow the module-level
+      // DOM `elements` map used by the paymentmethod handler below
+      const prStripeElements = stripe.elements();
+      const prButton = prStripeElements.create('paymentRequestButton', {
         paymentRequest: paymentRequest,
         style: {
           paymentRequestButton: {
