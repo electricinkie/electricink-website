@@ -24,22 +24,22 @@
     }, 100);
   }
 
-  // Timer trigger
-  let timer = setTimeout(openNewsletterModal, DELAY_MS);
+  // Timer trigger (disabled)
+  // let timer = setTimeout(openNewsletterModal, DELAY_MS);
 
-  // Exit intent trigger
-  document.addEventListener('mouseleave', function (e) {
-    if (e.clientY <= 0) openNewsletterModal();
-  });
+  // Exit intent trigger (disabled)
+  // document.addEventListener('mouseleave', function (e) {
+  //   if (e.clientY <= 0) openNewsletterModal();
+  // });
 
-  // Pause timer if user leaves tab
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) {
-      clearTimeout(timer);
-    } else {
-      timer = setTimeout(openNewsletterModal, DELAY_MS);
-    }
-  });
+  // Pause timer if user leaves tab (disabled)
+  // document.addEventListener('visibilitychange', function () {
+  //   if (document.hidden) {
+  //     clearTimeout(timer);
+  //   } else {
+  //     timer = setTimeout(openNewsletterModal, DELAY_MS);
+  //   }
+  // });
 
   window.closeNewsletterModal = function () {
     const backdrop = document.getElementById('newsletterBackdrop');
