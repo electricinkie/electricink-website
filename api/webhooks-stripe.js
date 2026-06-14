@@ -778,8 +778,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
     // Register sale in internal system (non-blocking)
     try {
-      const internalApiUrl = process.env.INTERNAL_API_URL;
+      const internalApiUrl = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
       const internalSecret = process.env.INTERNAL_WEBHOOK_SECRET;
+      if (!process.env.INTERNAL_API_URL) {
+        logger.warn('[WEBHOOK] INTERNAL_API_URL not set, using fallback URL', { url: internalApiUrl });
+      }
       if (internalApiUrl && internalSecret) {
         const salePayload = {
           shipping_address: order.shippingAddress || null,
