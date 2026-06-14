@@ -589,7 +589,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       // ── Black Cat Rewards block ───────────────────────────────────
       let pointsBlock = '';
       try {
-        const _internalApiUrl = process.env.INTERNAL_API_URL;
+        const _internalApiUrl = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
         if (order.customerEmail && _internalApiUrl) {
           const ptsFetch = await fetch(
             `${_internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`,
