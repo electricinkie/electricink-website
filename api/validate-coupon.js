@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
 const _rlMap = new Map();

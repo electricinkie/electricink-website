@@ -117,7 +117,7 @@ const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@electricink.ie';
  */
 
 const Stripe = require('stripe');
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 const captureException = (err, ctx) => { console.error('[sentry-stub]', err && err.message, ctx); };
 const { v4: uuidv4 } = require('uuid');
 const { Resend } = require('resend');

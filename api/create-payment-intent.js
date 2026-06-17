@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 const captureException = (err, ctx) => { console.error('[sentry-stub]', err && err.message, ctx); };
 const { z } = require('zod');
 const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
@@ -496,11 +496,11 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Rate limiting (per IP) using Firestore
+    // Rate limiting (per IP) — in-memory only, resets on cold start
     try {
       // On Vercel, x-real-ip is set by infrastructure and is not client-spoofable.
       // x-forwarded-for is used as fallback but validated against IPv4/IPv6 format
-      // to prevent attackers from forging arbitrary document keys in Firestore.
+      // to prevent attackers from forging arbitrary keys.
       const rawIp = req.headers['x-real-ip']
         || (req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : null)
         || (req.socket && req.socket.remoteAddress)
