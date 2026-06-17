@@ -624,7 +624,7 @@ window.appliedDiscount = 0;
 
             // Confirm payment — use handleActions:false for Payment Request (Google/Apple Pay)
             // then complete the event BEFORE handling any required actions
-            const {error: confirmError} = await stripe.confirmCardPayment(
+            const {error: confirmError, paymentIntent: confirmedIntent} = await stripe.confirmCardPayment(
               clientSecret,
               {payment_method: ev.paymentMethod.id},
               {handleActions: false}
@@ -636,6 +636,15 @@ window.appliedDiscount = 0;
               ev.complete('fail');
               if (window.toast) {
                 window.toast.error(confirmError.message);
+              }
+            } else if (confirmedIntent && confirmedIntent.status === 'requires_action') {
+              const {error: actionError} = await stripe.handleCardAction(clientSecret);
+              if (actionError) {
+                ev.complete('fail');
+                if (window.toast) window.toast.error(actionError.message);
+              } else {
+                ev.complete('success');
+                debugLog('✅ Express payment succeeded after 3DS!');
               }
             } else {
               // Complete the Payment Request sheet immediately
