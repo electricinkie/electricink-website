@@ -495,6 +495,66 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       return null;
     }
 
+    // Register sale in internal system (non-blocking)
+    try {
+      const internalApiUrl = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+      const internalSecret = process.env.INTERNAL_WEBHOOK_SECRET;
+      if (!process.env.INTERNAL_API_URL) {
+        logger.warn('[WEBHOOK] INTERNAL_API_URL not set, using fallback URL', { url: internalApiUrl });
+      }
+      if (internalApiUrl && internalSecret) {
+        const salePayload = {
+          shipping_address: order.shippingAddress || null,
+          shipping_method: order.shippingMethod || null,
+          customer_phone: order.customerPhone || null,
+
+          items: enrichedItems.map(it => ({
+            ...it,
+            // price_ex = price excluding VAT. Site JSON prices include 23% VAT,
+            // so divide by 1.23 to get the ex-VAT value the internal system expects.
+            price_ex: (() => {
+              const resolved = resolveCatalogItem(it.id);
+              let grossPrice = 0;
+              if (resolved && resolved.variant) {
+                grossPrice = resolved.variant.price || resolved.product?.basic?.price || 0;
+              } else if (resolved && resolved.product) {
+                grossPrice = resolved.product.basic?.price || resolved.product.price || 0;
+              }
+              return grossPrice > 0 ? parseFloat((grossPrice / 1.23).toFixed(4)) : 0;
+            })()
+          })),
+          total: order.total,
+          order_id: order.orderId,
+          customer_name: order.customerName,
+          customer_email: order.customerEmail,
+          referral_code: (paymentIntent.metadata && paymentIntent.metadata.referral_code)
+            ? paymentIntent.metadata.referral_code
+            : null
+        };
+        const saleRes = await fetch(`${internalApiUrl}/api/sales/website`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-webhook-secret': internalSecret
+          },
+          body: JSON.stringify(salePayload),
+          signal: AbortSignal.timeout(25000)
+        });
+        const saleBody = saleRes.ok ? await saleRes.json().catch(() => ({})) : {};
+        if (saleRes.status === 200 && saleBody.duplicate === true) {
+          logger.info('Duplicate webhook event — skipping emails', { orderId });
+          return { success: true, duplicate: true };
+        }
+        if (!saleRes.ok) {
+          logger.warn('Failed to register sale in internal system', { orderId, status: saleRes.status });
+        } else {
+          logger.info('Sale registered in internal system', { orderId });
+        }
+      }
+    } catch (saleErr) {
+      logger.error('Error registering sale in internal system', { orderId, error: saleErr && saleErr.message });
+    }
+
     // CLIENT EMAIL
     if (process.env.NODE_ENV === 'development') {
       logger.debug('Sending order confirmation', { orderId });
@@ -764,61 +824,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       timestamp: new Date().toISOString(),
       status: 'emails_processed'
     }));
-
-    // Register sale in internal system (non-blocking)
-    try {
-      const internalApiUrl = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
-      const internalSecret = process.env.INTERNAL_WEBHOOK_SECRET;
-      if (!process.env.INTERNAL_API_URL) {
-        logger.warn('[WEBHOOK] INTERNAL_API_URL not set, using fallback URL', { url: internalApiUrl });
-      }
-      if (internalApiUrl && internalSecret) {
-        const salePayload = {
-          shipping_address: order.shippingAddress || null,
-          shipping_method: order.shippingMethod || null,
-          customer_phone: order.customerPhone || null,
-
-          items: enrichedItems.map(it => ({
-            ...it,
-            // price_ex = price excluding VAT. Site JSON prices include 23% VAT,
-            // so divide by 1.23 to get the ex-VAT value the internal system expects.
-            price_ex: (() => {
-              const resolved = resolveCatalogItem(it.id);
-              let grossPrice = 0;
-              if (resolved && resolved.variant) {
-                grossPrice = resolved.variant.price || resolved.product?.basic?.price || 0;
-              } else if (resolved && resolved.product) {
-                grossPrice = resolved.product.basic?.price || resolved.product.price || 0;
-              }
-              return grossPrice > 0 ? parseFloat((grossPrice / 1.23).toFixed(4)) : 0;
-            })()
-          })),
-          total: order.total,
-          order_id: order.orderId,
-          customer_name: order.customerName,
-          customer_email: order.customerEmail,
-          referral_code: (paymentIntent.metadata && paymentIntent.metadata.referral_code)
-            ? paymentIntent.metadata.referral_code
-            : null
-        };
-        const saleRes = await fetch(`${internalApiUrl}/api/sales/website`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-webhook-secret': internalSecret
-          },
-          body: JSON.stringify(salePayload),
-          signal: AbortSignal.timeout(25000)
-        });
-        if (!saleRes.ok) {
-          logger.warn('Failed to register sale in internal system', { orderId, status: saleRes.status });
-        } else {
-          logger.info('Sale registered in internal system', { orderId });
-        }
-      }
-    } catch (saleErr) {
-      logger.error('Error registering sale in internal system', { orderId, error: saleErr && saleErr.message });
-    }
 
     return { success: true, orderId, emailStatus: 'processed', requestId };
 
