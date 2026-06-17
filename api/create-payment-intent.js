@@ -281,7 +281,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   // ═══════════════════════════════════════════════════════════════
   // VALIDATE AND APPLY DISCOUNT (server-side verification)
   // ═══════════════════════════════════════════════════════════════
-  let discount = 0;
+  let discount = null;
 
   if (couponCode && Number(clientDiscount) > 0) {
     try {
@@ -293,8 +293,10 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
       });
 
       let coupon = null;
+      let promoCode = null;
       if (promotions && promotions.data && promotions.data.length > 0) {
-        coupon = promotions.data[0].coupon;
+        promoCode = promotions.data[0];
+        coupon = promoCode.coupon;
       } else {
         try {
           coupon = await stripe.coupons.retrieve(couponCode);
@@ -305,6 +307,27 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
       }
 
       if (coupon) {
+        const _upperCode = String(couponCode).toUpperCase();
+        let couponRejected = false;
+        if (!coupon.valid || (coupon.redeem_by && Date.now() / 1000 > coupon.redeem_by)) {
+          logger.warn('Coupon rejected: expired or invalid', { code: _upperCode });
+          couponRejected = true;
+        }
+        if (!couponRejected && coupon.max_redemptions && coupon.times_redeemed >= coupon.max_redemptions) {
+          logger.warn('Coupon rejected: max redemptions reached', { code: _upperCode });
+          couponRejected = true;
+        }
+        if (!couponRejected && promoCode && promoCode.metadata && promoCode.metadata.restricted_email) {
+          const _restrictedEmail = promoCode.metadata.restricted_email.toLowerCase().trim();
+          if ((customerEmail || '').toLowerCase().trim() !== _restrictedEmail) {
+            logger.warn('Coupon rejected: email restriction failed', { code: _upperCode });
+            couponRejected = true;
+          }
+        }
+        if (couponRejected) {
+          discount = 0;
+        }
+
         // Optional first-order check via coupon metadata
         const firstOrderOnly = coupon.metadata && coupon.metadata.first_order_only === 'true';
         if (firstOrderOnly && customerEmail) {

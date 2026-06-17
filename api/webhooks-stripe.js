@@ -450,17 +450,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
     // 5. Envia email de confirmação (NÃO-BLOQUEANTE) após salvar pedido
 
-    if (!resend) {
-      logger.warn(JSON.stringify({
-        msg: 'Resend not initialized - skipping email notifications',
-        orderId,
-        requestId,
-        timestamp: new Date().toISOString(),
-        status: 'warn'
-      }));
-      return;
-    }
-
     // ═══════════════════════════════════════════════════════════════
     // SEND EMAILS (AWAITED) — run inline so webhook waits for completion
     // ═══════════════════════════════════════════════════════════════
