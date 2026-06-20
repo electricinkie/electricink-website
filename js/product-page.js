@@ -685,7 +685,7 @@ import { INTERNAL_API_URL } from '/js/constants.js';
 
     const warningP = document.createElement('p');
     warningP.className = 'warning-text';
-    warningP.textContent = bodyText;
+    warningP.innerHTML = bodyText;
 
     warningContentDiv.appendChild(warningTopDiv);
     warningContentDiv.appendChild(warningP);
