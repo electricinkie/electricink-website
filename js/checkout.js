@@ -47,7 +47,7 @@ window.appliedDiscount = 0;
   
   let shippingMethod = 'standard'; // 'standard', 'same-day', 'pickup'
   const VAT_RATE = 0.23; // 23% VAT for Ireland
-  const STANDARD_RATE = 11.50; // Standard shipping rate
+  const STANDARD_RATE = 13.00; // Standard shipping rate
   const SAMEDAY_RATE = 7.50; // Same-day Dublin rate
   const PICKUP_RATE = 0; // Store pickup is free
   const SAMEDAY_CUTOFF_HOUR = 14; // 2 PM cutoff for same-day
@@ -869,7 +869,7 @@ window.appliedDiscount = 0;
     try {
       if (standardLabel) {
         const priceEl = standardLabel.querySelector('.shipping-option-price');
-        if (priceEl) priceEl.textContent = isFree ? 'FREE' : '€11.50';
+        if (priceEl) priceEl.textContent = isFree ? 'FREE' : '€13.00';
       }
       if (sameDayOption) {
         const priceEl = sameDayOption.querySelector('.shipping-option-price');

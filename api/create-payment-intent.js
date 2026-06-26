@@ -104,7 +104,7 @@ function checkRateLimit(key) {
  */
 function calculateShipping(subtotal, address = {}) {
   const FREE_SHIPPING_THRESHOLD = 150;
-  const STANDARD_RATE = 11.50;
+  const STANDARD_RATE = 13.00;
   const SAMEDAY_RATE = 7.50;
   const PICKUP_RATE = 0;
 
