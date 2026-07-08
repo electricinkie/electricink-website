@@ -432,7 +432,7 @@ window.appliedDiscount = 0;
       const qualifiesForFreeShipping = totals.subtotal >= freeShippingThreshold;
       
       // Calculate initial shipping using the first available option (or fallback)
-      let initialShipping = initialShippingOptions.length ? initialShippingOptions[0].amount : (qualifiesForFreeShipping ? 0 : 1150);
+      let initialShipping = initialShippingOptions.length ? initialShippingOptions[0].amount : (qualifiesForFreeShipping ? 0 : 1300);
       let initialTotal = Math.round((totals.subtotal - (totals.discount || 0) + (initialShipping / 100)) * 100);
       
       debugLog('   Free shipping?', qualifiesForFreeShipping);
@@ -472,7 +472,7 @@ window.appliedDiscount = 0;
 
         // Add standard if available
         if (baseOptions.some(o => o.id === 'standard')) {
-          shippingOptions.push({ id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: 'Ireland-wide delivery', amount: 1150 });
+          shippingOptions.push({ id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: 'Ireland-wide delivery', amount: 1300 });
         }
 
         // Add Same-Day only if baseOptions includes it and address qualifies
@@ -582,6 +582,67 @@ window.appliedDiscount = 0;
         debugLog('   Payment button mounted');
         
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // Shared completion logic — called after both direct and 3DS success
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function finishExpressOrder(ev, paymentIntentId) {
+          const shippingAddress = ev.shippingAddress;
+          const fullAddress = [
+            shippingAddress.addressLine[0],
+            shippingAddress.addressLine[1],
+            shippingAddress.city,
+            shippingAddress.postalCode,
+            shippingAddress.country
+          ].filter(Boolean).join(', ');
+
+          const orderInfo = {
+            paymentIntentId: paymentIntentId,
+            amount: totals.total,
+            currency: 'eur',
+            email: ev.payerEmail,
+            name: ev.payerName,
+            phone: ev.payerPhone || 'N/A',
+            date: new Date().toISOString(),
+            items: cart,
+            totals: {
+              subtotal: totals.subtotal,
+              shipping: ev.shippingOption.amount / 100,
+              shippingText: ev.shippingOption.label,
+              vat: totals.vat,
+              total: totals.total
+            },
+            shipping: {
+              firstName: ev.payerName.split(' ')[0] || '',
+              lastName: ev.payerName.split(' ').slice(1).join(' ') || '',
+              address: shippingAddress.addressLine[0] || '',
+              address2: shippingAddress.addressLine[1] || '',
+              city: shippingAddress.city || '',
+              postalCode: shippingAddress.postalCode || '',
+              country: shippingAddress.country || 'IE',
+              phone: ev.payerPhone || 'N/A',
+              method: ev.shippingOption.id,
+              fullAddress: fullAddress
+            }
+          };
+
+          localStorage.setItem('electricink_last_order', JSON.stringify(orderInfo));
+          localStorage.removeItem('electricink_cart');
+
+          sendOrderEmails(orderInfo, paymentIntentId).catch(console.error);
+
+          if (typeof fbq === 'function') {
+            fbq('track', 'Purchase', {
+              value: totals.total,
+              currency: 'EUR',
+              transaction_id: paymentIntentId
+            });
+          }
+
+          setTimeout(() => {
+            window.location.href = `/success.html?payment_intent=${paymentIntentId}`;
+          }, 100);
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // EVENT: Payment Method (complete payment)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         paymentRequest.on('paymentmethod', async (ev) => {
@@ -645,78 +706,14 @@ window.appliedDiscount = 0;
               } else {
                 ev.complete('success');
                 debugLog('✅ Express payment succeeded after 3DS!');
+                const paymentIntentId = clientSecret.split('_secret')[0];
+                await finishExpressOrder(ev, paymentIntentId);
               }
             } else {
-              // Complete the Payment Request sheet immediately
               ev.complete('success');
               debugLog('✅ Express payment succeeded!');
-              
-              // Get payment intent ID from clientSecret
               const paymentIntentId = clientSecret.split('_secret')[0];
-              
-              // Format shipping address
-              const shippingAddress = ev.shippingAddress;
-              const fullAddress = [
-                shippingAddress.addressLine[0],
-                shippingAddress.addressLine[1],
-                shippingAddress.city,
-                shippingAddress.postalCode,
-                shippingAddress.country
-              ].filter(Boolean).join(', ');
-              
-              // Prepare order info
-              const orderInfo = {
-                paymentIntentId: paymentIntentId,
-                amount: totals.total,
-                currency: 'eur',
-                email: ev.payerEmail,
-                name: ev.payerName,
-                phone: ev.payerPhone || 'N/A',
-                date: new Date().toISOString(),
-                items: cart,
-                totals: {
-                  subtotal: totals.subtotal,
-                  shipping: ev.shippingOption.amount / 100,
-                  shippingText: ev.shippingOption.label,
-                  vat: totals.vat,
-                  total: totals.total
-                },
-                shipping: {
-                  firstName: ev.payerName.split(' ')[0] || '',
-                  lastName: ev.payerName.split(' ').slice(1).join(' ') || '',
-                  address: shippingAddress.addressLine[0] || '',
-                  address2: shippingAddress.addressLine[1] || '',
-                  city: shippingAddress.city || '',
-                  postalCode: shippingAddress.postalCode || '',
-                  country: shippingAddress.country || 'IE',
-                  phone: ev.payerPhone || 'N/A',
-                  method: ev.shippingOption.id,
-                  fullAddress: fullAddress
-                }
-              };
-              
-              // Save to localStorage
-              localStorage.setItem('electricink_last_order', JSON.stringify(orderInfo));
-              
-              // Clear cart
-              localStorage.removeItem('electricink_cart');
-              
-              // Send emails (non-blocking)
-              sendOrderEmails(orderInfo, paymentIntentId).catch(console.error);
-
-              // META PIXEL: Purchase — antes do redirect (dedup com server event via transaction_id)
-              if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', {
-                  value: totals.total,
-                  currency: 'EUR',
-                  transaction_id: paymentIntentId
-                });
-              }
-
-              // Redirect to success — delay garante que fbq dispara antes de sair
-              setTimeout(() => {
-                window.location.href = `/success.html?payment_intent=${paymentIntentId}`;
-              }, 100);
+              await finishExpressOrder(ev, paymentIntentId);
             }
           } catch (error) {
             console.error('❌ Express checkout error:', error);
@@ -767,7 +764,7 @@ window.appliedDiscount = 0;
    * Amounts are in cents (for Payment Request compatibility).
    */
   function getAvailableShippingOptions(subtotal) {
-    const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1150;
+    const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1300;
     const allOptions = [
       { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free delivery on orders over €150 — Ireland-wide' : 'Ireland-wide delivery', amount: standardAmount },
       { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 750 },
