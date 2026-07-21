@@ -153,6 +153,78 @@
     "reachCompliant": true,
     "stripe_price_id": "price_1SmpkxAiq7NBxfpw4Kw9R9Sw"
   },
+  "raven-black-fineline": {
+    "id": "raven-black-fineline",
+    "name": "Raven Black Fineline",
+    "category": "Inks",
+    "subcategory": "Black Inks",
+    "description": "Raven Black Fineline delivers a solid, stable black engineered for ultra-fine linework, with virtually no risk of blowout. Smooth Easy Glow flow for clean, precise lines. REACH compliant.",
+    "features": [
+      "REACH compliant (EU 2020/2081)",
+      "Engineered for ultra-fine, blowout-resistant lines",
+      "High fluidity — no dilution required",
+      "Faster healing, strong fixation"
+    ],
+    "stripe": {
+      "productId": "prod_UvbJFDw9duhUAy",
+      "priceId": "price_1Tvk6UAiq7NBxfpwIdNVGzT6"
+    },
+    "price": 26,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "raven-fineline-30",
+        "size": "30mL",
+        "label": "30mL",
+        "price": 26,
+        "priceId": "price_1Tvk6UAiq7NBxfpwIdNVGzT6",
+        "stripe_price_id": "price_1Tvk6UAiq7NBxfpwIdNVGzT6",
+        "quantity": 4,
+        "image": "/images/products/artistic-inks/30ml-raven-black-fineline.webp"
+      },
+      {
+        "id": "raven-fineline-240",
+        "size": "240mL",
+        "label": "240mL",
+        "price": 49,
+        "priceId": "price_1Tvk6UAiq7NBxfpwUkhSCIIy",
+        "stripe_price_id": "price_1Tvk6UAiq7NBxfpwUkhSCIIy",
+        "quantity": 4,
+        "image": "/images/products/artistic-inks/240ml-raven-black-fineline.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-raven-black-fineline.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-raven-black-fineline.webp",
+      "/images/products/artistic-inks/240ml-raven-black-fineline.webp",
+      "/images/products/artistic-inks/raio-raven-black.webp"
+    ],
+    "content": {
+      "tagline": "Precision Black for Ultra-Fine Lines",
+      "technology": "Easy Glow Technology: high-fluidity formula built for fineline precision, with strong retention and no sedimentation",
+      "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
+    },
+    "inventory": {
+      "stock_quantity": 4,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 2
+    },
+    "seo": {
+      "meta_title": "Raven Black Fineline | Electric Ink Ireland",
+      "meta_description": "Raven Black Fineline delivers a solid, stable black engineered for ultra-fine linework — virtually no blowout, high fluidity, and fast healing. REACH-compliant and ready to use. Shop now at Electric Ink Ireland.",
+      "keywords": [
+        "inks",
+        "raven black fineline",
+        "REACH compliant",
+        "tattoo ink",
+        "fine line ink"
+      ]
+    },
+    "inStock": true,
+    "featured": false,
+    "reachCompliant": true,
+    "stripe_price_id": "price_1Tvk6UAiq7NBxfpwIdNVGzT6"
+  },
   "ghost-white": {
     "id": "ghost-white",
     "name": "Ghost White",

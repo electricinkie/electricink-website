@@ -563,10 +563,10 @@
       "label": "SPECIAL OFFER"
     },
     "variants": [],
-    "image": "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
+    "image": "/images/products/tattoo-machines/ultra-pen-2-cover-2.webp",
     "images": [
-      "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
       "/images/products/tattoo-machines/ultra-pen-2-cover-2.webp",
+      "/images/products/tattoo-machines/ultra-pen-2-cover.webp",
       "/images/products/tattoo-machines/ultra-pen-2-cover-3.webp",
       "/images/products/tattoo-machines/ultra-pen-2-1.webp",
       "/images/products/tattoo-machines/ultra-pen-2-2.webp",
@@ -637,10 +637,15 @@
     },
     "price": 550,
     "variants": [],
-    "image": "/images/products/tattoo-machines/pp2-deluxe_power-pop-azul.webp",
+    "image": "/images/products/tattoo-machines/penpop-2-case.webp",
     "images": [
-      "/images/products/tattoo-machines/pp2-deluxe_power-pop-azul.webp",
-      "/images/products/tattoo-machines/pp2-deluxe_power-pop-azul-2.webp"
+      "/images/products/tattoo-machines/penpop-2-case.webp",
+      "/images/products/tattoo-machines/penpop-2-cover.webp",
+      "/images/products/tattoo-machines/penpop-2-combo.webp",
+      "/images/products/tattoo-machines/penpop-2-1.webp",
+      "/images/products/tattoo-machines/penpop-2-2.webp",
+      "/images/products/tattoo-machines/penpop-2-3.webp",
+      "/images/products/tattoo-machines/penpop-2-4.webp"
     ],
     "content": {
       "specifications": {
