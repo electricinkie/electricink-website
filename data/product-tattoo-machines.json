@@ -4,7 +4,7 @@
     "name": "Grip Ultra Pen Balance Flex",
     "category": "Tattoo Machines",
     "subcategory": "Grips & Accessories",
-    "description": "Grip Ultra Pen Balance Flex professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Adjustable balance grip for the Electra Pen, Ultra Pen, and Ultra Pen 2, with cartridge alignment and ergonomic design. Available in 38mm and 45mm.",
     "features": [
       "Adjustable needle exposure",
       "Cartridge alignment system",
@@ -78,7 +78,7 @@
     "name": "Grip Pen 3",
     "category": "Tattoo Machines",
     "subcategory": "Grips & Accessories",
-    "description": "Grip Pen 3 professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Grip for the Electric Ink Pen 3, 38mm diameter, with Flex connector and adjustable needle exposure.",
     "features": [
       "compatibility with Electric Ink Pen 3",
       "38mm diameter for comfortable grip",
@@ -123,7 +123,7 @@
     "name": "Electra Pop",
     "category": "Tattoo Machines",
     "subcategory": "Rotary Machines",
-    "description": "Electra Pop professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Electra Pop lightweight rotary tattoo machine with a high-performance Mabuchi motor, 3.3mm stroke, and shock absorption technology. Available in multiple colours.",
     "features": [
       "3.3mm stroke length for precise lining and powerful shading",
       "High-performance Mabuchi DC motor, exclusively developed for Electric Ink",
@@ -348,7 +348,7 @@
     "name": "Electra Pop Pro",
     "category": "Tattoo Machines",
     "subcategory": "Rotary Machines",
-    "description": "Electra Pop Pro professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Electra Pop Pro rotary tattoo machine with adjustable 3.3–4mm stroke, Mabuchi motor, and shock absorption technology.",
     "features": [
       "Adjustable stroke: Switch between 3.3mm and 4mm",
       "High-performance Mabuchi DC motor",
@@ -427,10 +427,10 @@
   },
   "pen-3": {
     "id": "pen-3",
-    "name": "Pen 3",
+    "name": "Pen 3 4.0",
     "category": "Tattoo Machines",
     "subcategory": "Rotary Machines",
-    "description": "Pen 3 professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Pen 3 4.0 rotary tattoo machine with Neodymium 22R motor, 4.0mm stroke, and Magnetic Coupling (MC2) for wireless use.",
     "features": [
       "Neodymium 22R Motor: to Electric Ink",
       "4.0mm stroke length for optimal precision",
@@ -471,7 +471,7 @@
       "low_stock_threshold": 2
     },
     "seo": {
-      "meta_title": "Electric Ink Pen 3 | Professional Tattoo Machine",
+      "meta_title": "Electric Ink Pen 3 4.0 | Professional Tattoo Machine",
       "meta_description": "Pen 3 rotary tattoo machine with 4.0mm stroke. Compatible with Universal cartridges and Electric Ink grips.",
       "keywords": [
         "Pen 3",
@@ -488,7 +488,7 @@
     "name": "Ultra Pen",
     "category": "Tattoo Machines",
     "subcategory": "Rotary Machines",
-    "description": "Ultra Pen professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Ultra Pen rotary tattoo machine with Permanently Aligned System (PAS2), Long Adjustable Damping System (LADS1), and FLEX cartridge compatibility.",
     "features": [
       "FLEX system compatibility",
       "Permanently Aligned System 2 (PAS2)",
@@ -512,7 +512,7 @@
     ],
     "content": {
       "specifications": {
-        "motor": "High-performance Neodymium Electric Ink motor",
+        "motor": "High-performance DC precision motor",
         "voltage": "6 to 12V",
         "stroke_length": "3.5mm",
         "weight": "150g"
@@ -545,7 +545,7 @@
     "name": "Ultra Pen 2 - Combo",
     "category": "Tattoo Machines",
     "subcategory": "Professional Kits",
-    "description": "Ultra Pen 2 - Combo professional tattoo machine. Designed for reliable studio use; maintains original specs.",
+    "description": "Ultra Pen 2 professional combo kit — rotary machine with Neodymium 22R motor, 4.0mm stroke, and full wireless power supply kit included.",
     "features": [
       "4.0mm stroke length for precise lines and shading",
       "Neodymium 22R motor: to Electric Ink",

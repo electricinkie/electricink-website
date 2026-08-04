@@ -4,7 +4,7 @@
     "name": "Tattoo Balm",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Balm for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Balm for post-tattoo healing, with 15 natural active ingredients for fast absorption.",
     "features": [
       "15 natural active ingredients",
       "Fast absorption",
@@ -90,7 +90,7 @@
     "name": "Tattoo Cream Derma",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Cream Derma for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Cream Derma, an antioxidant-rich moisturizer for healed tattoos (10+ days).",
     "features": [
       "For healed skin (10+ days)",
       "Antioxidant-rich formula",
@@ -136,7 +136,7 @@
     "name": "Slimer Tattoo Gel",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Slimer Tattoo Gel for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Slimer Tattoo Gel, a cooling mint lubricant used during tattooing to reduce redness and irritation.",
     "features": [
       "Reduces redness in 5-10 min",
       "Refreshing mint essence",
@@ -205,7 +205,7 @@
     "name": "Tattoo Skin Scrub Out",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
-    "description": "Tattoo Skin Scrub Out for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Skin Scrub Out, an exfoliating pre-tattoo prep gel for safer, smoother needle puncture.",
     "features": [
       "Removes dead cells",
       "Moisturizes & softens",
@@ -250,7 +250,7 @@
     "name": "Tattoo Prep",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
-    "description": "Tattoo Prep for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Prep shaving foam with Aloe Vera and Chamomile, for smooth pre-tattoo hair removal.",
     "features": [
       "Aloe Vera & Chamomile",
       "Smooth razor glide",
@@ -295,7 +295,7 @@
     "name": "The Gloo Stencil Transfer",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "The Gloo Stencil Transfer for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "The Gloo Stencil Transfer gel, used during tattooing for precise, sharp stencil transfer and skin adhesion.",
     "features": [
       "Precise transfer accuracy",
       "Enhanced skin adhesion",
@@ -364,7 +364,7 @@
     "name": "Transfer It",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Transfer It for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Transfer It, an extra-fixation gel for extended stencil durability throughout long sessions.",
     "features": [
       "Extra-long fixation",
       "Enhanced precision",
@@ -443,7 +443,7 @@
     "name": "Stencil Fix Spray",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Stencil Fix Spray for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Stencil Fix Spray, for extra stencil fixation and freehand drawing durability during tattooing.",
     "features": [
       "Prevents smudging",
       "Removes excess carbon",
@@ -489,7 +489,7 @@
     "name": "Tattoo Clean Up",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Clean Up for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Clean Up foam, a pH-balanced cleanser used during tattooing to optimize pigment retention.",
     "features": [
       "Optimizes pigment retention",
       "Reduces irritation",
@@ -560,7 +560,7 @@
     "name": "Tattoo Clean Up Refill",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Clean Up Refill for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "1L refill for Tattoo Clean Up foam bottle — same pH-balanced formula, bulk studio size.",
     "features": [
       "Eco-friendly refill",
       "1L bulk size",
@@ -603,7 +603,7 @@
     "name": "Cat Slobber Butter",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Cat Slobber Butter for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Cat Slobber Butter, a vegan Shea/Mango/Aloe blend for smooth needle glide during tattooing.",
     "features": [
       "Shea, Mango & Aloe",
       "Smooth needle glide",
@@ -723,7 +723,7 @@
     "name": "Vaseline Slip Premium",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Vaseline Slip Premium for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Vaseline Slip Premium, with Omega complex and Clove Oil for smooth needle glide and skin protection.",
     "features": [
       "Omega & antioxidants",
       "Revitalizing Clove Oil",
@@ -791,7 +791,7 @@
     "name": "Tattoo After All",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo After All for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo After All, an antiseptic post-tattoo spray that cleanses and reduces redness.",
     "features": [
       "Antiseptic protection",
       "Reduces redness",
@@ -859,7 +859,7 @@
     "name": "Tattoo Barrier Film",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Barrier Film for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Barrier Film, a breathable transparent second-skin for protecting healing tattoos.",
     "features": [
       "Transparent barrier",
       "Breathable & flexible",
@@ -925,7 +925,7 @@
     "name": "Tattoo Dry Solidifier",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Dry Solidifier for tattoo aftercare. Soothes and supports healing. Professional formula.",
+    "description": "Tattoo Dry Solidifier, used post-tattoo to safely solidify and dispose of liquid waste.",
     "features": [
       "Prevents leaks",
       "Safe disposal",
