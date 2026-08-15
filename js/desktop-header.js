@@ -267,6 +267,7 @@
   }
 
   async function loadNotifications(prefix) {
+    return; // temporarily disabled
     const token = localStorage.getItem(NOTIF_TOKEN_KEY);
     const btn   = document.getElementById(`${prefix}NotifBtn`);
     const badge = document.getElementById(`${prefix}NotifBadge`);

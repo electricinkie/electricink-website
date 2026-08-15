@@ -265,6 +265,7 @@
   }
 
   async function loadNotifications(prefix) {
+    return; // temporarily disabled
     const token    = localStorage.getItem(NOTIF_TOKEN_KEY);
     const btn      = document.getElementById(`${prefix}NotifBtn`);
     const badge    = document.getElementById(`${prefix}NotifBadge`);
@@ -346,6 +347,7 @@
   }
 
   async function initLoyaltyBtn() {
+    return; // temporarily disabled
     const guest    = document.getElementById('mobileLoyaltyGuest');
     const loggedIn = document.getElementById('mobileLoyaltyLoggedIn');
     const label    = document.getElementById('mobileLoyaltyLabel');

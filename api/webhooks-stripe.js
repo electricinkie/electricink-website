@@ -680,6 +680,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
                             <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;padding-top:6px;">${levelLabel}</td>
                           </tr>
                         </table>
+                        <!-- temporarily disabled — Black Cat Rewards is not public yet.
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
                           <tr>
                             <td style="border-radius:4px;background-color:#000000;">
@@ -690,6 +691,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
                             </td>
                           </tr>
                         </table>
+                        -->
                       </td>
                     </tr>
                   </table>
