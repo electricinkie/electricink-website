@@ -718,8 +718,8 @@
     "featured": true,
     "stripe_price_id": "price_1Sm1h1Aiq7NBxfpwSzraXhBJ"
   },
-  "vaseline-slip": {
-    "id": "vaseline-slip",
+  "vaseline-slip-premium": {
+    "id": "vaseline-slip-premium",
     "name": "Vaseline Slip Premium",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
@@ -748,22 +748,32 @@
         "image": "/images/products/cosmetics/slip-premium-90g.webp"
       },
       {
-        "id": "vas-150",
-        "size": "150g",
-        "label": "150g",
-        "price": 12.0,
-        "priceId": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
-        "stripe_price_id": "price_1Sm1kpAiq7NBxfpwXsSLEprv",
-        "quantity": 2,
-        "image": "/images/products/cosmetics/slip-premium-150g.webp"
+        "id": "vaseline-slip-premium-250",
+        "size": "250g",
+        "label": "250g",
+        "price": 14.0,
+        "priceId": "price_1U5BhaAiq7NBxfpwwzv9MwsK",
+        "stripe_price_id": "price_1U5BhaAiq7NBxfpwwzv9MwsK",
+        "quantity": 0,
+        "image": "/images/products/cosmetics/slip-premium-250g.webp"
+      },
+      {
+        "id": "vaseline-slip-premium-800",
+        "size": "800g",
+        "label": "800g",
+        "price": 23.0,
+        "priceId": "price_1U5BhaAiq7NBxfpwWpIslGmk",
+        "stripe_price_id": "price_1U5BhaAiq7NBxfpwWpIslGmk",
+        "quantity": 0,
+        "image": "/images/products/cosmetics/slip-premium-800g.webp"
       }
     ],
     "image": "/images/products/cosmetics/slip-premium-90g.webp",
     "images": [
       "/images/products/cosmetics/slip-premium-90g.webp",
-      "/images/products/cosmetics/slip-premium-150g.webp",
+      "/images/products/cosmetics/slip-premium-90g-box.webp",
       "/images/products/cosmetics/slip-premium-250g.webp",
-      "/images/products/cosmetics/slip-premium-2.webp"
+      "/images/products/cosmetics/slip-premium-800g.webp"
     ],
     "content": {
       "usage_instructions": "Apply a thin layer during tattooing to ensure smooth needle glide and skin protection.\nReapply as necessary."
@@ -785,6 +795,84 @@
     },
     "inStock": true,
     "stripe_price_id": "price_1Sm1kqAiq7NBxfpwXaSneQFu"
+  },
+  "vaseline-slip": {
+    "id": "vaseline-slip",
+    "name": "Vaseline Slip",
+    "category": "Cosmetics",
+    "subcategory": "During Tattoo",
+    "description": "Vaseline Slip, made with pure pharmaceutical-grade paraffin for excellent needle glide and high yield.",
+    "features": [
+      "Pure pharmaceutical-grade paraffin",
+      "Excellent needle glide",
+      "High yield — goes further per use",
+      "Softens and protects skin"
+    ],
+    "stripe": {
+      "productId": "prod_V5MRZdgbkwDfG3",
+      "priceId": "price_1U5BiOAiq7NBxfpw79l6f2hG"
+    },
+    "price": 8.0,
+    "size": "90g",
+    "variants": [
+      {
+        "id": "vaseline-slip-90",
+        "size": "90g",
+        "label": "90g",
+        "price": 8.0,
+        "priceId": "price_1U5BiOAiq7NBxfpw79l6f2hG",
+        "stripe_price_id": "price_1U5BiOAiq7NBxfpw79l6f2hG",
+        "quantity": 0,
+        "image": "/images/products/cosmetics/slip-90g.webp"
+      },
+      {
+        "id": "vaseline-slip-250",
+        "size": "250g",
+        "label": "250g",
+        "price": 12.0,
+        "priceId": "price_1U5BiOAiq7NBxfpwfIC34TgF",
+        "stripe_price_id": "price_1U5BiOAiq7NBxfpwfIC34TgF",
+        "quantity": 0,
+        "image": "/images/products/cosmetics/slip-250g.webp"
+      },
+      {
+        "id": "vaseline-slip-800",
+        "size": "800g",
+        "label": "800g",
+        "price": 23.0,
+        "priceId": "price_1U5BiOAiq7NBxfpwDVcDJM5B",
+        "stripe_price_id": "price_1U5BiOAiq7NBxfpwDVcDJM5B",
+        "quantity": 0,
+        "image": "/images/products/cosmetics/slip-800g.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/slip-90g.webp",
+    "images": [
+      "/images/products/cosmetics/slip-90g.webp",
+      "/images/products/cosmetics/slip-90g-box.webp",
+      "/images/products/cosmetics/slip-250g.webp",
+      "/images/products/cosmetics/slip-800g.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply a thin layer using a spatula to ensure smooth needle glide during tattooing.\nReapply as necessary."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "out_of_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Vaseline Slip | Electric Ink Ireland",
+      "meta_description": "Pure pharmaceutical-grade paraffin vaseline for excellent needle glide and high yield. Softens and protects skin throughout the tattoo session. Shop now at Electric Ink Ireland.",
+      "keywords": [
+        "cosmetics",
+        "during tattoo",
+        "vaseline slip",
+        "needle glide"
+      ]
+    },
+    "inStock": false,
+    "stripe_price_id": "price_1U5BiOAiq7NBxfpw79l6f2hG"
   },
   "after-all": {
     "id": "after-all",
