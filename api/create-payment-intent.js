@@ -34,9 +34,19 @@ async function loadProducts() {
     // Build the same shape the rest of the file expects:
     // { [productId]: { basic: { price }, variants: [{ id, price, label }] } }
     const merged = {};
+    const nowMs = Date.now();
     for (const row of rows) {
       const pid = row.id;
-      const priceGross = parseFloat((parseFloat(row.price_ex) * 1.23).toFixed(2));
+      // Active promotion: promo_price_ex present and either no expiry or an
+      // expiry still in the future. Anything else falls back to price_ex.
+      const promoActive =
+        row.promo_price_ex !== null &&
+        row.promo_price_ex !== undefined &&
+        (row.promo_ends_at === null ||
+          row.promo_ends_at === undefined ||
+          new Date(row.promo_ends_at).getTime() > nowMs);
+      const basePriceEx = promoActive ? row.promo_price_ex : row.price_ex;
+      const priceGross = parseFloat((parseFloat(basePriceEx) * 1.23).toFixed(2));
       if (!merged[pid]) {
         merged[pid] = { basic: { price: priceGross }, variants: [] };
       }
@@ -82,6 +92,12 @@ async function loadProducts() {
 }
 
 let stripeProducts = {};
+// Timestamp (ms) of the last successful `loadProducts()` population.
+// The cache lives on a warm serverless instance, so without a TTL a price
+// change in the internal API would never reach that instance. 60s matches the
+// Cache-Control window used by api/catalog.js.
+let stripeProductsCachedAt = 0;
+const STRIPE_PRODUCTS_TTL_MS = 60 * 1000;
 
 const _rlMap = new Map();
 function checkRateLimit(key) {
@@ -195,8 +211,11 @@ function resolveProductById(itemId) {
 }
 
 async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '', customerToken = '') {
-  if (!stripeProducts || Object.keys(stripeProducts).length === 0) {
+  const cacheEmpty = !stripeProducts || Object.keys(stripeProducts).length === 0;
+  const cacheStale = (Date.now() - stripeProductsCachedAt) > STRIPE_PRODUCTS_TTL_MS;
+  if (cacheEmpty || cacheStale) {
     stripeProducts = await loadProducts();
+    stripeProductsCachedAt = Date.now();
   }
 
   // Fetch rank discount if customer is logged in
