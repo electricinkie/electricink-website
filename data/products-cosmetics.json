@@ -1049,5 +1049,61 @@
     },
     "inStock": true,
     "stripe_price_id": "price_1Sm1xXAiq7NBxfpwgTnMwun3"
+  },
+  "tattoo-protection-15cmx5m": {
+    "id": "tattoo-protection-15cmx5m",
+    "name": "Tattoo Protection 15CMX5M",
+    "category": "Cosmetics",
+    "subcategory": "Aftercare",
+    "description": "Transparent polyurethane adhesive film for the initial tattoo healing stage — acts as a breathable second skin, hypoallergenic and waterproof.",
+    "features": [
+      "Transparent, elastic polyurethane film",
+      "Hypoallergenic and waterproof",
+      "Adapts smoothly to the skin without wrinkles",
+      "Can remain on the skin for up to 5 days"
+    ],
+    "stripe": {
+      "productId": "prod_V6Rfs3z8xU7NxX",
+      "priceId": "price_1U6ElmAiq7NBxfpwhJzzV031"
+    },
+    "price": 25.0,
+    "variants": [
+      {
+        "id": "tattoo-protection-15cmx5m-default",
+        "label": "Default",
+        "price": 25.0,
+        "priceId": "price_1U6ElmAiq7NBxfpwhJzzV031",
+        "stripe_price_id": "price_1U6ElmAiq7NBxfpwhJzzV031",
+        "quantity": 0,
+        "image": "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-box.webp"
+      }
+    ],
+    "image": "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-box.webp",
+    "images": [
+      "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-box.webp",
+      "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-box-2.webp",
+      "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-roll.webp",
+      "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-roll-2.webp"
+    ],
+    "content": {
+      "usage_instructions": "Apply Tattoo After All and ensure the skin is dry and free of residue. Cut the film to the desired size and apply gently over the area, avoiding wrinkles. Can remain on the skin for up to 5 days. To remove, use warm running water."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Tattoo Protection Film 15cm x 5m | Electric Ink Ireland",
+      "meta_description": "Transparent polyurethane adhesive film for the initial tattoo healing stage. Hypoallergenic, waterproof, and breathable. Shop now at Electric Ink Ireland.",
+      "keywords": [
+        "cosmetics",
+        "aftercare",
+        "tattoo protection film",
+        "healing film"
+      ]
+    },
+    "inStock": true,
+    "stripe_price_id": "price_1U6ElmAiq7NBxfpwhJzzV031"
   }
 }
