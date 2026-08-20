@@ -718,19 +718,19 @@
     "name": "Tattoo Machine Protector",
     "category": "Accessories",
     "subcategory": "Machine Accessories",
-    "description": "Disposable plastic protectors for tattoo machines, preventing contact with residue and cross-contamination during procedures. Pack of approximately 100 units, available in multiple colours.",
+    "description": "Disposable plastic protectors for tattoo machines, preventing contact with residue and cross-contamination during procedures. Pack of 100 units, available in multiple colours.",
     "features": [
       "Disposable, hygienic, single-use protection",
       "Prevents cross-contamination with exposed skin",
       "Protects equipment used during the session",
-      "Pack of approximately 100 units, available in several colours"
+      "Pack of 100 units, available in several colours"
     ],
     "stripe": {
       "productId": "prod_V6gx9KIDZiCIPA",
       "priceId": "price_1U6TZGAiq7NBxfpwfxQUo9da"
     },
     "price": 25.0,
-    "size": "13.5cm x 15.5cm",
+    "size": "13mm x 15mm",
     "variants": [
       {
         "id": "protector-transparent",
@@ -791,7 +791,7 @@
       "/images/products/accessories/tattoo-machine-protector-yellow.webp"
     ],
     "content": {
-      "dimensions": "Approx. 13.5cm x 15.5cm, 0.08mm plastic film. Pack of approximately 100 units."
+      "dimensions": "13mm x 15mm, 0.08mm plastic film. Pack of 100 units."
     },
     "inventory": {
       "stock_quantity": 0,
