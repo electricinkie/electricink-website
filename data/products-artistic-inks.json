@@ -338,8 +338,8 @@
       "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
     },
     "inventory": {
-      "stock_quantity": 1,
-      "stock_status": "available_on_request",
+      "stock_quantity": 0,
+      "stock_status": "in_stock",
       "low_stock_threshold": 5
     },
     "seo": {
@@ -353,11 +353,11 @@
         "vibrant red"
       ]
     },
-    "inStock": false,
+    "inStock": true,
     "featured": false,
     "reachCompliant": true,
     "stripe_price_id": "price_1SmprRAiq7NBxfpwVL8NKUBi",
-    "orderOnRequest": true
+    "orderOnRequest": false
   },
   "orange": {
     "id": "orange",
