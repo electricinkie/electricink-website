@@ -132,6 +132,16 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function buildDiscountRowHtml(amount, code) {
+  if (!amount || amount <= 0) return '';
+  const label = code ? `Discount (${escapeHtml(String(code).toUpperCase().trim())})` : 'Discount';
+  return `
+                      <tr>
+                        <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">${label}</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #43BDAB; font-weight: 600;">-€${amount.toFixed(2)}</td>
+                      </tr>`;
+}
+
 //
 
 // Vercel serverless config
@@ -416,6 +426,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
 
     const customerEmail = (paymentIntent.metadata.customer_email || paymentIntent.receipt_email || 'no-email@electricink.ie').toLowerCase().trim();
     const customerName = paymentIntent.metadata.customer_name || 'Customer';
+    const discountAmount = parseFloat(paymentIntent.metadata.discount_amount || '0') || 0;
+    const couponCode = paymentIntent.metadata.coupon_code || '';
     const order = {
       orderId,
       paymentIntentId: paymentIntent.id,
@@ -438,6 +450,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       shippingCost: (shipping_cents / 100),
       subtotal: (subtotal_cents / 100),
       total: (paymentIntent.amount / 100),
+      discount: discountAmount,
+      couponCode,
       createdAt: new Date().toISOString(),
       paidAt: new Date().toISOString(),
       createdAtMillis: Date.now(),
@@ -586,6 +600,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+        .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY);
@@ -752,6 +767,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+        .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY_ADMIN);
