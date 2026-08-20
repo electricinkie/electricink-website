@@ -609,7 +609,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.postalCode,
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
-        .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+        .replace(/{{subtotal}}/g, ((order.subtotal || 0) + (order.rankDiscount || 0)).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
@@ -777,7 +777,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.postalCode,
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
-        .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
+        .replace(/{{subtotal}}/g, ((order.subtotal || 0) + (order.rankDiscount || 0)).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
