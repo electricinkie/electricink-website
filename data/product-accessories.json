@@ -733,6 +733,14 @@
     "size": "13.5cm x 15.5cm",
     "variants": [
       {
+        "id": "protector-transparent",
+        "label": "Transparent",
+        "colour": "Transparent",
+        "image": "/images/products/accessories/tattoo-machine-protector-transparent.webp",
+        "quantity": 0,
+        "price": 25.0
+      },
+      {
         "id": "protector-blue",
         "label": "Blue",
         "colour": "Blue",
@@ -773,8 +781,9 @@
         "price": 25.0
       }
     ],
-    "image": "/images/products/accessories/tattoo-machine-protector-blue.webp",
+    "image": "/images/products/accessories/tattoo-machine-protector-transparent.webp",
     "images": [
+      "/images/products/accessories/tattoo-machine-protector-transparent.webp",
       "/images/products/accessories/tattoo-machine-protector-blue.webp",
       "/images/products/accessories/tattoo-machine-protector-orange.webp",
       "/images/products/accessories/tattoo-machine-protector-pink.webp",
