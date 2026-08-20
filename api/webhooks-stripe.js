@@ -142,6 +142,15 @@ function buildDiscountRowHtml(amount, code) {
                       </tr>`;
 }
 
+function buildMemberDiscountRowHtml(rankDiscount) {
+  if (!rankDiscount || rankDiscount <= 0) return '';
+  return `
+                      <tr>
+                        <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">Member discount</td>
+                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #43BDAB; font-weight: 600;">-€${rankDiscount.toFixed(2)}</td>
+                      </tr>`;
+}
+
 //
 
 // Vercel serverless config
@@ -452,6 +461,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       total: (paymentIntent.amount / 100),
       discount: discountAmount,
       couponCode,
+      rankDiscount: (parseInt(paymentIntent.metadata.rank_discount_cents || '0', 10) / 100),
       createdAt: new Date().toISOString(),
       paidAt: new Date().toISOString(),
       createdAtMillis: Date.now(),
@@ -601,6 +611,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         ].filter(Boolean).join(', ')))
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
+        .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY);
@@ -768,6 +779,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         ].filter(Boolean).join(', ')))
         .replace(/{{subtotal}}/g, ((order.subtotal || 0)).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
+        .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY_ADMIN);

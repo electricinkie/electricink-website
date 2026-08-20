@@ -242,6 +242,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   }
 
   let subtotal = 0;
+  // Display-only aggregate: how much the rank discount took off. Never affects subtotal/total.
+  let rankDiscountCents = 0;
 
   // Calculate subtotal from backend prices (source of truth)
   for (const item of cartItems) {
@@ -287,6 +289,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
       const productCategory = (resolved.product.category || '').toLowerCase();
       if (rankConsumableCategories.includes(productCategory)) {
         itemPrice = parseFloat((price * (1 - rankDiscount)).toFixed(2));
+        rankDiscountCents += Math.round((price - itemPrice) * quantity * 100);
       }
     }
 
@@ -399,6 +402,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     subtotal: parseFloat(subtotal.toFixed(2)),
     shipping: parseFloat(shipping.toFixed(2)),
     discount: parseFloat((discount || 0).toFixed(2)),
+    rankDiscountCents,
     vat: parseFloat(vat.toFixed(2)),
     total: parseFloat(total.toFixed(2))
   };
@@ -591,6 +595,7 @@ module.exports = async function handler(req, res) {
         items: buildItemsMeta(items),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
+        rank_discount_cents: String(totals.rankDiscountCents || 0),
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
         phone: (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || incomingMetadata.phone || '',
         backend_validated: 'true',
