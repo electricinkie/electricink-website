@@ -476,7 +476,11 @@ module.exports = async function handler(req, res) {
       items: rawItems,
       shippingMethod: req.body.shippingMethod || (req.body.shippingAddress && req.body.shippingAddress.method) || 'standard',
       customer_email: req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email),
-      name: req.body.name || (req.body.metadata && req.body.metadata.customer_name)
+      name: req.body.name || (req.body.metadata && req.body.metadata.customer_name),
+      // Included so `shippingAddressSchema` actually runs — without this key the schema
+      // was declared but never exercised, letting a malformed postalCode reach
+      // calculateShipping() and throw on .trim() instead of returning a clean 400.
+      shippingAddress: req.body.shippingAddress
     };
 
     // Validação robusta do input usando o payload normalizado
@@ -484,10 +488,13 @@ module.exports = async function handler(req, res) {
     items = validatedData.items;
     shippingMethod = validatedData.shippingMethod;
     metadata = req.body.metadata || {};
-    shippingAddress = req.body.shippingAddress || {};
+    // Spread from req.body, not validatedData: the schema strips unknown keys, and the
+    // downstream Stripe `shipping` block still falls back to the legacy `address`,
+    // `address2` and `postal_code` spellings that the schema does not declare.
+    shippingAddress = { ...(req.body.shippingAddress || {}), method: shippingMethod };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const zodErrors = Array.isArray(error.errors) ? error.errors : [];
+      const zodErrors = Array.isArray(error.issues ?? error.errors) ? (error.issues ?? error.errors) : [];
       logger.warn('Invalid request data', { errors: zodErrors });
       return res.status(400).json({
         error: 'Invalid request data',
@@ -622,7 +629,7 @@ module.exports = async function handler(req, res) {
         },
         metadata: {
           ...metadata,
-          shipping_method: req.body.shippingMethod || (req.body.shippingAddress && req.body.shippingAddress.method) || 'standard',
+          shipping_method: shippingMethod,
           subtotal: totals.subtotal.toFixed(2),
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),
