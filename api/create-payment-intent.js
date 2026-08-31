@@ -218,25 +218,29 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     stripeProductsCachedAt = Date.now();
   }
 
-  // Fetch rank discount if customer is logged in
+  // Loyalty/rank discount deactivated — program not live for customers as of 2026-08-31.
+  // These stay declared at their zero/empty defaults so every downstream consumer
+  // (the per-item discount at the pricing loop, rankDiscountCents, the Stripe
+  // `rank_discount_cents` metadata and the "Member discount" email row) reports zero.
+  // Re-enable by restoring the fetch below once the program is relaunched.
   let rankDiscount = 0;
   let rankConsumableCategories = [];
-  if (customerToken) {
-    try {
-      const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
-      const rdRes = await fetch(`${INTERNAL_URL}/api/loyalty/rank-discount`, {
-        headers: { Authorization: `Bearer ${customerToken}` },
-        signal: AbortSignal.timeout(3000)
-      });
-      if (rdRes.ok) {
-        const rdData = await rdRes.json();
-        rankDiscount = Math.min(Math.max(Number(rdData.discount) || 0, 0), 1);
-        rankConsumableCategories = rdData.consumable_categories || [];
-      }
-    } catch (rdErr) {
-      logger.warn('Rank discount fetch failed', { error: rdErr && rdErr.message });
-    }
-  }
+  // if (customerToken) {
+  //   try {
+  //     const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
+  //     const rdRes = await fetch(`${INTERNAL_URL}/api/loyalty/rank-discount`, {
+  //       headers: { Authorization: `Bearer ${customerToken}` },
+  //       signal: AbortSignal.timeout(3000)
+  //     });
+  //     if (rdRes.ok) {
+  //       const rdData = await rdRes.json();
+  //       rankDiscount = Math.min(Math.max(Number(rdData.discount) || 0, 0), 1);
+  //       rankConsumableCategories = rdData.consumable_categories || [];
+  //     }
+  //   } catch (rdErr) {
+  //     logger.warn('Rank discount fetch failed', { error: rdErr && rdErr.message });
+  //   }
+  // }
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
   }
