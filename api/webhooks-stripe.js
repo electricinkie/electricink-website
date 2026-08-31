@@ -612,7 +612,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{subtotal}}/g, ((order.subtotal || 0) + (order.rankDiscount || 0)).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
-        .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
+        .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY);
 
@@ -780,7 +780,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{subtotal}}/g, ((order.subtotal || 0) + (order.rankDiscount || 0)).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
-        .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : 'FREE')
+        .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY_ADMIN);
 
