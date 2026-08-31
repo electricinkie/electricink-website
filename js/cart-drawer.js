@@ -97,7 +97,7 @@
       }
     } catch (_) {}
     const milestones = [
-      { threshold: 150, label: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Add €{gap} more for free shipping (orders over €150)' },
+      { threshold: 150, label: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Add €{gap} more for free shipping (orders over €150 incl. VAT)' },
     ];
     const next = milestones.find(m => sub < m.threshold);
     const progressHtml = next ? `
