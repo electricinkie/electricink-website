@@ -766,7 +766,7 @@ window.appliedDiscount = 0;
   function getAvailableShippingOptions(subtotal) {
     const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1300;
     const allOptions = [
-      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free delivery on orders over €150 — Ireland-wide' : 'Ireland-wide delivery', amount: standardAmount },
+      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? `Free delivery on orders over €${FREE_SHIPPING_THRESHOLD} (incl. VAT) — Ireland-wide` : 'Ireland-wide delivery', amount: standardAmount },
       { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 750 },
       { id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 }
     ];
@@ -796,7 +796,7 @@ window.appliedDiscount = 0;
     if (freeNotice) {
       const textSpan = freeNotice.querySelector('span');
       if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-        if (textSpan) textSpan.textContent = 'Free shipping applied on orders over €150';
+        if (textSpan) textSpan.textContent = `Free shipping applied on orders over €${FREE_SHIPPING_THRESHOLD} (incl. VAT)`;
         freeNotice.style.display = 'flex';
       } else {
         freeNotice.style.display = 'none';

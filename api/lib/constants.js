@@ -6,7 +6,8 @@ const SHIPPING_METHODS = {
 
 // Authoritative threshold for free shipping - used by billing logic
 // DO NOT change without updating js/constants.js and all HTML content
-const FREE_SHIPPING_THRESHOLD = 120;
+// Source of truth is calculateShipping() in api/create-payment-intent.js — this mirrors it
+const FREE_SHIPPING_THRESHOLD = 150;
 
 const PRODUCT_FIELDS = {
   ID: 'id',
