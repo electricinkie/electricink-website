@@ -48,7 +48,7 @@ window.appliedDiscount = 0;
   let shippingMethod = 'standard'; // 'standard', 'same-day', 'pickup'
   const VAT_RATE = 0.23; // 23% VAT for Ireland
   const STANDARD_RATE = 13.00; // Standard shipping rate
-  const SAMEDAY_RATE = 7.50; // Same-day Dublin rate
+  const SAMEDAY_RATE = 14.99; // Same-day Dublin rate
   const PICKUP_RATE = 0; // Store pickup is free
   const SAMEDAY_CUTOFF_HOUR = 14; // 2 PM cutoff for same-day
   
@@ -481,7 +481,7 @@ window.appliedDiscount = 0;
           const cutoffTime = new Date();
           cutoffTime.setHours(14, 0, 0, 0); // 2PM
           if (now < cutoffTime) {
-            shippingOptions.unshift({ id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08) - Today!', amount: 750 });
+            shippingOptions.unshift({ id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08) - Today!', amount: 1499 });
           }
         }
 
@@ -767,7 +767,7 @@ window.appliedDiscount = 0;
     const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1300;
     const allOptions = [
       { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? `Free delivery on orders over €${FREE_SHIPPING_THRESHOLD} (incl. VAT) — Ireland-wide` : 'Ireland-wide delivery', amount: standardAmount },
-      { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 750 },
+      { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 1499 },
       { id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 }
     ];
     return allOptions;
@@ -870,7 +870,7 @@ window.appliedDiscount = 0;
       }
       if (sameDayOption) {
         const priceEl = sameDayOption.querySelector('.shipping-option-price');
-        if (priceEl) priceEl.textContent = isFree ? 'FREE' : '€7.50';
+        if (priceEl) priceEl.textContent = isFree ? 'FREE' : '€14.99';
       }
       if (pickupLabel) {
         const priceEl = pickupLabel.querySelector('.shipping-option-price');
