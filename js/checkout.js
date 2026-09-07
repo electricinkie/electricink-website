@@ -79,8 +79,7 @@ window.appliedDiscount = 0;
       const params = new URLSearchParams(window.location.search);
       const token = params.get('restore');
       if (!token) return;
-      const email = atob(decodeURIComponent(token));
-      const res = await fetch(`${INTERNAL_API_URL}/api/abandoned-cart/restore?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`${INTERNAL_API_URL}/api/abandoned-cart/restore?token=${encodeURIComponent(token)}`);
       if (!res.ok) return;
       const data = await res.json();
       if (!data.items || !data.items.length) return;
@@ -973,7 +972,7 @@ window.appliedDiscount = 0;
       const cart = JSON.parse(localStorage.getItem('electricink_cart') || '[]');
       if (!cart.length) return;
       const total = parseFloat(cart.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2));
-      fetch(`${INTERNAL_API_URL}/api/abandoned-cart/save`, {
+      fetch('/api/abandoned-cart-save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, items: cart, total })

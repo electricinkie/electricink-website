@@ -768,7 +768,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{orderNumber}}/g, orderId)
         .replace(/{{customerName}}/g, escapeHtml(order.customerName || ''))
         .replace(/{{customerEmail}}/g, escapeHtml(order.customerEmail || ''))
-        .replace(/{{customerPhone}}/g, order.customerPhone || 'N/A')
+        .replace(/{{customerPhone}}/g, escapeHtml(order.customerPhone || 'N/A'))
         .replace(/{{orderDate}}/g, new Date().toLocaleDateString())
         .replace(/{{shippingAddress}}/g, escapeHtml([
           order.shippingAddress?.line1,

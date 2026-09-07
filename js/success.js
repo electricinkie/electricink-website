@@ -143,7 +143,7 @@ import { INTERNAL_API_URL } from './constants.js';
   // ── Mark abandoned cart as converted ──
   try {
     if (orderData.email) {
-      fetch(`${INTERNAL_API_URL}/api/abandoned-cart/convert`, {
+      fetch('/api/abandoned-cart-convert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: orderData.email })
