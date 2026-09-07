@@ -116,13 +116,18 @@ function checkRateLimit(key) {
  * Calculate shipping cost based on subtotal and address
  * @param {number} subtotal - Cart subtotal in EUR
  * @param {object} address - Shipping address with postalCode
+ * @param {object} out - Out-param: receives `method`, the shipping method actually
+ *                       charged (differs from the requested one when 'same-day'
+ *                       does not qualify and falls back to the standard rate)
  * @returns {number} Shipping cost in EUR
  */
-function calculateShipping(subtotal, address = {}) {
+function calculateShipping(subtotal, address = {}, out = {}) {
   const FREE_SHIPPING_THRESHOLD = 150;
   const STANDARD_RATE = 13.00;
   const SAMEDAY_RATE = 14.99;
   const PICKUP_RATE = 0;
+
+  out.method = address.method || 'standard';
 
   // Free shipping above threshold
   if (subtotal >= FREE_SHIPPING_THRESHOLD) {
@@ -142,7 +147,9 @@ function calculateShipping(subtotal, address = {}) {
     }
   }
 
-  // Default to standard shipping
+  // Default to standard shipping — also the fall-through for a 'same-day'
+  // request that did not qualify, so report the method actually charged.
+  out.method = 'standard';
   return STANDARD_RATE;
 }
 
@@ -302,7 +309,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   }
 
   // Calculate shipping from backend
-  const shipping = calculateShipping(subtotal, shippingAddress);
+  const shippingOut = {};
+  const shipping = calculateShipping(subtotal, shippingAddress, shippingOut);
 
   // ═══════════════════════════════════════════════════════════════
   // VALIDATE AND APPLY DISCOUNT (server-side verification)
@@ -405,6 +413,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   return {
     subtotal: parseFloat(subtotal.toFixed(2)),
     shipping: parseFloat(shipping.toFixed(2)),
+    shippingMethodCharged: shippingOut.method,
     discount: parseFloat((discount || 0).toFixed(2)),
     rankDiscountCents,
     vat: parseFloat(vat.toFixed(2)),
@@ -416,6 +425,7 @@ module.exports = async function handler(req, res) {
   // CORS headers
   const ALLOWED_ORIGINS = [
     'https://electricink.ie',
+    'https://www.electricink.ie',
     'http://localhost:3000',
     'http://127.0.0.1:3000'
   ];
@@ -451,6 +461,20 @@ module.exports = async function handler(req, res) {
     method:      z.enum(['standard', 'pickup', 'same-day']).optional(),
   }).optional();
 
+  // Client-supplied metadata. Only the keys consumed downstream are typed/length
+  // checked here; the allowed set stays exactly the one the metadata whitelist
+  // below already uses. 500 chars is Stripe's own cap for a metadata value;
+  // `phone` follows the tighter limit already used by shippingAddressSchema.
+  // Unknown keys pass through untouched (the frontend sends a numeric
+  // `items_count`) and are dropped later by the whitelist anyway.
+  const metadataSchema = z.object({
+    customer_email: z.string().max(500).optional(),
+    email:          z.string().max(500).optional(),
+    customer_name:  z.string().max(500).optional(),
+    name:           z.string().max(500).optional(),
+    phone:          z.string().max(30).optional(),
+  }).passthrough().nullish();
+
   const checkoutSchema = z.object({
     items: z.array(
       z.object({
@@ -466,7 +490,8 @@ module.exports = async function handler(req, res) {
     }),
     email: z.string().email('Invalid email').optional(),
     name: z.string().min(2).max(100).optional(),
-    shippingAddress: shippingAddressSchema
+    shippingAddress: shippingAddressSchema,
+    metadata: metadataSchema
   });
 
   let items, shippingMethod, metadata, shippingAddress;
@@ -484,14 +509,15 @@ module.exports = async function handler(req, res) {
       // Included so `shippingAddressSchema` actually runs — without this key the schema
       // was declared but never exercised, letting a malformed postalCode reach
       // calculateShipping() and throw on .trim() instead of returning a clean 400.
-      shippingAddress: req.body.shippingAddress
+      shippingAddress: req.body.shippingAddress,
+      metadata: req.body.metadata
     };
 
     // Validação robusta do input usando o payload normalizado
     const validatedData = checkoutSchema.parse(payload);
     items = validatedData.items;
     shippingMethod = validatedData.shippingMethod;
-    metadata = req.body.metadata || {};
+    metadata = validatedData.metadata || {};
     // Spread from req.body, not validatedData: the schema strips unknown keys, and the
     // downstream Stripe `shipping` block still falls back to the legacy `address`,
     // `address2` and `postal_code` spellings that the schema does not declare.
@@ -574,6 +600,8 @@ module.exports = async function handler(req, res) {
         .update(JSON.stringify({
           items: items.map(i => ({ id: i.id, qty: i.quantity })),
           shipping: shippingAddress?.method,
+          coupon: req.body.couponCode || req.body.coupon || '',
+          total: totals.total,
           timestamp: Math.floor(Date.now() / 300000) // 5 minutos
         }))
         .digest('hex');
@@ -614,6 +642,8 @@ module.exports = async function handler(req, res) {
       };
       metadata = metadataSanitized;
 
+      const shippingMethodCharged = totals.shippingMethodCharged || shippingMethod;
+
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
         currency: 'eur',
@@ -633,7 +663,10 @@ module.exports = async function handler(req, res) {
         },
         metadata: {
           ...metadata,
-          shipping_method: shippingMethod,
+          shipping_method: shippingMethodCharged,
+          // Only when the charged method differs from the requested one
+          // (e.g. 'same-day' outside D01-D08 or after the 2PM cutoff).
+          ...(shippingMethodCharged !== shippingMethod ? { requested_shipping_method: shippingMethod } : {}),
           subtotal: totals.subtotal.toFixed(2),
           shipping: totals.shipping.toFixed(2),
           vat: totals.vat.toFixed(2),

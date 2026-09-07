@@ -626,8 +626,6 @@ window.appliedDiscount = 0;
           localStorage.setItem('electricink_last_order', JSON.stringify(orderInfo));
           localStorage.removeItem('electricink_cart');
 
-          sendOrderEmails(orderInfo, paymentIntentId).catch(console.error);
-
           if (typeof fbq === 'function') {
             fbq('track', 'Purchase', {
               value: totals.total,
@@ -1530,46 +1528,6 @@ window.appliedDiscount = 0;
     }
   }
 
-  async function sendOrderEmails(orderInfo, paymentIntentId) {
-    const orderNumber = paymentIntentId.substring(3, 15).toUpperCase();
-    
-    const emailData = {
-      orderNumber: orderNumber,
-      email: orderInfo.email,
-      items: orderInfo.items,
-      totals: orderInfo.totals,
-      shipping: orderInfo.shipping
-    };
-
-    try {
-      // Email 1: Customer confirmation
-      await fetch('/api/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'order-confirmation',
-          data: emailData
-        })
-      });
-
-      // Email 2: Admin notification
-      debugLog('🔵 Enviando para admin...', { orderNumber: emailData.orderNumber });
-      const adminResponse = await fetch('/api/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'order-notification-admin',
-          data: emailData
-        })
-      });
-      const adminResult = await adminResponse.json();
-      debugLog('🔵 Response admin:', adminResponse.status, adminResult);
-    } catch (error) {
-      console.error('Email sending failed (non-blocking):', error);
-      // Don't block checkout flow if emails fail
-    }
-  }
-
   function handlePaymentSuccess(paymentIntent) {
     // Save order info to localStorage (completo para success page)
     const orderInfo = {
@@ -1604,9 +1562,6 @@ window.appliedDiscount = 0;
     } catch (error) {
       console.error('Error saving order info:', error);
     }
-
-    // Send confirmation emails
-    sendOrderEmails(orderInfo, paymentIntent.id).catch(err => console.error('sendOrderEmails failed:', err));
 
     // Clear cart
     try {

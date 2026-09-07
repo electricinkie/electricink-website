@@ -526,6 +526,13 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       if (!process.env.INTERNAL_API_URL) {
         logger.warn('[WEBHOOK] INTERNAL_API_URL not set, using fallback URL', { url: internalApiUrl });
       }
+      if (!internalSecret) {
+        logger.error('[WEBHOOK] INTERNAL_WEBHOOK_SECRET not configured - sale NOT registered in internal system, order needs manual fulfilment', {
+          orderId,
+          paymentIntentId: paymentIntent.id,
+          requestId
+        });
+      }
       if (internalApiUrl && internalSecret) {
         const salePayload = {
           shipping_address: order.shippingAddress || null,
@@ -651,7 +658,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         return `
           <tr>
             <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">
-              <strong>${item.name || item.description || item.id || 'Item'}</strong>
+              <strong>${escapeHtml(item.name || item.description || item.id || 'Item')}</strong>
               ${item.variant ? `<br><small style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999;">${String(item.variant).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</small>` : ''}
             </td>
             <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; text-align: center; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">${quantity}</td>
@@ -816,7 +823,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         return `
           <tr>
             <td style="padding: 12px; border-bottom: 1px solid #e8e8e8; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 13px; color: #000000;">
-              <strong>${item.name || item.description || item.id || 'Item'}</strong>
+              <strong>${escapeHtml(item.name || item.description || item.id || 'Item')}</strong>
               ${item.sku ? ` <small style="color:#999999">(SKU: ${item.sku})</small>` : ''}
               ${item.variant ? `<br><small style="font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 11px; color: #999999;">${String(item.variant).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</small>` : ''}
             </td>
