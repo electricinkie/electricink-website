@@ -8,7 +8,7 @@
 }
 
 .pro-team-inner {
-  max-width: 1040px;
+  max-width: 1320px;
   margin: 0 auto;
 }
 
@@ -46,7 +46,7 @@
 
 .pt-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 
@@ -127,7 +127,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px;
+  padding: 20px;
   z-index: 4;
 }
 
@@ -156,20 +156,21 @@
 
 .pt-tags {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 4px;
+  flex-wrap: nowrap;
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .pt-card:hover .pt-info .pt-tags { opacity: 0; transform: translateY(4px); }
 
 .pt-tag {
-  font-size: 10px;
+  font-size: 9px;
   font-family: 'Montserrat', sans-serif;
   color: #888;
   background: rgba(255,255,255,0.06);
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 3px;
+  white-space: nowrap;
 }
 
 .pt-cta {
@@ -226,8 +227,8 @@
 /* Placeholder gradients — remove when real photos are added */
 
 /* Remove placeholder gradients and set fallback background for better visibility */
-.pt-photo-1, .pt-photo-2, .pt-photo-3,
-.pt-tattoo-1, .pt-tattoo-2, .pt-tattoo-3 {
+.pt-photo-1, .pt-photo-2, .pt-photo-3, .pt-photo-4,
+.pt-tattoo-1, .pt-tattoo-2, .pt-tattoo-3, .pt-tattoo-4 {
   /* no placeholder background so the image fills the whole card */
   background-color: transparent;
 }
@@ -265,23 +266,6 @@
     min-width: 86%;
     aspect-ratio: 3/4; /* portrait cards on mobile */
     scroll-snap-align: start;
-  }
-}
-
-/* Slightly larger small screens: two-column grid between 480 and 768px */
-@media (min-width: 480px) and (max-width: 768px) {
-  .pt-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    overflow: visible;
-    padding-left: 0;
-  }
-
-  .pt-card {
-    flex: 0 0 auto;
-    min-width: unset;
-    aspect-ratio: 3/4;
   }
 }
 
