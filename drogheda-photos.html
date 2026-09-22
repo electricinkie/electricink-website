@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Photos from the Drogheda show - Electric Ink Ireland.">
+  <!-- Temporary event page shared by direct link. Kept out of search so
+       it does not linger as a stale result once the Drive folder expires. -->
+  <meta name="robots" content="noindex, nofollow">
+  <title>Drogheda Photos - Electric Ink Ireland</title>
+
+  <!-- Favicons (Big Player Structure) -->
+  <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <link rel="manifest" href="/images/favicons/site.webmanifest">
+  <meta name="theme-color" content="#43BDAB">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/mobile-header.css">
+  <link rel="stylesheet" href="/css/desktop-header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/cart-drawer.css">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7K2B1EJYH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F7K2B1EJYH');
+  </script>
+  <!-- End Google Analytics -->
+
+  <!-- Meta Pixel -->
+  <script src="/js/pixel.js"></script>
+  <!-- End Meta Pixel -->
+
+  <style>
+    /* ========================================
+       DROGHEDA PHOTOS - page scoped styles
+       Dark page to sit flush with the black
+       site header and site footer.
+       ======================================== */
+
+    body {
+      background: #000000;
+      color: #FFFFFF;
+    }
+
+    .drogheda-page {
+      background: #000000;
+      padding-bottom: 8px;
+    }
+
+    .drogheda-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ---------- HERO ---------- */
+    .dg-hero {
+      position: relative;
+      text-align: center;
+      padding: 56px 0 36px;
+      overflow: hidden;
+    }
+
+    .dg-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .dg-kicker {
+      display: inline-block;
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border: 1.5px solid var(--color-primary);
+      padding: 6px 14px;
+      margin-bottom: 24px;
+    }
+
+    .dg-hero h1 {
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      margin: 0 0 20px 0;
+      text-wrap: balance;
+    }
+
+    .dg-hero h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--color-primary);
+      margin: 20px auto 0;
+    }
+
+    .dg-lede {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: #d4d4d4;
+      max-width: 52ch;
+      margin: 24px 0 10px;
+    }
+
+    .dg-lede strong {
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .dg-aside {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #8a8a8a;
+      max-width: 46ch;
+      margin: 0;
+      text-wrap: balance;
+    }
+
+    /* ---------- CTA BUTTON ---------- */
+    .dg-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--color-primary);
+      color: #000000;
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 30px;
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .dg-cta:hover,
+    .dg-cta:focus-visible {
+      background: transparent;
+      color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .dg-cta svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ---------- GALLERY ---------- */
+    .dg-gallery {
+      padding: 16px 0 64px;
+    }
+
+    .dg-gallery-label {
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #777777;
+      margin-bottom: 44px;
+    }
+
+    /* Photos laid down one over the next, like a pile on a table */
+    .dg-wall {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 28px 0 24px;
+    }
+
+    .dg-shot {
+      position: relative;
+      flex: 0 0 auto;
+      width: 212px;
+      margin: 0 0 0 -56px;
+      background: #FFFFFF;
+      padding: 10px 10px 36px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65);
+      transform-origin: center bottom;
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+      cursor: pointer;
+    }
+
+    .dg-shot:first-child { margin-left: 0; }
+
+    /* Pull the hovered photo out of the pile and straighten it */
+    .dg-shot:hover,
+    .dg-shot:focus-within {
+      transform: translateY(-18px) rotate(0deg) scale(1.06);
+      box-shadow: 0 26px 46px rgba(0, 0, 0, 0.8);
+      z-index: 60;
+    }
+
+    .dg-shot-media {
+      aspect-ratio: 4 / 5;
+      background: repeating-linear-gradient(
+        135deg,
+        #101010,
+        #101010 10px,
+        #181818 10px,
+        #181818 20px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .dg-shot-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dg-shot-media span {
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #4a4a4a;
+    }
+
+    .dg-shot-caption {
+      position: absolute;
+      bottom: 11px;
+      left: 10px;
+      right: 10px;
+      text-align: center;
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9a9a9a;
+    }
+
+    /* Scattered wall - varied spans and tilts */
+    .dg-shot-1 { transform: rotate(-7deg)   translateY(6px);  z-index: 1; }
+    .dg-shot-2 { transform: rotate(4deg)    translateY(-4px); z-index: 2; }
+    .dg-shot-3 { transform: rotate(-2.5deg) translateY(10px); z-index: 3; }
+    .dg-shot-4 { transform: rotate(5.5deg)  translateY(0);    z-index: 4; }
+    .dg-shot-5 { transform: rotate(-4deg)   translateY(8px);  z-index: 5; }
+
+    /* Photos live in /images/drogheda/ at 800x1000 (4:5), already
+       cropped to what the frame shows. See that folder's README. */
+
+    /* ---------- CLOSING ---------- */
+    .dg-closing {
+      text-align: center;
+      padding: 0 0 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .dg-closing p {
+      font-family: 'Outfit', 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #FFFFFF;
+      max-width: 30ch;
+      margin: 0;
+    }
+
+    /* ---------- TABLET ---------- */
+    @media (max-width: 900px) {
+      .dg-hero h1 { font-size: 40px; }
+
+      .dg-shot {
+        width: 172px;
+        margin-left: -46px;
+      }
+    }
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 600px) {
+      .drogheda-container { padding: 0 20px; }
+
+      .dg-hero { padding: 44px 0 32px; }
+
+      .dg-kicker {
+        font-size: 11px;
+        padding: 5px 12px;
+        margin-bottom: 18px;
+      }
+
+      .dg-hero h1 {
+        font-size: 32px;
+        margin-bottom: 14px;
+      }
+
+      .dg-hero h1::after { margin-top: 16px; }
+
+      .dg-lede {
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 18px 0 8px;
+      }
+
+      .dg-aside { font-size: 13px; }
+
+      .dg-cta {
+        font-size: 14px;
+        padding: 15px 24px;
+        width: 100%;
+        max-width: 320px;
+        justify-content: center;
+      }
+
+      .dg-gallery { padding: 8px 0 44px; }
+
+      .dg-gallery-label {
+        font-size: 12px;
+        margin-bottom: 26px;
+      }
+
+      /* Photos are decorative here - the Drive folder is the point.
+         They fan out like a hand of cards and always fit the screen,
+         so the page only ever scrolls vertically. */
+      .dg-wall {
+        justify-content: center;
+        overflow: hidden;
+        padding: 30px 0 18px;
+      }
+
+      .dg-shot {
+        width: 36vw;
+        margin-left: -23vw;
+        padding: 6px 6px 22px;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65);
+      }
+
+      /* Rotating from the bottom edge is what opens the fan.
+         Keep the angles shallow - the wider the tilt, the more
+         horizontal room the fan needs, and it has to fit the screen. */
+      .dg-shot-1 { transform: rotate(-7deg); }
+      .dg-shot-2 { transform: rotate(-3.5deg); }
+      .dg-shot-3 { transform: rotate(0deg); }
+      .dg-shot-4 { transform: rotate(3.5deg); }
+      .dg-shot-5 { transform: rotate(7deg); }
+
+      /* No hover on touch - the fan cycles by itself, and a tap
+         also brings a photo forward. See js/drogheda-photos.js */
+      .dg-shot.is-front,
+      .dg-shot:active {
+        transform: translateY(-12px) rotate(0deg) scale(1.05);
+        box-shadow: 0 20px 34px rgba(0, 0, 0, 0.8);
+        z-index: 60;
+      }
+
+      .dg-shot-caption {
+        bottom: 6px;
+        font-size: 9px;
+      }
+
+      .dg-closing {
+        padding: 0 0 52px;
+        gap: 20px;
+      }
+
+      .dg-closing p { font-size: 19px; }
+    }
+
+    /* The tilts are static layout, not motion, so they stay - only the
+       movement is dropped. The auto cycle opts out in JS as well. */
+    @media (prefers-reduced-motion: reduce) {
+      .dg-shot,
+      .dg-cta {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header será injetado pelo mobile-header.js / desktop-header.js -->
+
+  <!-- Main Content -->
+  <main class="drogheda-page">
+
+    <!-- Hero -->
+    <section class="dg-hero">
+      <div class="drogheda-container">
+        <div class="dg-hero-inner">
+          <span class="dg-kicker">Drogheda</span>
+          <h1>Photos from the show</h1>
+          <p class="dg-lede">The Black Cat was out with the camera all weekend. Everything's in the Drive folder, sorted into <strong>Artists</strong>, <strong>Shows</strong> and <strong>Random</strong>.</p>
+          <p class="dg-aside">If you're not in there, sorry &mdash; he got distracted. He's only a cat.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="dg-gallery">
+      <div class="drogheda-container">
+        <p class="dg-gallery-label">A few from the weekend</p>
+        <div class="dg-wall">
+          <figure class="dg-shot dg-shot-1">
+            <div class="dg-shot-media"><img src="/images/drogheda/01.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          </figure>
+          <figure class="dg-shot dg-shot-2">
+            <div class="dg-shot-media"><img src="/images/drogheda/02.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          </figure>
+          <figure class="dg-shot dg-shot-3">
+            <div class="dg-shot-media"><img src="/images/drogheda/03.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          </figure>
+          <figure class="dg-shot dg-shot-4">
+            <div class="dg-shot-media"><img src="/images/drogheda/04.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          </figure>
+          <figure class="dg-shot dg-shot-5">
+            <div class="dg-shot-media"><img src="/images/drogheda/05.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing -->
+    <section class="dg-closing">
+      <div class="drogheda-container">
+        <p>Artists, shows and random &mdash; it's all in there.</p>
+        <a class="dg-cta" href="https://drive.google.com/drive/folders/1IocbqGrpW35CJIBoyy1Jabjqr5alcVfD?usp=drive_link" target="_blank" rel="noopener">
+          Open drive folder
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M7 17L17 7M17 7H8M17 7V16"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+
+      <div class="footer-grid">
+
+        <!-- Help & Support Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Help &amp; Support</h4>
+          <ul class="footer-links">
+            <li><a href="/contact-us.html">Contact Us</a></li>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/shipping-information.html">Shipping Information</a></li>
+            <li><a href="/returns-refunds.html">Returns &amp; Refunds</a></li>
+          </ul>
+        </div>
+
+        <!-- About Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">About</h4>
+          <ul class="footer-links">
+            <li><a href="/about-us.html">About Us</a></li>
+            <li><a href="https://wa.me/353831473502" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="mailto:contact@electricink.ie">Email Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Legal</h4>
+          <ul class="footer-links">
+            <li><a href="/terms-conditions.html">Terms &amp; Conditions</a></li>
+              <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+              <li><a href="/cookie-policy.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- Social Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Follow Us</h4>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/electricink.ie/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 64 64" class="social-icon">
+                <path d="M46.91,25.816c-0.073-1.597-0.326-2.687-0.697-3.641c-0.383-0.986-0.896-1.823-1.73-2.657c-0.834-0.834-1.67-1.347-2.657-1.73c-0.954-0.371-2.045-0.624-3.641-0.697C36.585,17.017,36.074,17,32,17s-4.585,0.017-6.184,0.09c-1.597,0.073-2.687,0.326-3.641,0.697c-0.986,0.383-1.823,0.896-2.657,1.73c-0.834,0.834-1.347,1.67-1.73,2.657c-0.371,0.954-0.624,2.045-0.697,3.641C17.017,27.415,17,27.926,17,32c0,4.074,0.017,4.585,0.09,6.184c0.073,1.597,0.326,2.687,0.697,3.641c0.383,0.986,0.896,1.823,1.73,2.657c0.834,0.834,1.67,1.347,2.657,1.73c0.954,0.371,2.045,0.624,3.641,0.697C27.415,46.983,27.926,47,32,47s4.585-0.017,6.184-0.09c1.597-0.073,2.687-0.326,3.641-0.697c0.986-0.383,1.823-0.896,2.657-1.73c0.834-0.834,1.347-1.67,1.73-2.657c0.371-0.954,0.624-2.045,0.697-3.641C46.983,36.585,47,36.074,47,32S46.983,27.415,46.91,25.816z M44.21,38.061c-0.067,1.462-0.311,2.257-0.516,2.785c-0.272,0.7-0.597,1.2-1.122,1.725c-0.525,0.525-1.025,0.85-1.725,1.122c-0.529,0.205-1.323,0.45-2.785,0.516c-1.581,0.072-2.056,0.087-6.061,0.087s-4.48-0.015-6.061-0.087c-1.462-0.067-2.257-0.311-2.785-0.516c-0.7-0.272-1.2-0.597-1.725-1.122c-0.525-0.525-0.85-1.025-1.122-1.725c-0.205-0.529-0.45-1.323-0.516-2.785c-0.072-1.582-0.087-2.056-0.087-6.061s0.015-4.48,0.087-6.061c0.067-1.462,0.311-2.257,0.516-2.785c0.272-0.7,0.597-1.2,1.122-1.725c0.525-0.525,1.025-0.85,1.725-1.122c0.529-0.205,1.323-0.45,2.785-0.516c1.582-0.072,2.056-0.087,6.061-0.087s4.48,0.015,6.061,0.087c1.462,0.067,2.257,0.311,2.785,0.516c0.7,0.272,1.2,0.597,1.725,1.122c0.525,0.525,0.85,1.025,1.122,1.725c0.205,0.529,0.45,1.323,0.516,2.785c0.072,1.582,0.087,2.056,0.087,6.061S44.282,36.48,44.21,38.061z M32,24.297c-4.254,0-7.703,3.449-7.703,7.703c0,4.254,3.449,7.703,7.703,7.703c4.254,0,7.703-3.449,7.703-7.703C39.703,27.746,36.254,24.297,32,24.297z M32,37c-2.761,0-5-2.239-5-5c0-2.761,2.239-5,5-5s5,2.239,5,5C37,34.761,34.761,37,32,37z M40.007,22.193c-0.994,0-1.8,0.806-1.8,1.8c0,0.994,0.806,1.8,1.8,1.8c0.994,0,1.8-0.806,1.8-1.8C41.807,22.999,41.001,22.193,40.007,22.193z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2025 Electric Ink Ireland. All rights reserved.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="/js/drogheda-photos.js"></script>
+  <script type="module" src="/js/mobile-header.js"></script>
+  <!-- Desktop Header -->
+  <script type="module" src="/js/desktop-header.js"></script>
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <script type="module" src="/js/cart-drawer.js"></script>
+</body>
+</html>
