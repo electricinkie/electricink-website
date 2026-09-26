@@ -1,5 +1,4 @@
 const https = require('https');
-const { getEffectivePriceEx, isPromoActive } = require('./lib/promo');
 
 const _rl = new Map();
 function checkRateLimit(ip) {
@@ -143,29 +142,10 @@ module.exports = async (req, res) => {
     }
     res.setHeader('Content-Type', 'application/json');
 
-    // If body is empty, send empty JSON
-    let body = result.body && result.body.length ? result.body : '{}';
-    // Enrich rows with computed promo fields, using the same canonical
-    // logic as checkout (api/lib/promo.js). On ANY parse failure, fall
-    // back to the original passthrough behaviour unchanged — never break
-    // the proxy because of an enrichment step.
-    if (res.statusCode >= 200 && res.statusCode < 300) {
-      try {
-        const parsed = JSON.parse(body);
-        const rows = Array.isArray(parsed) ? parsed : [parsed];
-        const nowMs = Date.now();
-        const enriched = rows.map(row => ({
-          ...row,
-          promo_active: isPromoActive(row.promo_price_ex, row.promo_ends_at, nowMs),
-          effective_price_ex: getEffectivePriceEx(row.price_ex, row.promo_price_ex, row.promo_ends_at, nowMs)
-        }));
-        body = JSON.stringify(Array.isArray(parsed) ? enriched : enriched[0]);
-      } catch (parseErr) {
-        // Leave body exactly as received from upstream — do not enrich,
-        // do not error out.
-      }
-    }
+    // Try to forward body as-is. If it's already a stringified JSON, send it.
     try {
+      // If body is empty, send empty JSON
+      const body = result.body && result.body.length ? result.body : '{}';
       res.end(body);
     } catch (e) {
       res.end(JSON.stringify({ error: 'Failed to parse upstream response' }));

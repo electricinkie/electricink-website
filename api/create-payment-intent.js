@@ -9,7 +9,6 @@ const debug = process.env.NODE_ENV === 'development'
   : () => {};
 const fs = require('fs');
 const path = require('path');
-const { getEffectivePriceEx } = require('./lib/promo');
 
 // Runtime environment diagnostic (do NOT log full secrets)
 logger.info('Environment check', {
@@ -38,7 +37,15 @@ async function loadProducts() {
     const nowMs = Date.now();
     for (const row of rows) {
       const pid = row.id;
-      const basePriceEx = getEffectivePriceEx(row.price_ex, row.promo_price_ex, row.promo_ends_at, nowMs);
+      // Active promotion: promo_price_ex present and either no expiry or an
+      // expiry still in the future. Anything else falls back to price_ex.
+      const promoActive =
+        row.promo_price_ex !== null &&
+        row.promo_price_ex !== undefined &&
+        (row.promo_ends_at === null ||
+          row.promo_ends_at === undefined ||
+          new Date(row.promo_ends_at).getTime() > nowMs);
+      const basePriceEx = promoActive ? row.promo_price_ex : row.price_ex;
       const priceGross = parseFloat((parseFloat(basePriceEx) * 1.23).toFixed(2));
       if (!merged[pid]) {
         merged[pid] = { basic: { price: priceGross }, variants: [] };
