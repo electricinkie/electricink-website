@@ -261,6 +261,27 @@ function escHtml(str) {
         return acc;
       }, {});
 
+      // Gross price (VAT incl.) from an ex-VAT value, same rounding used everywhere.
+      const toGross = (priceEx) => {
+        const p = parseFloat(priceEx);
+        return isNaN(p) ? null : parseFloat((p * 1.23).toFixed(2));
+      };
+
+      // Effective price is what the customer pays: the promo price when a
+      // promotion is running, the normal price otherwise. effective_price_ex is
+      // added by /api/catalog; fall back to price_ex when it is absent so an
+      // older payload keeps behaving exactly as before.
+      const resolveRowPrices = (row) => {
+        const normal = toGross(row.price_ex);
+        const effective = toGross(row.effective_price_ex);
+        return {
+          price: effective !== null ? effective : normal,
+          wasPrice: (row.promo_active === true && normal !== null && effective !== null && normal > effective)
+            ? normal
+            : undefined
+        };
+      };
+
       // Merge into local allProducts
       Object.keys(allProducts).forEach(pid => {
         const local = allProducts[pid];
@@ -282,8 +303,9 @@ function escHtml(str) {
               found = entries.find(e => variant.id && e.variant_id && e.variant_id.endsWith(variant.id));
             }
             if (found) {
-              const parsedPrice = parseFloat(found.price_ex);
-              if (!isNaN(parsedPrice)) variant.price = parseFloat((parsedPrice * 1.23).toFixed(2));
+              const resolved = resolveRowPrices(found);
+              if (resolved.price !== null) variant.price = resolved.price;
+              if (resolved.wasPrice !== undefined) variant.wasPrice = resolved.wasPrice;
               const parsedStock = parseInt(found.stock, 10);
               if (!isNaN(parsedStock)) variant.quantity = parsedStock;
             }
@@ -299,10 +321,11 @@ function escHtml(str) {
           // Simple product - apply first entry price and stock summary
           const first = entries[0];
           if (first) {
-            const parsedPrice = parseFloat(first.price_ex);
-            if (!isNaN(parsedPrice)) {
-              const priceWithVat = parseFloat((parsedPrice * 1.23).toFixed(2));
-              if (local.basic) local.basic.price = priceWithVat; else local.price = priceWithVat;
+            const resolved = resolveRowPrices(first);
+            if (resolved.price !== null) {
+              const target = local.basic ? local.basic : local;
+              target.price = resolved.price;
+              if (resolved.wasPrice !== undefined) target.wasPrice = resolved.wasPrice;
             }
           }
           local.inventory = local.inventory || {};
@@ -378,7 +401,16 @@ function escHtml(str) {
       } else {
         // Single product - use basic price or product-level price
         const price = typeof data.basic?.price === 'number' ? data.basic.price : data.price;
-        priceDisplay = (typeof price === 'number' && !isNaN(price)) ? `€${price.toFixed(2)}` : 'Price unavailable';
+        const wasPrice = typeof data.basic?.wasPrice === 'number' ? data.basic.wasPrice : data.wasPrice;
+        if (typeof price === 'number' && !isNaN(price)) {
+          // On promotion the display carries both prices, so the card renderer
+          // can draw the was/now pair. Without a promotion it stays a string.
+          priceDisplay = (typeof wasPrice === 'number' && !isNaN(wasPrice) && wasPrice > price)
+            ? { was: `€${wasPrice.toFixed(2)}`, now: `€${price.toFixed(2)}` }
+            : `€${price.toFixed(2)}`;
+        } else {
+          priceDisplay = 'Price unavailable';
+        }
       }
 
       // Map 'Needles' category to 'Cartridges' and expose variant
@@ -616,7 +648,20 @@ function getAvailabilityBadgeInfo(product) {
         // Price
         const price = document.createElement('div');
         price.className = 'product-price';
-        price.textContent = product.priceDisplay;
+        if (product.priceDisplay && typeof product.priceDisplay === 'object') {
+          // Promotion: struck-through normal price followed by the promo price.
+          // Classes already exist in css/category-page.css.
+          const was = document.createElement('span');
+          was.className = 'price-was';
+          was.textContent = product.priceDisplay.was;
+          const now = document.createElement('span');
+          now.className = 'price-now';
+          now.textContent = product.priceDisplay.now;
+          price.appendChild(was);
+          price.appendChild(now);
+        } else {
+          price.textContent = product.priceDisplay;
+        }
 
         // View button
         const viewBtn = document.createElement('div');
