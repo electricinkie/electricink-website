@@ -20,15 +20,16 @@
 
 .badge-featured {
   display: inline-block;
-  background: rgba(67, 189, 171, 0.15);
-  color: #43BDAB;
-  font-family: 'Montserrat', sans-serif;
+  align-self: flex-start;
+  background: #000000;
+  color: #FFFFFF;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  padding: 8px 16px;
-  border-radius: 20px;
+  letter-spacing: 0.08em;
+  padding: 5px 9px;
+  border-radius: 4px;
   margin-bottom: 25px;
 }
 
@@ -36,7 +37,7 @@
   width: 100%;
   height: 550px;
   background: #F8F8F8;
-  border-radius: 16px;
+  border-radius: 10px;
   overflow: hidden;
   margin-bottom: 20px;
 }
@@ -60,10 +61,10 @@
   height: 100px;
   background: #F8F8F8;
   border: 2px solid transparent;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.18s ease;
   padding: 0;
 }
 
@@ -75,7 +76,6 @@
 
 .thumbnail:hover {
   border-color: rgba(67, 189, 171, 0.5);
-  transform: translateY(-2px);
 }
 
 .thumbnail.active {
@@ -85,10 +85,8 @@
 .product-showcase .trust-badges {
   display: flex;
   gap: 15px;
-  padding: 18px 20px;
-  background: rgba(67, 189, 171, 0.08);
-  border-radius: 8px;
-  border: 1px solid rgba(67, 189, 171, 0.2);
+  padding: 16px 0 0;
+  border-top: 1px solid #E8E8E8;
 }
 
 .product-showcase .trust-item {
@@ -99,9 +97,7 @@
 }
 
 .product-showcase .trust-check {
-  color: #43BDAB;
-  font-size: 16px;
-  font-weight: 700;
+  display: none;
 }
 
 .product-showcase .trust-badges .trust-text {
@@ -190,10 +186,14 @@
 }
 
 .feature-bullet {
-  color: #43BDAB;
-  font-size: 14px;
   flex-shrink: 0;
-  margin-top: 2px;
+  width: 10px;
+  height: 2px;
+  margin-top: 9px;
+  background: #43BDAB;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
 }
 
 .feature-content {
@@ -237,15 +237,15 @@
 }
 
 .product-showcase .promo-badge-large {
-  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  background: #000000;
   color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 800;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  box-shadow: 0 6px 18px rgba(255, 107, 53, 0.12);
+  letter-spacing: 0.08em;
 }
 
 .product-showcase .price-was {
@@ -256,14 +256,14 @@
 }
 
 .product-showcase .price-now {
-  color: #0f9f88;
+  color: #000000;
   font-size: 1.9rem;
   font-weight: 900;
   line-height: 1;
 }
 
 .product-showcase .price-savings {
-  color: #FF6B35;
+  color: #43BDAB;
   font-size: 0.95rem;
   font-weight: 700;
   margin-left: 6px;
@@ -292,11 +292,7 @@
     display: flex;
     align-items: center;
     flex-wrap: nowrap; /* keep items on one line */
-    padding: 8px 12px; /* reduced padding for compact look */
     gap: 18px; /* space between each trust item */
-    border-radius: 6px;
-    background: rgba(67, 189, 171, 0.06);
-    border: 1px solid rgba(67, 189, 171, 0.12);
   }
 
 
@@ -304,27 +300,9 @@
      the group compact while giving each item a subtle pill and a
      circular check token for clarity. */
   .product-showcase .trust-item {
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: rgba(67, 189, 171, 0.02);
     gap: 10px;
     align-items: center;
     display: inline-flex;
-  }
-
-  .product-showcase .trust-check {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: #E8F8F4;
-    color: #0f9f88;
-    font-weight: 800;
-    font-size: 14px;
-    flex-shrink: 0;
-    border: 1px solid rgba(67, 189, 171, 0.12);
   }
 
   /* Make left and right columns behave as vertical flex containers
@@ -367,7 +345,7 @@
   flex: 1 1 50%;
   width: auto;
   padding: 16px 20px;
-  border-radius: 12px 0 0 12px;
+  border-radius: 8px 0 0 8px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -379,7 +357,7 @@
   flex: 1 1 50%;
   width: auto;
   padding: 16px 20px;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 8px 8px 0;
   font-family: 'Outfit', sans-serif;
   font-size: 16px;
   font-weight: 700;
@@ -389,7 +367,7 @@
   background: #000;
   border: none;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: background-color 0.18s ease;
   position: relative;
   z-index: 1;
 }
@@ -397,7 +375,6 @@
 .product-showcase .product-actions .btn-add-to-cart:hover {
   background: #43BDAB;
   color: #fff;
-  transform: translateY(-2px);
 }
 
 .btn-whatsapp-order {
@@ -413,15 +390,12 @@
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+  border-radius: 8px;
+  transition: background-color 0.18s ease;
 }
 
 .btn-whatsapp-order:hover {
   background: #20BA5A;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
 }
 
 /* Ensure both action buttons have identical sizing and box model */
@@ -447,17 +421,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 15px;
-  background: rgba(67, 189, 171, 0.05);
-  border-radius: 8px;
-  border-left: 3px solid #43BDAB;
+  padding: 16px 0 0;
+  border-top: 1px solid #E8E8E8;
 }
 
 .guarantee-icon {
-  color: #43BDAB;
-  font-size: 18px;
-  font-weight: 700;
-  flex-shrink: 0;
+  display: none;
 }
 
 .guarantee-text {
@@ -527,7 +496,7 @@
   .product-showcase .trust-badges {
     flex-direction: row;
     gap: 10px;
-    padding: 16px;
+    padding: 16px 0 0;
   }
 
   .product-showcase .trust-item {
@@ -557,16 +526,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
-    background: rgba(67, 189, 171, 0.08);
-    border-radius: 8px;
+    padding: 16px 0;
+    border-top: 1px solid #E8E8E8;
+    border-bottom: 1px solid #E8E8E8;
     cursor: pointer;
     margin-bottom: 12px;
-    transition: all 0.3s ease;
-  }
-
-  .features-accordion-header:hover {
-    background: rgba(67, 189, 171, 0.12);
   }
 
   .features-accordion-title {
@@ -577,13 +541,20 @@
   }
 
   .features-accordion-icon {
-    font-size: 18px;
-    color: #43BDAB;
-    transition: transform 0.3s ease;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+    transform: rotate(45deg);
+    transition: transform 0.18s ease;
   }
 
   .features-accordion-icon.open {
-    transform: rotate(180deg);
+    transform: rotate(-135deg);
   }
 
   .features-accordion-content {
@@ -626,7 +597,7 @@
 
   .product-showcase .product-actions .btn-whatsapp-order,
   .product-showcase .product-actions .btn-add-to-cart {
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     width: 100%;
     z-index: 0;
     padding: 14px 22px;
@@ -635,5 +606,24 @@
     align-items: center;
     justify-content: center;
     height: auto;
+  }
+}
+/* Desktop: specs are always expanded, so the toggle glyph has no job */
+@media (min-width: 769px) {
+  .features-accordion-header {
+    margin-bottom: 14px;
+  }
+
+  .features-accordion-title {
+    font-family: 'Outfit', 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #000000;
+  }
+
+  .features-accordion-icon {
+    display: none;
   }
 }
