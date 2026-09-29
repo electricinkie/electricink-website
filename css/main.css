@@ -118,6 +118,26 @@ a {
   opacity: 0.9;
 }
 
+/* ========================================
+   Promo price pair (global fallback)
+   Same values as css/category-page.css:552-563, so a was/now pair renders
+   consistently on pages that don't load a section-specific stylesheet
+   (e.g. the homepage cards). Page-level files loaded after main.css keep
+   overriding these.
+   ======================================== */
+.price-was {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.price-now {
+  color: #43BDAB;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
 /* Respect reduced-motion site-wide: keep state changes, drop the motion */
 @media (prefers-reduced-motion: reduce) {
   *,
