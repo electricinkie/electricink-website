@@ -37,11 +37,6 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  transition: transform 0.3s ease;
-}
-
-.desktop-logo:hover {
-  transform: scale(1.05);
 }
 
 .desktop-logo img {
@@ -80,7 +75,7 @@
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 6px;
-  transition: all 0.3s ease;
+  transition: color 0.18s ease;
   background: none;
   border: none;
   cursor: pointer;
@@ -88,12 +83,10 @@
 
 .desktop-menu-link:hover {
   color: #43BDAB;
-  background: rgba(67, 189, 171, 0.1);
 }
 
 .desktop-menu-link.active {
   color: #43BDAB;
-  background: rgba(67, 189, 171, 0.15);
   position: relative;
 }
 
@@ -129,16 +122,16 @@
   left: 50%;
   transform: translateX(-50%);
   background: #FFFFFF;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   list-style: none;
   margin: 0;
   padding: 8px 0;
   min-width: 200px;
   opacity: 0;
   visibility: hidden;
-  transform: translateX(-50%) translateY(-10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
   z-index: 100;
 }
 
@@ -173,13 +166,12 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .desktop-dropdown-menu a:hover {
-  background: rgba(67, 189, 171, 0.1);
+  background: #F5F5F5;
   color: #43BDAB;
-  padding-left: 24px;
 }
 
 /* ────────── User Menu (signed-in) ────────── */
@@ -193,7 +185,7 @@
   gap: 8px;
   padding: 8px 16px;
   background: transparent;
-  border: 1px solid #2dd4bf;
+  border: 1px solid #43BDAB;
   border-radius: 6px;
   color: white;
   cursor: pointer;
@@ -206,8 +198,8 @@
   margin-top: 0;
   background: #ffffff;
   border: none;
-  border-radius: 12px;
-  box-shadow: 0 18px 50px rgba(6,11,15,0.18), 0 6px 18px rgba(6,11,15,0.06);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   min-width: 240px;
   padding: 8px;
   display: flex;
@@ -226,13 +218,13 @@
   text-align: left;
   border: none;
   background: transparent;
-  color: #0f1724;
+  color: #111111;
   text-decoration: none;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  border-radius: 8px;
-  transition: background 160ms ease, transform 120ms ease, color 160ms ease;
+  border-radius: 6px;
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .user-dropdown a:hover,
@@ -241,17 +233,16 @@
 .user-dropdown button:focus {
   background: linear-gradient(90deg, rgba(67,189,171,0.06), rgba(2,132,199,0.03));
   color: #075985;
-  transform: translateX(4px);
 }
 
 .user-dropdown .divider {
   height: 1px;
-  background: #eef2f6;
+  background: #EEEEEE;
   margin: 6px 0;
 }
 
 .logout-btn {
-  color: #b91c1c;
+  color: #C0392B;
   font-weight: 700;
   background: transparent;
   border-radius: 8px;
@@ -267,7 +258,6 @@
   height: 12px;
   background: #ffffff;
   transform: rotate(45deg);
-  box-shadow: -2px -2px 6px rgba(6,11,15,0.03);
 }
 
 /* ────────── Right Actions ────────── */
@@ -307,13 +297,11 @@
   color: #FFFFFF;
   text-decoration: none;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: color 0.18s ease;
 }
 
 .desktop-cart:hover {
-  background: rgba(67, 189, 171, 0.1);
   color: #43BDAB;
-  transform: translateY(-2px);
 }
 
 .desktop-cart svg {
@@ -337,7 +325,6 @@
   align-items: center;
   justify-content: center;
   padding: 0 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* ────────── Auth Button ────────── */
@@ -351,14 +338,12 @@
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 
 .auth-button:hover {
-  background: rgba(67, 189, 171, 0.06);
   color: #43BDAB;
-  border-color: rgba(67, 189, 171, 0.25);
-  transform: translateY(-1px);
+  border-color: rgba(67, 189, 171, 0.5);
 }
 
 .auth-button.hidden {
@@ -374,16 +359,11 @@
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.12s ease, transform 0.12s ease, color 0.12s ease;
+  transition: background-color 0.18s ease;
 }
 
 .sign-in-btn:hover {
   background: rgba(67,189,171,0.08);
-  transform: translateY(-1px);
-}
-
-.sign-in-btn:active {
-  transform: translateY(0);
 }
 
 /* ────────── Mobile/Tablet: Hide Desktop Header ────────── */
