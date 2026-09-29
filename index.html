@@ -184,7 +184,7 @@
   <!-- Categories Section -->
     <section class="categories">
       <div class="categories-header">
-        <h2 class="categories-title">SHOP BY CATEGORY</h2>
+        <h2 class="categories-title">Shop by category</h2>
         <p class="categories-subtitle">From tattoo artists to tattoo artists — professional gear only</p>
       </div>
 
@@ -745,14 +745,14 @@
     </div>
   </section>
     <!-- Reviews Section -->
-    <section class="homepage-reviews" style="padding:64px 40px;background:#f8f8f8;border-top:1px solid #e8e8e8;">
-      <div style="max-width:1080px;margin:0 auto;">
-        <div style="margin-bottom:36px;">
-          <p style="font-size:11px;font-weight:700;color:#43BDAB;text-transform:uppercase;letter-spacing:.12em;margin:0 0 8px;">From the community</p>
-          <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-.02em;color:#0a0a0a;margin:0;">What our community is saying.</h2>
+    <section class="homepage-reviews">
+      <div class="reviews-inner">
+        <div class="reviews-header">
+          <p class="reviews-kicker">From the community</p>
+          <h2 class="reviews-title">What our community is saying.</h2>
         </div>
-        <div id="homepageReviewsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-          <div style="text-align:center;padding:40px;color:#999;font-size:13px;grid-column:1/-1;">Loading reviews...</div>
+        <div id="homepageReviewsGrid" class="reviews-grid">
+          <div class="reviews-loading">Loading reviews...</div>
         </div>
         <div id="homepageReviewsDots" class="reviews-dots"></div>
       </div>
@@ -764,6 +764,10 @@
         <div class="cta-header">
           <h2 class="cta-title">Ready to Restock?</h2>
           <p class="cta-subtitle">Browse professional supplies — in stock, ready to ship</p>
+        </div>
+
+        <div class="cta-buttons">
+          <a href="/category.html" class="btn-primary">Shop all products</a>
         </div>
 
         
@@ -933,15 +937,15 @@
         grid.style.gridTemplateColumns = data.reviews.length < 3
           ? `repeat(${data.reviews.length},1fr)` : 'repeat(3,1fr)';
         grid.innerHTML = data.reviews.map(r => `
-          <div style="background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div class="review-card">
             <div>
-              <div style="color:#43BDAB;font-size:16px;letter-spacing:2px;margin-bottom:10px;">${stars(r.rating)}</div>
-              ${r.comment ? `<p style="font-family:'Montserrat',sans-serif;font-size:13px;color:#444;line-height:1.6;margin:0 0 14px;">"${r.comment.replace(/</g,'&lt;')}"</p>` : ''}
+              <div class="review-stars">${stars(r.rating)}</div>
+              ${r.comment ? `<p class="review-text">"${r.comment.replace(/</g,'&lt;')}"</p>` : ''}
             </div>
             <div>
-              <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:#0a0a0a;">${r.reviewer_name.replace(/</g,'&lt;')}</div>
-              <div style="font-size:11px;color:#999;margin-top:2px;">${new Date(r.created_at).toLocaleDateString('en-IE',{year:'numeric',month:'short'})}</div>
-              ${r.product_id ? `<a href="/products.html?id=${encodeURIComponent(r.product_id)}" style="display:inline-block;margin-top:10px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#43BDAB;text-decoration:none;border:1px solid rgba(67,189,171,0.3);border-radius:6px;padding:3px 8px;">${(r.product_name || r.product_id).replace(/</g,'&lt;')}</a>` : ''}
+              <div class="review-name">${r.reviewer_name.replace(/</g,'&lt;')}</div>
+              <div class="review-date">${new Date(r.created_at).toLocaleDateString('en-IE',{year:'numeric',month:'short'})}</div>
+              ${r.product_id ? `<a href="/products.html?id=${encodeURIComponent(r.product_id)}" class="review-product">${(r.product_name || r.product_id).replace(/</g,'&lt;')}</a>` : ''}
             </div>
           </div>
         `).join('');

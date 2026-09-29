@@ -2,6 +2,109 @@
    Homepage Reviews Carousel
    =================================== */
 
+/* Section */
+.homepage-reviews {
+  padding: 64px 40px;
+  background: #F8F8F8;
+  border-top: 1px solid #E8E8E8;
+}
+
+.reviews-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.reviews-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.reviews-kicker {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #43BDAB;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 10px;
+}
+
+.reviews-title {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 0.95;
+  color: #111;
+  margin: 0;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.reviews-loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 13px;
+  grid-column: 1 / -1;
+}
+
+/* Card (markup rendered by the reviews script in index.html) */
+.review-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.review-stars {
+  color: #43BDAB;
+  font-size: 16px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.review-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+
+.review-name {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+}
+
+.review-date {
+  font-size: 11px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.review-product {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #43BDAB;
+  text-decoration: none;
+  border: 1px solid rgba(67, 189, 171, 0.3);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
 /* Dots — hidden on desktop, visible on mobile */
 .reviews-dots {
   display: none;
@@ -13,7 +116,7 @@
   border-radius: 50%;
   background-color: rgba(67, 189, 171, 0.3);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.18s ease;
   border: none;
   padding: 0;
   outline: none;
@@ -21,7 +124,6 @@
 
 .reviews-dot:hover {
   background-color: rgba(67, 189, 171, 0.6);
-  transform: scale(1.2);
 }
 
 .reviews-dot.active {
@@ -34,6 +136,10 @@
 @media (max-width: 768px) {
   .homepage-reviews {
     padding: 48px 20px !important;
+  }
+
+  .reviews-title {
+    font-size: 28px;
   }
 
   #homepageReviewsGrid {

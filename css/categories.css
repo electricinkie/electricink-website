@@ -12,21 +12,19 @@
 
 .categories-title {
   font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 900;
   color: #111;
-  text-transform: uppercase;
-  letter-spacing: 1.5px; /* more breathing room for uppercase */
+  letter-spacing: -1.5px;
   line-height: 0.95;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .categories-subtitle {
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   font-weight: 400;
-  color: #999999;
-  letter-spacing: 0.5px;
+  color: #666666;
 }
 
 .categories-title span { color: #111; }
@@ -109,7 +107,7 @@
   }
 
   .categories-title {
-    font-size: 30px;
+    font-size: 36px;
   }
 
   .categories-subtitle {
@@ -157,8 +155,7 @@
   }
 
   .categories-title {
-    font-size: 24px;
-    letter-spacing: 1.5px;
+    font-size: 28px;
   }
 
   .categories-subtitle {
