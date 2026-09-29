@@ -285,11 +285,12 @@
   font-weight: 600;
   color: #000000;
   text-decoration: none;
-  transition: background-color 0.18s ease, color 0.18s ease;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .howtouse-cta:hover {
-  background: #000000;
+  background: #43BDAB;
+  border-color: #43BDAB;
   color: #FFFFFF;
 }
 

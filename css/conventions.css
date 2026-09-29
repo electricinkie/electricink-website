@@ -93,10 +93,10 @@
       padding: 16px 36px;
       border-radius: 4px;
       text-decoration: none;
-      transition: opacity 0.18s;
+      transition: background-color 0.18s ease;
       white-space: nowrap;
     }
-    .conv-hero-cta:hover { opacity: 0.88; }
+    .conv-hero-cta:hover { background: #2A9D8F; }
 
     /* ── Section base ── */
     .conv-section {
@@ -294,12 +294,12 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
+      transition: background-color 0.18s ease, opacity 0.18s ease;
       margin-top: 8px;
       width: 100%;
       font-family: inherit;
     }
-    .conv-submit:hover { opacity: 0.88; }
+    .conv-submit:hover:not(:disabled) { background: #2A9D8F; }
     .conv-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
     .conv-form-note {
