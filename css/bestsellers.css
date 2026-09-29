@@ -60,19 +60,16 @@
 .bestseller-card {
   width: 100%;
   background: #FFFFFF;
-  border: 1px solid #E0E0E0;
-  border-radius: 12px;
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: all 0.3s ease;
+  transition: border-color 0.18s ease;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .bestseller-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
   border-color: #43BDAB;
 }
 
@@ -81,18 +78,20 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  padding: 6px 12px;
+  padding: 5px 9px;
   font-family: 'Outfit', sans-serif;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 20px;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  background-color: #000000;
+  color: #FFFFFF;
   z-index: 2;
 }
 
 .badge-essential {
-  background-color: #43BDAB;
+  background-color: #000000;
   color: #FFFFFF;
 }
 
@@ -102,23 +101,23 @@
 }
 
 .badge-bestseller {
-  background-color: #AA0000;
+  background-color: #000000;
   color: #FFFFFF;
 }
 
 .badge-top {
-  background-color: #FF6B6B;
+  background-color: #000000;
   color: #FFFFFF;
 }
 
 .badge-trending {
-  background-color: #FFA300;
+  background-color: #000000;
   color: #FFFFFF;
 }
 
 /* NEW: Pro Choice badge */
 .badge-pro-choice {
-  background-color: #2E4A51;
+  background-color: #43BDAB;
   color: #FFFFFF;
 }
 
@@ -137,11 +136,6 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 0.4s ease;
-}
-
-.bestseller-card:hover .bestseller-image img {
-  transform: scale(1.05);
 }
 
 /* Info */
@@ -191,12 +185,11 @@
   border-radius: 50%;
   background-color: rgba(67, 189, 171, 0.3);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.18s ease;
 }
 
 .bestsellers-dot:hover {
   background-color: rgba(67, 189, 171, 0.6);
-  transform: scale(1.2);
 }
 
 .bestsellers-dot.active {
@@ -266,11 +259,6 @@
     flex: 0 0 calc(100% - 40px);
     min-width: calc(100% - 40px);
     scroll-snap-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  .bestseller-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   }
 
   .bestseller-image {

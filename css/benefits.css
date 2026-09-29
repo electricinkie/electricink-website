@@ -8,16 +8,6 @@
   width: 100%;
 }
 
-.benefits-bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent 0%, #43BDAB 50%, transparent 100%);
-}
-
 .benefits-wrapper {
   display: flex;
   align-items: center;
@@ -38,11 +28,10 @@
 
 .benefit-link {
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.benefit-link:hover {
-  transform: translateY(-2px);
+.benefit-label {
+  transition: color 0.18s ease;
 }
 
 .benefit-link:hover .benefit-label {
@@ -56,15 +45,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(67, 189, 171, 0.12);
-  border-radius: 50%;
   position: relative;
-  transition: all 0.3s ease;
-}
-
-.benefit-item:hover .benefit-visual {
-  background: rgba(67, 189, 171, 0.2);
-  transform: scale(1.08);
 }
 
 .benefit-visual img {
@@ -73,12 +54,6 @@
   object-fit: contain;
   position: relative;
   z-index: 2;
-  transition: all 0.3s ease;
-}
-
-.benefit-item:hover .benefit-visual img {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 10px rgba(67, 189, 171, 0.6));
 }
 
 .benefit-text {
@@ -114,7 +89,7 @@
 .benefit-divider {
   width: 1px;
   height: 40px;
-  background: linear-gradient(180deg, transparent 0%, #333333 50%, transparent 100%);
+  background: #222222;
   flex-shrink: 0;
 }
 
@@ -126,12 +101,6 @@
   color: #666666;
   padding: 0 0 12px 0;
   letter-spacing: 0.5px;
-  animation: pulse-hint 2s ease-in-out infinite;
-}
-
-@keyframes pulse-hint {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
 }
 
 @media (max-width: 1400px) {
@@ -164,7 +133,7 @@
     grid-row: 2;
     width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, #333333 50%, transparent 100%);
+    background: #222222;
   }
   
   .benefit-item:nth-child(5) { grid-column: 1; grid-row: 3; }
@@ -203,10 +172,6 @@
     overflow: visible;
   }
 
-  .benefits-bar::before {
-    display: none;
-  }
-
   .benefits-wrapper {
     display: flex;
     flex-direction: row;
@@ -230,14 +195,13 @@
     min-width: 160px;
     flex-shrink: 0;
     scroll-snap-align: center;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(67, 189, 171, 0.15);
-    border-radius: 12px;
+    background: transparent;
+    border: 1px solid #222222;
+    border-radius: 10px;
     padding: 14px 12px;
     gap: 10px;
     flex-direction: column;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .benefit-divider {
@@ -247,7 +211,6 @@
   .benefit-visual {
     width: 42px;
     height: 42px;
-    background: rgba(67, 189, 171, 0.15);
     margin: 0 auto;
   }
 

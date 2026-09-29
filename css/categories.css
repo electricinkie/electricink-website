@@ -39,67 +39,34 @@
 
 .category-card {
   background: #FFFFFF;
-  border: 1px solid rgba(67, 189, 171, 0.3);
-  border-radius: 16px;
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
   padding: 20px 20px 20px 20px;
   text-align: center;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: border-color 0.18s ease;
   cursor: pointer;
 }
 
-.category-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent 0%, #43BDAB 50%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
 .category-card:hover {
-  background: rgba(67, 189, 171, 0.05);
   border-color: #43BDAB;
-  transform: translateY(-8px);
-  box-shadow: 0 10px 30px rgba(67, 189, 171, 0.25);
-}
-
-.category-card:hover::before {
-  opacity: 1;
 }
 
 .category-icon {
   width: 80px;
   height: 80px;
   margin: 0 auto 25px;
-  background: rgba(67, 189, 171, 0.12);
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all 0.4s ease;
-}
-
-.category-card:hover .category-icon {
-  background: rgba(67, 189, 171, 0.25);
-  transform: scale(1.1) rotate(5deg);
 }
 
 .category-icon img {
   width: 50px;
   height: 50px;
   object-fit: contain;
-  transition: all 0.4s ease;
-}
-
-.category-card:hover .category-icon img {
-  transform: scale(1.15);
-  filter: grayscale(1) brightness(0) invert(1) drop-shadow(0 0 15px rgba(67, 189, 171, 0.7));
 }
 
 .category-name {
@@ -110,7 +77,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 10px;
-  transition: color 0.3s ease;
+  transition: color 0.18s ease;
 }
 
 .category-card:hover .category-name {
@@ -127,16 +94,7 @@
 }
 
 .category-arrow {
-  font-size: 24px;
-  color: #43BDAB;
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: all 0.3s ease;
-}
-
-.category-card:hover .category-arrow {
-  opacity: 1;
-  transform: translateX(0);
+  display: none;
 }
 
 /* Tablet */
