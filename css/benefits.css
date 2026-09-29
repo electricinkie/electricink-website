@@ -95,9 +95,7 @@
   color: #FFFFFF;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
 .benefit-detail {
