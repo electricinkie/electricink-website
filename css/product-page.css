@@ -38,7 +38,7 @@
 .breadcrumb-link {
   color: #666;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.18s ease;
   position: relative;
   padding-bottom: 2px;
 }
@@ -121,11 +121,16 @@
   height: 100%;
   max-height: 55vh;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .main-image:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-image img { transition: none; }
+  .main-image:hover img { transform: none; }
 }
 
 .product-thumbnails {
@@ -166,7 +171,7 @@
   border: 2px solid #e8e8e8;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.18s ease;
   scroll-snap-align: start;
 }
 
@@ -176,7 +181,6 @@
 
 .product-thumbnail.active {
   border-color: #43BDAB;
-  box-shadow: 0 0 0 2px rgba(67, 189, 171, 0.2);
 }
 
 /* ========================================
@@ -228,7 +232,7 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  color: #6b7280;
+  color: #666666;
   vertical-align: middle;
 }
 
@@ -252,7 +256,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: #999999;
   padding: 4px;
   display: flex;
   align-items: center;
@@ -268,12 +272,6 @@
   height: 8px;
   background: #43BDAB;
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
 }
 
 .product-description {
@@ -341,18 +339,12 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.18s ease;
 }
 
 .btn-add-to-cart:hover {
   background: #43BDAB;
   color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-}
-
-.btn-add-to-cart:active {
-  transform: translateY(0);
 }
 
 /* ========================================
@@ -378,8 +370,7 @@
 }
 
 .trust-check {
-  color: #43BDAB;
-  font-weight: 700;
+  display: none;
 }
 
 /* ========================================
@@ -414,11 +405,13 @@
 }
 
 #featuresList li::before {
-  content: '✓';
+  content: '';
   position: absolute;
   left: 0;
-  color: #43BDAB;
-  font-weight: 700;
+  top: 0.8em;
+  width: 10px;
+  height: 2px;
+  background: #43BDAB;
 }
 
 /* ========================================
@@ -450,9 +443,9 @@
   gap: 12px;
   width: 100%;
   padding: 14px 18px;
-  background: rgba(67, 189, 171, 0.05);
-  border: 2px solid rgba(67, 189, 171, 0.08);
-  border-radius: 12px;
+  background: transparent;
+  border: 1px solid #E8E8E8;
+  border-radius: 8px;
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
   font-size: 16px;
@@ -465,20 +458,25 @@
 }
 
 .product-how-to-use .how-to-toggle[aria-expanded="true"] {
-  background: linear-gradient(135deg, #43BDAB 0%, #2a9d8f 100%);
-  color: #fff;
   border-color: #43BDAB;
 }
 
 .product-how-to-use .how-to-toggle .how-to-arrow {
-  transition: transform 0.25s ease;
-  color: #43BDAB;
-  font-weight: 800;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-right: 2px solid #000000;
+  border-bottom: 2px solid #000000;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+  transform: rotate(45deg);
+  transition: transform 0.18s ease;
 }
 
 .product-how-to-use .how-to-toggle[aria-expanded="true"] .how-to-arrow {
-  transform: rotate(180deg);
-  color: #fff;
+  transform: rotate(-135deg);
 }
 
 .product-how-to-use .how-to-content {
@@ -984,16 +982,17 @@
    ============================================ */
 
 .promo-badge-large {
-  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  background: #000000;
   color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   display: inline-block;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
 }
 
 .product-page .price-display-container {
@@ -1017,7 +1016,7 @@
 }
 
 .product-page .price-savings {
-  color: #FF6B35;
+  color: #43BDAB;
   font-size: 0.95rem;
   font-weight: 600;
   margin-top: 0.5rem;
@@ -1042,14 +1041,17 @@
 .product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) .product-info::before {
   content: "SPECIAL OFFER";
   display: inline-block;
-  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  align-self: flex-start;
+  background: #000000;
   color: #fff;
-  padding: 10px 18px;
-  border-radius: 8px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
-  box-shadow: 0 4px 12px rgba(255,107,53,0.25);
 }
 
 .product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::before {
@@ -1071,7 +1073,7 @@
 .product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::after {
   content: " Save €249.00";
   display: block;
-  color: #FF6B35;
+  color: #43BDAB;
   font-size: 0.95rem;
   margin-top: 0.5rem;
 }
@@ -1217,8 +1219,6 @@
 .btn-wholesale-buy:hover {
   background: #000;
   color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
 @media (max-width: 768px) {
