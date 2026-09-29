@@ -77,6 +77,27 @@ import { INTERNAL_API_URL } from '/js/constants.js';
         if (item && item.variant_id) apiByVariant.set(item.variant_id, item);
       });
 
+      // Gross price (VAT incl.) from an ex-VAT value, same rounding used everywhere.
+      function toGross(priceEx) {
+        const p = parseFloat(priceEx);
+        return isNaN(p) ? null : parseFloat((p * 1.23).toFixed(2));
+      }
+
+      // Effective price is what the customer pays: the promo price when a
+      // promotion is running, the normal price otherwise. effective_price_ex is
+      // added by /api/catalog; fall back to price_ex when it is absent so an
+      // older payload keeps behaving exactly as before.
+      function resolveRowPrices(row) {
+        const normal = toGross(row.price_ex);
+        const effective = toGross(row.effective_price_ex);
+        return {
+          price: effective !== null ? effective : normal,
+          wasPrice: (row.promo_active === true && normal !== null && effective !== null && normal > effective)
+            ? normal
+            : undefined
+        };
+      }
+
       // Helper to match variant id heuristically
       function findApiForVariant(variant) {
         if (!variant) return null;
@@ -97,8 +118,9 @@ import { INTERNAL_API_URL } from '/js/constants.js';
         localProduct.variants.forEach(variant => {
           const apiEntry = findApiForVariant(variant);
           if (apiEntry) {
-            const parsedPrice = parseFloat(apiEntry.price_ex);
-            if (!isNaN(parsedPrice)) variant.price = parseFloat((parsedPrice * 1.23).toFixed(2));
+            const resolved = resolveRowPrices(apiEntry);
+            if (resolved.price !== null) variant.price = resolved.price;
+            if (resolved.wasPrice !== undefined) variant.wasPrice = resolved.wasPrice;
             const parsedStock = parseInt(apiEntry.stock, 10);
             if (!isNaN(parsedStock)) variant.quantity = parsedStock;
           }
@@ -114,10 +136,11 @@ import { INTERNAL_API_URL } from '/js/constants.js';
         // Simple product - apply first api entry as fallback
         const first = apiData[0];
         if (first) {
-          const parsedPrice = parseFloat(first.price_ex);
-          if (!isNaN(parsedPrice)) {
-            const priceWithVat = parseFloat((parsedPrice * 1.23).toFixed(2));
-            if (localProduct.basic) localProduct.basic.price = priceWithVat; else localProduct.price = priceWithVat;
+          const resolved = resolveRowPrices(first);
+          if (resolved.price !== null) {
+            const target = localProduct.basic ? localProduct.basic : localProduct;
+            target.price = resolved.price;
+            if (resolved.wasPrice !== undefined) target.wasPrice = resolved.wasPrice;
           }
         }
         localProduct.inventory = localProduct.inventory || {};
@@ -298,6 +321,24 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     });
   }
 
+  // Render a plain price, or a was/now pair when a promotion is running.
+  // Classes already exist in css/product-page.css.
+  function renderPrice(el, price, wasPrice) {
+    if (typeof wasPrice !== 'number' || isNaN(wasPrice) || !(wasPrice > price)) {
+      el.textContent = `€${price.toFixed(2)}`;
+      return;
+    }
+    const was = document.createElement('span');
+    was.className = 'price-was';
+    was.textContent = `€${wasPrice.toFixed(2)}`;
+    const now = document.createElement('span');
+    now.className = 'price-now';
+    now.textContent = `€${price.toFixed(2)}`;
+    el.textContent = '';
+    el.appendChild(was);
+    el.appendChild(now);
+  }
+
   // RENDER price (defensive: avoid calling toFixed on undefined)
   const priceEl = document.getElementById('productPrice');
   if (productData.variants && productData.variants.length > 0) {
@@ -314,7 +355,9 @@ import { INTERNAL_API_URL } from '/js/constants.js';
       const uniquePrices = Array.from(new Set(variantPrices.map(p => Number(p).toFixed(2))));
       if (uniquePrices.length === 1) {
         // All variants share same price - display single price
-        priceEl.textContent = `€${parseFloat(uniquePrices[0]).toFixed(2)}`;
+        const singlePrice = parseFloat(uniquePrices[0]);
+        const promoVariant = productData.variants.find(v => typeof v.wasPrice === 'number' && !isNaN(v.wasPrice));
+        renderPrice(priceEl, singlePrice, promoVariant ? promoVariant.wasPrice : undefined);
       } else {
         // Multiple prices - show price range using the lowest variant price
         const minPrice = Math.min(...variantPrices);
@@ -324,7 +367,9 @@ import { INTERNAL_API_URL } from '/js/constants.js';
   } else {
     // Simple product - use basic price or product-level price defensively
     const price = (typeof productData.basic?.price === 'number') ? productData.basic.price : productData.price;
-    priceEl.textContent = (typeof price === 'number' && !isNaN(price)) ? `€${price.toFixed(2)}` : 'Price unavailable';
+    const wasPrice = (typeof productData.basic?.wasPrice === 'number') ? productData.basic.wasPrice : productData.wasPrice;
+    if (typeof price === 'number' && !isNaN(price)) renderPrice(priceEl, price, wasPrice);
+    else priceEl.textContent = 'Price unavailable';
   }
 
   // RENDER stock indicator badge based on inventory.stock_status
@@ -455,6 +500,14 @@ import { INTERNAL_API_URL } from '/js/constants.js';
         : variant.price;
       option.dataset.price = (typeof optPrice === 'number' && !isNaN(optPrice)) ? String(optPrice) : '';
 
+      // Expose the pre-promo price so the change handler can draw the was/now
+      // pair. Only set when this variant is actually on promotion.
+      const optPriceNum = parseFloat(option.dataset.price);
+      if (typeof variant.wasPrice === 'number' && !isNaN(variant.wasPrice)
+          && !isNaN(optPriceNum) && variant.wasPrice > optPriceNum) {
+        option.dataset.wasPrice = String(variant.wasPrice);
+      }
+
       // Ensure a usable priceId is available on the option: prefer variant, otherwise fall back to product-level ids
       option.dataset.priceId = variant.stripe_price_id || variant.priceId || variant.price_id || productData.stripe_price_id || (productData.stripe && (productData.stripe.priceId || productData.stripe.price_id)) || productData.priceId || productData.price_id || '';
       option.dataset.image = variant.image || '';
@@ -478,12 +531,15 @@ import { INTERNAL_API_URL } from '/js/constants.js';
 
       // Use dataset.price for display to avoid calling toFixed on undefined
       const displayPrice = parseFloat(option.dataset.price);
+      // An <option> cannot hold markup, so a promotion is shown as plain text.
+      const displayWas = parseFloat(option.dataset.wasPrice);
+      const wasSuffix = isNaN(displayWas) ? '' : ` (was €${displayWas.toFixed(2)})`;
       // If we already set textContent above for stock messages, keep it and append price where applicable
       if (!option.textContent || option.textContent.trim() === '') {
-        option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}`;
+        option.textContent = isNaN(displayPrice) ? `${variant.label}` : `${variant.label} - €${displayPrice.toFixed(2)}${wasSuffix}`;
       } else if (!isNaN(displayPrice)) {
         // append price alongside existing stock text
-        option.textContent = `${option.textContent} - €${displayPrice.toFixed(2)}`;
+        option.textContent = `${option.textContent} - €${displayPrice.toFixed(2)}${wasSuffix}`;
       }
 
       variantSelect.appendChild(option);
@@ -536,7 +592,8 @@ import { INTERNAL_API_URL } from '/js/constants.js';
 
       const parsed = parseFloat(selected.dataset.price);
       if (!isNaN(parsed)) {
-        priceEl.textContent = `€${parsed.toFixed(2)}`;
+        const parsedWas = parseFloat(selected.dataset.wasPrice);
+        renderPrice(priceEl, parsed, isNaN(parsedWas) ? undefined : parsedWas);
       } else {
         // fallback to product-level price or display price range
         const basePrice = (typeof productData.basic?.price === 'number') ? productData.basic.price : productData.price;
