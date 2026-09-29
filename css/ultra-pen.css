@@ -21,8 +21,8 @@
 .badge-featured {
   display: inline-block;
   align-self: flex-start;
-  background: #000000;
-  color: #FFFFFF;
+  background: #43BDAB;
+  color: #000000;
   font-family: 'Outfit', 'Montserrat', sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -247,7 +247,7 @@
 
 .product-showcase .promo-badge-large {
   background: #000000;
-  color: #fff;
+  color: #43BDAB;
   padding: 5px 9px;
   border-radius: 4px;
   font-family: 'Outfit', 'Montserrat', sans-serif;

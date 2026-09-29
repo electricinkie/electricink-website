@@ -531,7 +531,7 @@
   top: 12px;
   right: 12px;
   background: #000000;
-  color: white;
+  color: #43BDAB;
   padding: 5px 9px;
   border-radius: 4px;
   font-family: 'Outfit', 'Montserrat', sans-serif;
@@ -590,7 +590,7 @@ a.product-card[href*="ultra-pen-2-combo"]::before {
   top: 56px; /* increased spacing for breathing room */
   right: 12px;
   background: #000000;
-  color: white;
+  color: #43BDAB;
   padding: 5px 9px;
   border-radius: 4px;
   font-family: 'Outfit', 'Montserrat', sans-serif;

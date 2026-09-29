@@ -13,8 +13,8 @@
 
 .badge {
   display: inline-block;
-  background: #000000;
-  color: #FFFFFF;
+  background: #43BDAB;
+  color: #000000;
   font-family: 'Outfit', 'Montserrat', sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -216,12 +216,12 @@
 }
 
 .new-nav-arrow:hover {
-  background: #000000;
-  border-color: #000000;
+  background: #43BDAB;
+  border-color: #43BDAB;
 }
 
 .new-nav-arrow:hover svg {
-  stroke: #FFFFFF;
+  stroke: #000000;
 }
 
 .new-nav-arrow.disabled {

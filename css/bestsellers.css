@@ -85,14 +85,14 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-radius: 4px;
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #43BDAB;
+  color: #000000;
   z-index: 2;
 }
 
 .badge-essential {
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #43BDAB;
+  color: #000000;
 }
 
 .badge-pro {
@@ -101,24 +101,24 @@
 }
 
 .badge-bestseller {
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #43BDAB;
+  color: #000000;
 }
 
 .badge-top {
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #43BDAB;
+  color: #000000;
 }
 
 .badge-trending {
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #43BDAB;
+  color: #000000;
 }
 
 /* NEW: Pro Choice badge */
 .badge-pro-choice {
-  background-color: #43BDAB;
-  color: #FFFFFF;
+  background-color: #000000;
+  color: #43BDAB;
 }
 
 /* Image */
