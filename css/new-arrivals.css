@@ -96,6 +96,16 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.new-product:hover .new-product-image img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .new-product-image img { transition: none; }
+  .new-product:hover .new-product-image img { transform: none; }
 }
 
 .new-product-info {
