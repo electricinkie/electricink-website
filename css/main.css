@@ -120,7 +120,8 @@ a {
 
 /* A was/now pair carries the label on .price-now, so the wrapper must not
    emit a second one. */
-.new-product-price:has(.price-now)::after { content: none; }
+.new-product-price:has(.price-now)::after,
+.product-price:has(.price-now)::after { content: none; }
 
 /* ========================================
    Promo price pair (global fallback)
