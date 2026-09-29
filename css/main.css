@@ -13,8 +13,8 @@ html {
 :root{
   --color-primary: #43BDAB;
   --color-accent: #ffa300;
-  --color-text: #111827;
-  --color-muted: #6b7280;
+  --color-text: #111111;
+  --color-muted: #666666;
   --bg: #ffffff;
   --card-bg: #f8fafb;
   --surface-border: #eeeeee;
@@ -116,5 +116,17 @@ a {
   color: var(--muted);
   vertical-align: middle;
   opacity: 0.9;
+}
+
+/* Respect reduced-motion site-wide: keep state changes, drop the motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 

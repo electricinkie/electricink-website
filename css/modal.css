@@ -125,7 +125,6 @@
 
 .modal-btn-primary:hover {
   background: #3AAA9A;
-  box-shadow: 0 4px 12px rgba(67, 189, 171, 0.3);
 }
 
 /* Secondary Button */
@@ -145,7 +144,6 @@
 
 .modal-container[data-type="delete"] .modal-btn-primary:hover {
   background: #ee3333;
-  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
 }
 
 /* ────────── Mobile ────────── */
