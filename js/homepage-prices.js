@@ -17,8 +17,18 @@ async function fetchPrice(productId) {
     const prices = rows.map(v => toGross(v.price_ex));
     const min = Math.min(...prices);
     const max = Math.max(...prices);
-    // Multiple distinct prices: unchanged "from €X", no promo handling for now.
-    if (min !== max) return { text: `from €${min.toFixed(2)}` };
+    // Effective price is what the customer pays: the promo price when a
+    // promotion is running, the normal price otherwise. Falls back to price_ex
+    // when effective_price_ex is absent, so an older payload behaves as before.
+    const effectiveOf = (v) => {
+      const eff = toGross(v.effective_price_ex);
+      return eff !== null ? eff : toGross(v.price_ex);
+    };
+    // Multiple distinct prices: "from €X" at the effective price, so the home
+    // never shows a higher "from" than category-page.js for the same product.
+    // min/max stay on the normal prices, because they also decide the branch
+    // below and carry the pre-promo "was".
+    if (min !== max) return { text: `from €${Math.min(...rows.map(effectiveOf)).toFixed(2)}` };
     // Single price with an active promotion: was/now pair. Any missing or
     // non-cheaper promo price falls back to the plain single-price string.
     const promoRow = rows.find(v => v.promo_active === true);
