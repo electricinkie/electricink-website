@@ -387,14 +387,23 @@ function escHtml(str) {
       if (data.variants && data.variants.length > 0) {
         // Has variants - prefer explicit price_range.display, otherwise try variant.price or product price
         const priceRangeDisplay = data.price_range && data.price_range.display;
-        const firstPrice = (data.variants[0] && typeof data.variants[0].price === 'number')
-          ? data.variants[0].price
+        // The merge above already resolved effective_price_ex (falling back to
+        // price_ex) into variant.price, so the minimum across variants is the
+        // lowest price a customer can actually pay. Reading variants[0] would
+        // show the wrong "from" whenever a discount deep enough to reorder the
+        // variants makes a dearer one the cheapest. js/homepage-prices.js takes
+        // the minimum for the same reason.
+        const variantPrices = data.variants
+          .filter(v => v && typeof v.price === 'number' && !isNaN(v.price))
+          .map(v => v.price);
+        const minPrice = variantPrices.length > 0
+          ? Math.min(...variantPrices)
           : (typeof data.price === 'number' ? data.price : (typeof data.basic?.price === 'number' ? data.basic.price : NaN));
 
         if (priceRangeDisplay) {
           priceDisplay = priceRangeDisplay;
-        } else if (!isNaN(firstPrice)) {
-          priceDisplay = `from €${firstPrice.toFixed(2)}`;
+        } else if (!isNaN(minPrice)) {
+          priceDisplay = `from €${minPrice.toFixed(2)}`;
         } else {
           priceDisplay = 'Price unavailable';
         }
