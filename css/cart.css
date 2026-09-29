@@ -87,12 +87,11 @@
   letter-spacing: 1px;
   text-decoration: none;
   border-radius: 6px;
-  transition: all 0.3s ease;
+  transition: background-color 0.18s ease;
 }
 
 .btn-primary:hover {
   background: #2a9d8f;
-  transform: translateY(-2px);
 }
 
 /* ────────── Cart Items ────────── */
@@ -108,14 +107,8 @@
   gap: 20px;
   padding: 20px;
   background: #FFFFFF;
-  border: 2px solid #e8e8e8;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.cart-item:hover {
-  border-color: #43BDAB;
-  box-shadow: 0 4px 20px rgba(67, 189, 171, 0.1);
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
 }
 
 /* Item Image */
@@ -290,13 +283,11 @@
   border-radius: 6px;
   cursor: pointer;
   margin-top: 24px;
-  transition: all 0.3s ease;
+  transition: background-color 0.18s ease;
 }
 
 .btn-checkout:hover {
   background: #2a9d8f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(67, 189, 171, 0.3);
 }
 
 .continue-shopping {
