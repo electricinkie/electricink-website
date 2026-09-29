@@ -7,16 +7,6 @@
   overflow: hidden;
 }
 
-.site-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #43BDAB 50%, transparent 100%);
-}
-
 .footer-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -45,12 +35,6 @@
   width: 120px;
   height: auto;
   object-fit: contain;
-  transition: all 0.3s ease;
-}
-
-.footer-logo img:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 15px rgba(67, 189, 171, 0.4));
 }
 
 /* Footer Columns */
@@ -62,14 +46,12 @@
 
 .footer-heading {
   font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 700;
-  color: #43BDAB;
+  color: #FFFFFF;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
   margin: 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid rgba(67, 189, 171, 0.2);
 }
 
 /* Footer Links */
@@ -94,28 +76,12 @@
   color: #CCCCCC;
   text-decoration: none;
   display: inline-block;
-  transition: all 0.3s ease;
+  transition: color 0.18s ease;
   position: relative;
-}
-
-.footer-links a::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 1px;
-  background: #43BDAB;
-  transition: width 0.3s ease;
 }
 
 .footer-links a:hover {
   color: #43BDAB;
-  transform: translateX(5px);
-}
-
-.footer-links a:hover::before {
-  width: 100%;
 }
 
 /* Social Links */
@@ -130,49 +96,28 @@
   height: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(67, 189, 171, 0.1);
-  border-radius: 50%;
-  transition: all 0.3s ease;
+  justify-content: flex-start;
   position: relative;
-}
-
-.social-link::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #43BDAB, #2A9D8F);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.social-link:hover {
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 8px 20px rgba(67, 189, 171, 0.3);
-}
-
-.social-link:hover::before {
-  opacity: 1;
 }
 
 .social-icon {
-  width: 24px;
-  height: 24px;
+  /* the Instagram glyph fills only ~47% of its 64-unit viewBox */
+  width: 42px;
+  height: 42px;
+  margin-left: -11px;
   fill: #FFFFFF;
   position: relative;
   z-index: 1;
-  transition: all 0.3s ease;
+  transition: fill 0.18s ease;
 }
 
 .social-link:hover .social-icon {
-  fill: #FFFFFF;
-  transform: scale(1.15);
+  fill: #43BDAB;
 }
 
 /* Footer Bottom */
 .footer-bottom {
-  border-top: 1px solid rgba(67, 189, 171, 0.1);
+  border-top: 1px solid #1A1A1A;
   padding: 30px 0;
   text-align: center;
 }
@@ -217,7 +162,7 @@
   }
 
   .footer-heading {
-    font-size: 15px;
+    font-size: 12px;
   }
 
   .footer-links a {
@@ -244,7 +189,7 @@
   .footer-col-logo {
     grid-column: 1 / -1;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(67, 189, 171, 0.1);
+    border-bottom: 1px solid #1A1A1A;
     margin-bottom: 10px;
   }
 
@@ -257,7 +202,7 @@
   }
 
   .footer-heading {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .footer-links {
@@ -266,10 +211,6 @@
 
   .footer-links a {
     font-size: 13px;
-  }
-
-  .footer-links a:hover {
-    transform: translateX(3px);
   }
 
   .footer-social {
@@ -301,8 +242,7 @@
   }
 
   .footer-heading {
-    font-size: 13px;
-    padding-bottom: 8px;
+    font-size: 11px;
   }
 
   .footer-links {
@@ -319,8 +259,8 @@
   }
 
   .social-icon {
-    width: 22px;
-    height: 22px;
+    width: 40px;
+    height: 40px;
   }
 
   .footer-bottom {
