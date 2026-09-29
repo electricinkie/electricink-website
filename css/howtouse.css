@@ -128,7 +128,7 @@
 .howtouse-phase-badge {
   display: inline-block;
   background: #43BDAB;
-  color: #000000;
+  color: #FFFFFF;
   padding: 5px 9px;
   border-radius: 4px;
   font-family: 'Outfit', 'Montserrat', sans-serif;
@@ -231,7 +231,7 @@
   font-family: 'Outfit', sans-serif;
   font-size: 22px;
   font-weight: 900;
-  color: #000000;
+  color: #FFFFFF;
 }
 
 /* Product Content (Desktop: Always visible) */
