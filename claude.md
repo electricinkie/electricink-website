@@ -19,17 +19,37 @@ com o sistema interno (electricink-internal no Railway).
 - Frontend: Vanilla JS com ES modules (import/export)
 - API routes: CommonJS (require/module.exports) — NÃO misturar
 - Stripe: PaymentIntent + webhooks + Payment Request Button
-- Firebase/Firestore: orders, rate_limits, abandoned_carts
+- Firebase/Firestore: NÃO é usado por nenhuma rota em api/*.js (nem para
+  orders — a idempotência das orders é garantida pelo internal via
+  ON CONFLICT (order_id)). Resta apenas resíduo: check de env
+  FIREBASE_SERVICE_ACCOUNT em api/create-payment-intent.js e
+  scripts/dev-server.js, que faz require de api/lib/firebase-admin
+  (ficheiro que já não existe)
+- Rate limiting: os 4 pontos (api/catalog.js, api/validate-coupon.js,
+  api/convention-apply.js, api/create-payment-intent.js) usam new Map()
+  em memória, por instância serverless — ineficaz entre cold starts,
+  conhecido e documentado como tal
+- Abandoned carts: vivem na PostgreSQL do electricink-internal (tabela
+  abandoned_carts, restore_token + expiração), consumidos via
+  api/abandoned-cart-save.js e api/abandoned-cart-convert.js neste repo
 - Resend: emails via api/lib/resend.js
-- Logger: api/lib/logger.js — usar sempre nas API routes
-- Sentry: api/lib/sentry.js
+- Logger: api/lib/** é excluído do deploy pelo .vercelignore (limite de
+  funções serverless do plano Vercel) — cada rota em api/*.js define o
+  seu próprio logger inline (padrão: const logger = { info: console.log,
+  ... }). NUNCA fazer require('./lib/...') de dentro de api/ — causa
+  MODULE_NOT_FOUND em produção (incidente de 2026-09, ver historial).
+  Qualquer código partilhado entre funções serverless deve viver em /lib
+  na raiz do repositório, fora de /api.
 
 ## Ficheiros críticos
 - api/webhooks-stripe.js — idempotente via Firestore
 - api/create-payment-intent.js — preços server-side + buildItemsMeta
 - api/validate-coupon.js — validação de cupons Stripe
 - api/catalog.js — proxy transparente para o internal
-- api/lib/constants.js — catálogo completo, source of truth
+- api/lib/constants.js — NÃO USADO (código morto): não é importado por
+  nenhum ficheiro, é excluído do deploy pelo .vercelignore, e não contém
+  catálogo (só SHIPPING_METHODS, FREE_SHIPPING_THRESHOLD, PRODUCT_FIELDS).
+  Não confundir com js/constants.js, que é o usado pelo frontend
 - js/checkout.js — fluxo completo + Express Checkout
 - js/account.js — auth, loyalty, dashboard
 - js/cart-drawer.js — deve ser type="module" em todas as páginas
@@ -83,6 +103,11 @@ com o sistema interno (electricink-internal no Railway).
 - GET /api/reviews — público
 - POST /api/reviews — público
 - GET /api/products/:id — x-crm-secret (via api/catalog.js)
+- POST /api/abandoned-cart-save — bridge local, anexa x-webhook-secret
+  server-side antes de reencaminhar para o internal
+- POST /api/abandoned-cart-convert — idem
+- GET /api/abandoned-cart/restore — directo ao internal, autenticado por
+  token na própria URL, não por header
 
 ## Integration check — correr após mudanças de auth
 - cart-drawer.js tem type="module" em todas as páginas?
@@ -101,3 +126,20 @@ com o sistema interno (electricink-internal no Railway).
 - 2026-04: homepage-prices.js — preços dinâmicos
 - 2026-04: Admin email fix — resolveCatalogItem()
 - 2026-04: cart-drawer.js type="module" em checkout + cart
+
+### 2026-09
+- Sistema de promoções: lib/promo.js (raiz do repo, fora de /api de
+  propósito — ver nota sobre api/lib/** na secção Stack), api/catalog.js
+  enriquece a resposta com promo_active/effective_price_ex, exibição nas
+  3 páginas (home, categoria, produto), carrossel de descoberta na
+  homepage entre o showcase do Ultra Pen e os Bestsellers
+- api/abandoned-cart-save.js e api/abandoned-cart-convert.js criados —
+  bridges que anexam x-webhook-secret server-side; js/checkout.js
+  restore trocado de atob(email) para token aleatório na URL;
+  api/webhooks-stripe.js: escape de customerPhone/item.name em falta
+  corrigido
+- Incidente de produção (2026-09): require('./lib/promo') dentro de
+  api/catalog.js e api/create-payment-intent.js causou 500 em ambas as
+  funções porque .vercelignore exclui api/lib/**. Revertido; lib/promo.js
+  recriado fora de /api. Regra resultante: ver linha Logger na secção
+  Stack.
