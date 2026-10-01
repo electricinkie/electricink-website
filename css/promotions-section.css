@@ -1,0 +1,343 @@
+/* Promotions Section Styles
+   Modelled on css/new-arrivals.css: a flex track with calc() widths and a
+   min-width floor, so the layout is agnostic to how many cards the JS
+   renders. Deliberately NOT modelled on css/bestsellers.css, whose
+   grid-template-columns: repeat(6, 1fr) hardcodes the card count.
+   Price styling reuses the global .price-was/.price-now pair. */
+.promotions-section {
+  max-width: 1400px;
+  margin: 80px auto;
+  padding: 0 100px;
+  overflow: visible;
+}
+
+.promotions-container {
+  width: 100%;
+}
+
+.promotions-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+/* .badge is the shared pill defined in css/new-arrivals.css */
+
+.promotions-title {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  color: #111;
+  letter-spacing: -1.5px;
+  line-height: 0.95;
+  margin-bottom: 12px;
+}
+
+.promotions-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #666666;
+}
+
+.promotions-swiper {
+  position: relative;
+  overflow: visible;
+  margin-bottom: 30px;
+  padding: 30px 20px;
+}
+
+.promotions-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 10px 20px 10px 0;
+}
+
+.promotions-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Applied by js/promotions-section.js after measuring the real overflow —
+   never from a hardcoded card count. Too few cards to scroll: centre them
+   and drop the scroll affordances. */
+.promotions-track.no-overflow {
+  justify-content: center;
+  overflow-x: visible;
+  scroll-snap-type: none;
+  padding-right: 0;
+}
+
+.promotions-swiper:has(.promotions-track.no-overflow) .promotions-nav-arrow,
+.promotions-section:has(.promotions-track.no-overflow) .promotions-dots {
+  display: none;
+}
+
+.promotions-card {
+  flex: 0 0 calc(25% - 15px);
+  min-width: 300px;
+  scroll-snap-align: center;
+  background: #FFFFFF;
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.18s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.promotions-card:hover {
+  border-color: #43BDAB;
+}
+
+.promotions-card-image {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.promotions-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.promotions-card:hover .promotions-card-image img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promotions-card-image img { transition: none; }
+  .promotions-card:hover .promotions-card-image img { transform: none; }
+}
+
+.promotions-card-info {
+  padding: 20px;
+}
+
+.promotions-card-category {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #43BDAB;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.promotions-card-title {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.promotions-card-description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  min-height: 40px;
+}
+
+.promotions-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.promotions-card-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.promotions-card-cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000000;
+  transition: color 0.18s ease;
+  white-space: nowrap;
+}
+
+.promotions-card:hover .promotions-card-cta {
+  color: #43BDAB;
+}
+
+/* Dots Indicator */
+.promotions-dots {
+  display: none;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.promotions-dot {
+  width: 10px;
+  height: 10px;
+  background: rgba(67, 189, 171, 0.3);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+  padding: 0;
+}
+
+.promotions-dot:hover {
+  background: rgba(67, 189, 171, 0.6);
+}
+
+.promotions-dot.active {
+  background: #43BDAB;
+  width: 12px;
+  height: 12px;
+}
+
+/* Navigation Arrows (Desktop only) */
+.promotions-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.promotions-nav-arrow:hover {
+  background: #43BDAB;
+  border-color: #43BDAB;
+}
+
+.promotions-nav-arrow:hover svg {
+  stroke: #FFFFFF;
+}
+
+.promotions-nav-arrow.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.promotions-nav-arrow svg {
+  width: 20px;
+  height: 20px;
+  stroke: #000000;
+  stroke-width: 2;
+  transition: stroke 0.18s ease;
+}
+
+.promotions-nav-prev {
+  left: -70px;
+}
+
+.promotions-nav-next {
+  right: -70px;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .promotions-section {
+    margin: 60px auto;
+    padding: 0 30px;
+  }
+
+  .promotions-title {
+    font-size: 36px;
+  }
+
+  .promotions-card {
+    flex: 0 0 calc(33.333% - 14px);
+    min-width: 250px;
+  }
+
+  .promotions-card-image {
+    height: 240px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .promotions-section {
+    margin: 50px auto;
+    padding: 0 20px;
+  }
+
+  .promotions-header {
+    margin-bottom: 35px;
+  }
+
+  .promotions-title {
+    font-size: 28px;
+  }
+
+  .promotions-subtitle {
+    font-size: 14px;
+  }
+
+  .promotions-track {
+    gap: 15px;
+    padding: 0;
+  }
+
+  .promotions-card {
+    flex: 0 0 calc(100% - 40px);
+    min-width: calc(100% - 40px);
+    scroll-snap-align: center;
+  }
+
+  .promotions-card-image {
+    height: 220px;
+  }
+
+  .promotions-card-info {
+    padding: 18px;
+  }
+
+  .promotions-card-title {
+    font-size: 16px;
+  }
+
+  .promotions-card-description {
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  .promotions-card-price {
+    font-size: 15px;
+  }
+
+  .promotions-card-cta {
+    font-size: 12px;
+  }
+
+  .promotions-nav-arrow {
+    display: none;
+  }
+
+  .promotions-dots {
+    display: flex;
+  }
+}

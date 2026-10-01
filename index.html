@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="css/categories.css">
   <link rel="stylesheet" href="css/new-arrivals.css">
   <link rel="stylesheet" href="css/ultra-pen.css">
+  <link rel="stylesheet" href="css/promotions-section.css">
   <link rel="stylesheet" href="css/bestsellers.css">
   <link rel="stylesheet" href="css/homepage-reviews.css">
   <link rel="stylesheet" href="css/cta-footer.css">
@@ -536,6 +537,40 @@
       </div>
     </section>
 
+    <!-- Promotions (populated by js/promotions-section.js; hidden until it
+         confirms at least one product has an active promotion) -->
+    <section id="promotions" class="promotions-section" style="display: none;">
+      <div class="promotions-container">
+
+        <div class="promotions-header">
+          <span class="badge">Limited Time</span>
+          <h2 class="promotions-title">On <span class="title-accent">Promotion</span></h2>
+          <p class="promotions-subtitle">Active price drops — while stock lasts</p>
+        </div>
+
+        <div class="promotions-swiper">
+          <!-- Navigation Arrows -->
+          <button class="promotions-nav-arrow promotions-nav-prev" aria-label="Previous promotions">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="promotions-nav-arrow promotions-nav-next" aria-label="Next promotions">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <!-- Cards rendered by JavaScript -->
+          <div class="promotions-track" id="promotionsTrack"></div>
+        </div>
+
+        <!-- Dots rendered by JavaScript, one per card -->
+        <div class="promotions-dots" id="promotionsDots"></div>
+
+      </div>
+    </section>
+
     <!-- Bestsellers -->
     <section id="bestsellers" class="bestsellers">
       <div class="bestsellers-container">
@@ -887,6 +922,7 @@
   <!-- Page Scripts -->
   <script type="module" src="js/new-arrivals.js"></script>
   <script type="module" src="js/ultra-pen.js"></script>
+  <script type="module" src="js/promotions-section.js"></script>
   <script type="module" src="js/bestsellers.js"></script>
 
   <script src="/js/pro-team-animate.js"></script>
