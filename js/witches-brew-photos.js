@@ -1,5 +1,5 @@
 // ========================================
-// DROGHEDA PHOTOS - auto fan cycle (mobile)
+// WITCHES BREW PHOTOS - auto fan cycle (mobile)
 // Electric Ink IE
 // ========================================
 
@@ -11,10 +11,10 @@
 const STEP_MS = 1800;
 
 function initFanCycle() {
-  const wall = document.querySelector('.dg-wall');
+  const wall = document.querySelector('.wb-wall');
   if (!wall) return;
 
-  const shots = Array.from(wall.querySelectorAll('.dg-shot'));
+  const shots = Array.from(wall.querySelectorAll('.wb-shot'));
   if (shots.length < 2) return;
 
   const noHover = window.matchMedia('(hover: none)');
@@ -81,8 +81,25 @@ function initFanCycle() {
   });
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initFanCycle);
-} else {
+// A photo that is missing drops out, so its frame falls back to the
+// striped placeholder instead of the browser's broken image icon.
+function initMissingPhotos() {
+  document.querySelectorAll('.wb-shot-media img').forEach((img) => {
+    if (img.complete && img.naturalWidth === 0) {
+      img.remove();
+      return;
+    }
+    img.addEventListener('error', () => img.remove());
+  });
+}
+
+function init() {
+  initMissingPhotos();
   initFanCycle();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }

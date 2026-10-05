@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Photos from the Drogheda show - Electric Ink Ireland.">
+  <meta name="description" content="Photos from the Witches Brew Tat2 show - Electric Ink Ireland.">
   <!-- Temporary event page shared by direct link. Kept out of search so
        it does not linger as a stale result once the Drive folder expires. -->
   <meta name="robots" content="noindex, nofollow">
-  <title>Drogheda Photos - Electric Ink Ireland</title>
+  <title>Witches Brew Tat2 Photos - Electric Ink Ireland</title>
 
   <!-- Favicons (Big Player Structure) -->
   <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
@@ -45,7 +45,7 @@
 
   <style>
     /* ========================================
-       DROGHEDA PHOTOS - page scoped styles
+       WITCHES BREW PHOTOS - page scoped styles
        Dark page to sit flush with the black
        site header and site footer.
        ======================================== */
@@ -55,26 +55,26 @@
       color: #FFFFFF;
     }
 
-    .drogheda-page {
+    .wb-page {
       background: #000000;
       padding-bottom: 8px;
     }
 
-    .drogheda-container {
+    .wb-container {
       max-width: 900px;
       margin: 0 auto;
       padding: 0 40px;
     }
 
     /* ---------- HERO ---------- */
-    .dg-hero {
+    .wb-hero {
       position: relative;
       text-align: center;
       padding: 56px 0 36px;
       overflow: hidden;
     }
 
-    .dg-hero-inner {
+    .wb-hero-inner {
       position: relative;
       z-index: 1;
       max-width: 620px;
@@ -84,7 +84,7 @@
       align-items: center;
     }
 
-    .dg-kicker {
+    .wb-kicker {
       display: inline-block;
       font-family: 'Outfit', 'Montserrat', sans-serif;
       color: var(--color-primary);
@@ -97,7 +97,7 @@
       margin-bottom: 24px;
     }
 
-    .dg-hero h1 {
+    .wb-hero h1 {
       font-family: 'Outfit', 'Montserrat', sans-serif;
       font-weight: 800;
       font-size: 48px;
@@ -108,7 +108,7 @@
       text-wrap: balance;
     }
 
-    .dg-hero h1::after {
+    .wb-hero h1::after {
       content: '';
       display: block;
       width: 60px;
@@ -117,21 +117,22 @@
       margin: 20px auto 0;
     }
 
-    .dg-lede {
+    .wb-lede {
       font-family: 'Montserrat', sans-serif;
       font-size: 17px;
       line-height: 1.7;
       color: #d4d4d4;
       max-width: 52ch;
       margin: 24px 0 10px;
+      text-wrap: pretty;
     }
 
-    .dg-lede strong {
+    .wb-lede strong {
       color: #FFFFFF;
       font-weight: 700;
     }
 
-    .dg-aside {
+    .wb-aside {
       font-family: 'Montserrat', sans-serif;
       font-size: 14px;
       line-height: 1.6;
@@ -142,7 +143,7 @@
     }
 
     /* ---------- CTA BUTTON ---------- */
-    .dg-cta {
+    .wb-cta {
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -160,25 +161,25 @@
       transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
 
-    .dg-cta:hover,
-    .dg-cta:focus-visible {
+    .wb-cta:hover,
+    .wb-cta:focus-visible {
       background: transparent;
       color: var(--color-primary);
       transform: translateY(-2px);
     }
 
-    .dg-cta svg {
+    .wb-cta svg {
       width: 16px;
       height: 16px;
       flex-shrink: 0;
     }
 
     /* ---------- GALLERY ---------- */
-    .dg-gallery {
+    .wb-gallery {
       padding: 16px 0 64px;
     }
 
-    .dg-gallery-label {
+    .wb-gallery-label {
       font-family: 'Outfit', 'Montserrat', sans-serif;
       text-align: center;
       font-size: 13px;
@@ -190,14 +191,14 @@
     }
 
     /* Photos laid down one over the next, like a pile on a table */
-    .dg-wall {
+    .wb-wall {
       display: flex;
       justify-content: center;
       align-items: flex-start;
       padding: 28px 0 24px;
     }
 
-    .dg-shot {
+    .wb-shot {
       position: relative;
       flex: 0 0 auto;
       width: 212px;
@@ -210,17 +211,17 @@
       cursor: pointer;
     }
 
-    .dg-shot:first-child { margin-left: 0; }
+    .wb-shot:first-child { margin-left: 0; }
 
     /* Pull the hovered photo out of the pile and straighten it */
-    .dg-shot:hover,
-    .dg-shot:focus-within {
+    .wb-shot:hover,
+    .wb-shot:focus-within {
       transform: translateY(-18px) rotate(0deg) scale(1.06);
       box-shadow: 0 26px 46px rgba(0, 0, 0, 0.8);
       z-index: 60;
     }
 
-    .dg-shot-media {
+    .wb-shot-media {
       aspect-ratio: 4 / 5;
       background: repeating-linear-gradient(
         135deg,
@@ -235,14 +236,14 @@
       overflow: hidden;
     }
 
-    .dg-shot-media img {
+    .wb-shot-media img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .dg-shot-media span {
+    .wb-shot-media span {
       font-family: 'Outfit', 'Montserrat', sans-serif;
       font-size: 10px;
       font-weight: 700;
@@ -251,7 +252,7 @@
       color: #4a4a4a;
     }
 
-    .dg-shot-caption {
+    .wb-shot-caption {
       position: absolute;
       bottom: 11px;
       left: 10px;
@@ -266,17 +267,17 @@
     }
 
     /* Scattered wall - varied spans and tilts */
-    .dg-shot-1 { transform: rotate(-7deg)   translateY(6px);  z-index: 1; }
-    .dg-shot-2 { transform: rotate(4deg)    translateY(-4px); z-index: 2; }
-    .dg-shot-3 { transform: rotate(-2.5deg) translateY(10px); z-index: 3; }
-    .dg-shot-4 { transform: rotate(5.5deg)  translateY(0);    z-index: 4; }
-    .dg-shot-5 { transform: rotate(-4deg)   translateY(8px);  z-index: 5; }
+    .wb-shot-1 { transform: rotate(-7deg)   translateY(6px);  z-index: 1; }
+    .wb-shot-2 { transform: rotate(4deg)    translateY(-4px); z-index: 2; }
+    .wb-shot-3 { transform: rotate(-2.5deg) translateY(10px); z-index: 3; }
+    .wb-shot-4 { transform: rotate(5.5deg)  translateY(0);    z-index: 4; }
+    .wb-shot-5 { transform: rotate(-4deg)   translateY(8px);  z-index: 5; }
 
-    /* Photos live in /images/drogheda/ at 800x1000 (4:5), already
+    /* Photos live in /images/witches-brew/ at 800x1000 (4:5), already
        cropped to what the frame shows. See that folder's README. */
 
     /* ---------- CLOSING ---------- */
-    .dg-closing {
+    .wb-closing {
       text-align: center;
       padding: 0 0 72px;
       display: flex;
@@ -285,20 +286,26 @@
       gap: 24px;
     }
 
-    .dg-closing p {
+    /* The section is a centred flex column, so without this the
+       container shrinks to its text and the full-width mobile
+       button shrinks with it. */
+    .wb-closing .wb-container { width: 100%; }
+
+    .wb-closing p {
       font-family: 'Outfit', 'Montserrat', sans-serif;
       font-size: 22px;
       font-weight: 700;
       color: #FFFFFF;
       max-width: 30ch;
-      margin: 0;
+      margin: 0 auto 24px;
+      text-wrap: balance;
     }
 
     /* ---------- TABLET ---------- */
     @media (max-width: 900px) {
-      .dg-hero h1 { font-size: 40px; }
+      .wb-hero h1 { font-size: 40px; }
 
-      .dg-shot {
+      .wb-shot {
         width: 172px;
         margin-left: -46px;
       }
@@ -306,32 +313,32 @@
 
     /* ---------- MOBILE ---------- */
     @media (max-width: 600px) {
-      .drogheda-container { padding: 0 20px; }
+      .wb-container { padding: 0 20px; }
 
-      .dg-hero { padding: 44px 0 32px; }
+      .wb-hero { padding: 44px 0 32px; }
 
-      .dg-kicker {
+      .wb-kicker {
         font-size: 11px;
         padding: 5px 12px;
         margin-bottom: 18px;
       }
 
-      .dg-hero h1 {
+      .wb-hero h1 {
         font-size: 32px;
         margin-bottom: 14px;
       }
 
-      .dg-hero h1::after { margin-top: 16px; }
+      .wb-hero h1::after { margin-top: 16px; }
 
-      .dg-lede {
+      .wb-lede {
         font-size: 15px;
         line-height: 1.6;
         margin: 18px 0 8px;
       }
 
-      .dg-aside { font-size: 13px; }
+      .wb-aside { font-size: 13px; }
 
-      .dg-cta {
+      .wb-cta {
         font-size: 14px;
         padding: 15px 24px;
         width: 100%;
@@ -339,9 +346,9 @@
         justify-content: center;
       }
 
-      .dg-gallery { padding: 8px 0 44px; }
+      .wb-gallery { padding: 8px 0 44px; }
 
-      .dg-gallery-label {
+      .wb-gallery-label {
         font-size: 12px;
         margin-bottom: 26px;
       }
@@ -349,13 +356,13 @@
       /* Photos are decorative here - the Drive folder is the point.
          They fan out like a hand of cards and always fit the screen,
          so the page only ever scrolls vertically. */
-      .dg-wall {
+      .wb-wall {
         justify-content: center;
         overflow: hidden;
         padding: 30px 0 18px;
       }
 
-      .dg-shot {
+      .wb-shot {
         width: 36vw;
         margin-left: -23vw;
         padding: 6px 6px 22px;
@@ -365,39 +372,42 @@
       /* Rotating from the bottom edge is what opens the fan.
          Keep the angles shallow - the wider the tilt, the more
          horizontal room the fan needs, and it has to fit the screen. */
-      .dg-shot-1 { transform: rotate(-7deg); }
-      .dg-shot-2 { transform: rotate(-3.5deg); }
-      .dg-shot-3 { transform: rotate(0deg); }
-      .dg-shot-4 { transform: rotate(3.5deg); }
-      .dg-shot-5 { transform: rotate(7deg); }
+      .wb-shot-1 { transform: rotate(-7deg); }
+      .wb-shot-2 { transform: rotate(-3.5deg); }
+      .wb-shot-3 { transform: rotate(0deg); }
+      .wb-shot-4 { transform: rotate(3.5deg); }
+      .wb-shot-5 { transform: rotate(7deg); }
 
       /* No hover on touch - the fan cycles by itself, and a tap
-         also brings a photo forward. See js/drogheda-photos.js */
-      .dg-shot.is-front,
-      .dg-shot:active {
+         also brings a photo forward. See js/witches-brew-photos.js */
+      .wb-shot.is-front,
+      .wb-shot:active {
         transform: translateY(-12px) rotate(0deg) scale(1.05);
         box-shadow: 0 20px 34px rgba(0, 0, 0, 0.8);
         z-index: 60;
       }
 
-      .dg-shot-caption {
+      .wb-shot-caption {
         bottom: 6px;
         font-size: 9px;
       }
 
-      .dg-closing {
+      .wb-closing {
         padding: 0 0 52px;
         gap: 20px;
       }
 
-      .dg-closing p { font-size: 19px; }
+      .wb-closing p {
+        font-size: 19px;
+        margin-bottom: 20px;
+      }
     }
 
     /* The tilts are static layout, not motion, so they stay - only the
        movement is dropped. The auto cycle opts out in JS as well. */
     @media (prefers-reduced-motion: reduce) {
-      .dg-shot,
-      .dg-cta {
+      .wb-shot,
+      .wb-cta {
         transition: none;
       }
     }
@@ -408,54 +418,54 @@
   <!-- Header será injetado pelo mobile-header.js / desktop-header.js -->
 
   <!-- Main Content -->
-  <main class="drogheda-page">
+  <main class="wb-page">
 
     <!-- Hero -->
-    <section class="dg-hero">
-      <div class="drogheda-container">
-        <div class="dg-hero-inner">
-          <span class="dg-kicker">Drogheda</span>
-          <h1>Photos from the show</h1>
-          <p class="dg-lede">The Black Cat was out with the camera all weekend. Everything's in the Drive folder, sorted into <strong>Artists</strong>, <strong>Shows</strong> and <strong>Random</strong>.</p>
-          <p class="dg-aside">If you're not in there, sorry &mdash; he got distracted. He's only a cat.</p>
+    <section class="wb-hero">
+      <div class="wb-container">
+        <div class="wb-hero-inner">
+          <span class="wb-kicker">Witches Brew Tat2 Do</span>
+          <h1>We Conjured A Few Photos</h1>
+          <p class="wb-lede">The Black Cat had the camera all weekend. For once, he looked the part. It's all in the Drive: <strong>Artists</strong>, <strong>Shows</strong> and <strong>More</strong>.</p>
+          <p class="wb-aside">If you're not in there, sorry. He got spooked and wandered off. He's only a cat.</p>
         </div>
       </div>
     </section>
 
     <!-- Gallery -->
-    <section class="dg-gallery">
-      <div class="drogheda-container">
-        <p class="dg-gallery-label">A few from the weekend</p>
-        <div class="dg-wall">
-          <figure class="dg-shot dg-shot-1">
-            <div class="dg-shot-media"><img src="/images/drogheda/01.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
-            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+    <section class="wb-gallery">
+      <div class="wb-container">
+        <p class="wb-gallery-label">A few from the weekend</p>
+        <div class="wb-wall">
+          <figure class="wb-shot wb-shot-1">
+            <div class="wb-shot-media"><img src="/images/witches-brew/01.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="wb-shot-caption">Witches Brew</figcaption>
           </figure>
-          <figure class="dg-shot dg-shot-2">
-            <div class="dg-shot-media"><img src="/images/drogheda/02.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
-            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          <figure class="wb-shot wb-shot-2">
+            <div class="wb-shot-media"><img src="/images/witches-brew/02.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="wb-shot-caption">Witches Brew</figcaption>
           </figure>
-          <figure class="dg-shot dg-shot-3">
-            <div class="dg-shot-media"><img src="/images/drogheda/03.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
-            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          <figure class="wb-shot wb-shot-3">
+            <div class="wb-shot-media"><img src="/images/witches-brew/03.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="wb-shot-caption">Witches Brew</figcaption>
           </figure>
-          <figure class="dg-shot dg-shot-4">
-            <div class="dg-shot-media"><img src="/images/drogheda/04.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
-            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          <figure class="wb-shot wb-shot-4">
+            <div class="wb-shot-media"><img src="/images/witches-brew/04.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="wb-shot-caption">Witches Brew</figcaption>
           </figure>
-          <figure class="dg-shot dg-shot-5">
-            <div class="dg-shot-media"><img src="/images/drogheda/05.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
-            <figcaption class="dg-shot-caption">Drogheda</figcaption>
+          <figure class="wb-shot wb-shot-5">
+            <div class="wb-shot-media"><img src="/images/witches-brew/05.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+            <figcaption class="wb-shot-caption">Witches Brew</figcaption>
           </figure>
         </div>
       </div>
     </section>
 
     <!-- Closing -->
-    <section class="dg-closing">
-      <div class="drogheda-container">
-        <p>Artists, shows and random &mdash; it's all in there.</p>
-        <a class="dg-cta" href="https://drive.google.com/drive/folders/1IocbqGrpW35CJIBoyy1Jabjqr5alcVfD?usp=drive_link" target="_blank" rel="noopener">
+    <section class="wb-closing">
+      <div class="wb-container">
+        <p>Go on, see if he caught you.</p>
+        <a class="wb-cta" href="https://drive.google.com/drive/folders/1zLzYVlmhx4xSSJQl6RyFQ7osa6Bcmilh?usp=drive_link" target="_blank" rel="noopener">
           Open drive folder
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path d="M7 17L17 7M17 7H8M17 7V16"/>
@@ -525,7 +535,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script type="module" src="/js/drogheda-photos.js"></script>
+  <script type="module" src="/js/witches-brew-photos.js"></script>
   <script type="module" src="/js/mobile-header.js"></script>
   <!-- Desktop Header -->
   <script type="module" src="/js/desktop-header.js"></script>
