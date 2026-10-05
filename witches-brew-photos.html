@@ -301,6 +301,27 @@
       text-wrap: balance;
     }
 
+    .wb-closing p.wb-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #8a8a8a;
+      max-width: 40ch;
+      margin: 20px auto 0;
+    }
+
+    .wb-tag a {
+      color: var(--color-primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .wb-tag a:hover,
+    .wb-tag a:focus-visible {
+      text-decoration: underline;
+    }
+
     /* ---------- TABLET ---------- */
     @media (max-width: 900px) {
       .wb-hero h1 { font-size: 40px; }
@@ -397,7 +418,7 @@
         gap: 20px;
       }
 
-      .wb-closing p {
+      .wb-closing p:not(.wb-tag) {
         font-size: 19px;
         margin-bottom: 20px;
       }
@@ -471,6 +492,7 @@
             <path d="M7 17L17 7M17 7H8M17 7V16"/>
           </svg>
         </a>
+        <p class="wb-tag">Posting one? Tag <a href="https://www.instagram.com/electricink.ie/" target="_blank" rel="noopener">@electricink.ie</a> and we'll happily share it.</p>
       </div>
     </section>
 
