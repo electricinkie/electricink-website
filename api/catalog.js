@@ -145,21 +145,30 @@ module.exports = async (req, res) => {
 
     // If body is empty, send empty JSON
     let body = result.body && result.body.length ? result.body : '{}';
-    // Enrich 2xx array responses with computed promo fields. On ANY failure,
-    // keep the original body untouched — enrichment must never break the proxy.
+    // Enrich 2xx array responses with computed promo fields and strip supplier
+    // cost. On ANY failure, return a generic error — never the raw upstream body,
+    // which would leak cost.
     if (res.statusCode >= 200 && res.statusCode < 300) {
       try {
         const parsed = JSON.parse(body);
         if (Array.isArray(parsed)) {
           const nowMs = Date.now();
-          body = JSON.stringify(parsed.map(row => ({
-            ...row,
-            promo_active: isPromoActive(row.promo_price_ex, row.promo_ends_at, nowMs),
-            effective_price_ex: getEffectivePriceEx(row.price_ex, row.promo_price_ex, row.promo_ends_at, nowMs)
-          })));
+          // Strip supplier cost — internal-only (CRM/POS read it via x-crm-secret)
+          body = JSON.stringify(parsed
+            .filter(r => r !== null && typeof r === 'object' && !Array.isArray(r))
+            .map(r => {
+              const { cost, ...row } = r || {};
+              return {
+                ...row,
+                promo_active: isPromoActive(row.promo_price_ex, row.promo_ends_at, nowMs),
+                effective_price_ex: getEffectivePriceEx(row.price_ex, row.promo_price_ex, row.promo_ends_at, nowMs)
+              };
+            }));
         }
       } catch (e) {
-        // Leave body exactly as received from upstream
+        res.statusCode = 502;
+        res.removeHeader('Cache-Control');
+        body = JSON.stringify({ error: 'Failed to process upstream response' });
       }
     }
     try {
