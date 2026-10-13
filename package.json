@@ -10,6 +10,7 @@
     "prebuild": "node scripts/add-version-to-assets.js",
     "build": "echo 'Build complete with versioned assets'",
     "vercel-build": "npm run build",
+    "check:catalog": "node scripts/check-catalog-sync.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -19,7 +20,9 @@
     "express": "^5.2.1",
     "jsdom": "^21.1.2",
     "resend": "^3.5.0",
-    "stripe": "^14.0.0"
+    "stripe": "^14.0.0",
+    "uuid": "^11.1.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
