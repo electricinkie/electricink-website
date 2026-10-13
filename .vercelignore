@@ -3,3 +3,10 @@
 api/handlers/**
 api/oms/**
 api/lib/**
+
+# Internal files — not part of the public site (K-2)
+scripts/
+CLAUDE.md
+claude.md
+README.md
+.inkpoints
