@@ -855,83 +855,25 @@ if (productData.wholesale && productData.wholesale.enabled) {
   wholesalePanel.className = 'wholesale-panel';
   wholesalePanel.style.display = 'none';
 
+  // Wholesale tiers are not sold online (they do not exist in the internal
+  // catalog, so checkout would reject them). The tiers stay in the JSON but
+  // are not rendered, and nothing here adds to the cart: buyers are sent to
+  // WhatsApp instead. Same number used in index.html / success.html.
+  const minWholesaleQty = Math.min(...wholesale.tiers.map(t => t.quantity));
+
   const wholesaleDesc = document.createElement('p');
   wholesaleDesc.className = 'wholesale-description';
-  wholesaleDesc.textContent = wholesale.description;
+  wholesaleDesc.textContent = `Buying ${minWholesaleQty} or more? Contact us for wholesale pricing.`;
   wholesalePanel.appendChild(wholesaleDesc);
 
-  const tiersGrid = document.createElement('div');
-  tiersGrid.className = 'wholesale-tiers';
-
-  let selectedTier = wholesale.tiers[0];
-
-  wholesale.tiers.forEach((tier, index) => {
-    const card = document.createElement('div');
-    card.className = 'wholesale-tier-card' + (index === 0 ? ' selected' : '');
-    card.dataset.tierId = tier.id;
-    card.innerHTML = `
-      <div class="tier-label">${tier.label}</div>
-      <div class="tier-qty">${tier.quantity} units</div>
-      <div class="tier-unit-price">€${tier.unit_price.toFixed(2)}/unit</div>
-      ${(() => {
-        const individualPrice = productData.basic?.price ?? productData.price ?? 0;
-        const individualTotal = individualPrice * tier.quantity;
-        const saving = individualTotal - tier.price;
-        return saving > 0.01
-          ? `<div class="tier-saving"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.59 13.41 11 3H4v7l9.59 9.59a2 2 0 0 0 2.82 0l4.18-4.18a2 2 0 0 0 0-2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> Save €${saving.toFixed(2)}</div>`
-          : '';
-      })()}
-    `;
-    card.addEventListener('click', () => {
-      tiersGrid.querySelectorAll('.wholesale-tier-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      selectedTier = tier;
-      const individualPrice = productData.basic?.price ?? productData.price ?? 0;
-      const individualTotal = individualPrice * tier.quantity;
-      const saving = Math.max(0, individualTotal - tier.price);
-      wholesaleBuyBtn.textContent = `Order ${tier.label} — Save €${saving.toFixed(2)}`;
-    });
-    tiersGrid.appendChild(card);
-  });
-
-  wholesalePanel.appendChild(tiersGrid);
-
-  const wholesaleBuyBtn = document.createElement('button');
-  wholesaleBuyBtn.className = 'btn-add-to-cart btn-wholesale-buy';
-  {
-    const individualPrice = productData.basic?.price ?? productData.price ?? 0;
-    const individualTotal = individualPrice * selectedTier.quantity;
-    const saving = Math.max(0, individualTotal - selectedTier.price);
-    wholesaleBuyBtn.textContent = `Order ${selectedTier.label} — Save €${saving.toFixed(2)}`;
-  }
-  wholesaleBuyBtn.addEventListener('click', () => {
-    if (!selectedTier) return;
-    const itemToAdd = {
-      id: selectedTier.id,
-      name: `${name} - Wholesale ${selectedTier.label} (${selectedTier.quantity} units)`,
-      price: selectedTier.price,
-      stripe_price_id: selectedTier.stripe_price_id,
-      image: mainImage,
-      variant: `${selectedTier.quantity} units`
-    };
-    if (window.cart && window.cart.addItem) {
-      if (window.cart.addItem(itemToAdd)) {
-        if (typeof gtag === 'function') gtag('event', 'add_to_cart', {
-          currency: 'EUR',
-          value: itemToAdd.price,
-          items: [{ item_id: itemToAdd.id, item_name: itemToAdd.name, price: itemToAdd.price, quantity: itemToAdd.quantity || 1 }]
-        });
-        const orig = wholesaleBuyBtn.innerHTML;
-        wholesaleBuyBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/></svg> Added!`;
-        wholesaleBuyBtn.style.background = '#43BDAB';
-        setTimeout(() => {
-          wholesaleBuyBtn.innerHTML = orig;
-          wholesaleBuyBtn.style.background = '';
-        }, 2000);
-      }
-    }
-  });
-  wholesalePanel.appendChild(wholesaleBuyBtn);
+  const wholesaleContactBtn = document.createElement('a');
+  wholesaleContactBtn.className = 'btn-add-to-cart btn-wholesale-buy';
+  wholesaleContactBtn.href = `https://wa.me/353831473502?text=${encodeURIComponent(`Hi Electric Ink Team, I'd like wholesale pricing for ${name} (${minWholesaleQty}+ units).`)}`;
+  wholesaleContactBtn.target = '_blank';
+  wholesaleContactBtn.rel = 'noopener noreferrer';
+  wholesaleContactBtn.style.cssText = 'display:block;text-align:center;text-decoration:none;box-sizing:border-box;';
+  wholesaleContactBtn.textContent = 'Contact us on WhatsApp';
+  wholesalePanel.appendChild(wholesaleContactBtn);
 
   tabButtons.after(wholesalePanel);
 
