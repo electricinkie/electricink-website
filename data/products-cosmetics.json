@@ -4,12 +4,17 @@
     "name": "Tattoo Balm",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Balm for post-tattoo healing, with 15 natural active ingredients for fast absorption.",
+    "description": "Tattoo Balm for post-tattoo healing, with natural active ingredients for fast absorption. Moisturising, regenerating and healing, developed specifically for immediate tattoo aftercare.",
     "features": [
-      "15 natural active ingredients",
+      "Natural active ingredients",
       "Fast absorption",
       "Vegan & paraben-free",
-      "Dermatologically tested"
+      "Dermatologically tested",
+      "Exclusive fragrance",
+      "Easy absorption",
+      "Superior adherence",
+      "No dyes",
+      "Petrolatum-free"
     ],
     "stripe": {
       "productId": "prod_TjU7b8nxU1sNzc",
@@ -28,19 +33,20 @@
     "content": {
       "usage_instructions": "Apply 2-3 times daily for 14 days.",
       "ingredients": [
-        "Vitamin E",
-        "Rice Wax",
         "Shea Butter",
+        "Rice Wax",
         "Mango Butter",
-        "Cocoa Butter",
-        "Argan Extract",
         "Aloe Vera Extract",
+        "Vitamin E",
         "Witch Hazel Extract",
         "Coconut Oil",
+        "Cocoa Butter",
         "Rice Bran Oil",
         "Rosehip Oil",
+        "Argan Extract",
         "Peppermint Oil",
-        "Sunflower Oil"
+        "Sunflower Oil",
+        "Dragon's Blood Resin"
       ]
     },
     "inventory": {
@@ -88,7 +94,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Balm | Electric Ink Ireland",
-      "meta_description": "Complete post-tattoo care with 15 natural ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
+      "meta_description": "Complete post-tattoo care with natural active ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "aftercare",
