@@ -927,6 +927,11 @@ window.appliedDiscount = 0;
     if (!discountInput || !applyButton) return;
     
     applyButton.addEventListener('click', function() {
+      // Once a coupon is applied the same button acts as "Remove"
+      if (window.appliedCoupon) {
+        removeDiscountCode();
+        return;
+      }
       applyDiscountCode(discountInput.value.trim().toUpperCase());
     });
     
@@ -1057,9 +1062,12 @@ window.appliedDiscount = 0;
         }
         // ===== FIM UPDATE PAYMENT REQUEST =====
 
-        // Disable input after successful application
+        // Lock the input and turn the button into "Remove"
         if (discountInput) discountInput.disabled = true;
-        if (applyBtn) applyBtn.textContent = 'Applied';
+        if (applyBtn) {
+          applyBtn.disabled = false;
+          applyBtn.textContent = 'Remove';
+        }
 
         debugLog('[COUPON] Applied:', result.coupon && result.coupon.code, '- Discount:', result.discount);
       } else {
@@ -1083,6 +1091,26 @@ window.appliedDiscount = 0;
     }
   }
   
+  function removeDiscountCode() {
+    window.appliedCoupon = null;
+    window.appliedDiscount = 0;
+
+    const discountInput = document.getElementById('discountCode');
+    const applyBtn = document.getElementById('applyDiscountBtn');
+    if (discountInput) {
+      discountInput.disabled = false;
+      discountInput.value = '';
+    }
+    if (applyBtn) {
+      applyBtn.disabled = false;
+      applyBtn.textContent = 'Apply';
+    }
+    showDiscountMessage('', '');
+
+    calculateTotals();
+    renderOrderSummary();
+  }
+
   function showDiscountMessage(message, type) {
     const discountMessage = document.getElementById('discountMessage');
     if (!discountMessage) return;
@@ -1105,7 +1133,8 @@ window.appliedDiscount = 0;
         color: '#000',
         fontFamily: '"Montserrat", sans-serif',
         fontSmoothing: 'antialiased',
-        fontSize: '15px',
+        // 16px on phones so iOS doesn't zoom on focus (matches the ≤640px form inputs)
+        fontSize: window.matchMedia('(max-width: 640px)').matches ? '16px' : '15px',
         '::placeholder': {
           color: '#999'
         }
@@ -1204,10 +1233,11 @@ window.appliedDiscount = 0;
 
       } catch (error) {
         console.error('Checkout error:', error);
+        const checkoutErrorMessage = (error && error.userMessage) || 'Payment processing failed. Please try again.';
         if (window.toast) {
-          window.toast.error('Payment processing failed. Please try again.', 5000);
+          window.toast.error(checkoutErrorMessage, 5000);
         }
-        showError('Payment processing failed. Please try again.');
+        showError(checkoutErrorMessage);
         setLoading(false);
       }
     });
@@ -1495,8 +1525,13 @@ window.appliedDiscount = 0;
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        const err = new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        // 400/429 messages from the server are written for customers; other statuses stay generic
+        if ((response.status === 400 || response.status === 429) && errorData.error) {
+          err.userMessage = errorData.error;
+        }
+        throw err;
       }
 
       const data = await response.json();
@@ -1607,11 +1642,10 @@ window.appliedDiscount = 0;
   }
 
   function showError(message) {
-    // Show error in a simple alert
-    // Could be enhanced with a custom modal or toast
-    if (message) {
-      alert(message);
-    }
+    // Callers already raise a toast; this is only the fallback for when the toast
+    // module failed to load — shown inline instead of a blocking alert().
+    if (!message || window.toast) return;
+    showCardError(message);
   }
 
   function showCardError(message) {

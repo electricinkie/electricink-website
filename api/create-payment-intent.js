@@ -643,7 +643,7 @@ module.exports = async function handler(req, res) {
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
         phone: (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || incomingMetadata.phone || '',
         backend_validated: 'true',
-        referral_code: String(req.body.referral_code || '').toUpperCase().trim()
+        referral_code: String(req.body.referral_code || '').toUpperCase().trim().slice(0, 50)
       };
       metadata = metadataSanitized;
 

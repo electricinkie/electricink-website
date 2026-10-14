@@ -78,15 +78,16 @@ module.exports = async (req, res) => {
     let promoCodeId = null;
     
     try {
-      // First try: Promotion Code lookup (e.g., BLACKCAT10)
-      const promotions = await stripe.promotionCodes.list({ 
+      // First try: Promotion Code lookup (e.g., BLACKCAT10). No `active` filter, so an
+      // expired/inactive code can be told apart from a code that does not exist.
+      const promotions = await stripe.promotionCodes.list({
         code: upperCode,
-        active: true,
-        limit: 1 
+        limit: 10
       });
-      
-      if (promotions.data.length > 0) {
-        const promoCode = promotions.data[0];
+      const activePromo = promotions.data.find(p => p.active);
+
+      if (activePromo) {
+        const promoCode = activePromo;
         coupon = promoCode.coupon;
         promoCodeId = promoCode.id;
         
@@ -127,6 +128,10 @@ module.exports = async (req, res) => {
           }
         }
         
+      } else if (promotions.data.length > 0) {
+        // Promotion code exists but is inactive (expired, fully redeemed or switched off)
+        logger.warn('[COUPON] Promotion code inactive', { code: upperCode });
+        return res.json({ valid: false, message: 'This coupon has expired or is no longer active' });
       } else {
         // Second try: Direct coupon lookup (e.g., promo_XXX)
         if (process.env.NODE_ENV === 'development') {
@@ -140,8 +145,14 @@ module.exports = async (req, res) => {
         }
       }
     } catch (err) {
-      logger.warn('[COUPON] Not found', { code: upperCode, error: err.message });
-      return res.json({ valid: false, message: 'Coupon not found' });
+      // coupons.retrieve on an unknown id → resource_missing. Anything else (bad key,
+      // network, Stripe outage) is a technical failure, not a missing coupon.
+      if (err && err.code === 'resource_missing') {
+        logger.warn('[COUPON] Not found', { code: upperCode });
+        return res.json({ valid: false, message: 'Coupon not found' });
+      }
+      logger.error('[COUPON] Stripe lookup failed', { code: upperCode, type: err && err.type, error: err && err.message });
+      return res.json({ valid: false, message: 'Could not validate the coupon, please try again' });
     }
 
     // ═══════════════════════════════════════════════════════════
