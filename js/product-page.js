@@ -683,13 +683,19 @@ import { INTERNAL_API_URL } from '/js/constants.js';
   }
 
   // RENDER materials/ingredients (if exists)
-  if (productData.content?.materials || productData.content?.ingredients) {
+  // `ingredients` may be a string or an array of names (shown comma-separated);
+  // an empty array renders nothing.
+  const rawIngredients = productData.content?.ingredients;
+  const ingredientsText = Array.isArray(rawIngredients)
+    ? rawIngredients.filter(i => typeof i === 'string' && i.trim()).map(i => i.trim()).join(', ')
+    : (rawIngredients || '');
+  if (productData.content?.materials || ingredientsText) {
     const materialsSection = document.createElement('div');
     materialsSection.className = 'product-materials';
-    
+
     const title = productData.content.materials ? 'Materials' : 'Ingredients';
-    const content = productData.content.materials || productData.content.ingredients;
-    
+    const content = productData.content.materials || ingredientsText;
+
     // Build elements safely to avoid injecting untrusted HTML
     const h3 = document.createElement('h3');
     h3.textContent = title;
@@ -698,8 +704,11 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     materialsSection.appendChild(h3);
     materialsSection.appendChild(pContent);
     
-    document.querySelector('.product-usage')?.after(materialsSection) || 
-    document.getElementById('productDescription').after(materialsSection);
+    // Place right after the How to Use accordion when the page has one
+    const materialsAnchor = document.querySelector('.product-usage') ||
+      document.getElementById('productHowToUse') ||
+      document.getElementById('productDescription');
+    materialsAnchor.after(materialsSection);
   }
 
   // RENDER warnings (if exists) — support both `warnings` and legacy `warning` keys

@@ -26,7 +26,22 @@
       "/images/products/cosmetics/tattoo-balm-4.webp"
     ],
     "content": {
-      "usage_instructions": "Apply 2-3 times daily for 14 days."
+      "usage_instructions": "Apply 2-3 times daily for 14 days.",
+      "ingredients": [
+        "Vitamin E",
+        "Rice Wax",
+        "Shea Butter",
+        "Mango Butter",
+        "Cocoa Butter",
+        "Argan Extract",
+        "Aloe Vera Extract",
+        "Witch Hazel Extract",
+        "Coconut Oil",
+        "Rice Bran Oil",
+        "Rosehip Oil",
+        "Peppermint Oil",
+        "Sunflower Oil"
+      ]
     },
     "inventory": {
       "stock_quantity": 50,
