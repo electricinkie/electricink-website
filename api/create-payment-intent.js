@@ -316,6 +316,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   // VALIDATE AND APPLY DISCOUNT (server-side verification)
   // ═══════════════════════════════════════════════════════════════
   let discount = null;
+  // Code as resolved by Stripe (promotion code or coupon id), never the raw client input.
+  let validatedCouponCode = '';
 
   if (couponCode && Number(clientDiscount) > 0) {
     try {
@@ -342,6 +344,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
 
       if (coupon) {
         const _upperCode = String(couponCode).toUpperCase();
+        validatedCouponCode = promoCode ? promoCode.code : coupon.id;
         let couponRejected = false;
         if (!coupon.valid || (coupon.redeem_by && Date.now() / 1000 > coupon.redeem_by)) {
           logger.warn('Coupon rejected: expired or invalid', { code: _upperCode });
@@ -415,6 +418,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     shipping: parseFloat(shipping.toFixed(2)),
     shippingMethodCharged: shippingOut.method,
     discount: parseFloat((discount || 0).toFixed(2)),
+    // Empty when the coupon was rejected or produced no discount
+    couponCode: discount > 0 ? validatedCouponCode : '',
     rankDiscountCents,
     vat: parseFloat(vat.toFixed(2)),
     total: parseFloat(total.toFixed(2))
@@ -672,7 +677,7 @@ module.exports = async function handler(req, res) {
           vat: totals.vat.toFixed(2),
           items_count: items.length,
           backend_validated: 'true', // Security flag
-          coupon_code: (req.body.couponCode || ''),
+          coupon_code: totals.couponCode || '',
           discount_amount: String(Number(totals.discount || 0).toFixed(2))
         },
         automatic_payment_methods: {

@@ -560,7 +560,10 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           customer_email: order.customerEmail,
           referral_code: (paymentIntent.metadata && paymentIntent.metadata.referral_code)
             ? paymentIntent.metadata.referral_code
-            : null
+            : null,
+          // Only attribute the sale to a coupon when a discount was actually applied
+          coupon_code: (discountAmount > 0 && couponCode) ? couponCode : null,
+          discount_amount: discountAmount
         };
         const saleRes = await fetch(`${internalApiUrl}/api/sales/website`, {
           method: 'POST',
