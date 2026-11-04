@@ -30,33 +30,6 @@
         
         <!-- Cart (Right) - sempre visível -->
         <div class="mobile-right-actions">
-          <!-- Notification Center -->
-          <div class="ei-notif-wrap" style="position:relative;">
-            <button class="ei-notif-btn hidden" id="mobileNotifBtn"
-                    aria-label="Notifications">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-              </svg>
-              <span class="ei-notif-badge hidden" id="mobileNotifBadge"></span>
-            </button>
-            <div class="ei-notif-dropdown" id="mobileNotifDropdown">
-              <div class="ei-notif-header">
-                <span class="ei-notif-header-title">Black Cat Rewards</span>
-                <button class="ei-notif-mark-read" id="mobileMarkRead">
-                  Mark all read
-                </button>
-              </div>
-              <div class="ei-notif-list" id="mobileNotifList">
-                <div class="ei-notif-empty">Loading...</div>
-              </div>
-              <div class="ei-notif-footer">
-                <a href="/account.html">View all rewards →</a>
-              </div>
-            </div>
-          </div>
           <a href="/cart.html" class="header-cart" aria-label="Shopping cart">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"/>
@@ -156,40 +129,6 @@
         <!-- Divider -->
         <li class="menu-divider"></li>
 
-        <!-- Sign In / Account -->
-        <li id="mobileLoyaltyItem" style="display:none !important;">
-          <a href="/account.html" id="mobileLoyaltyGuest" class="mobile-menu-link" style="display:flex;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            Sign in
-          </a>
-          <a href="/account.html" id="mobileLoyaltyLoggedIn" class="mobile-menu-link" style="color:#FFA300;display:none;">
-            <img src="/images/account/ink-points-coin.webp" width="20" height="20" alt="" style="border-radius:50%;">
-            <span id="mobileLoyaltyLabel">My Rewards</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <li class="menu-divider"></li>
-
-        <!-- Sign Out -->
-        <li id="mobileSignOutItem" style="display:none;">
-          <button id="mobileSignOutBtn" class="mobile-menu-link"
-                  style="width:100%;background:none;border:none;cursor:pointer;text-align:left;color:#c0392b;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            Sign Out
-          </button>
-        </li>
-
-        <!-- Divider -->
-        <li class="menu-divider"></li>
-
         <!-- Shopping Cart -->
         <li>
           <a href="/cart.html" class="mobile-menu-link mobile-menu-link-highlight">
@@ -208,208 +147,6 @@
     </nav>
   `;
 
-  // Auth removed - getInitials helper removed
-
-  // ────────── Notification Center ──────────
-  var NOTIF_API = (typeof INTERNAL_API_URL !== 'undefined')
-    ? INTERNAL_API_URL
-    : 'https://ei-internal-production.up.railway.app';
-  var NOTIF_TOKEN_KEY = 'ei_loyalty_token';
-
-  const ACTION_CONFIG = {
-    purchase:      { label: 'Catokens earned',  svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-    welcome_bonus: { label: 'Welcome bonus',    svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="#FFA300" stroke-width="1.8" stroke-linejoin="round"/></svg>' },
-    mission:       { label: 'Mission complete', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#0033C4" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#0033C4" stroke-width="2" stroke-linecap="round"/></svg>' },
-    badge:         { label: 'Badge unlocked',   svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="#FFA300" stroke-width="1.8" stroke-linejoin="round"/></svg>' },
-    redemption:    { label: 'Coupon generated', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="1" stroke="#ff4444" stroke-width="1.8"/><path d="M7 10h6M10 7v6" stroke="#ff4444" stroke-width="1.8" stroke-linecap="round"/></svg>' },
-    manual:        { label: 'Catokens added',   svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16V4M4 10l6-6 6 6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-    referral:      { label: 'Referral bonus',   color: '#43BDAB', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M13 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM4 16a6 6 0 0 1 12 0" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/></svg>' },
-    anniversary:   { label: 'Anniversary bonus',color: '#FFA300', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L10 14.3l-4.8 2.5.9-5.3L2.2 7.7l5.4-.8L10 2z" stroke="#FFA300" stroke-width="1.8" stroke-linejoin="round"/></svg>' },
-    refund:        { label: 'Catokens refunded',color: '#43BDAB', svg: '<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 10l6 6 6-6M10 4v12" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-  };
-
-  function formatTimeAgo(dateStr) {
-    const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
-    return `${Math.floor(diff/86400)}d ago`;
-  }
-
-  function renderNotifList(notifications, listEl) {
-    if (!notifications.length) {
-      listEl.innerHTML = '<div class="ei-notif-empty">No activity yet.</div>';
-      return;
-    }
-    listEl.innerHTML = notifications.map(n => {
-      const cfg = ACTION_CONFIG[n.action] || ACTION_CONFIG.manual;
-      const isUnread = !n.read_at;
-        const pts = n.points > 0
-          ? `+${n.points.toLocaleString()} Catokens`
-          : `${n.points.toLocaleString()} Catokens`;
-      const _escN = (s) => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-      const text = n.points < 0
-        ? `${cfg.label}: ${_escN(n.description)}`
-        : `${pts} — ${_escN(n.description) || cfg.label}`;
-      const safeAction = _escN(n.action);
-      return `
-        <div class="ei-notif-item ${isUnread ? 'unread' : ''}">
-          <div class="ei-notif-icon ${safeAction}">${cfg.svg}</div>
-          <div class="ei-notif-body">
-            <p class="ei-notif-text">${text}</p>
-            <p class="ei-notif-time">${formatTimeAgo(n.created_at)}</p>
-          </div>
-          <span class="ei-notif-unread-dot ${isUnread ? '' : 'hidden'}"></span>
-        </div>`;
-    }).join('');
-  }
-
-  async function loadNotifications(prefix) {
-    return; // temporarily disabled
-    const token    = localStorage.getItem(NOTIF_TOKEN_KEY);
-    const btn      = document.getElementById(`${prefix}NotifBtn`);
-    const badge    = document.getElementById(`${prefix}NotifBadge`);
-    const list     = document.getElementById(`${prefix}NotifList`);
-    if (!btn || !badge || !list) return;
-    if (!token) { btn.classList.add('hidden'); return; }
-    try {
-      const res = await fetch(`${NOTIF_API}/api/loyalty/notifications`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) { btn.classList.add('hidden'); return; }
-      const data = await res.json();
-      renderNotifList(data.notifications || [], list);
-      if (data.unread_count > 0) {
-        badge.textContent = data.unread_count > 9 ? '9+' : data.unread_count;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-      btn.classList.remove('hidden');
-    } catch (err) { console.warn('[mobile] loadNotifications error:', err); }
-  }
-
-  async function markAllRead(prefix) {
-    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
-    if (!token) return;
-    try {
-      await fetch(`${NOTIF_API}/api/loyalty/notifications/read`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const badge = document.getElementById(`${prefix}NotifBadge`);
-      const list  = document.getElementById(`${prefix}NotifList`);
-      if (badge) badge.classList.add('hidden');
-      if (list) {
-        list.querySelectorAll('.ei-notif-item.unread')
-          .forEach(el => el.classList.remove('unread'));
-        list.querySelectorAll('.ei-notif-unread-dot')
-          .forEach(el => el.classList.add('hidden'));
-      }
-    } catch (err) { console.warn('[mobile] markAllRead error:', err); }
-  }
-
-  function updateMobileSignOut() {
-    const item = document.getElementById('mobileSignOutItem');
-    const btn  = document.getElementById('mobileSignOutBtn');
-    if (!item || !btn) return;
-    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
-    item.style.display = token ? 'block' : 'none';
-    btn.onclick = async () => {
-      const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);';
-      overlay.innerHTML = `
-        <div style="background:#fff;border-radius:16px;padding:28px 32px;max-width:340px;width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-          <div style="font-family:'Montserrat',sans-serif;text-align:center;">
-            <div style="font-size:16px;font-weight:700;color:#000;margin-bottom:8px;">Sign out?</div>
-            <div style="font-size:13px;color:#555;margin-bottom:24px;">You'll need to sign in again to access your Catokens and rewards.</div>
-            <div style="display:flex;gap:10px;">
-              <button id="so-cancel" style="flex:1;padding:12px;border-radius:9px;border:1px solid #e0e0e0;background:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#555;cursor:pointer;">Cancel</button>
-              <button id="so-confirm" style="flex:1;padding:12px;border-radius:9px;border:none;background:#c0392b;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;">Sign Out</button>
-            </div>
-          </div>
-        </div>`;
-      document.body.appendChild(overlay);
-      const confirmed = await new Promise(resolve => {
-        overlay.querySelector('#so-confirm').onclick = () => { overlay.remove(); resolve(true); };
-        overlay.querySelector('#so-cancel').onclick  = () => { overlay.remove(); resolve(false); };
-        overlay.onclick = e => { if (e.target === overlay) { overlay.remove(); resolve(false); } };
-      });
-      if (!confirmed) return;
-      localStorage.removeItem(NOTIF_TOKEN_KEY);
-      localStorage.removeItem('ei_last_level');
-      localStorage.removeItem('ei_last_pts');
-      localStorage.removeItem('blackcat_coupons');
-      window.dispatchEvent(new CustomEvent('ei:auth-change', { detail: { loggedIn: false } }));
-      item.style.display = 'none';
-      if (window.location.pathname.startsWith('/account')) window.location.href = '/';
-    };
-  }
-
-  async function initLoyaltyBtn() {
-    return; // temporarily disabled
-    const guest    = document.getElementById('mobileLoyaltyGuest');
-    const loggedIn = document.getElementById('mobileLoyaltyLoggedIn');
-    const label    = document.getElementById('mobileLoyaltyLabel');
-    if (!guest || !loggedIn) return;
-    const token = localStorage.getItem(NOTIF_TOKEN_KEY);
-    if (!token) return;
-    // Show immediately from JWT payload — no network wait
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const quickName = (payload.name || '').split(' ')[0];
-      if (quickName) {
-        if (label) label.textContent = `${quickName} · ...`;
-        guest.style.display = 'none';
-        loggedIn.style.display = 'flex';
-      }
-    } catch (err) { console.warn('[mobile] initLoyaltyBtn JWT parse error:', err); }
-    // Update with fresh points from API in background
-    try {
-      const res = await fetch(`${NOTIF_API}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) {
-        guest.style.display = 'flex';
-        loggedIn.style.display = 'none';
-        return;
-      }
-      const data = await res.json();
-      const customer = data.customer || data;
-      const name = (customer.name || '').split(' ')[0];
-      const pts  = (customer.loyalty_points_total || 0).toLocaleString();
-      if (label) label.textContent = `${name} · ${pts}`;
-      guest.style.display = 'none';
-      loggedIn.style.display = 'flex';
-    } catch (err) { console.warn('[mobile] initLoyaltyBtn fetch error:', err); }
-  }
-
-  function initNotifications(prefix) {
-    const btn      = document.getElementById(`${prefix}NotifBtn`);
-    const dropdown = document.getElementById(`${prefix}NotifDropdown`);
-    const markRead = document.getElementById(`${prefix}MarkRead`);
-    if (!btn || !dropdown) return;
-
-    loadNotifications(prefix);
-
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = dropdown.classList.contains('open');
-      dropdown.classList.toggle('open');
-      if (!isOpen) markAllRead(prefix);
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!btn.closest('.ei-notif-wrap').contains(e.target)) {
-        dropdown.classList.remove('open');
-      }
-    });
-
-    if (markRead) {
-      markRead.addEventListener('click', () => markAllRead(prefix));
-    }
-  }
-
   // ────────── Initialize Header ──────────
   async function initMobileHeader() {
     // REMOVE any existing headers (prevents duplication)
@@ -417,25 +154,8 @@
     document.querySelector('.mobile-menu')?.remove();
     document.querySelector('.mobile-menu-backdrop')?.remove();
 
-    // Inject notifications CSS and wait for it to load before rendering header
-    await new Promise((resolve) => {
-      if (document.querySelector('link[href="/css/notifications.css"]')) {
-        resolve();
-        return;
-      }
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/css/notifications.css';
-      link.onload = resolve;
-      link.onerror = resolve;
-      document.head.appendChild(link);
-    });
-
     // Inject header at start of body
     document.body.insertAdjacentHTML('afterbegin', headerHTML);
-      initLoyaltyBtn();
-    updateMobileSignOut();
-    initNotifications('mobile');
 
     // Initialize functionality
     setupMenuToggle();
@@ -544,19 +264,6 @@
 
   // ────────── Listen for Cart Updates ──────────
   window.addEventListener('cart-updated', updateCartCount);
-
-  // ────────── Listen for Auth Changes ──────────
-  window.addEventListener('ei:auth-change', () => {
-    const guest    = document.getElementById('mobileLoyaltyGuest');
-    const loggedIn = document.getElementById('mobileLoyaltyLoggedIn');
-    const label    = document.getElementById('mobileLoyaltyLabel');
-    if (guest) guest.style.display = 'flex';
-    if (loggedIn) loggedIn.style.display = 'none';
-    if (label) label.textContent = 'My Rewards';
-    initLoyaltyBtn();
-    updateMobileSignOut();
-    loadNotifications('mobile');
-  });
 
   // ────────── Auto-Initialize ──────────
   if (document.readyState === 'loading') {

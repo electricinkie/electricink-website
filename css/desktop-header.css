@@ -174,117 +174,11 @@
   color: #43BDAB;
 }
 
-/* ────────── User Menu (signed-in) ────────── */
-.user-menu {
-  position: relative;
-}
-
-.user-menu-trigger {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid #43BDAB;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-}
-
-.user-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  margin-top: 0;
-  background: #ffffff;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  min-width: 240px;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 1000;
-}
-
-.user-dropdown a,
-.user-dropdown button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px 14px;
-  text-align: left;
-  border: none;
-  background: transparent;
-  color: #111111;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  border-radius: 6px;
-  transition: background-color 0.18s ease, color 0.18s ease;
-}
-
-.user-dropdown a:hover,
-.user-dropdown button:hover,
-.user-dropdown a:focus,
-.user-dropdown button:focus {
-  background: linear-gradient(90deg, rgba(67,189,171,0.06), rgba(2,132,199,0.03));
-  color: #075985;
-}
-
-.user-dropdown .divider {
-  height: 1px;
-  background: #EEEEEE;
-  margin: 6px 0;
-}
-
-.logout-btn {
-  color: #C0392B;
-  font-weight: 700;
-  background: transparent;
-  border-radius: 8px;
-}
-
-/* small caret for the dropdown */
-.user-dropdown::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  right: 18px;
-  width: 12px;
-  height: 12px;
-  background: #ffffff;
-  transform: rotate(45deg);
-}
-
 /* ────────── Right Actions ────────── */
 .desktop-right-actions {
   display: flex;
   align-items: center;
   gap: 4px;
-}
-
-/* ────────── Notification Button ────────── */
-.ei-notif-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: 8px;
-  transition: background 0.2s;
-}
-
-.ei-notif-btn:hover {
-  background: rgba(67, 189, 171, 0.1);
-}
-
-.ei-notif-btn.hidden {
-  display: none !important;
 }
 
 /* ────────── Cart Icon ────────── */
@@ -325,45 +219,6 @@
   align-items: center;
   justify-content: center;
   padding: 0 6px;
-}
-
-/* ────────── Auth Button ────────── */
-.auth-button {
-  background: transparent;
-  color: #FFFFFF;
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 6px 10px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: color 0.18s ease, border-color 0.18s ease;
-}
-
-.auth-button:hover {
-  color: #43BDAB;
-  border-color: rgba(67, 189, 171, 0.5);
-}
-
-.auth-button.hidden {
-  display: none !important;
-}
-
-/* Charming sign-in button for desktop */
-.sign-in-btn {
-  background: transparent;
-  color: #43BDAB;
-  border: 1px solid rgba(67,189,171,0.9);
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.18s ease;
-}
-
-.sign-in-btn:hover {
-  background: rgba(67,189,171,0.08);
 }
 
 /* ────────── Mobile/Tablet: Hide Desktop Header ────────── */
