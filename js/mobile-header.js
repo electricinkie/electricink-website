@@ -444,6 +444,19 @@
     setActiveMenuItem();
 
     // Auth removed - setupAuthHandlers and applyAuthStateImmediately removed
+
+    // Product search (js/search.js): optional, must never break the header.
+    // Not on checkout. The button goes before the cart.
+    try {
+      if (!window.location.pathname.startsWith('/checkout')) {
+        const searchSlot = document.querySelector('.site-header .mobile-right-actions');
+        if (searchSlot) {
+          import('/js/search.js')
+            .then((m) => m.mountSearchButton(searchSlot, { before: searchSlot.querySelector('.header-cart') }))
+            .catch(() => {});
+        }
+      }
+    } catch (e) { /* search unavailable: header keeps working */ }
   }
 
   // Auth removed - applyAuthStateImmediately and updateMobileAuthUI functions removed

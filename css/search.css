@@ -156,6 +156,7 @@
 
 /* ────────── Header button (same build as the cart icon) ────────── */
 .ei-search-btn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,14 +172,29 @@
   transition: color 0.18s ease;
 }
 
-.desktop-right-actions .ei-search-btn {
+/* desktop header icons are 44px (class set by js/search.js) */
+.ei-search-btn--lg {
   width: 44px;
   height: 44px;
 }
 
+/* The button sits on the black header: teal there is 9.11:1. */
 .ei-search-btn:hover,
 .ei-search-btn[aria-expanded="true"] {
   color: #43BDAB;
+}
+
+/* Open state does not rely on colour alone: a 2px bar under the icon */
+.ei-search-btn[aria-expanded="true"]::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 20px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transform: translateX(-50%);
 }
 
 .ei-search-btn:focus-visible {

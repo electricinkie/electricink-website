@@ -37,10 +37,15 @@ let results = [];
 let active = -1;
 let cartObserver = null;
 let headerObserver = null;
+let mounted = false;       // global listeners exist only after mountSearchButton()
 const buttons = [];
 
+// Importing this module has no side effects: the stylesheet and the global
+// "/" shortcut are added on the first mount or open.
+
 // ────────── Stylesheet (CSP: style-src 'self') ──────────
-if (!document.querySelector(`link[href="${CSS_URL}"]`)) {
+function ensureStyles() {
+  if (document.querySelector(`link[href="${CSS_URL}"]`)) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = CSS_URL;
@@ -333,13 +338,30 @@ function onDocumentKey(e) {
   if (e.key === 'Escape') closeSearch();
 }
 
+// cart-drawer.js has no open event. Every way it opens (cartDrawer.open and
+// openOnAdd) adds .open to #cart-drawer-overlay (js/cart-drawer.js:151-195),
+// so only that element's class is observed, and only while the search is open.
+// The overlay is built on the cart's first open (buildDOM); before that there
+// is nothing to observe, and any cart opening starts with a click outside the
+// panel (header cart link, "Add to cart"), which already closes the search.
+function onCartOverlayChange() {
+  const overlay = document.getElementById('cart-drawer-overlay');
+  if (overlay && overlay.classList.contains('open')) closeSearch({ restoreFocus: false });
+}
+
 function watchCart() {
-  // cart-drawer.js has no open event: it adds .open to #cart-drawer-overlay
-  cartObserver = new MutationObserver(() => {
-    const overlay = document.getElementById('cart-drawer-overlay');
-    if (overlay && overlay.classList.contains('open')) closeSearch({ restoreFocus: false });
-  });
-  cartObserver.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  const overlay = document.getElementById('cart-drawer-overlay');
+  if (!overlay) return;
+  cartObserver = new MutationObserver(onCartOverlayChange);
+  cartObserver.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+}
+
+// Another dialog already open: the cart drawer or sheet, the mobile menu,
+// or a modal from js/modal.js / the notify-me modal (.modal-backdrop.show).
+function otherDialogOpen() {
+  return Boolean(document.querySelector(
+    '#cart-drawer-overlay.open, #cart-bottom-sheet.open, .mobile-menu.open, .modal-backdrop.show'
+  ));
 }
 
 function watchHeader() {
@@ -350,6 +372,7 @@ function watchHeader() {
 }
 
 export function openSearch(opener) {
+  ensureStyles();
   buildPanel();
   trigger = opener || trigger;
   if (!panel.hidden) {
@@ -373,7 +396,9 @@ export function closeSearch({ restoreFocus = true } = {}) {
   panel.hidden = true;
   buttons.forEach((b) => b.setAttribute('aria-expanded', 'false'));
   if (cartObserver) cartObserver.disconnect();
+  cartObserver = null;
   if (headerObserver) headerObserver.disconnect();
+  headerObserver = null;
   window.removeEventListener('resize', syncTop);
   document.removeEventListener('pointerdown', onOutsidePointer, true);
   document.removeEventListener('keydown', onDocumentKey);
@@ -382,11 +407,32 @@ export function closeSearch({ restoreFocus = true } = {}) {
 
 // ────────── Header button ──────────
 
+// "/" opens the search on desktop. Ignored while typing in a field, with
+// Ctrl/Cmd/Alt, or when another dialog is open; preventDefault only when it
+// actually opens.
+function onSlashKey(e) {
+  if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!window.matchMedia('(min-width: 769px)').matches) return;
+  const t = e.target;
+  if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+  if (panel && !panel.hidden) return;
+  if (otherDialogOpen()) return;
+  e.preventDefault();
+  openSearch(buttons.find((b) => b.isConnected && b.offsetParent !== null) || null);
+}
+
 export function mountSearchButton(container, { before = null } = {}) {
   if (!container || container.querySelector('.ei-search-btn')) return null;
+  ensureStyles();
+  if (!mounted) {
+    mounted = true;
+    document.addEventListener('keydown', onSlashKey);
+  }
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'ei-search-btn';
+  // the desktop header's icons are 44px, the mobile ones 40px
+  if (container.closest('.desktop-header')) button.classList.add('ei-search-btn--lg');
   button.setAttribute('aria-label', TEXT.buttonLabel);
   button.setAttribute('aria-expanded', 'false');
   button.setAttribute('aria-controls', PANEL_ID);
@@ -399,13 +445,3 @@ export function mountSearchButton(container, { before = null } = {}) {
   buttons.push(button);
   return button;
 }
-
-// "/" opens the search on desktop, unless the user is typing somewhere
-document.addEventListener('keydown', (e) => {
-  if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
-  if (!window.matchMedia('(min-width: 769px)').matches) return;
-  const t = e.target;
-  if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-  e.preventDefault();
-  openSearch(buttons.find((b) => b.offsetParent !== null) || null);
-});
