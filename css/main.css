@@ -42,7 +42,14 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+button,
+summary,
+[role="button"],
+nav {
   user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Remove blue/orange tap highlight on mobile across the whole site.
