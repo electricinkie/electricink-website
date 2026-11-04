@@ -4,17 +4,12 @@
     "name": "Tattoo Balm",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Balm for post-tattoo healing, with natural active ingredients for fast absorption. Moisturising, regenerating and healing, developed specifically for immediate tattoo aftercare.",
+    "description": "Balm for freshly tattooed skin, made with natural ingredients: shea butter, mango butter, aloe vera, vitamin E, rosehip oil and more. Moisturizing, with fast absorption and good adherence to the skin. Vegan, paraben-free, petrolatum-free, no dyes. Exclusive fragrance. 25 g.",
     "features": [
-      "Natural active ingredients",
-      "Fast absorption",
-      "Vegan & paraben-free",
-      "Dermatologically tested",
-      "Exclusive fragrance",
-      "Easy absorption",
-      "Superior adherence",
-      "No dyes",
-      "Petrolatum-free"
+      "Natural ingredients: shea, mango butter, aloe vera, vitamin E",
+      "Moisturizing, fast absorption",
+      "Vegan, paraben-free, petrolatum-free, no dyes",
+      "Good adherence to the skin"
     ],
     "stripe": {
       "productId": "prod_TjU7b8nxU1sNzc",
@@ -31,7 +26,7 @@
       "/images/products/cosmetics/tattoo-balm-4.webp"
     ],
     "content": {
-      "usage_instructions": "Apply 2-3 times daily for 14 days.",
+      "usage_instructions": "Wash your hands and apply a thin layer over the tattoo.\nUse it 2 to 3 times a day for 14 days.\nFollow your tattooer's aftercare advice.",
       "ingredients": [
         "Shea Butter",
         "Rice Wax",
@@ -94,7 +89,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Balm | Electric Ink Ireland",
-      "meta_description": "Complete post-tattoo care with natural active ingredients. Deeply moisturizes, regenerates, and accelerates healing. Vegan, paraben-free, dermatologically tested.... Shop Electric Ink Ireland.",
+      "meta_description": "Vegan tattoo balm with shea, mango butter, aloe vera and vitamin E. Fast absorption, no dyes, petrolatum-free. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "aftercare",
@@ -111,7 +106,7 @@
     "name": "Tattoo Cream Derma",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Cream Derma, an antioxidant-rich moisturizer for healed tattoos (10+ days).",
+    "description": "Light daily moisturizer for healed tattoos (10+ days). Antioxidant-rich, pH-balanced and fast to absorb. 30 g.",
     "features": [
       "For healed skin (10+ days)",
       "Antioxidant-rich formula",
@@ -131,7 +126,7 @@
       "/images/products/cosmetics/tattoo-cream-2.webp"
     ],
     "content": {
-      "usage_instructions": "Use daily to moisturize healed tattoos and maintain vibrancy."
+      "usage_instructions": "Use it daily on healed tattoos (10+ days).\nApply a thin layer and rub in until absorbed."
     },
     "inventory": {
       "stock_quantity": 5,
@@ -140,7 +135,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Cream Derma | Electric Ink Ireland",
-      "meta_description": "Lightweight moisturizer for healed tattoos. Plant-based oils and butters provide deep hydration with anti-aging antioxidants. Keep your ink bold and vibrant.... Shop Electric Ink Ireland.",
+      "meta_description": "Daily moisturizer for healed tattoos (10+ days). Antioxidant-rich, pH-balanced, fast absorption. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "aftercare",
@@ -157,12 +152,12 @@
     "name": "Slimer Tattoo Gel",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Slimer Tattoo Gel, a cooling mint lubricant used during tattooing to reduce redness and irritation.",
+    "description": "The water-based gel to keep within reach all session long. Use it as your glide instead of vaseline or butter, wipe away excess ink mid-session, and leave a layer on finished areas while you work on the rest. At the end it gives a fresh, clean shine, which is why our pro team uses it for post-tattoo photos. Light texture, mint essence and plant extracts. Moisturizing and non-drying. Apply it with a spatula.",
     "features": [
-      "Reduces redness in 5-10 min",
-      "Refreshing mint essence",
-      "Protective film barrier",
-      "Prevents dryness"
+      "Glides all session long, instead of vaseline or butter",
+      "Wipes away excess ink mid-session",
+      "Leave a layer on finished areas while you keep working",
+      "Fresh, clean shine: the pro team's go-to for post-tattoo photos"
     ],
     "stripe": {
       "productId": "prod_TjUCnikkW8V98S",
@@ -200,7 +195,7 @@
       "/images/products/cosmetics/slimer-tattoo-gel-info.webp"
     ],
     "content": {
-      "usage_instructions": "Apply during tattooing as needed.\nReduces inflammation immediately.\nMaintains stencil clarity and improves ink visibility."
+      "usage_instructions": "Once the stencil is on and fixed, spread the gel with a spatula and use it as your glide.\nMid-session, use it to wipe away excess ink. On areas you've finished, leave a layer on while you work on the rest.\nAt the end, a final layer gives a fresh, clean shine for photos. Reapply whenever needed."
     },
     "inventory": {
       "stock_quantity": 15,
@@ -209,7 +204,7 @@
     },
     "seo": {
       "meta_title": "Slimer Tattoo Gel | Electric Ink Ireland",
-      "meta_description": "Water-based gel with refreshing mint. Reduces redness, soothes burning sensation, and prevents dryness during tattooing. Superior lubricant with protective film.... Shop Electric Ink Ireland.",
+      "meta_description": "Water-based tattoo gel with mint. Glide, wipe away excess ink and finish with a clean shine for photos. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "during tattoo",
@@ -226,12 +221,12 @@
     "name": "Tattoo Skin Scrub Out",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
-    "description": "Tattoo Skin Scrub Out, an exfoliating pre-tattoo prep gel for safer, smoother needle puncture.",
+    "description": "Exfoliating gel for the first step of skin prep. Clears dead skin and excess keratin without drying and softens the hair before shaving, leaving the skin clean and even for the stencil. 250 g tube.",
     "features": [
-      "Removes dead cells",
-      "Moisturizes & softens",
-      "Safer needle puncture",
-      "Optimal prep essential"
+      "Removes dead skin and excess keratin",
+      "Exfoliates without drying out the skin",
+      "Softens the hair before shaving",
+      "Leaves the skin clean and even for the stencil"
     ],
     "stripe": {
       "productId": "prod_TjUGg2WGdrsUbl",
@@ -246,7 +241,7 @@
       "/images/products/cosmetics/scrub-out-2.webp"
     ],
     "content": {
-      "usage_instructions": "Apply sufficient amount onto the area to be tattooed.\nGently massage in circular motion to exfoliate skin.\nRinse thoroughly with Clean Up/Prep to remove debris."
+      "usage_instructions": "Apply to the area before shaving.\nMassage in small circles to exfoliate.\nRemove the particles with Tattoo Prep or rinse with water."
     },
     "inventory": {
       "stock_quantity": 0,
@@ -255,7 +250,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Skin Scrub Out | Electric Ink Ireland",
-      "meta_description": "Exfoliating gel removes dead cells and impurities. Softens skin, facilitates ink application, and makes the process safer. Essential for preparation.... Shop Electric Ink Ireland.",
+      "meta_description": "Exfoliating gel for tattoo skin prep. Removes dead skin and excess keratin without drying. Use before shaving. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "pre-tattoo",
@@ -271,12 +266,12 @@
     "name": "Tattoo Prep",
     "category": "Cosmetics",
     "subcategory": "Pre-Tattoo",
-    "description": "Tattoo Prep shaving foam with Aloe Vera and Chamomile, for smooth pre-tattoo hair removal.",
+    "description": "Foam for the second step of skin prep. Cleans the skin, removes leftover exfoliant and lets the razor glide smoothly, with Aloe Vera and Chamomile to moisturize and calm. Use it instead of alcohol when shaving the area. 200 mL bottle.",
     "features": [
-      "Aloe Vera & Chamomile",
-      "Smooth razor glide",
-      "Calms & moisturizes",
-      "No rinse required"
+      "Removes exfoliant residue and cleans the skin",
+      "Lets the razor glide smoothly",
+      "Aloe Vera and Chamomile to moisturize and calm",
+      "Gentle on the skin, no rinsing needed"
     ],
     "stripe": {
       "productId": "prod_TjUJfEY74SgGR0",
@@ -291,7 +286,7 @@
       "/images/products/cosmetics/prep-info.webp"
     ],
     "content": {
-      "usage_instructions": "Apply directly on skin or on disposable absorbent paper.\nSpread foam evenly across area for easy hair removal.\nRemove excess foam with absorbent paper—no rinsing needed."
+      "usage_instructions": "Apply the foam directly on the skin.\nSpread it and shave the area.\nWipe off the excess with paper. No rinsing needed."
     },
     "inventory": {
       "stock_quantity": 10,
@@ -300,7 +295,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Prep | Electric Ink Ireland",
-      "meta_description": "Shaving foam with Aloe Vera and Chamomile. Enhances razor glide during hair removal and cleanses skin. Calms and moisturizes. No rinsing needed.... Shop Electric Ink Ireland.",
+      "meta_description": "Shaving foam with Aloe Vera and Chamomile. Cleans the skin, removes exfoliant residue and eases shaving. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "pre-tattoo",
@@ -316,12 +311,12 @@
     "name": "The Gloo Stencil Transfer",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "The Gloo Stencil Transfer gel, used during tattooing for precise, sharp stencil transfer and skin adhesion.",
+    "description": "Stencil transfer gel for printed stencils. Gives sharp, detailed transfers with strong skin adhesion and fast drying, even on complex areas like elbows, knees and joints. Dermatologically tested.",
     "features": [
-      "Precise transfer accuracy",
-      "Enhanced skin adhesion",
-      "Dermatologically tested",
-      "Professional results"
+      "Sharp, detailed transfer",
+      "Strong skin adhesion",
+      "Fast drying",
+      "Works on complex areas: elbows, knees, joints"
     ],
     "stripe": {
       "productId": "prod_TjULsjQFxQ5b8F",
@@ -357,7 +352,7 @@
       "/images/products/cosmetics/gloo-240g.webp"
     ],
     "content": {
-      "usage_instructions": "Apply gel, spread evenly in a thin layer.\nPosition stencil, press 10-15 seconds.\nRemove slowly for a clean, sharp stencil."
+      "usage_instructions": "Apply a thin, even layer on clean, dry skin.\nPosition the stencil carefully, with no bubbles or wrinkles, and press for 10 to 15 seconds.\nPeel off the paper slowly.\nLet it dry before you start."
     },
     "inventory": {
       "stock_quantity": 15,
@@ -366,7 +361,7 @@
     },
     "seo": {
       "meta_title": "The Gloo Stencil Transfer | Electric Ink Ireland",
-      "meta_description": "Precise, sharp stencils every time. Gel formula enhances transfer accuracy and skin adhesion. Dermatologically tested. Clear, durable stencils throughout tattooing. Shop now at Electric Ink Ireland.",
+      "meta_description": "Stencil transfer gel for printed stencils. Sharp detail, strong adhesion, fast drying, even on elbows, knees and joints. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "stencil transfer",
@@ -385,12 +380,12 @@
     "name": "Transfer It",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Transfer It, an extra-fixation gel for extended stencil durability throughout long sessions.",
+    "description": "Stencil transfer cream with extra hold, for sharp, well-defined stencils that last through long sessions. Works with thermal and hand-drawn stencils. The moisturizing formula helps keep the skin from drying out and goes a long way. Once dry, a stencil applied with IT stays put: only IT itself takes it off.",
     "features": [
-      "Extra-long fixation",
-      "Enhanced precision",
-      "Won't dry out area",
-      "Extended coverage"
+      "Extra hold for long sessions",
+      "Sharp, well-defined stencil",
+      "Works with thermal and hand-drawn stencils",
+      "Moisturizing formula, high yield"
     ],
     "stripe": {
       "productId": "prod_TjUS3eS4PCSUr1",
@@ -437,7 +432,7 @@
       "/images/products/cosmetics/it-240ml.webp"
     ],
     "content": {
-      "usage_instructions": "Apply a thin layer on prepared skin.\nPosition stencil, press firmly 10-15 seconds.\nRemove carefully—stays clear throughout the session."
+      "usage_instructions": "Apply a thin layer on clean, dry skin and spread until a transparent film forms.\nPlace the stencil and press firmly for about 10 seconds.\nIf the stencil is misplaced, rub a little IT over it before it dries and wipe it off.\nLet it dry completely before you start."
     },
     "inventory": {
       "stock_quantity": 10,
@@ -446,12 +441,12 @@
     },
     "seo": {
       "meta_title": "Transfer It | Electric Ink Ireland",
-      "meta_description": "Extra stencil fixation for extended duration. Gel formula provides precision, definition, and durability without drying the area. Long-lasting coverage. Shop now at Electric Ink Ireland.",
+      "meta_description": "Stencil transfer cream with extra hold and sharp definition for thermal and hand-drawn stencils. Moisturizing, high yield. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "stencil fixation",
         "during tattoo",
-        "gel formula",
+        "stencil cream",
         "tattoo"
       ]
     },
@@ -464,12 +459,12 @@
     "name": "Stencil Fix Spray",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Stencil Fix Spray, for extra stencil fixation and freehand drawing durability during tattooing.",
+    "description": "Fixing spray for stencils and freehand drawings. Use it after the stencil is on (after Transfer IT) or once the freehand drawing is done: it sets the lines so they don't smudge during the tattoo and removes the excess carbon from the stencil. The formula has moisturizing agents that don't dry out the skin. 120 mL bottle.",
     "features": [
-      "Prevents smudging",
-      "Removes excess carbon",
-      "Keeps skin hydrated",
-      "Works on freehand"
+      "Sets the stencil so it doesn't smudge",
+      "Removes excess carbon from the stencil",
+      "Fixes freehand drawings too",
+      "Moisturizing formula, doesn't dry out the skin"
     ],
     "stripe": {
       "productId": "prod_TjUVpNsfZVRD3l",
@@ -484,7 +479,7 @@
       "/images/products/cosmetics/fix-2.webp"
     ],
     "content": {
-      "usage_instructions": "Spray onto absorbent paper and press onto stencil for 5 seconds.\nFor freehand: spray directly onto skin to fix the drawing."
+      "usage_instructions": "Apply the stencil (after Transfer IT) or draw your freehand design.\nSpray Stencil Fix onto a paper towel.\nPress the paper onto the skin for 5 seconds to set the lines."
     },
     "inventory": {
       "stock_quantity": 10,
@@ -493,7 +488,7 @@
     },
     "seo": {
       "meta_title": "Stencil Fix Spray | Electric Ink Ireland",
-      "meta_description": "Professional spray for extra stencil fixation. Removes excess carbon, prevents smudging, and keeps skin hydrated. Perfect for stencils and freehand work. Shop now at Electric Ink Ireland.",
+      "meta_description": "Spray that sets stencils and freehand drawings so they don't smudge, and removes excess carbon. Moisturizing formula. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "stencil fix",
@@ -510,12 +505,12 @@
     "name": "Tattoo Clean Up",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Clean Up foam, a pH-balanced cleanser used during tattooing to optimize pigment retention.",
+    "description": "Foam cleanser to use throughout the session. Cleans the skin without disturbing the stencil, keeps it pH-balanced and hydrated, and leaves a fresh feel. Apply the foam, wipe with a paper towel, no rinsing needed. Comes in 90 mL and 200 mL foam pump bottles; a 1 L refill is available separately.",
     "features": [
-      "Optimizes pigment retention",
-      "Reduces irritation",
-      "Maintains pH balance",
-      "Promotes faster healing"
+      "Cleans during the session without disturbing the stencil",
+      "pH-balanced",
+      "Hydrates and leaves a fresh feel",
+      "No rinsing needed"
     ],
     "stripe": {
       "productId": "prod_TjUXvUXA83i0pO",
@@ -554,7 +549,7 @@
       "/images/products/cosmetics/clean-up-1l.webp"
     ],
     "content": {
-      "usage_instructions": "Apply foam directly to tattooed area.\nGently spread evenly over skin.\nThoroughly clean with disposable paper."
+      "usage_instructions": "Apply the foam directly on the skin and spread it over the area.\nWipe with a paper towel until all the impurities are gone.\nNo rinsing needed."
     },
     "inventory": {
       "stock_quantity": 0,
@@ -563,7 +558,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Clean Up | Electric Ink Ireland",
-      "meta_description": "Gentle foam neutralizes and cleanses during tattooing. Maintains pH balance for better pigment retention. Reduces redness and swelling for vibrant, lasting results. Shop now at Electric Ink Ireland.",
+      "meta_description": "Foam cleanser for use during tattooing. Cleans without disturbing the stencil, pH-balanced and hydrating, no rinsing needed. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "clean up",
@@ -581,12 +576,12 @@
     "name": "Tattoo Clean Up Refill",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "1L refill for Tattoo Clean Up foam bottle — same pH-balanced formula, bulk studio size.",
+    "description": "1 L refill for the Tattoo Clean Up foam bottle, for studios that go through a lot of product. Same formula: cleans the skin during the session without disturbing the stencil, pH-balanced, hydrating, no rinsing needed. Refill the pump bottle and keep working.",
     "features": [
-      "Eco-friendly refill",
-      "1L bulk size",
-      "Use with foam bottle",
-      "Same trusted formula"
+      "Refill for the Tattoo Clean Up foam bottle",
+      "1 L bulk size for studios",
+      "Fill the pump bottle and keep working",
+      "Same formula as the 90 mL and 200 mL bottles"
     ],
     "stripe": {
       "productId": "prod_TjUZzKGZrguF2C",
@@ -607,7 +602,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Clean Up Refill | Electric Ink Ireland",
-      "meta_description": "1L refill for foam bottle. Same pH-balanced formula that optimizes pigment retention and reduces irritation. Eco-friendly bulk option for busy studios. Shop now at Electric Ink Ireland.",
+      "meta_description": "1 L refill for the Tattoo Clean Up foam bottle. Same formula, cleans without disturbing the stencil, bulk studio size. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "clean up refill",
@@ -624,12 +619,12 @@
     "name": "Cat Slobber Butter",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Cat Slobber Butter, a vegan Shea/Mango/Aloe blend for smooth needle glide during tattooing.",
+    "description": "Vegan butter made for the needle glide, with shea, mango butter and aloe vera plus oils and vitamin E. Hydrates and softens the skin while you work, with a mild fragrance in three options: Traditional, Mint (fresh and invigorating) and Clove & Cinnamon. Tested by tattooers and compatible with tattoo inks. Apply it with a spatula.",
     "features": [
-      "Shea, Mango & Aloe",
-      "Smooth needle glide",
-      "Vegan formula",
-      "Multiple fragrance options"
+      "Vegan butter with shea, mango and aloe vera",
+      "Smooth needle glide that hydrates and softens",
+      "Mild fragrance in 3 options: Traditional, Mint, Clove & Cinnamon",
+      "Tested by tattooers, compatible with tattoo inks"
     ],
     "stripe": {
       "productId": "prod_TjUgesU7XvVSmA",
@@ -718,7 +713,7 @@
       "/images/products/cosmetics/cat-slobber-250g-mint.webp"
     ],
     "content": {
-      "usage_instructions": "Apply a thin, even layer over the area.\nGently massage into skin.\nReapply as needed for hydration and glide."
+      "usage_instructions": "Once the stencil is on and fixed, take a little with a spatula.\nSpread it over the skin in a thin layer.\nReapply whenever needed."
     },
     "inventory": {
       "stock_quantity": 0,
@@ -727,7 +722,7 @@
     },
     "seo": {
       "meta_title": "Cat Slobber Butter | Electric Ink Ireland",
-      "meta_description": "Vegan butter with Shea, Mango, and Aloe Vera. Enhances needle glide, reduces friction, and improves pigmentation. Available in Traditional, Clove & Cinnamon, or Mint.... Shop Electric Ink Ireland.",
+      "meta_description": "Vegan butter with shea, mango and aloe vera for a smooth needle glide. Mild fragrance in Traditional, Mint or Clove & Cinnamon. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "during tattoo",
@@ -744,12 +739,12 @@
     "name": "Vaseline Slip Premium",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Vaseline Slip Premium, with Omega complex and Clove Oil for smooth needle glide and skin protection.",
+    "description": "Our enriched vaseline: pure paraffin with clove and macadamia oils, omegas 3, 6 and 9, and vitamins E and C. A smooth needle glide with extra hydration for the skin during the session. The clove oil adds a fresh, invigorating touch. Apply it with a spatula.",
     "features": [
-      "Omega & antioxidants",
-      "Revitalizing Clove Oil",
-      "Smooth needle glide",
-      "Prevents irritation"
+      "Enriched pure-paraffin formula",
+      "Clove and macadamia oils, omegas 3, 6, 9, vitamins E and C",
+      "Hydrates the skin during the session",
+      "Smooth needle glide, no loss of performance"
     ],
     "stripe": {
       "productId": "prod_TjUk5X0HS4DDOR",
@@ -797,7 +792,7 @@
       "/images/products/cosmetics/slip-premium-800g.webp"
     ],
     "content": {
-      "usage_instructions": "Apply a thin layer during tattooing to ensure smooth needle glide and skin protection.\nReapply as necessary."
+      "usage_instructions": "Once the stencil is on and fixed, take a little with a spatula.\nSpread it over the skin in a thin layer.\nReapply whenever needed."
     },
     "inventory": {
       "stock_quantity": 2,
@@ -806,7 +801,7 @@
     },
     "seo": {
       "meta_title": "Vaseline Slip Premium | Electric Ink Ireland",
-      "meta_description": "Premium vaseline with Omega Complex, antioxidants, and vitamins. Smooth needle glide with Clove Oil. Maintains hydration and protects from irritation.... Shop Electric Ink Ireland.",
+      "meta_description": "Enriched tattoo vaseline with clove and macadamia oils, omegas and vitamins E and C. Smooth needle glide and hydration. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "during tattoo",
@@ -822,12 +817,12 @@
     "name": "Vaseline Slip",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Vaseline Slip, made with pure pharmaceutical-grade paraffin for excellent needle glide and high yield.",
+    "description": "Pure paraffin vaseline of the highest pharmaceutical grade, for a smooth needle glide and softness throughout the tattoo. Optimized glide, less resistance on the skin and high yield, so it goes a long way. Apply it with a spatula.",
     "features": [
-      "Pure pharmaceutical-grade paraffin",
-      "Excellent needle glide",
-      "High yield — goes further per use",
-      "Softens and protects skin"
+      "Pure paraffin, highest pharmaceutical grade",
+      "Optimized glide with less resistance on the skin",
+      "High yield, a little goes a long way",
+      "Softness for the skin throughout the session"
     ],
     "stripe": {
       "productId": "prod_V5MRZdgbkwDfG3",
@@ -875,7 +870,7 @@
       "/images/products/cosmetics/slip-800g.webp"
     ],
     "content": {
-      "usage_instructions": "Apply a thin layer using a spatula to ensure smooth needle glide during tattooing.\nReapply as necessary."
+      "usage_instructions": "Once the stencil is on and fixed, take a little with a spatula.\nSpread it over the skin in a thin layer.\nReapply whenever needed."
     },
     "inventory": {
       "stock_quantity": 0,
@@ -884,7 +879,7 @@
     },
     "seo": {
       "meta_title": "Vaseline Slip | Electric Ink Ireland",
-      "meta_description": "Pure pharmaceutical-grade paraffin vaseline for excellent needle glide and high yield. Softens and protects skin throughout the tattoo session. Shop now at Electric Ink Ireland.",
+      "meta_description": "Pure paraffin vaseline of pharmaceutical grade for a smooth needle glide and high yield. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "during tattoo",
@@ -900,12 +895,12 @@
     "name": "Tattoo After All",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo After All, an antiseptic post-tattoo spray that cleanses and reduces redness.",
+    "description": "Spray for the final clean-up after the tattoo. Apply it when you finish, leave it for a few seconds and press a paper towel on the skin to take off the excess. The skin is left clean and ready for the next step of aftercare, such as Barrier Film or Protection. With Aloe Vera, Chamomile and Witch Hazel extracts. No rinsing needed. Available in 90 mL and 250 mL.",
     "features": [
-      "Antiseptic protection",
-      "Reduces redness",
-      "No rinse needed",
-      "Rapid recovery"
+      "Final clean-up spray for right after the tattoo",
+      "Leaves the skin clean, ready for the next aftercare step",
+      "With Aloe Vera, Chamomile and Witch Hazel extracts",
+      "No rinsing needed"
     ],
     "stripe": {
       "productId": "prod_TjUoGWkFxCNru7",
@@ -942,7 +937,7 @@
       "/images/products/cosmetics/after-all-250ml.webp"
     ],
     "content": {
-      "usage_instructions": "Apply After All to cleaned, tattooed area.\nGently pat skin dry with soft paper.\nNo rinsing necessary."
+      "usage_instructions": "When the tattoo is finished, spray After All over the area.\nLeave it for a few seconds, then press a paper towel lightly on the skin to take off the excess.\nLet the skin dry before applying Barrier Film or Protection."
     },
     "inventory": {
       "stock_quantity": 16,
@@ -951,12 +946,12 @@
     },
     "seo": {
       "meta_title": "Tattoo After All | Electric Ink Ireland",
-      "meta_description": "Antiseptic post-tattoo spray. Cleanses, soothes, and reduces redness. Creates protective barrier for rapid recovery. Use after Tattoo Soap. No rinse required.... Shop Electric Ink Ireland.",
+      "meta_description": "Post-tattoo finishing spray with Aloe Vera, Chamomile and Witch Hazel extracts. Apply when the tattoo is done, no rinsing needed. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "aftercare",
         "tattoo after all",
-        "antiseptic spray"
+        "post-tattoo spray"
       ]
     },
     "inStock": true,
@@ -968,12 +963,12 @@
     "name": "Tattoo Barrier Film",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Tattoo Barrier Film, a breathable transparent second-skin for protecting healing tattoos.",
+    "description": "A cream that turns into a transparent protective film when it meets the air: a breathable second skin for your fresh tattoo, with no need for cling film. Alcohol-free, moisturizing and comfortable. Apply a thin layer on clean, dry skin, let it dry completely, and wash it off with warm running water when you want to remove it. Not for use on the eyes.",
     "features": [
-      "Transparent barrier",
-      "Breathable & flexible",
-      "Protects healing skin",
-      "Easy application"
+      "Cream that dries into a transparent protective film",
+      "Breathable second skin, no cling film needed",
+      "Alcohol-free, moisturizing and comfortable",
+      "Washes off with warm running water"
     ],
     "stripe": {
       "productId": "prod_TjUtBF8BzltzEq",
@@ -1009,7 +1004,7 @@
       "/images/products/cosmetics/barrier-film-100ml.webp"
     ],
     "content": {
-      "usage_instructions": "Apply a layer of Barrier Film over the tattoo and allow it to dry completely.\nTo remove: rinse with warm water or use Clean Up."
+      "usage_instructions": "Start on clean, dry skin, after After All.\nApply a thin layer over the tattoo and let it dry completely.\nTo remove, wash with warm running water."
     },
     "inventory": {
       "stock_quantity": 9,
@@ -1018,7 +1013,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Barrier Film | Electric Ink Ireland",
-      "meta_description": "Transparent 'second skin' film. Breathable, flexible protection from external agents. Apply when tattoo fluid begins to dry. Use on any body part except eyes.... Shop Electric Ink Ireland.",
+      "meta_description": "Cream that dries into a transparent, breathable second-skin film for fresh tattoos. Alcohol-free and moisturizing. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "aftercare",
@@ -1034,12 +1029,12 @@
     "name": "Tattoo Dry Solidifier",
     "category": "Cosmetics",
     "subcategory": "During Tattoo",
-    "description": "Tattoo Dry Solidifier, used post-tattoo to safely solidify and dispose of liquid waste.",
+    "description": "Single-use units that solidify the liquid waste from the session (blood, fluids, ink), so it can be thrown away without spills. Add one to your waste container, let it set and dispose of it following your studio's waste procedure. 10 individual units per box.",
     "features": [
-      "Prevents leaks",
-      "Safe disposal",
-      "10 units included",
-      "Health compliant"
+      "Solidifies liquid waste: blood, fluids, ink",
+      "Helps prevent leaks and spills",
+      "Tidier, easier disposal",
+      "10 individual units per box"
     ],
     "stripe": {
       "productId": "prod_TjUxSHvTIln5AK",
@@ -1053,6 +1048,9 @@
       "/images/products/cosmetics/dry-10g.webp",
       "/images/products/cosmetics/dry-10g-2.webp"
     ],
+    "content": {
+      "usage_instructions": "When the session is over, put the liquid waste in your container.\nAdd one unit and let it set until the liquid solidifies.\nDispose of it following your studio's waste procedure."
+    },
     "inventory": {
       "stock_quantity": 0,
       "stock_status": "out_of_stock",
@@ -1060,7 +1058,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Dry Solidifier | Electric Ink Ireland",
-      "meta_description": "Solidifies liquid tattoo waste (blood, fluids, inks). Prevents leaks, reduces contamination risk, and ensures safe disposal. 10 individual units per box.... Shop Electric Ink Ireland.",
+      "meta_description": "Solidifies liquid tattoo waste (blood, fluids, ink) for tidier disposal and fewer spills. 10 individual units per box. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "during tattoo",
@@ -1076,12 +1074,12 @@
     "name": "Tattoo Protection 15CMX5M",
     "category": "Cosmetics",
     "subcategory": "Aftercare",
-    "description": "Transparent polyurethane adhesive film for the initial tattoo healing stage — acts as a breathable second skin, hypoallergenic and waterproof.",
+    "description": "Transparent polyurethane adhesive film, in a 15 cm x 5 m roll, for the first days of a fresh tattoo. A breathable, waterproof second skin that adapts to the skin without wrinkles. Cut it to size, stick it over the tattoo and leave it on for up to 4 days. Hypoallergenic and comfortable.",
     "features": [
       "Transparent, elastic polyurethane film",
-      "Hypoallergenic and waterproof",
-      "Adapts smoothly to the skin without wrinkles",
-      "Can remain on the skin for up to 4 days"
+      "Breathable and waterproof",
+      "Hypoallergenic and comfortable",
+      "Stays on for up to 4 days"
     ],
     "stripe": {
       "productId": "prod_V6Rfs3z8xU7NxX",
@@ -1107,7 +1105,7 @@
       "/images/products/cosmetics/tattoo-protection-15cmx5m-plastic-film-roll-2.webp"
     ],
     "content": {
-      "usage_instructions": "Apply Tattoo After All and ensure the skin is fully dry and free of residue. Wear disposable gloves during application. Cut the film to the desired size, apply gently over the tattoo with a safety margin, and press to adhere without wrinkles. Can remain on the skin for up to 4 days, and should only be replaced if significant fluid builds up underneath."
+      "usage_instructions": "Apply After All and make sure the skin is fully dry and free of residue.\nWear disposable gloves. Cut the film to size, leaving a safety margin around the tattoo.\nPress it gently onto the skin so it sticks without wrinkles.\nLeave it on for up to 4 days. Replace it only if a lot of fluid builds up underneath."
     },
     "inventory": {
       "stock_quantity": 0,
@@ -1116,7 +1114,7 @@
     },
     "seo": {
       "meta_title": "Tattoo Protection Film 15cm x 5m | Electric Ink Ireland",
-      "meta_description": "Transparent polyurethane adhesive film for the initial tattoo healing stage. Hypoallergenic, waterproof, and breathable. Shop now at Electric Ink Ireland.",
+      "meta_description": "Transparent polyurethane film roll (15 cm x 5 m) for fresh tattoos. Breathable, waterproof, hypoallergenic, stays on up to 4 days. Shop Electric Ink Ireland.",
       "keywords": [
         "cosmetics",
         "aftercare",
