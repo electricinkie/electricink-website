@@ -8,7 +8,9 @@
     "start": "node scripts/dev-server.js",
     "build": "echo 'Build complete with versioned assets'",
     "vercel-build": "npm run build",
-    "check:catalog": "node scripts/check-catalog-sync.js"
+    "check:catalog": "node scripts/check-catalog-sync.js",
+    "build:search": "node scripts/build-search-index.js",
+    "check:search": "node scripts/build-search-index.js --check"
   },
   "dependencies": {
     "@sentry/node": "^10.34.0",
