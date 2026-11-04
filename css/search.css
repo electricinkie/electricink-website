@@ -1,0 +1,218 @@
+/* ========================================
+   PRODUCT SEARCH (js/search.js)
+   Panel under the injected header. Brand look: black, white, teal as the
+   accent; no shadows, no glass, no gradients; 1px borders.
+   Fonts and weights already loaded by every page (Outfit 700,
+   Montserrat 400/600).
+   ======================================== */
+
+.ei-search-panel {
+  --ei-search-top: 80px;          /* replaced by js/search.js with the measured header */
+  --ei-search-rule: #DDE6E4;
+  --ei-search-muted: #5A6866;     /* 5.8:1 on white */
+  --ei-search-active: #E6F5F2;    /* light teal tint, black text on it */
+
+  position: fixed;
+  top: var(--ei-search-top);
+  left: 50%;
+  z-index: 1100;                  /* above the header (1000), under the mobile menu (2000) */
+  display: flex;
+  flex-direction: column;
+  width: min(640px, calc(100vw - 48px));
+  max-height: calc(100vh - var(--ei-search-top) - 24px);
+  max-height: calc(100dvh - var(--ei-search-top) - 24px);
+  background: #FFFFFF;
+  border: 1px solid var(--ei-search-rule);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  transform: translateX(-50%);
+  overflow: hidden;
+}
+
+.ei-search-panel[hidden] {
+  display: none;
+}
+
+/* ────────── Input ────────── */
+.ei-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--ei-search-rule);
+  color: var(--ei-search-muted);
+}
+
+.ei-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;                /* 16px keeps iOS from zooming in on focus */
+  color: #000000;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ei-search-input::placeholder {
+  color: var(--ei-search-muted);
+}
+
+.ei-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.ei-search-bar:focus-within {
+  box-shadow: inset 0 -2px 0 #000000;   /* focus line on the input row, not a drop shadow */
+}
+
+/* ────────── Results ────────── */
+.ei-search-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ei-search-list:empty {
+  display: none;
+}
+
+.ei-search-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.ei-search-option[aria-selected="true"] {
+  background: var(--ei-search-active);
+}
+
+.ei-search-thumb {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: #FFFFFF;
+  border: 1px solid var(--ei-search-rule);
+  border-radius: 8px;
+}
+
+.ei-search-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ei-search-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #000000;
+}
+
+.ei-search-category {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--ei-search-muted);
+}
+
+.ei-search-message {
+  margin: 0;
+  padding: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ei-search-muted);
+}
+
+.ei-search-message[hidden] {
+  display: none;
+}
+
+.ei-search-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ────────── Header button (same build as the cart icon) ────────── */
+.ei-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.desktop-right-actions .ei-search-btn {
+  width: 44px;
+  height: 44px;
+}
+
+.ei-search-btn:hover,
+.ei-search-btn[aria-expanded="true"] {
+  color: #43BDAB;
+}
+
+.ei-search-btn:focus-visible {
+  outline: 2px solid #43BDAB;
+  outline-offset: 2px;
+}
+
+/* ────────── Mobile: full width under the header ────────── */
+@media (max-width: 768px) {
+  /* mobile header: 12 + 40 + 12 = 64px (the logo is absolutely positioned
+     and adds no height; css/mobile-header.css) */
+  .ei-search-panel {
+    --ei-search-top: 64px;
+    left: 0;
+    width: 100%;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    transform: none;
+  }
+
+  .ei-search-bar {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .ei-search-panel {
+    --ei-search-top: 60px;        /* 10 + 40 + 10 */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ei-search-btn {
+    transition: none;
+  }
+}
