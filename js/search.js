@@ -58,7 +58,7 @@ function ensureStyles() {
 function normalize(value) {
   return String(value || '')
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
@@ -69,30 +69,52 @@ function words(value) {
   return n ? n.split(' ') : [];
 }
 
+// Same display name the site uses (js/product-page.js:235-237): cartridges are
+// stored with category "Needles" but shown as "Cartridges" everywhere.
+function displayCategory(category) {
+  return String(category || '').toLowerCase() === 'needles' ? 'Cartridges' : category;
+}
+
 function prepare(entry) {
   return {
     entry,
     name: normalize(entry.name),
     nameWords: words(entry.name),
     keywordWords: entry.keywords.flatMap(words),
-    categoryWords: words(entry.category).concat(words(entry.subcategory)),
+    categoryWords: words(entry.category)
+      .concat(words(displayCategory(entry.category)), words(entry.subcategory)),
     variantWords: entry.variants.flatMap(words)
   };
 }
 
 const hasPrefix = (list, term) => list.some((w) => w.startsWith(term));
 
-// Every query word must prefix-match a word in some field. The name weighs
-// most: "tattoo" sits in almost every keyword list, so keywords alone must
-// never outrank a product named after the search.
+function termScore(item, term) {
+  if (hasPrefix(item.nameWords, term)) return 60;
+  if (hasPrefix(item.keywordWords, term)) return 40;
+  if (hasPrefix(item.categoryWords, term)) return 20;
+  if (hasPrefix(item.variantWords, term)) return 15;
+  return 0;
+}
+
+// Plurals: "cartridges" -> "cartridge", "supplies" -> "supply".
+function singular(term) {
+  if (term.length > 4 && term.endsWith('ies')) return term.slice(0, -3) + 'y';
+  if (term.length > 3 && term.endsWith('s') && !term.endsWith('ss')) return term.slice(0, -1);
+  return null;
+}
+
+// Every query word must prefix-match a word in some field (or its singular
+// form). The name weighs most: "tattoo" sits in almost every keyword list, so
+// keywords alone must never outrank a product named after the search. A match
+// through the singular form counts 20% (at most 12), below the weakest exact
+// match (15), so it only fills gaps: "balms" finds the balm, but "machines"
+// still lists the machines (category) before the machine cover (name).
 function score(item, query, terms) {
   let total = item.name.startsWith(query) ? 100 : 0;
   for (const term of terms) {
-    let best = 0;
-    if (hasPrefix(item.nameWords, term)) best = 60;
-    else if (hasPrefix(item.keywordWords, term)) best = 40;
-    else if (hasPrefix(item.categoryWords, term)) best = 20;
-    else if (hasPrefix(item.variantWords, term)) best = 15;
+    const one = singular(term);
+    const best = Math.max(termScore(item, term), one ? 0.2 * termScore(item, one) : 0);
     if (best === 0) return 0;
     total += best;
   }
@@ -262,7 +284,7 @@ function render(entries) {
     name.textContent = entry.name;
     const category = document.createElement('span');
     category.className = 'ei-search-category';
-    category.textContent = entry.category;
+    category.textContent = displayCategory(entry.category);
     text.append(name, category);
 
     a.append(img, text);
@@ -421,27 +443,38 @@ function onSlashKey(e) {
   openSearch(buttons.find((b) => b.isConnected && b.offsetParent !== null) || null);
 }
 
-export function mountSearchButton(container, { before = null } = {}) {
-  if (!container || container.querySelector('.ei-search-btn')) return null;
+// Binds a search button. The headers render the button in their own markup
+// (styled by css/mobile-header.css / css/desktop-header.css, so it is final on
+// first paint) and pass it here. Passing a container instead creates a button
+// in it, before `before` (kept for the console test and other callers).
+export function mountSearchButton(target, { before = null } = {}) {
+  if (!target) return null;
+  let button;
+  if (target.matches('.ei-search-btn')) {
+    button = target;
+  } else {
+    if (target.querySelector('.ei-search-btn')) return null;
+    button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'ei-search-btn';
+    button.setAttribute('aria-label', TEXT.buttonLabel);
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', PANEL_ID);
+    button.appendChild(svgIcon(24));
+    target.insertBefore(button, before && before.parentNode === target ? before : null);
+  }
+  if (button.dataset.eiSearchBound) return button;
+  button.dataset.eiSearchBound = 'true';
+
   ensureStyles();
   if (!mounted) {
     mounted = true;
     document.addEventListener('keydown', onSlashKey);
   }
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'ei-search-btn';
-  // the desktop header's icons are 44px, the mobile ones 40px
-  if (container.closest('.desktop-header')) button.classList.add('ei-search-btn--lg');
-  button.setAttribute('aria-label', TEXT.buttonLabel);
-  button.setAttribute('aria-expanded', 'false');
-  button.setAttribute('aria-controls', PANEL_ID);
-  button.appendChild(svgIcon(24));
   button.addEventListener('click', () => {
     if (panel && !panel.hidden) closeSearch();
     else openSearch(button);
   });
-  container.insertBefore(button, before && before.parentNode === container ? before : null);
   buttons.push(button);
   return button;
 }

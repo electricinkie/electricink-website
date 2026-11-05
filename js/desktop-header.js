@@ -47,6 +47,15 @@
         
         <!-- Cart (Right) - Auth removed -->
         <div class="desktop-right-actions">
+          <!-- Product search: rendered with the header so it never pops in late;
+               js/search.js binds it (removed on checkout) -->
+          <button type="button" class="ei-search-btn" aria-label="Search products"
+                  aria-expanded="false" aria-controls="ei-search-panel">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
           <a href="/cart.html" class="desktop-cart" aria-label="Shopping cart">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"/>
@@ -171,15 +180,16 @@
     // Auth removed - all auth UI interactions removed
 
     // Product search (js/search.js): optional, must never break the header.
-    // Not on checkout. The button goes before the cart.
+    // The button is already in the header markup; drop it on checkout, or if
+    // the module fails to load, so a dead button never stays on screen.
     try {
-      if (!window.location.pathname.startsWith('/checkout')) {
-        const searchSlot = document.querySelector('.desktop-header .desktop-right-actions');
-        if (searchSlot) {
-          import('/js/search.js')
-            .then((m) => m.mountSearchButton(searchSlot, { before: searchSlot.querySelector('.desktop-cart') }))
-            .catch(() => {});
-        }
+      const searchBtn = document.querySelector('.desktop-header .ei-search-btn');
+      if (searchBtn && window.location.pathname.startsWith('/checkout')) {
+        searchBtn.remove();
+      } else if (searchBtn) {
+        import('/js/search.js')
+          .then((m) => m.mountSearchButton(searchBtn))
+          .catch(() => searchBtn.remove());
       }
     } catch (e) { /* search unavailable: header keeps working */ }
   }
