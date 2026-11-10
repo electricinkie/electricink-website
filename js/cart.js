@@ -158,7 +158,7 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     // Modal customizado
     const confirmed = await window.modal.delete({
       title: 'Remove Item',
-      message: `Remove ${item.name} from cart?`,
+      message: `Remove ${escHtml(item.name)} from cart?`,
       primaryBtn: 'Remove',
       secondaryBtn: 'Cancel'
     });
