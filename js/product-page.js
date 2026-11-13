@@ -397,10 +397,10 @@ import { INTERNAL_API_URL } from '/js/constants.js';
       }
       color = '#f59e0b';
     } else if (productData.orderOnRequest === true) {
-      label = 'Available — may ship with delay';
+      label = 'Available to order — ships in 7–10 days';
       color = '#f97316';
     } else if (stockStatus === 'available_on_request') {
-      label = 'Available — may ship with delay';
+      label = 'Available to order — ships in 7–10 days';
       color = '#f97316';
     } else if (stockStatus === 'out_of_stock') {
       label = 'Out of Stock';
