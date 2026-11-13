@@ -46,6 +46,9 @@ window.appliedDiscount = 0;
   };
   
   let shippingMethod = 'standard'; // 'standard', 'same-day', 'pickup'
+  // Method the server actually charged on the last create-payment-intent call.
+  // It differs from shippingMethod when a same-day request no longer qualifies.
+  let lastChargedShippingMethod = null;
   const VAT_RATE = 0.23; // 23% VAT for Ireland
   const STANDARD_RATE = 13.00; // Standard shipping rate
   const SAMEDAY_RATE = 14.99; // Same-day Dublin rate
@@ -471,15 +474,12 @@ window.appliedDiscount = 0;
 
         // Add standard if available
         if (baseOptions.some(o => o.id === 'standard')) {
-          shippingOptions.push({ id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: 'Ireland-wide delivery', amount: 1300 });
+          shippingOptions.push({ id: 'standard', label: 'An Post Express (usually 1-3 business days)', detail: 'Tracked, Ireland-wide delivery', amount: 1300 });
         }
 
         // Add Same-Day only if baseOptions includes it and address qualifies
         if (baseOptions.some(o => o.id === 'same-day') && isDublinCentral) {
-          const now = new Date();
-          const cutoffTime = new Date();
-          cutoffTime.setHours(14, 0, 0, 0); // 2PM
-          if (now < cutoffTime) {
+          if (isBeforeCutoff()) { // 2PM Dublin time
             shippingOptions.unshift({ id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08) - Today!', amount: 1499 });
           }
         }
@@ -680,6 +680,13 @@ window.appliedDiscount = 0;
             if (elements.form.lastName)  elements.form.lastName.value  = _prevLastName  || elements.form.lastName.value;
             if (elements.form.phone)     elements.form.phone.value     = _prevPhone     || elements.form.phone.value;
 
+            // Same-day refused by the server: close the sheet without charging
+            const _requestedExpressMethod = ev.shippingOption && ev.shippingOption.id ? ev.shippingOption.id : shippingMethod;
+            if (sameDayWasDowngraded(_requestedExpressMethod)) {
+              ev.complete('fail');
+              return;
+            }
+
             // Confirm payment — use handleActions:false for Payment Request (Google/Apple Pay)
             // then complete the event BEFORE handling any required actions
             const {error: confirmError, paymentIntent: confirmedIntent} = await stripe.confirmCardPayment(
@@ -748,12 +755,49 @@ window.appliedDiscount = 0;
   }
   
   /**
-   * Check if current time is before 2 PM cutoff
+   * Current hour in Dublin (0-23), whatever the visitor's own clock or time zone.
+   * Same calculation as calculateShipping() in api/create-payment-intent.js.
+   */
+  function dublinHour() {
+    try {
+      return Number(new Date().toLocaleString('en-IE', { timeZone: 'Europe/Dublin', hour: 'numeric', hour12: false }));
+    } catch (e) {
+      return new Date().getHours();
+    }
+  }
+
+  /**
+   * Check if current time is before the 2 PM (Dublin) cutoff
    */
   function isBeforeCutoff() {
-    const now = new Date();
-    const currentHour = now.getHours();
-    return currentHour < SAMEDAY_CUTOFF_HOUR;
+    return dublinHour() < SAMEDAY_CUTOFF_HOUR;
+  }
+
+  /**
+   * After create-payment-intent: true when the customer picked same-day but the
+   * server charged another method (cutoff passed or postcode outside D01-D08).
+   * Switches the form to standard and tells the customer, so the payment is not
+   * confirmed with a delivery they did not expect.
+   */
+  function sameDayWasDowngraded(requestedMethod) {
+    if (requestedMethod !== 'same-day' || !lastChargedShippingMethod || lastChargedShippingMethod === 'same-day') {
+      return false;
+    }
+    const standardRadio = document.getElementById('shipping-standard');
+    if (standardRadio && !standardRadio.disabled) {
+      standardRadio.checked = true;
+    }
+    shippingMethod = 'standard';
+    updateShippingOptions();
+    calculateTotals();
+    renderOrderSummary();
+    const msg = 'Same-day delivery is no longer available for this order (D01–D08, order by 2 PM). We switched it to standard delivery — please check the total and place your order again.';
+    if (window.toast) {
+      window.toast.error(msg, 8000);
+    } else {
+      showError(msg);
+    }
+    return true;
   }
 
   /**
@@ -763,7 +807,7 @@ window.appliedDiscount = 0;
   function getAvailableShippingOptions(subtotal) {
     const standardAmount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 1300;
     const allOptions = [
-      { id: 'standard', label: 'Standard Delivery (3-5 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? `Free delivery on orders over €${FREE_SHIPPING_THRESHOLD} (incl. VAT) — Ireland-wide` : 'Ireland-wide delivery', amount: standardAmount },
+      { id: 'standard', label: 'An Post Express (usually 1-3 business days)', detail: subtotal >= FREE_SHIPPING_THRESHOLD ? `Free delivery on orders over €${FREE_SHIPPING_THRESHOLD} (incl. VAT) — Ireland-wide` : 'Tracked, Ireland-wide delivery', amount: standardAmount },
       { id: 'same-day', label: 'Same-Day Delivery (Order by 2PM)', detail: 'Dublin Central (D01-D08)', amount: 1499 },
       { id: 'pickup', label: 'Store Pickup', detail: 'FREE - Collect from our Dublin location', amount: 0 }
     ];
@@ -1190,10 +1234,17 @@ window.appliedDiscount = 0;
         updateShippingOptions();
         
         // Create payment intent
+        const requestedMethod = shippingMethod;
         const clientSecret = await createPaymentIntent();
 
         if (!clientSecret) {
           throw new Error('Failed to create payment intent');
+        }
+
+        // Same-day refused by the server: stop before charging the card
+        if (sameDayWasDowngraded(requestedMethod)) {
+          setLoading(false);
+          return;
         }
 
         // Confirm payment with Stripe (with 3D Secure / SCA support)
@@ -1535,10 +1586,12 @@ window.appliedDiscount = 0;
       }
 
       const data = await response.json();
-      
+
       if (!data.clientSecret) {
         throw new Error('Invalid response from payment server');
       }
+
+      lastChargedShippingMethod = (data.calculatedTotals && data.calculatedTotals.shippingMethodCharged) || null;
 
       // Verify backend calculations match frontend and always prefer backend
       if (data.calculatedTotals) {

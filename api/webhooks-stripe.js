@@ -142,6 +142,35 @@ function buildDiscountRowHtml(amount, code) {
                       </tr>`;
 }
 
+// Human label for the shipping method recorded on the PaymentIntent metadata.
+function shippingMethodLabel(method) {
+  if (method === 'same-day') return 'Same-day delivery (Dublin D01–D08)';
+  if (method === 'pickup') return 'Studio pickup';
+  return 'Standard delivery';
+}
+
+// Admin-only banner: same-day orders must be dispatched today, and a same-day
+// request the server downgraded to standard is flagged so nobody promises it.
+function buildShippingBannerHtml(method, requestedMethod) {
+  let text = '';
+  let bg = '';
+  if (method === 'same-day') {
+    text = 'SAME-DAY — dispatch today (D01–D08)';
+    bg = '#000000';
+  } else if (requestedMethod === 'same-day') {
+    text = 'Customer picked same-day but it did not qualify (after 2 PM or outside D01–D08). Charged and sent as standard.';
+    bg = '#666666';
+  } else {
+    return '';
+  }
+  return `
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td style="background-color: ${bg}; padding: 16px 24px; border-radius: 8px; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 700; color: #43BDAB;">${escapeHtml(text)}</td>
+                </tr>
+              </table>`;
+}
+
 function buildMemberDiscountRowHtml(rankDiscount) {
   if (!rankDiscount || rankDiscount <= 0) return '';
   return `
@@ -623,6 +652,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
+        .replace(/{{shippingMethod}}/g, escapeHtml(shippingMethodLabel(order.shippingMethod)))
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY);
 
@@ -791,6 +821,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
+        .replace(/{{shippingMethod}}/g, escapeHtml(shippingMethodLabel(order.shippingMethod)))
+        .replace(/{{shippingBanner}}/g, buildShippingBannerHtml(order.shippingMethod, paymentIntent.metadata.requested_shipping_method || ''))
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
         .replace(/{{vat}}/g, VAT_DISPLAY_ADMIN);
 
@@ -845,7 +877,7 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       const adminEmailResult = await resend.emails.send({
         from: EMAIL_FROM,
         to: ADMIN_EMAIL,
-        subject: `🔔 New Order #${orderId} - ${order.customerName}`,
+        subject: `${order.shippingMethod === 'same-day' ? '🚚 SAME-DAY — ' : '🔔 '}New Order #${orderId} - ${order.customerName}`,
         html: finalAdminHtml
       });
 

@@ -127,29 +127,30 @@ function calculateShipping(subtotal, address = {}, out = {}) {
   const SAMEDAY_RATE = 14.99;
   const PICKUP_RATE = 0;
 
-  out.method = address.method || 'standard';
+  // Decide the method first: a 'same-day' request only stands for a D01-D08
+  // postcode before 2PM Dublin time; otherwise it becomes 'standard'. This runs
+  // before the free-shipping check so an order over the threshold is not
+  // recorded as same-day when it does not qualify.
+  let method = address.method || 'standard';
+  if (method === 'same-day') {
+    const isDublinCentral = !!address.postalCode && /^D0[1-8]/i.test(address.postalCode.trim());
+    const nowHour = new Date().toLocaleString('en-IE', { timeZone: 'Europe/Dublin', hour: 'numeric', hour12: false });
+    if (!(isDublinCentral && Number(nowHour) < 14)) {
+      method = 'standard';
+    }
+  }
+  out.method = method;
 
-  // Free shipping above threshold
+  // Free shipping above threshold (every method, same-day included)
   if (subtotal >= FREE_SHIPPING_THRESHOLD) {
     return 0;
   }
-  // Store pickup is always free
-  if (address.method === 'pickup') {
+  if (method === 'pickup') {
     return PICKUP_RATE;
   }
-
-  // Same-day Dublin delivery (D01-D08) — order by 2PM cutoff
-  if (address.method === 'same-day' && address.postalCode) {
-    const isDublinCentral = /^D0[1-8]/i.test(address.postalCode.trim());
-    const nowHour = new Date().toLocaleString('en-IE', { timeZone: 'Europe/Dublin', hour: 'numeric', hour12: false });
-    if (isDublinCentral && Number(nowHour) < 14) {
-      return SAMEDAY_RATE;
-    }
+  if (method === 'same-day') {
+    return SAMEDAY_RATE;
   }
-
-  // Default to standard shipping — also the fall-through for a 'same-day'
-  // request that did not qualify, so report the method actually charged.
-  out.method = 'standard';
   return STANDARD_RATE;
 }
 
