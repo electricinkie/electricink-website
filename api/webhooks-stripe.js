@@ -171,15 +171,6 @@ function buildShippingBannerHtml(method, requestedMethod) {
               </table>`;
 }
 
-function buildMemberDiscountRowHtml(rankDiscount) {
-  if (!rankDiscount || rankDiscount <= 0) return '';
-  return `
-                      <tr>
-                        <td style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #666666;">Member discount</td>
-                        <td align="right" style="padding: 8px 0; font-family: 'Montserrat', Arial, Helvetica, sans-serif; font-size: 15px; color: #43BDAB; font-weight: 600;">-€${rankDiscount.toFixed(2)}</td>
-                      </tr>`;
-}
-
 //
 
 // Vercel serverless config
@@ -490,7 +481,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
       total: (paymentIntent.amount / 100),
       discount: discountAmount,
       couponCode,
-      rankDiscount: (parseInt(paymentIntent.metadata.rank_discount_cents || '0', 10) / 100),
       createdAt: new Date().toISOString(),
       paidAt: new Date().toISOString(),
       createdAtMillis: Date.now(),
@@ -587,9 +577,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order_id: order.orderId,
           customer_name: order.customerName,
           customer_email: order.customerEmail,
-          referral_code: (paymentIntent.metadata && paymentIntent.metadata.referral_code)
-            ? paymentIntent.metadata.referral_code
-            : null,
           // Only attribute the sale to a coupon when a discount was actually applied
           coupon_code: (discountAmount > 0 && couponCode) ? couponCode : null,
           discount_amount: discountAmount
@@ -648,9 +635,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.postalCode,
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
-        .replace(/{{subtotal}}/g, ((order.subtotal || 0) + (order.rankDiscount || 0)).toFixed(2))
+        .replace(/{{subtotal}}/g, (order.subtotal || 0).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
-        .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
         .replace(/{{shippingMethod}}/g, escapeHtml(shippingMethodLabel(order.shippingMethod)))
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
@@ -701,79 +687,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         `;
       }).join('');
 
-      // ── Black Cat Rewards block ───────────────────────────────────
-      let pointsBlock = '';
-      try {
-        const _internalApiUrl = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
-        if (order.customerEmail && _internalApiUrl) {
-          const ptsFetch = await fetch(
-            `${_internalApiUrl}/api/loyalty/points-summary?email=${encodeURIComponent(order.customerEmail)}`,
-            {
-              headers: { 'x-crm-secret': process.env.CRM_SECRET || '' },
-              signal: AbortSignal.timeout(8000)
-            }
-          );
-          if (ptsFetch.ok) {
-            const ptsData = await ptsFetch.json();
-            if (ptsData.found && ptsData.points > 0) {
-              const multipliers = { fresh_ink: 4, steady_hand: 5, raw_talent: 6, nine_lives: 7, legend: 8, black_cat: 10 };
-              const lvl = ptsData?.level || 'fresh_ink';
-              const earned = Math.round((order.total || 0) * (multipliers[lvl] || 4));
-              const levelLabels = {
-                fresh_ink:   'Fresh Ink',
-                steady_hand: 'Steady Hand',
-                raw_talent:  'Raw Talent',
-                nine_lives:  'Nine Lives',
-                legend:      'Legend',
-                black_cat:   'Black Cat',
-              };
-              const levelLabel = levelLabels[ptsData.level] || ptsData.level;
-              pointsBlock = `
-              <tr>
-                <td style="padding: 0 40px 0 40px;">
-                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8fafb;border-radius:8px;margin-bottom:30px;">
-                    <tr>
-                      <td style="padding:24px;">
-                        <p style="margin:0 0 4px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#999999;text-transform:uppercase;letter-spacing:0.06em;">Black Cat Rewards</p>
-                        <p style="margin:0 0 16px 0;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:22px;font-weight:700;color:#43BDAB;">+${earned.toLocaleString()} Catokens earned</p>
-                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                          <tr>
-                            <td style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;color:#666666;">Total balance</td>
-                            <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;">${ptsData.points.toLocaleString()} Catokens</td>
-                          </tr>
-                          <tr>
-                            <td style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;color:#666666;padding-top:6px;">Level</td>
-                            <td align="right" style="font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#000000;padding-top:6px;">${levelLabel}</td>
-                          </tr>
-                        </table>
-                        <!-- temporarily disabled — Black Cat Rewards is not public yet.
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
-                          <tr>
-                            <td style="border-radius:4px;background-color:#000000;">
-                              <a href="https://electricink.ie/account.html"
-                                 style="display:inline-block;padding:10px 20px;font-family:'Montserrat',Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:0.04em;">
-                                View your rewards
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
-                        -->
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>`;
-            }
-          }
-        }
-      } catch (ptsErr) {
-        logger.warn('Points block fetch failed', { error: ptsErr.message });
-      }
-      // ─────────────────────────────────────────────────────────────
-
       const finalClientHtml = clientEmailHtml
-        .replace(/{{itemsList}}/g, itemsHtml)
-        .replace(/{{pointsBlock}}/g, pointsBlock);
+        .replace(/{{itemsList}}/g, itemsHtml);
 
       const clientResult = await resend.emails.send({
         from: EMAIL_FROM,
@@ -817,9 +732,8 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.postalCode,
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
-        .replace(/{{subtotal}}/g, ((order.subtotal || 0) + (order.rankDiscount || 0)).toFixed(2))
+        .replace(/{{subtotal}}/g, (order.subtotal || 0).toFixed(2))
         .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
-        .replace(/{{memberDiscountRow}}/g, buildMemberDiscountRowHtml(order.rankDiscount))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
         .replace(/{{shippingMethod}}/g, escapeHtml(shippingMethodLabel(order.shippingMethod)))
         .replace(/{{shippingBanner}}/g, buildShippingBannerHtml(order.shippingMethod, paymentIntent.metadata.requested_shipping_method || ''))
