@@ -653,7 +653,8 @@
   .availability-message { order: 4; }
   .product-stock { order: 5; }
   .product-variants { order: 6; }
-  .btn-add-to-cart { order: 7; }
+  /* :where() keeps this to the info column: the review form's Submit button is also .btn-add-to-cart */
+  :where(.product-info) > .btn-add-to-cart { order: 7; }
   #notifyMeBtn { order: 7; }
   .product-description { order: 8; }
   .product-how-to-use { order: 9; }
@@ -913,30 +914,6 @@
   justify-content: center;
 }
 
-.warning-content strong {
-.warning-content p {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  color: #666;
-  margin: 0;
-  display: flex;
-  align-items: center;
-}
-
-/* Important badge inside warning paragraph */
-.product-warning .important-note {
-  display: inline-block;
-  background: #43BDAB;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 12px;
-  margin-right: 10px;
-}
-}
-
 /* Important badge inside warning paragraph */
 .product-warning .important-note {
   display: inline-block;
@@ -1024,20 +1001,6 @@
    PROMOTIONAL PRICING - Product Detail Page
    ============================================ */
 
-.promo-badge-large {
-  background: #000000;
-  color: #43BDAB;
-  padding: 5px 9px;
-  border-radius: 4px;
-  font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-
 .product-page .price-display-container {
   display: flex;
   align-items: center;
@@ -1056,13 +1019,6 @@
   color: #43BDAB;
   font-size: 2rem;
   font-weight: 700;
-}
-
-.product-page .price-savings {
-  color: #43BDAB;
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
 }
 
 @media (max-width: 768px) {

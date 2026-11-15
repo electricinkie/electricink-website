@@ -245,18 +245,6 @@
   flex-wrap: wrap;
 }
 
-.product-showcase .promo-badge-large {
-  background: #000000;
-  color: #43BDAB;
-  padding: 5px 9px;
-  border-radius: 4px;
-  font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .product-showcase .price-was {
   color: #777;
   text-decoration: line-through;
@@ -269,13 +257,6 @@
   font-size: 1.9rem;
   font-weight: 900;
   line-height: 1;
-}
-
-.product-showcase .price-savings {
-  color: #43BDAB;
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-left: 6px;
 }
 
 /* Hide legacy single price when promo container exists to avoid duplicate prices */

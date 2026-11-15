@@ -1389,7 +1389,7 @@ async function submitNotifyMe() {
   }
 
   const productId = new URLSearchParams(window.location.search).get('id') || 'unknown';
-  const productName = document.getElementById('product-name')?.textContent?.trim() || '';
+  const productName = document.getElementById('productName')?.textContent?.trim() || '';
 
   if (btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
   if (errorEl) errorEl.textContent = '';
