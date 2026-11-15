@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /checkout.html
-Disallow: /success.html
 
 Sitemap: https://electricink.ie/sitemap.xml
