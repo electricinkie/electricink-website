@@ -258,7 +258,7 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
     el.setAttribute(attr, val);
   };
-  const productUrl = `https://electricink.ie/products.html?id=${encodeURIComponent(productData.id || '')}`;
+  const productUrl = `https://electricink.ie/products?id=${encodeURIComponent(productData.id || '')}`;
   setMeta('meta[property="og:title"]',       'content', metaTitle);
   setMeta('meta[property="og:description"]', 'content', metaDesc);
   setMeta('meta[property="og:image"]',       'content', mainImage.startsWith('http') ? mainImage : `https://electricink.ie${mainImage}`);
@@ -269,28 +269,6 @@ import { INTERNAL_API_URL } from '/js/constants.js';
   let canonical = document.querySelector('link[rel="canonical"]');
   if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
   canonical.href = productUrl;
-
-  // SEO — JSON-LD structured data
-  let jsonLd = document.getElementById('product-jsonld');
-  if (!jsonLd) { jsonLd = document.createElement('script'); jsonLd.id = 'product-jsonld'; jsonLd.type = 'application/ld+json'; document.head.appendChild(jsonLd); }
-  const price = productData.price || productData.variants?.[0]?.price || null;
-  jsonLd.textContent = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: name,
-    description: metaDesc,
-    image: mainImage.startsWith('http') ? mainImage : `https://electricink.ie${mainImage}`,
-    url: productUrl,
-    brand: { '@type': 'Brand', name: 'Electric Ink' },
-    offers: {
-      '@type': 'Offer',
-      price: price,
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-      url: productUrl,
-      seller: { '@type': 'Organization', name: 'Electric Ink IE' }
-    }
-  });
 
   // RENDER basic info
   document.getElementById('productName').textContent = name;
@@ -495,9 +473,9 @@ import { INTERNAL_API_URL } from '/js/constants.js';
       option.value = variant.id;
 
       // Determine option price safely (use product price as fallback when sharedPrice)
-      const optPrice = sharedPrice
-        ? (productData.basic?.price ?? productData.price ?? variant.price)
-        : variant.price;
+      const optPrice = (typeof variant.price === 'number' && !isNaN(variant.price))
+        ? variant.price
+        : (productData.basic?.price ?? productData.price);
       option.dataset.price = (typeof optPrice === 'number' && !isNaN(optPrice)) ? String(optPrice) : '';
 
       // Expose the pre-promo price so the change handler can draw the was/now
@@ -638,6 +616,42 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     // Trigger change event for the selected variant to initialize the image
     variantSelect.dispatchEvent(new Event('change'));
   }
+
+  // SEO — JSON-LD structured data
+  // Built after the price and variant rendering above, so the offer carries
+  // the price the customer sees (the selected variant's data-price, otherwise
+  // the simple-product price used by the price render) and the stock state
+  // the page already loaded. No extra requests.
+  let jsonLd = document.getElementById('product-jsonld');
+  if (!jsonLd) { jsonLd = document.createElement('script'); jsonLd.id = 'product-jsonld'; jsonLd.type = 'application/ld+json'; document.head.appendChild(jsonLd); }
+  const jsonLdVariantSelect = (productData.variants && productData.variants.length > 0)
+    ? document.getElementById('variantSelect')
+    : null;
+  const jsonLdVariantOption = jsonLdVariantSelect ? jsonLdVariantSelect.options[jsonLdVariantSelect.selectedIndex] || null : null;
+  let jsonLdPrice = jsonLdVariantOption ? parseFloat(jsonLdVariantOption.dataset.price) : NaN;
+  if (isNaN(jsonLdPrice)) {
+    const basePrice = (typeof productData.basic?.price === 'number') ? productData.basic.price : productData.price;
+    jsonLdPrice = (typeof basePrice === 'number' && !isNaN(basePrice)) ? basePrice : null;
+  }
+  const jsonLdInStock = checkProductAvailability(productData).canPurchase
+    && (!jsonLdVariantOption || jsonLdVariantOption.dataset.available === 'true');
+  jsonLd.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: name,
+    description: metaDesc,
+    image: mainImage.startsWith('http') ? mainImage : `https://electricink.ie${mainImage}`,
+    url: productUrl,
+    brand: { '@type': 'Brand', name: 'Electric Ink' },
+    offers: {
+      '@type': 'Offer',
+      price: jsonLdPrice,
+      priceCurrency: 'EUR',
+      availability: jsonLdInStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      url: productUrl,
+      seller: { '@type': 'Organization', name: 'Electric Ink IE' }
+    }
+  });
 
   // ======= Helper: Resolve Stripe priceId (FRONT) =======
   function resolveStripePriceId(product, variant) {
