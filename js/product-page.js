@@ -1134,7 +1134,7 @@ function checkProductAvailability(product) {
             // Success feedback no botão
             const btn = this;
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#43BDAB" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#43BDAB" stroke-width="2" stroke-linecap="round"/></svg> Added!`;
+            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#FFFFFF" stroke-width="2"/><path d="M6 10l3 3 5-6" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/></svg> Added!`;
             btn.style.background = '#43BDAB';
             setTimeout(() => {
               btn.innerHTML = originalHTML;
