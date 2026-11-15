@@ -193,6 +193,32 @@
   gap: 24px;
 }
 
+/* Desktop visual order of the info column. Every child the page or
+   js/product-page.js puts here has a value, so nothing falls to order 0 (top).
+   :where() keeps the specificity of a single class (or id), so the mobile
+   order block below still overrides these, and .btn-add-to-cart elsewhere
+   (review form, wholesale panel) is not affected. */
+:where(.product-info) > .product-category { order: 1; }
+:where(.product-info) > .product-title { order: 2; }
+:where(.product-info) > .product-tagline { order: 3; }
+:where(.product-info) > .product-tab-buttons { order: 4; }
+:where(.product-info) > .wholesale-panel { order: 5; }
+:where(.product-info) > .product-price { order: 6; }
+:where(.product-info) > .availability-message { order: 7; }
+:where(.product-info) > .product-stock { order: 8; }
+:where(.product-info) > .product-description { order: 9; }
+:where(.product-info) > .product-variants { order: 10; }
+:where(.product-info) > .btn-add-to-cart { order: 11; }
+:where(.product-info) > #notifyMeBtn { order: 12; }
+:where(.product-info) > .product-trust { order: 13; }
+:where(.product-info) > .product-features { order: 14; }
+:where(.product-info) > .product-how-to-use { order: 15; }
+:where(.product-info) > .product-materials { order: 16; }
+:where(.product-info) > .product-warning { order: 17; }
+:where(.product-info) > .product-specs { order: 18; }
+:where(.product-info) > .product-applications { order: 19; }
+:where(.product-info) > .product-disclaimer { order: 20; }
+
 .product-category {
   display: inline-block;
   font-family: 'Outfit', sans-serif;
@@ -249,7 +275,7 @@
   gap: 8px;
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
-  color: #666;
+  color: #444;
 }
 
 .btn-share-inline {
@@ -278,7 +304,7 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  color: #666;
+  color: #444;
 }
 
 /* ========================================
@@ -362,21 +388,23 @@
 
 .trust-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
-  color: #666;
+  color: #444;
 }
 
-/* Cat-eye marker from the logo (inline SVG in products.html) */
+/* Outline icons (inline SVG in products.html). They draw with stroke="currentColor",
+   so the colour comes from `color`; `fill` must stay none or the shapes fill in. */
 .trust-check {
   flex-shrink: 0;
-  width: 27px;
-  height: 10px;
-  margin-top: 4px;
-  fill: #43BDAB;
+  width: 20px;
+  height: 20px;
+  margin-top: 0;
+  color: #43BDAB;
+  fill: none;
 }
 
 /* ========================================
@@ -391,6 +419,7 @@
   font-family: 'Outfit', sans-serif;
   font-size: 18px;
   font-weight: 700;
+  color: #000;
   margin-bottom: 16px;
 }
 
@@ -405,7 +434,7 @@
 #featuresList li {
   font-family: 'Montserrat', sans-serif;
   font-size: 15px;
-  color: #666;
+  color: #444;
   padding-left: 24px;
   position: relative;
 }
@@ -432,6 +461,7 @@
   font-family: 'Outfit', sans-serif;
   font-size: 18px;
   font-weight: 700;
+  color: #000;
   margin-bottom: 16px;
 }
 
@@ -614,11 +644,17 @@
   
   .product-category { order: 1; }
   .product-title { order: 2; }
+  /* Wholesale tabs and panel (js/product-page.js) sit right after the title, as on desktop */
+  .product-tab-buttons { order: 3; }
+  .wholesale-panel { order: 3; }
   .product-tagline { order: 3; }
   .product-price { order: 4; }
+  /* Out-of-stock extras (js/product-page.js): message after the price, Notify me after the button */
+  .availability-message { order: 4; }
   .product-stock { order: 5; }
   .product-variants { order: 6; }
   .btn-add-to-cart { order: 7; }
+  #notifyMeBtn { order: 7; }
   .product-description { order: 8; }
   .product-how-to-use { order: 9; }
   .product-trust { order: 10; }
@@ -844,14 +880,15 @@
   font-family: 'Outfit', sans-serif;
   font-size: 18px;
   font-weight: 700;
+  color: #000;
   margin-bottom: 12px;
 }
 
 .product-materials p {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.6;
-  color: #666;
+  color: #444;
 }
 
 /* Warning Box */
