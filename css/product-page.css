@@ -1076,51 +1076,6 @@
 }
 
 
-/* Ultra Pen specific visuals on product detail (targets image src for Ultra Pen) */
-.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) {
-  position: relative;
-}
-
-.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) .product-info::before {
-  content: "SPECIAL OFFER";
-  display: inline-block;
-  align-self: flex-start;
-  background: #000000;
-  color: #43BDAB;
-  padding: 5px 9px;
-  border-radius: 4px;
-  font-family: 'Outfit', 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-
-.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::before {
-  content: "€1299.00";
-  color: #999;
-  text-decoration: line-through;
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice {
-  color: #43BDAB;
-  font-weight: 800;
-  font-size: 2rem;
-}
-
-.product-container:has(#mainProductImage[src*="ultra-pen-2-cover"]) #productPrice::after {
-  content: " Save €249.00";
-  display: block;
-  color: #43BDAB;
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
-}
-
 /* ========================================
    WHOLESALE TABS
    ======================================== */
