@@ -10,7 +10,9 @@
     "vercel-build": "npm run build",
     "check:catalog": "node scripts/check-catalog-sync.js",
     "build:search": "node scripts/build-search-index.js",
-    "check:search": "node scripts/build-search-index.js --check"
+    "check:search": "node scripts/build-search-index.js --check",
+    "build:sitemap": "node scripts/build-sitemap.js",
+    "check:sitemap": "node scripts/build-sitemap.js --check"
   },
   "dependencies": {
     "@sentry/node": "^10.34.0",
