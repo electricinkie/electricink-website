@@ -218,7 +218,7 @@ function resolveProductById(itemId) {
   return null;
 }
 
-async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '', customerToken = '') {
+async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
   const cacheEmpty = !stripeProducts || Object.keys(stripeProducts).length === 0;
   const cacheStale = (Date.now() - stripeProductsCachedAt) > STRIPE_PRODUCTS_TTL_MS;
   if (cacheEmpty || cacheStale) {
@@ -226,36 +226,11 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     stripeProductsCachedAt = Date.now();
   }
 
-  // Loyalty/rank discount deactivated — program not live for customers as of 2026-08-31.
-  // These stay declared at their zero/empty defaults so every downstream consumer
-  // (the per-item discount at the pricing loop, rankDiscountCents, the Stripe
-  // `rank_discount_cents` metadata and the "Member discount" email row) reports zero.
-  // Re-enable by restoring the fetch below once the program is relaunched.
-  let rankDiscount = 0;
-  let rankConsumableCategories = [];
-  // if (customerToken) {
-  //   try {
-  //     const INTERNAL_URL = process.env.INTERNAL_API_URL || 'https://ei-internal-production.up.railway.app';
-  //     const rdRes = await fetch(`${INTERNAL_URL}/api/loyalty/rank-discount`, {
-  //       headers: { Authorization: `Bearer ${customerToken}` },
-  //       signal: AbortSignal.timeout(3000)
-  //     });
-  //     if (rdRes.ok) {
-  //       const rdData = await rdRes.json();
-  //       rankDiscount = Math.min(Math.max(Number(rdData.discount) || 0, 0), 1);
-  //       rankConsumableCategories = rdData.consumable_categories || [];
-  //     }
-  //   } catch (rdErr) {
-  //     logger.warn('Rank discount fetch failed', { error: rdErr && rdErr.message });
-  //   }
-  // }
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Invalid cart: no items provided');
   }
 
   let subtotal = 0;
-  // Display-only aggregate: how much the rank discount took off. Never affects subtotal/total.
-  let rankDiscountCents = 0;
 
   // Calculate subtotal from backend prices (source of truth)
   for (const item of cartItems) {
@@ -295,18 +270,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
       throw new Error(`Invalid product data for: ${item.id}`);
     }
 
-    // Apply rank discount for consumable categories
-    let itemPrice = price;
-    if (rankDiscount > 0 && rankConsumableCategories.length > 0) {
-      const productCategory = (resolved.product.category || '').toLowerCase();
-      if (rankConsumableCategories.includes(productCategory)) {
-        itemPrice = parseFloat((price * (1 - rankDiscount)).toFixed(2));
-        rankDiscountCents += Math.round((price - itemPrice) * quantity * 100);
-      }
-    }
-
     // Use BACKEND price (not frontend!)
-    subtotal += itemPrice * quantity;
+    subtotal += price * quantity;
   }
 
   // Calculate shipping from backend
@@ -421,7 +386,6 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     discount: parseFloat((discount || 0).toFixed(2)),
     // Empty when the coupon was rejected or produced no discount
     couponCode: discount > 0 ? validatedCouponCode : '',
-    rankDiscountCents,
     vat: parseFloat(vat.toFixed(2)),
     total: parseFloat(total.toFixed(2))
   };
@@ -590,8 +554,7 @@ module.exports = async function handler(req, res) {
         shippingAddress,
         req.body.couponCode || req.body.coupon || null,
         Number(req.body.discount || 0),
-        req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email) || '',
-        req.body.customerToken || req.headers.authorization?.replace('Bearer ', '') || ''
+        req.body.customer_email || req.body.email || (req.body.metadata && req.body.metadata.customer_email) || ''
       );
       logger.info('Backend price validation passed', {
         subtotal: totals.subtotal,
@@ -640,11 +603,9 @@ module.exports = async function handler(req, res) {
         items: buildItemsMeta(items),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
-        rank_discount_cents: String(totals.rankDiscountCents || 0),
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
         phone: (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || incomingMetadata.phone || '',
-        backend_validated: 'true',
-        referral_code: String(req.body.referral_code || '').toUpperCase().trim().slice(0, 50)
+        backend_validated: 'true'
       };
       metadata = metadataSanitized;
 

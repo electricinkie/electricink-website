@@ -215,20 +215,6 @@ window.appliedDiscount = 0;
     
     // Setup form handler
     setupFormHandler();
-    // Prefill referral code if customer is logged in via Ink Points
-    try {
-      const inkToken = localStorage.getItem('ei_loyalty_token');
-      if (inkToken) {
-        fetch(`${INTERNAL_API_URL}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${inkToken}` }
-        }).then(r => r.ok ? r.json() : null).then(data => {
-          if (data && data.customer && data.customer.referral_code) {
-            const refInput = document.getElementById('referralCode');
-            if (refInput) refInput.value = data.customer.referral_code;
-          }
-        }).catch(() => {});
-      }
-    } catch {}
     // Pré-preencher email do usuário logado (se houver) e bloquear edição
     try {
       // Attempt immediate fill (fast path)
@@ -1539,9 +1525,6 @@ window.appliedDiscount = 0;
           customer_name: `${elements.form.firstName.value} ${elements.form.lastName.value}`,
           items_count: cart.length
         }
-        ,referral_code: document.getElementById('referralCode') 
-          ? (document.getElementById('referralCode').value || '').toUpperCase().trim() 
-          : ''
       };
       // Attach coupon info if present (frontend sends validated coupon data)
       if (window.appliedCoupon) {
@@ -1565,14 +1548,13 @@ window.appliedDiscount = 0;
       // Include server-trusted ID token when available so backend can stamp user UID
       let authHeader = {};
 
-      const _inkToken = localStorage.getItem('ei_loyalty_token') || '';
       const response = await fetch(PAYMENT_INTENT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...authHeader
         },
-        body: JSON.stringify({ ...orderData, customerToken: _inkToken })
+        body: JSON.stringify(orderData)
       });
 
       if (!response.ok) {
