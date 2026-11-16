@@ -103,12 +103,21 @@
     const progressHtml = next ? `
       <div style="margin-bottom:12px;">
         <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#43BDAB;margin:0 0 6px 0;display:flex;align-items:center;">
-          ${next.label.replace('{gap}', `€${(next.threshold - sub).toFixed(2)}`)}
+          ${next.label.replace('{gap}', `${(next.threshold - sub).toFixed(2)}`)}
         </p>
         <div style="background:#f0f0f0;border-radius:99px;height:5px;overflow:hidden;">
           <div style="height:100%;background:#43BDAB;border-radius:99px;transition:width 0.4s ease;width:${Math.min(100, Math.round((sub / next.threshold) * 100))}%;"></div>
         </div>
-      </div>` : '';
+      </div>` : `
+      <div style="margin-bottom:12px;">
+        <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#43BDAB;margin:0 0 6px 0;display:flex;align-items:center;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Free shipping unlocked
+        </p>
+        <div style="background:#f0f0f0;border-radius:99px;height:5px;overflow:hidden;">
+          <div style="height:100%;background:#43BDAB;border-radius:99px;transition:width 0.4s ease;width:100%;"></div>
+        </div>
+        <p style="font-family:'Montserrat',sans-serif;font-size:10px;color:#666;margin:6px 0 0 0;">Your order ships free, same-day in Dublin D01–D08 included.</p>
+      </div>`;
 
     footerEl.innerHTML = `
       <div class="cart-drawer-subtotal">

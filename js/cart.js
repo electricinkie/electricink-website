@@ -93,7 +93,6 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
 
     const sub = totals.subtotal;
     const milestones = [
-      { threshold: 50,  label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> Add €{gap} more to activate your referral bonus' },
       { threshold: FREE_SHIPPING_THRESHOLD, label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Add €{gap} more for free shipping (incl. VAT)' },
     ];
 
@@ -101,8 +100,12 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     if (next) {
       const gap = (next.threshold - sub).toFixed(2);
       const pct = Math.min(100, Math.round((sub / next.threshold) * 100));
-      progressTextEl.innerHTML = next.label.replace('{gap}', `€${gap}`);
+      progressTextEl.innerHTML = next.label.replace('{gap}', `${gap}`);
       progressFillEl.style.width = `${pct}%`;
+      progressEl.style.display = 'block';
+    } else if (sub > 0) {
+      progressTextEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Free shipping unlocked<span style="display:block;font-weight:400;font-size:11px;color:#666;margin-top:4px;">Your order ships free, same-day in Dublin D01–D08 included.</span>';
+      progressFillEl.style.width = '100%';
       progressEl.style.display = 'block';
     } else {
       progressEl.style.display = 'none';
