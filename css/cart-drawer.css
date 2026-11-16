@@ -320,6 +320,49 @@
 }
 .bs-btn-continue:hover { background: #43BDAB; color: #FFFFFF; }
 
+/* ── FREE-SHIPPING PROGRESS (drawer footer and cart page summary) ── */
+.ship-progress { margin-bottom: 12px; }
+.ship-progress-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-primary, #43BDAB);
+  margin: 0 0 6px 0;
+  /* two lines reserved, so moving between bands never shifts the buttons below */
+  min-height: 2.8em;
+  display: flex;
+  align-items: center;
+}
+.ship-progress-text svg { flex-shrink: 0; margin-right: 5px; }
+.ship-progress-track {
+  background: #f0f0f0;
+  border-radius: 99px;
+  height: 5px;
+  overflow: hidden;
+}
+.ship-progress-fill {
+  height: 100%;
+  max-width: 100%;
+  background: var(--color-primary, #43BDAB);
+  border-radius: 99px;
+  transition: width 0.4s ease, background-color 0.4s ease;
+}
+/* Last €50: the fill turns to the accent so the closing stretch reads as a new stage */
+.ship-progress.is-close .ship-progress-fill { background: var(--color-accent, #ffa300); }
+.ship-progress-note {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #5A6866;
+  margin: 6px 0 0 0;
+}
+/* The drawer is black: the note uses the on-dark muted grey from DESIGN.md */
+#cart-drawer .ship-progress-note { color: #B9C7C5; }
+@media (prefers-reduced-motion: reduce) {
+  .ship-progress-fill { transition: none; }
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   #cart-drawer { display: none !important; }

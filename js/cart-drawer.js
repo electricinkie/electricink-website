@@ -96,27 +96,33 @@
         isReferred = !!_p.referred;
       }
     } catch (_) {}
-    const milestones = [
-      { threshold: 150, label: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Add €{gap} more for free shipping (orders over €150 incl. VAT)' },
+    // Free-shipping progress: the copy changes with how much is left, and the
+    // bar stays visible once the threshold is reached. Compared before any
+    // discount, like the checkout and the server.
+    const shipThreshold = 150;
+    const shipBands = [
+      { above: 100, text: `Free shipping on orders over €${shipThreshold} (incl. VAT). €{gap} to go.` },
+      { above: 50, text: 'You’re on your way: add €{gap} more for free shipping.' },
+      { above: 20, text: 'Getting close: just €{gap} more for free shipping.', close: true },
+      { above: 0, text: 'Almost there: only €{gap} more for free shipping.', close: true },
     ];
-    const next = milestones.find(m => sub < m.threshold);
-    const progressHtml = next ? `
-      <div style="margin-bottom:12px;">
-        <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#43BDAB;margin:0 0 6px 0;display:flex;align-items:center;">
-          ${next.label.replace('{gap}', `${(next.threshold - sub).toFixed(2)}`)}
-        </p>
-        <div style="background:#f0f0f0;border-radius:99px;height:5px;overflow:hidden;">
-          <div style="height:100%;background:#43BDAB;border-radius:99px;transition:width 0.4s ease;width:${Math.min(100, Math.round((sub / next.threshold) * 100))}%;"></div>
+    const truckIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>';
+    const checkIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+    const shipGap = shipThreshold - sub;
+    const shipBand = shipBands.find(b => shipGap > b.above);
+    const progressHtml = shipBand ? `
+      <div class="ship-progress${shipBand.close ? ' is-close' : ''}">
+        <p class="ship-progress-text">${truckIcon}<span>${shipBand.text.replace('{gap}', shipGap.toFixed(2))}</span></p>
+        <div class="ship-progress-track">
+          <div class="ship-progress-fill" style="width:${Math.min(100, Math.floor((sub / shipThreshold) * 100))}%;"></div>
         </div>
       </div>` : `
-      <div style="margin-bottom:12px;">
-        <p style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#43BDAB;margin:0 0 6px 0;display:flex;align-items:center;">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#43BDAB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11v14"/><path d="M15 3h4l3 3v9h-7z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Free shipping unlocked
-        </p>
-        <div style="background:#f0f0f0;border-radius:99px;height:5px;overflow:hidden;">
-          <div style="height:100%;background:#43BDAB;border-radius:99px;transition:width 0.4s ease;width:100%;"></div>
+      <div class="ship-progress is-unlocked">
+        <p class="ship-progress-text">${checkIcon}<span>Free shipping unlocked.</span></p>
+        <div class="ship-progress-track">
+          <div class="ship-progress-fill" style="width:100%;"></div>
         </div>
-        <p style="font-family:'Montserrat',sans-serif;font-size:10px;color:#666;margin:6px 0 0 0;">Your order ships free, same-day in Dublin D01–D08 included.</p>
+        <p class="ship-progress-note">Your order ships free, same-day in Dublin D01–D08 included.</p>
       </div>`;
 
     footerEl.innerHTML = `

@@ -91,25 +91,37 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     const progressFillEl = document.getElementById('cartProgressFill');
     if (!progressEl || !progressTextEl || !progressFillEl) return;
 
+    // Free-shipping progress: the copy changes with how much is left, and the
+    // bar stays visible once the threshold is reached. Compared before any
+    // discount, like the checkout and the server.
     const sub = totals.subtotal;
-    const milestones = [
-      { threshold: FREE_SHIPPING_THRESHOLD, label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Add €{gap} more for free shipping (incl. VAT)' },
+    const shipBands = [
+      { above: 100, text: `Free shipping on orders over €${FREE_SHIPPING_THRESHOLD} (incl. VAT). €{gap} to go.` },
+      { above: 50, text: 'You’re on your way: add €{gap} more for free shipping.' },
+      { above: 20, text: 'Getting close: just €{gap} more for free shipping.', close: true },
+      { above: 0, text: 'Almost there: only €{gap} more for free shipping.', close: true },
     ];
+    const truckIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
+    const checkIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+    const progressNoteEl = document.getElementById('cartProgressNote');
 
-    const next = milestones.find(m => sub < m.threshold);
-    if (next) {
-      const gap = (next.threshold - sub).toFixed(2);
-      const pct = Math.min(100, Math.round((sub / next.threshold) * 100));
-      progressTextEl.innerHTML = next.label.replace('{gap}', `${gap}`);
+    const gap = FREE_SHIPPING_THRESHOLD - sub;
+    const band = shipBands.find(b => gap > b.above);
+    if (band) {
+      const pct = Math.min(100, Math.floor((sub / FREE_SHIPPING_THRESHOLD) * 100));
+      progressTextEl.innerHTML = `${truckIcon}<span>${band.text.replace('{gap}', gap.toFixed(2))}</span>`;
       progressFillEl.style.width = `${pct}%`;
-      progressEl.style.display = 'block';
-    } else if (sub > 0) {
-      progressTextEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Free shipping unlocked<span style="display:block;font-weight:400;font-size:11px;color:#666;margin-top:4px;">Your order ships free, same-day in Dublin D01–D08 included.</span>';
-      progressFillEl.style.width = '100%';
-      progressEl.style.display = 'block';
+      progressEl.classList.toggle('is-close', !!band.close);
+      progressEl.classList.remove('is-unlocked');
+      if (progressNoteEl) progressNoteEl.hidden = true;
     } else {
-      progressEl.style.display = 'none';
+      progressTextEl.innerHTML = `${checkIcon}<span>Free shipping unlocked.</span>`;
+      progressFillEl.style.width = '100%';
+      progressEl.classList.remove('is-close');
+      progressEl.classList.add('is-unlocked');
+      if (progressNoteEl) progressNoteEl.hidden = false;
     }
+    progressEl.style.display = 'block';
   }
 
   // ────────── Update Quantity ──────────
