@@ -170,3 +170,11 @@ código continua no repo à espera de remoção.
 - js/cart-drawer.js tem o limiar de portes grátis (150) escrito à mão em vez de FREE_SHIPPING_THRESHOLD
 - js/checkout.js: comentário obsoleto sobre ?debug=true
 - checkout: envia ei_loyalty_token como customerToken e o rank discount está comentado em api/create-payment-intent.js
+
+## Contexto partilhado (HQ)
+- O contexto de negócio comum aos repos vive fora deste repo, em `/Users/appreciart/Developer/electric-ink-hq`
+- Antes de decisões de negócio (prioridades, preços, promoções, copy, ofertas), ler `/Users/appreciart/Developer/electric-ink-hq/contexto/README.md`
+- Handoffs entre sessões e repos: `/Users/appreciart/Developer/electric-ink-hq/contexto/handoffs/`
+- As regras técnicas deste ficheiro continuam a mandar neste repo; o HQ não as substitui
+- Em conflito entre o HQ e o código, manda o código: reporta a divergência em vez de a corrigir sozinho
+- Não copiar conteúdo do HQ para este ficheiro
