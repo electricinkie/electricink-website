@@ -1361,7 +1361,11 @@ function openNotifyMeModal() {
   const errorEl = document.getElementById('notifyMeError');
   const btn = document.getElementById('notifyMeSubmitBtn');
   if (!backdrop) return;
-  if (typeof gtag === 'function') gtag('event', 'notify_me_open');
+  if (typeof gtag === 'function') {
+    // Same product_id the waitlist receives in submitNotifyMe()
+    const productId = new URLSearchParams(window.location.search).get('id') || 'unknown';
+    gtag('event', 'notify_me_open', { product_id: productId });
+  }
   if (emailInput) emailInput.value = '';
   if (errorEl) errorEl.textContent = '';
   if (btn) { btn.textContent = 'Notify Me'; btn.disabled = false; }
@@ -1402,7 +1406,7 @@ async function submitNotifyMe() {
     });
 
     if (res.ok) {
-      if (typeof gtag === 'function') gtag('event', 'notify_me_signup', { method: 'modal' });
+      if (typeof gtag === 'function') gtag('event', 'notify_me_signup', { method: 'modal', product_id: productId });
       closeNotifyMeModal();
       window.toast.success("You're on the list! We'll notify you when it's back in stock.");
     } else {
