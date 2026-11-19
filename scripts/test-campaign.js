@@ -224,12 +224,13 @@ test('23 UMD: require exposes compute; window.EI_CAMPAIGN in vm', () => {
 const SUMI = CONFIG.bundles[0].variantIds;
 const sumi = (variantId, qty, o) => Object.assign({ productId: 'sumi', variantId, qty, listCents: 2600, paidCents: 2600, promoActive: false, stock: null }, o);
 const sumiSet = (qtys) => SUMI.map((v, i) => sumi(v, qtys ? qtys[i] : 1));
+const SUMI_EXTRA = 6 * 2600 - CONFIG.bundles[0].priceCents;
 
-test('24 full Sumi set, 1 set (6 x 2600) -> bundleExtra 7800', () => {
+test('24 full Sumi set, 1 set (6 x 2600) -> bundleExtra 6 x 2600 - priceCents', () => {
   const r = run(sumiSet());
   assert.strictEqual(r.ok, true); assert.strictEqual(r.bundleSets, 1);
-  assert.strictEqual(r.bundleExtraCents, 7800); assert.strictEqual(r.extraCents, 7800);
-  assert.deepStrictEqual(r.perBundle, [{ id: 'sumi-set', sets: 1, extraCents: 7800 }]);
+  assert.strictEqual(r.bundleExtraCents, SUMI_EXTRA); assert.strictEqual(r.extraCents, SUMI_EXTRA);
+  assert.deepStrictEqual(r.perBundle, [{ id: 'sumi-set', sets: 1, extraCents: SUMI_EXTRA }]);
 });
 test('25 one of the 6 variants missing -> bundleExtra 0', () => {
   const r = run(sumiSet().slice(0, 5));
@@ -237,19 +238,19 @@ test('25 one of the 6 variants missing -> bundleExtra 0', () => {
 });
 test('26 min qty 3, cap 2 -> sets 2 and BUNDLE_CAP_EXCEEDED', () => {
   const r = run(sumiSet([3, 3, 3, 3, 3, 3]));
-  assert.strictEqual(r.bundleSets, 2); assert.strictEqual(r.bundleExtraCents, 15600);
+  assert.strictEqual(r.bundleSets, 2); assert.strictEqual(r.bundleExtraCents, 2 * SUMI_EXTRA);
   assert.deepStrictEqual(r.violations, [{ code: 'BUNDLE_CAP_EXCEEDED', productId: 'sumi', variantId: null, allowed: 2, requested: 3 }]);
 });
 test('27 qty (2,1,1,1,1,1) -> 1 set', () => {
   const r = run(sumiSet([2, 1, 1, 1, 1, 1]));
-  assert.strictEqual(r.bundleSets, 1); assert.strictEqual(r.bundleExtraCents, 7800); assert.strictEqual(r.violations.length, 0);
+  assert.strictEqual(r.bundleSets, 1); assert.strictEqual(r.bundleExtraCents, SUMI_EXTRA); assert.strictEqual(r.violations.length, 0);
 });
 test('28 set + Vault (Raven 30): set unlocks Boost, total = bundle + Vault extra', () => {
   const r = run([L.raven30(4)].concat(sumiSet()));
   assert.strictEqual(r.boostUnlocked, true);
-  assert.strictEqual(r.bundleExtraCents, 7800);
+  assert.strictEqual(r.bundleExtraCents, SUMI_EXTRA);
   assert.strictEqual(r.perLine[0].extraCents, 1040);
-  assert.strictEqual(r.extraCents, 7800 + 1040);
+  assert.strictEqual(r.extraCents, SUMI_EXTRA + 1040);
 });
 test('29 priceCents above the sum of the 6 -> bundleExtra 0 (never negative)', () => {
   const cfg = clone(CONFIG); cfg.bundles[0].priceCents = 20000;

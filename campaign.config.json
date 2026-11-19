@@ -24,7 +24,7 @@
       "id": "sumi-set",
       "productId": "sumi",
       "variantIds": ["sumi-1-gi", "sumi-2-yuu", "sumi-3-jin", "sumi-4-rei", "sumi-5-makoto", "sumi-6-meiyo"],
-      "priceCents": 7800,
+      "priceCents": 10000,
       "capPerOrder": 2
     }
   ],
