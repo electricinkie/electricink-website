@@ -376,9 +376,9 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     throw campaignErr;
   }
 
-  // Calculate shipping from backend (free-shipping threshold after the campaign discount)
+  // Calculate shipping from backend (free-shipping threshold on the subtotal before discounts, same as coupons)
   const shippingOut = {};
-  const shipping = calculateShipping((Math.round(subtotal * 100) - campaignExtraCents) / 100, shippingAddress, shippingOut);
+  const shipping = calculateShipping(subtotal, shippingAddress, shippingOut);
 
   // ═══════════════════════════════════════════════════════════════
   // VALIDATE AND APPLY DISCOUNT (server-side verification)
