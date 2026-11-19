@@ -420,6 +420,10 @@ async function handlePaymentIntentSucceeded(event, requestId) {
     let items = [];
     try {
       items = JSON.parse(paymentIntent.metadata.items || '[]');
+      // Newer PaymentIntents split items into items, items_2, items_3, ... (whole items, in order)
+      for (let n = 2; paymentIntent.metadata[`items_${n}`] !== undefined; n++) {
+        items = items.concat(JSON.parse(paymentIntent.metadata[`items_${n}`]));
+      }
       // Warn if webhook received fewer items than what was originally in the cart.
       // This can happen when the items JSON was truncated to fit Stripe's 500-char metadata limit.
       const itemsCount = parseInt(paymentIntent.metadata.items_count || '0', 10);

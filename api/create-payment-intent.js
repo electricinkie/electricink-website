@@ -693,27 +693,40 @@ module.exports = async function handler(req, res) {
       // Build a sanitized metadata object (whitelist) to avoid client-side injection
       const incomingMetadata = req.body.metadata || {};
       // Build compact items JSON — Stripe metadata values are capped at 500 chars.
-      // Slice items array until the serialised string fits safely within 490 chars.
+      // Split whole items, in order, into chunks of up to 490 chars each:
+      // keys items, items_2, items_3, ... (the webhook joins them back). Never truncates.
+      const ITEMS_METADATA_MESSAGE = 'Your cart is too large to process as one order. Please split it into smaller orders and try again.';
       const buildItemsMeta = (itemsArr) => {
-        const full = JSON.stringify(itemsArr.map((it, i) => ({ id: it.id, v: totals.itemVariantIds[i] || '', q: it.quantity })));
-        if (full.length <= 490) return full;
-        // Drop items from the end until it fits
-        for (let len = itemsArr.length - 1; len > 0; len--) {
-          const candidate = JSON.stringify(itemsArr.slice(0, len).map((it, i) => ({ id: it.id, v: totals.itemVariantIds[i] || '', q: it.quantity })));
-          if (candidate.length <= 490) {
-            logger.warn('items metadata truncated to fit Stripe 500-char limit', { original: itemsArr.length, kept: len });
-            return candidate;
+        const chunks = [];
+        let current = [];
+        itemsArr.forEach((it, i) => {
+          const entry = { id: it.id, v: totals.itemVariantIds[i] || '', q: it.quantity };
+          if (JSON.stringify([entry]).length > 490) {
+            const itemErr = new Error(ITEMS_METADATA_MESSAGE);
+            itemErr.code = 'ITEMS_METADATA_LIMIT';
+            itemErr.reason = 'item_over_490_chars';
+            throw itemErr;
           }
-        }
-        return '[]';
+          if (current.length > 0 && JSON.stringify([...current, entry]).length > 490) {
+            chunks.push(current);
+            current = [];
+          }
+          current.push(entry);
+        });
+        if (current.length > 0) chunks.push(current);
+        const out = { items: '[]' };
+        chunks.forEach((chunk, n) => {
+          out[n === 0 ? 'items' : `items_${n + 1}`] = JSON.stringify(chunk);
+        });
+        return out;
       };
 
       const metadataSanitized = {
         // allow only minimal, non-sensitive fields from client
         customer_email: incomingMetadata.customer_email || incomingMetadata.email || '',
         customer_name: incomingMetadata.customer_name || incomingMetadata.name || '',
-        // Store compact items representation — guarded against Stripe 500-char value limit
-        items: buildItemsMeta(items),
+        // Store compact items representation — items, items_2, ... each under Stripe's 500-char value limit
+        ...buildItemsMeta(items),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
@@ -723,6 +736,28 @@ module.exports = async function handler(req, res) {
       metadata = metadataSanitized;
 
       const shippingMethodCharged = totals.shippingMethodCharged || shippingMethod;
+
+      const paymentIntentMetadata = {
+        ...metadata,
+        shipping_method: shippingMethodCharged,
+        // Only when the charged method differs from the requested one
+        // (e.g. 'same-day' outside D01-D08 or after the 2PM cutoff).
+        ...(shippingMethodCharged !== shippingMethod ? { requested_shipping_method: shippingMethod } : {}),
+        subtotal: totals.subtotal.toFixed(2),
+        shipping: totals.shipping.toFixed(2),
+        vat: totals.vat.toFixed(2),
+        items_count: items.length,
+        backend_validated: 'true', // Security flag
+        coupon_code: totals.couponCode || '',
+        discount_amount: String(Number(totals.discount || 0).toFixed(2))
+      };
+      // Stripe allows at most 50 metadata keys: reject before any PaymentIntent is created
+      if (Object.keys(paymentIntentMetadata).length > 50) {
+        const keysErr = new Error(ITEMS_METADATA_MESSAGE);
+        keysErr.code = 'ITEMS_METADATA_LIMIT';
+        keysErr.reason = 'over_50_metadata_keys';
+        throw keysErr;
+      }
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
@@ -741,20 +776,7 @@ module.exports = async function handler(req, res) {
             country: shippingAddress.country || ''
           }
         },
-        metadata: {
-          ...metadata,
-          shipping_method: shippingMethodCharged,
-          // Only when the charged method differs from the requested one
-          // (e.g. 'same-day' outside D01-D08 or after the 2PM cutoff).
-          ...(shippingMethodCharged !== shippingMethod ? { requested_shipping_method: shippingMethod } : {}),
-          subtotal: totals.subtotal.toFixed(2),
-          shipping: totals.shipping.toFixed(2),
-          vat: totals.vat.toFixed(2),
-          items_count: items.length,
-          backend_validated: 'true', // Security flag
-          coupon_code: totals.couponCode || '',
-          discount_amount: String(Number(totals.discount || 0).toFixed(2))
-        },
+        metadata: paymentIntentMetadata,
         automatic_payment_methods: {
           enabled: true,
         },
@@ -771,6 +793,11 @@ module.exports = async function handler(req, res) {
       // Black Cat Friday per-order limit: customer-facing 400, logged without customer data
       if (error && error.code === 'CAMPAIGN_LIMIT') {
         logger.warn('Campaign limit rejected', { message: error.message });
+        return res.status(400).json({ error: error.message });
+      }
+      // Items do not fit Stripe metadata limits: customer-facing 400, logged without customer data
+      if (error && error.code === 'ITEMS_METADATA_LIMIT') {
+        logger.warn('Items metadata over Stripe limits, rejected', { reason: error.reason, itemsCount: items.length });
         return res.status(400).json({ error: error.message });
       }
       captureException(error, {
