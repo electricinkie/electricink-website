@@ -1634,5 +1634,116 @@
     "reachCompliant": false,
     "stripe_price_id": "price_1SmqFJAiq7NBxfpwXE6xmQID",
     "orderOnRequest": true
+  },
+  "sumi": {
+    "id": "sumi",
+    "name": "Sumi",
+    "category": "Inks",
+    "subcategory": "Sumi Inks",
+    "description": "Sumi grey series in six levels, from 1 GI (lightest) to 6 MEIYO (darkest). Smooth Easy Glow flow for easy application. REACH compliant.",
+    "features": [
+      "REACH compliant (EU 2020/2081)",
+      "Six grey levels, from 1 GI (lightest) to 6 MEIYO (darkest)",
+      "Easy Glow technology — no sedimentation",
+      "No sedimentation or coagulation"
+    ],
+    "stripe": {
+      "productId": "prod_Vep7zILDfUivTj",
+      "priceId": "price_1UdVSrAiq7NBxfpwUMMOMP3Z"
+    },
+    "price": 26,
+    "size": "30mL",
+    "variants": [
+      {
+        "id": "sumi-1-gi",
+        "size": "30mL",
+        "label": "1 - GI",
+        "price": 26,
+        "priceId": "price_1UdVSrAiq7NBxfpwUMMOMP3Z",
+        "stripe_price_id": "price_1UdVSrAiq7NBxfpwUMMOMP3Z",
+        "quantity": 0,
+        "image": "/images/products/artistic-inks/sumi-1-gi.webp"
+      },
+      {
+        "id": "sumi-2-yuu",
+        "size": "30mL",
+        "label": "2 - YUU",
+        "price": 26,
+        "priceId": "price_1UdVSrAiq7NBxfpweSwkAJ2D",
+        "stripe_price_id": "price_1UdVSrAiq7NBxfpweSwkAJ2D",
+        "quantity": 0,
+        "image": "/images/products/artistic-inks/sumi-2-yuu.webp"
+      },
+      {
+        "id": "sumi-3-jin",
+        "size": "30mL",
+        "label": "3 - JIN",
+        "price": 26,
+        "priceId": "price_1UdVSrAiq7NBxfpw5tM1v6L2",
+        "stripe_price_id": "price_1UdVSrAiq7NBxfpw5tM1v6L2",
+        "quantity": 0,
+        "image": "/images/products/artistic-inks/sumi-3-jin.webp"
+      },
+      {
+        "id": "sumi-4-rei",
+        "size": "30mL",
+        "label": "4 - REI",
+        "price": 26,
+        "priceId": "price_1UdVSrAiq7NBxfpwFocHiGM2",
+        "stripe_price_id": "price_1UdVSrAiq7NBxfpwFocHiGM2",
+        "quantity": 0,
+        "image": "/images/products/artistic-inks/sumi-4-rei.webp"
+      },
+      {
+        "id": "sumi-5-makoto",
+        "size": "30mL",
+        "label": "5 - MAKOTO",
+        "price": 26,
+        "priceId": "price_1UdVSrAiq7NBxfpwRDC8LEO0",
+        "stripe_price_id": "price_1UdVSrAiq7NBxfpwRDC8LEO0",
+        "quantity": 0,
+        "image": "/images/products/artistic-inks/sumi-5-makoto.webp"
+      },
+      {
+        "id": "sumi-6-meiyo",
+        "size": "30mL",
+        "label": "6 - MEIYO",
+        "price": 26,
+        "priceId": "price_1UdVSrAiq7NBxfpwOhQYMHfO",
+        "stripe_price_id": "price_1UdVSrAiq7NBxfpwOhQYMHfO",
+        "quantity": 0,
+        "image": "/images/products/artistic-inks/sumi-6-meiyo.webp"
+      }
+    ],
+    "image": "/images/products/artistic-inks/30ml-sumi.webp",
+    "images": [
+      "/images/products/artistic-inks/30ml-sumi.webp"
+    ],
+    "content": {
+      "tagline": "Six Grey Levels, Lightest to Darkest",
+      "technology": "Easy Glow Technology: no sedimentation High Resistance to environmental factors, gamma-sterilized",
+      "compliance": "Fully compliant with Regulation (EU) 2020/2081 (REACH) for tattoo and permanent makeup inks."
+    },
+    "inventory": {
+      "stock_quantity": 0,
+      "stock_status": "in_stock",
+      "low_stock_threshold": 5
+    },
+    "seo": {
+      "meta_title": "Sumi | Electric Ink Ireland",
+      "meta_description": "Sumi by Electric Ink: a REACH-compliant grey tattoo ink series in six levels, from 1 GI (lightest) to 6 MEIYO (darkest), with smooth Easy Glow flow. Shop now at Electric Ink Ireland.",
+      "keywords": [
+        "inks",
+        "sumi",
+        "grey wash",
+        "REACH compliant",
+        "tattoo ink"
+      ]
+    },
+    "inStock": true,
+    "featured": false,
+    "reachCompliant": true,
+    "stripe_price_id": "price_1UdVSrAiq7NBxfpwUMMOMP3Z",
+    "orderOnRequest": false
   }
 }
