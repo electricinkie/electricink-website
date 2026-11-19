@@ -492,6 +492,9 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     discount: parseFloat((discount || 0).toFixed(2)),
     // Empty when the coupon was rejected or produced no discount
     couponCode: discount > 0 ? validatedCouponCode : '',
+    // Black Cat Friday extra (already included in discount); label only when it applied
+    campaignExtra: parseFloat((campaignExtraCents / 100).toFixed(2)),
+    campaignLabel: campaignExtraCents > 0 ? campaignConfig.label : '',
     vat: parseFloat(vat.toFixed(2)),
     total: parseFloat(total.toFixed(2))
   };
@@ -761,6 +764,11 @@ module.exports = async function handler(req, res) {
         calculatedTotals: totals // Send back for frontend verification
       });
     } catch (error) {
+      // Black Cat Friday per-order limit: customer-facing 400, logged without customer data
+      if (error && error.code === 'CAMPAIGN_LIMIT') {
+        logger.warn('Campaign limit rejected', { message: error.message });
+        return res.status(400).json({ error: error.message });
+      }
       captureException(error, {
         endpoint: 'create-payment-intent',
         context: { items, shippingAddress }
