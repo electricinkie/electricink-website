@@ -335,9 +335,50 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     }
   }
 
-  // Calculate shipping from backend
+  // Black Cat Friday: extra discount in integer cents. Any failure = no campaign
+  // discount and the payment continues at normal prices; only per-order limits reject.
+  let campaignExtraCents = 0;
+  let campaignWindowOpen = false;
+  let campaignViolation = null;
+  if (campaign) {
+    try {
+      const campaignNowMs = Date.now();
+      campaignWindowOpen = campaign.isActive(campaignConfig, campaignNowMs) === true;
+      const campaignResult = campaign.compute({ config: campaignConfig, nowMs: campaignNowMs, lines: campaignLines });
+      if (campaignResult && campaignResult.ok === true) {
+        if (Array.isArray(campaignResult.violations) && campaignResult.violations.length > 0) {
+          campaignViolation = campaignResult.violations[0];
+        } else if (campaignResult.active === true && Number.isInteger(campaignResult.extraCents) && campaignResult.extraCents > 0) {
+          campaignExtraCents = campaignResult.extraCents;
+        }
+      } else {
+        logger.warn('Campaign compute failed, no campaign discount', { error: campaignResult && campaignResult.error });
+      }
+    } catch (err) {
+      logger.error('Campaign compute threw, no campaign discount', { error: err && err.message });
+      campaignExtraCents = 0;
+      campaignViolation = null;
+    }
+  }
+  if (campaignViolation) {
+    let campaignMessage = 'Black Cat Friday has a per-order limit on one of your items. Please lower the quantity and try again.';
+    if (campaignViolation.code === 'CAP_EXCEEDED') {
+      campaignMessage = `Black Cat Friday limit: up to ${campaignViolation.allowed} per order on one of your Vault items. Please lower the quantity and try again.`;
+    } else if (campaignViolation.code === 'STOCK_EXCEEDED') {
+      campaignMessage = campaignViolation.allowed > 0
+        ? `Only ${campaignViolation.allowed} left of one of your Vault items. Please lower the quantity and try again.`
+        : 'One of your Vault items just sold out. Please remove it and try again.';
+    } else if (campaignViolation.code === 'BUNDLE_CAP_EXCEEDED') {
+      campaignMessage = `Set deals are limited to ${campaignViolation.allowed} per order. Please lower the quantity and try again.`;
+    }
+    const campaignErr = new Error(campaignMessage);
+    campaignErr.code = 'CAMPAIGN_LIMIT';
+    throw campaignErr;
+  }
+
+  // Calculate shipping from backend (free-shipping threshold after the campaign discount)
   const shippingOut = {};
-  const shipping = calculateShipping(subtotal, shippingAddress, shippingOut);
+  const shipping = calculateShipping((Math.round(subtotal * 100) - campaignExtraCents) / 100, shippingAddress, shippingOut);
 
   // ═══════════════════════════════════════════════════════════════
   // VALIDATE AND APPLY DISCOUNT (server-side verification)
@@ -345,8 +386,12 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   let discount = null;
   // Code as resolved by Stripe (promotion code or coupon id), never the raw client input.
   let validatedCouponCode = '';
+  if (campaignExtraCents > 0) {
+    discount = campaignExtraCents / 100;
+    validatedCouponCode = campaignConfig.label;
+  }
 
-  if (couponCode && Number(clientDiscount) > 0) {
+  if (couponCode && Number(clientDiscount) > 0 && !campaignWindowOpen) {
     try {
       // Try promotion code first
       const promotions = await stripe.promotionCodes.list({
