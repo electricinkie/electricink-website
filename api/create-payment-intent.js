@@ -48,12 +48,14 @@ async function loadProducts() {
       const basePriceEx = promoActive ? row.promo_price_ex : row.price_ex;
       const priceGross = parseFloat((parseFloat(basePriceEx) * 1.23).toFixed(2));
       if (!merged[pid]) {
-        merged[pid] = { basic: { price: priceGross }, variants: [] };
+        merged[pid] = { id: pid, basic: { price: priceGross }, variants: [] };
       }
       merged[pid].variants.push({
         id: row.variant_id,
         label: row.label,
         price: priceGross,
+        listPrice: parseFloat((parseFloat(row.price_ex) * 1.23).toFixed(2)),
+        promoActive,
         stock: row.stock
       });
     }
