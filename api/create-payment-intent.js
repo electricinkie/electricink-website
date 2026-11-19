@@ -261,6 +261,9 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   }
 
   let subtotal = 0;
+  // Black Cat Friday: one line per resolved variant, integer cents VAT included.
+  // Built here only; compute() is wired in a later step.
+  const campaignLines = [];
 
   // Calculate subtotal from backend prices (source of truth)
   for (const item of cartItems) {
@@ -302,6 +305,34 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
 
     // Use BACKEND price (not frontend!)
     subtotal += price * quantity;
+
+    // Campaign line: euros -> cents only at this boundary. Missing or invalid data
+    // becomes a safe default (no Vault discount on that line), never a guess.
+    const campaignVariant = resolved.variantId
+      ? (product.variants || []).find(v => v.id === resolved.variantId || v.priceId === resolved.variantId || v.stripe_price_id === resolved.variantId)
+      : (Array.isArray(product.variants) ? product.variants[0] : null);
+    const lineProductId = product.id || resolved.matchedId || '';
+    const lineVariantId = (campaignVariant && campaignVariant.id) || resolved.variantId || lineProductId;
+    const linePaidCents = Math.round(price * 100);
+    const lineListOk = !!campaignVariant && typeof campaignVariant.listPrice === 'number' && Number.isFinite(campaignVariant.listPrice);
+    const lineStockNum = (campaignVariant && campaignVariant.stock !== null && campaignVariant.stock !== undefined && campaignVariant.stock !== '') ? Number(campaignVariant.stock) : NaN;
+    const lineStock = Number.isInteger(lineStockNum) ? Math.max(0, lineStockNum) : null;
+    // Same variant on several lines: merge so per-order caps and stock apply to the total
+    const lineExisting = campaignLines.find(l => l.productId === lineProductId && l.variantId === lineVariantId);
+    if (lineExisting) {
+      lineExisting.qty += quantity;
+      lineExisting.paidCents = Math.min(lineExisting.paidCents, linePaidCents);
+    } else {
+      campaignLines.push({
+        productId: lineProductId,
+        variantId: lineVariantId,
+        qty: quantity,
+        listCents: lineListOk ? Math.round(campaignVariant.listPrice * 100) : linePaidCents,
+        paidCents: linePaidCents,
+        promoActive: lineListOk && campaignVariant.promoActive === true,
+        stock: lineStock
+      });
+    }
   }
 
   // Calculate shipping from backend
