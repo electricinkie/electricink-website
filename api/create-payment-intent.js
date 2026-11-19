@@ -17,6 +17,34 @@ logger.info('Environment check', {
   hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET
 });
 
+// Black Cat Friday campaign: lib/campaign.js + campaign.config.json at the repo root
+// (never api/lib, which .vercelignore excludes). Loaded defensively: any failure or an
+// invalid config leaves campaign = null and payments continue at normal prices.
+// Not wired into the totals yet.
+let campaign = null;
+let campaignConfig = null;
+try {
+  const campaignLib = require('../lib/campaign');
+  const campaignCfg = require('../campaign.config.json');
+  const campaignCheck = campaignLib.validateConfig(campaignCfg);
+  if (campaignCheck.ok) {
+    campaign = campaignLib;
+    campaignConfig = campaignCfg;
+    logger.info('Campaign loaded', {
+      label: campaignCfg.label,
+      enabled: campaignCfg.enabled,
+      startsAt: campaignCfg.startsAt,
+      endsAt: campaignCfg.endsAt,
+      vaultItems: campaignCfg.vault.items.length,
+      bundles: Array.isArray(campaignCfg.bundles) ? campaignCfg.bundles.length : 0
+    });
+  } else {
+    logger.error('Campaign disabled: invalid config', { errors: campaignCheck.errors });
+  }
+} catch (err) {
+  logger.error('Campaign disabled: failed to load', { error: err && err.message });
+}
+
 // Load and merge all JSON product files from `data/` so the backend
 // has a single `stripeProducts` object even if `stripe-products.json` is missing.
 async function loadProducts() {
