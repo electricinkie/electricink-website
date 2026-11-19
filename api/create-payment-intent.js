@@ -264,6 +264,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   // Black Cat Friday: one line per resolved variant, integer cents VAT included.
   // Built here only; compute() is wired in a later step.
   const campaignLines = [];
+  // Variant the server resolved for each item, same order as cartItems ('' when none)
+  const itemVariantIds = [];
 
   // Calculate subtotal from backend prices (source of truth)
   for (const item of cartItems) {
@@ -305,6 +307,7 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
 
     // Use BACKEND price (not frontend!)
     subtotal += price * quantity;
+    itemVariantIds.push(resolved.variantId || '');
 
     // Campaign line: euros -> cents only at this boundary. Missing or invalid data
     // becomes a safe default (no Vault discount on that line), never a guess.
@@ -496,7 +499,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     campaignExtra: parseFloat((campaignExtraCents / 100).toFixed(2)),
     campaignLabel: campaignExtraCents > 0 ? campaignConfig.label : '',
     vat: parseFloat(vat.toFixed(2)),
-    total: parseFloat(total.toFixed(2))
+    total: parseFloat(total.toFixed(2)),
+    itemVariantIds
   };
 }
 
@@ -691,11 +695,11 @@ module.exports = async function handler(req, res) {
       // Build compact items JSON — Stripe metadata values are capped at 500 chars.
       // Slice items array until the serialised string fits safely within 490 chars.
       const buildItemsMeta = (itemsArr) => {
-        const full = JSON.stringify(itemsArr.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity })));
+        const full = JSON.stringify(itemsArr.map((it, i) => ({ id: it.id, v: totals.itemVariantIds[i] || '', q: it.quantity })));
         if (full.length <= 490) return full;
         // Drop items from the end until it fits
         for (let len = itemsArr.length - 1; len > 0; len--) {
-          const candidate = JSON.stringify(itemsArr.slice(0, len).map(it => ({ id: it.id, v: it.variant || '', q: it.quantity })));
+          const candidate = JSON.stringify(itemsArr.slice(0, len).map((it, i) => ({ id: it.id, v: totals.itemVariantIds[i] || '', q: it.quantity })));
           if (candidate.length <= 490) {
             logger.warn('items metadata truncated to fit Stripe 500-char limit', { original: itemsArr.length, kept: len });
             return candidate;
