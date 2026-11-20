@@ -364,15 +364,15 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     }
   }
   if (campaignViolation) {
-    let campaignMessage = 'Black Cat Friday has a per-order limit on one of your items. Please lower the quantity and try again.';
+    let campaignMessage = 'One item in your cart is over the Black Cat Friday limit per order. Please lower the quantity. Go back to your cart.';
     if (campaignViolation.code === 'CAP_EXCEEDED') {
-      campaignMessage = `Black Cat Friday limit: up to ${campaignViolation.allowed} per order on one of your Vault items. Please lower the quantity and try again.`;
+      campaignMessage = `Black Cat Friday deals are limited to ${campaignViolation.allowed} per item in each order. Please lower the quantity. Go back to your cart.`;
     } else if (campaignViolation.code === 'STOCK_EXCEEDED') {
       campaignMessage = campaignViolation.allowed > 0
-        ? `Only ${campaignViolation.allowed} left of one of your Vault items. Please lower the quantity and try again.`
-        : 'One of your Vault items just sold out. Please remove it and try again.';
+        ? `Only ${campaignViolation.allowed} left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.`
+        : 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.';
     } else if (campaignViolation.code === 'BUNDLE_CAP_EXCEEDED') {
-      campaignMessage = `Set deals are limited to ${campaignViolation.allowed} per order. Please lower the quantity and try again.`;
+      campaignMessage = `Black Cat Friday set deals are limited to ${campaignViolation.allowed} per order. Please lower the quantity. Go back to your cart.`;
     }
     const campaignErr = new Error(campaignMessage);
     campaignErr.code = 'CAMPAIGN_LIMIT';
@@ -561,7 +561,7 @@ module.exports = async function handler(req, res) {
   const checkoutSchema = z.object({
     items: z.array(
       z.object({
-        id: z.string().min(1, 'Product ID required'),
+        id: z.string().min(1, 'Product ID required').max(200, 'Product ID too long'),
         quantity: z.number().int().positive().max(100, 'Max 100 units per product'),
         variant: z.string().optional(),
         // Require Stripe price id provided by frontend

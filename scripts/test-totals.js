@@ -214,18 +214,18 @@ const RAVEN = 'raven-30', FINE = 'raven-fineline-240', CART = 'cartridge-box-20'
     h = reset({ now: OPEN });
     res = await call(h, SUMI.map((v) => [v, 3]));
     // 3 sets > cap 2 -> CAMPAIGN_LIMIT message for BUNDLE_CAP_EXCEEDED with allowed 2
-    expect400(res, 'Set deals are limited to 2 per order. Please lower the quantity and try again.');
+    expect400(res, 'Black Cat Friday set deals are limited to 2 per order. Please lower the quantity. Go back to your cart.');
   });
 
   await test('06 per-variant cap: 7 x Raven 30 -> 400; 4 x Fineline 240 -> 400', async () => {
     let h = reset({ now: OPEN });
     let res = await call(h, [[RAVEN, 7], [CART, 1]]);
     // cap 6 on raven-30 -> CAP_EXCEEDED allowed 6
-    expect400(res, 'Black Cat Friday limit: up to 6 per order on one of your Vault items. Please lower the quantity and try again.');
+    expect400(res, 'Black Cat Friday deals are limited to 6 per item in each order. Please lower the quantity. Go back to your cart.');
     h = reset({ now: OPEN });
     res = await call(h, [[FINE, 4], [CART, 1]]);
     // cap 3 on raven-fineline-240 -> CAP_EXCEEDED allowed 3
-    expect400(res, 'Black Cat Friday limit: up to 3 per order on one of your Vault items. Please lower the quantity and try again.');
+    expect400(res, 'Black Cat Friday deals are limited to 3 per item in each order. Please lower the quantity. Go back to your cart.');
   });
 
   await test('07 free shipping on the subtotal BEFORE the campaign discount', async () => {
