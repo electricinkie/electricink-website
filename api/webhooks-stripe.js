@@ -843,14 +843,12 @@ async function handlePaymentIntentFailed(paymentIntent, requestId) {
     paymentIntentId: paymentIntent.id,
     amount: paymentIntent.amount,
     currency: paymentIntent.currency,
-    email: paymentIntent.metadata?.customer_email || paymentIntent.receipt_email || 'unknown',
     requestId
   });
 
   logger.warn('Failed payment', {
     paymentIntentId: paymentIntent.id,
     amount: paymentIntent.amount,
-    customerEmail: paymentIntent.metadata?.customer_email || paymentIntent.receipt_email || 'unknown',
     failureReason: paymentIntent.last_payment_error?.message || 'Unknown error',
     requestId
   });
