@@ -87,7 +87,7 @@ module.exports = async (req, res) => {
     }
 
     const upperCode = code.trim().toUpperCase();
-    logger.info('[COUPON] Validating', { code: upperCode, email, subtotal });
+    logger.info('[COUPON] Validating', { code: upperCode, subtotal });
 
     // Black Cat Friday: no coupons while the campaign window is open (checked before
     // any Stripe call). If the campaign failed to load or isActive throws, carry on as usual.
@@ -150,7 +150,7 @@ module.exports = async (req, res) => {
           }
           
           if (customerEmail !== restrictedEmail) {
-            logger.warn('[COUPON] Email restriction failed', { customerEmail });
+            logger.warn('[COUPON] Email restriction failed', { code: upperCode });
             return res.json({ 
               valid: false, 
               message: 'This coupon is not available for your email' 
@@ -206,7 +206,7 @@ module.exports = async (req, res) => {
         if (checkRes.ok) {
           const checkData = await checkRes.json();
           if (checkData.has_orders) {
-            logger.warn('[COUPON] Not first order', { email });
+            logger.warn('[COUPON] Not first order', { code: upperCode });
             return res.json({ valid: false, message: 'Coupon valid only for first order' });
           }
         }
