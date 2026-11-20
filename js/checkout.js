@@ -709,7 +709,7 @@ window.appliedDiscount = 0;
             console.error('❌ Express checkout error:', error);
             ev.complete('fail');
             if (window.toast) {
-              window.toast.error('Payment failed. Retry.');
+              window.toast.error((error && error.userMessage) || 'Payment failed. Retry.', 8000);
             }
           }
         });
@@ -1272,7 +1272,7 @@ window.appliedDiscount = 0;
         console.error('Checkout error:', error);
         const checkoutErrorMessage = (error && error.userMessage) || 'Payment processing failed. Please try again.';
         if (window.toast) {
-          window.toast.error(checkoutErrorMessage, 5000);
+          window.toast.error(checkoutErrorMessage, 8000);
         }
         showError(checkoutErrorMessage);
         setLoading(false);
