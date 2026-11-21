@@ -295,7 +295,7 @@
 
     const card = document.createElement('a');
     card.className = compact ? 'bcf-card bcf-card--compact' : 'bcf-card';
-    card.href = '/products.html?id=' + encodeURIComponent(item.productId);
+    card.href = '/products.html?id=' + encodeURIComponent(item.productId) + '&variant=' + encodeURIComponent(item.variantId);
     card.dataset.productId = item.productId;
     card.dataset.variantId = item.variantId;
 
