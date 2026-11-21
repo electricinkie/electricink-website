@@ -188,7 +188,7 @@
       const lib = window.EI_CAMPAIGN;
       if (!lib || !lib.validateConfig(config).ok || !lib.isActive(config, Date.now())) return;
       const lines = cart.map(item => {
-        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === item.id);
+        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === item.id) || rows.find(r => r.id === item.id);
         if (!row) throw new Error('unmapped');
         const stockNum = (row.stock === null || row.stock === undefined || row.stock === '') ? NaN : Number(row.stock);
         return {
