@@ -549,6 +549,10 @@ import { INTERNAL_API_URL } from '/js/constants.js';
         // none available - choose first option so select isn't empty
         variantSelect.selectedIndex = 0;
       }
+      // ?variant=<id> pre-selects that variant; anything unknown or unavailable is ignored.
+      const wanted = urlParams.get('variant');
+      const match = wanted && Array.from(variantSelect.options).find(o => o.value === wanted && !o.disabled);
+      if (match) variantSelect.value = match.value;
     }
 
     // Update price and image on change (defensive: handle missing dataset.price)
