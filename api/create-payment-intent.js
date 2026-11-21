@@ -802,7 +802,7 @@ module.exports = async function handler(req, res) {
       }
       captureException(error, {
         endpoint: 'create-payment-intent',
-        context: { items, shippingAddress }
+        context: { itemsCount: Array.isArray(items) ? items.length : 0 }
       });
       logger.error('Error creating payment intent', error.message);
       if (error.message.includes('Invalid')) {
@@ -813,7 +813,7 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     captureException(error, {
       endpoint: 'create-payment-intent',
-      context: { items: req.body?.items || req.body?.cartItems, shippingAddress: req.body?.shippingAddress }
+      context: { itemsCount: Array.isArray(req.body?.items) ? req.body.items.length : 0 }
     });
     logger.error('Error processing request', error.message);
     return res.status(500).json({ error: 'Internal server error' });
