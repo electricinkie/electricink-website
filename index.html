@@ -29,12 +29,13 @@
   <!-- CSS Files -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/toast.css">
   <link rel="stylesheet" href="css/mobile-header.css">
   <link rel="stylesheet" href="css/desktop-header.css">
   <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/bcf-hero.css">
   <link rel="stylesheet" href="css/benefits.css">
   <link rel="stylesheet" href="css/categories.css">
   <link rel="stylesheet" href="css/new-arrivals.css">
@@ -62,8 +63,37 @@
   <!-- Hero Section -->
   <section class="hx" data-hx role="region" aria-roledescription="carousel" aria-label="Featured products" tabindex="0">
 
-    <!-- Slide 1 · Split: Raven Black (left bottle) + Ghost White (right bottle) -->
-    <article class="hx-slide is-active" data-layout="split" data-label="Raven Black / Ghost White" data-duration="9000" style="--cx-m: .5;" role="group" aria-roledescription="slide" aria-label="1 of 2">
+    <!-- Slide 1 · Black Cat Friday (remove this whole article after 30 Nov; markup contract in css/bcf-hero.css) -->
+    <article class="hx-slide is-active" data-label="Black Cat Friday" data-duration="12000" role="group" aria-roledescription="slide" aria-label="1 of 3">
+      <div class="bcf-hero" data-bcf-phase="before">
+        <svg class="bcf-eyes" viewBox="70 215 1226 355" role="img" aria-label="Two teal cat eyes">
+          <g class="bcf-look"><g class="bcf-squint">
+            <path class="bcf-eye" fill="#43BDAB" d="M 331.347656 364.023438 C 378.164062 390.308594 417.980469 427.460938 447.441406 472.351562 C 394.675781 529.566406 312.152344 548.429688 239.769531 519.816406 C 133.3125 481.375 70.851562 370.992188 92.710938 259.9375 C 108.585938 241.828125 132.355469 232.683594 156.277344 235.488281 C 187.945312 241.429688 215.152344 261.53125 230.140625 290.054688 C 253.816406 332.671875 254.058594 384.4375 230.785156 427.273438 C 272.574219 423.722656 310.050781 400.152344 331.347656 364.023438 Z"/>
+            <path class="bcf-eye" fill="#43BDAB" d="M 1209.722656 235.488281 C 1233.644531 232.683594 1257.414062 241.824219 1273.285156 259.941406 C 1295.152344 370.992188 1232.6875 481.375 1126.230469 519.816406 C 1053.847656 548.429688 971.324219 529.566406 918.558594 472.351562 C 948.019531 427.460938 987.832031 390.3125 1034.652344 364.023438 C 1055.949219 400.152344 1093.429688 423.722656 1135.214844 427.273438 C 1111.941406 384.4375 1112.183594 332.671875 1135.859375 290.054688 C 1150.847656 261.53125 1178.054688 241.429688 1209.722656 235.488281 Z"/>
+          </g></g>
+        </svg>
+        <p class="bcf-small" data-bcf-small></p>
+        <h2 class="bcf-title">Black Cat<br>Friday</h2>
+        <p class="bcf-dates" data-bcf-dates>27–30 NOV</p>
+        <p class="bcf-url">electricink.ie</p>
+        <div class="bcf-countdown" data-bcf-countdown hidden>
+          <p class="bcf-count-label" data-bcf-label></p>
+          <div class="bcf-count-grid">
+            <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-d>00</span><span class="bcf-count-unit">days</span></div>
+            <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-h>00</span><span class="bcf-count-unit">hours</span></div>
+            <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-m>00</span><span class="bcf-count-unit">minutes</span></div>
+            <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-s>00</span><span class="bcf-count-unit">seconds</span></div>
+          </div>
+        </div>
+        <div class="bcf-actions">
+          <a class="bcf-btn bcf-btn--solid" href="/black-cat-friday#vault">Shop the Vault</a>
+          <a class="bcf-btn bcf-btn--outline" href="/black-cat-friday#how">How it works</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Slide 2 · Split: Raven Black (left bottle) + Ghost White (right bottle) -->
+    <article class="hx-slide" data-layout="split" data-label="Raven Black / Ghost White" data-duration="9000" style="--cx-m: .5;" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true">
       <div class="hx-media">
         <img src="/images/home/hero-slides/easy-glow-black-white.webp" alt="Raven Black and Ghost White 240 mL bottles side by side" width="1920" height="1080" loading="eager" fetchpriority="high" decoding="async">
         <div class="hx-shade hx-shade-l"></div>
@@ -87,8 +117,8 @@
       </div>
     </article>
 
-    <!-- Slide 2 · InkCap: product on the left, copy on the right -->
-    <article class="hx-slide" data-layout="right" data-anchor="left" data-label="InkCap" data-duration="7000" style="--cx-m: .17; --zoom-d: 1.25; --zx: .1; --zy: .55;" role="group" aria-roledescription="slide" aria-label="2 of 2" aria-hidden="true">
+    <!-- Slide 3 · InkCap: product on the left, copy on the right -->
+    <article class="hx-slide" data-layout="right" data-anchor="left" data-label="InkCap" data-duration="7000" style="--cx-m: .17; --zoom-d: 1.25; --zx: .1; --zy: .55;" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true">
       <div class="hx-media">
         <img src="/images/home/hero-slides/inkcap.webp" alt="InkCap tub with blue silicone ink cups" width="1920" height="1080" loading="eager" decoding="async">
         <div class="hx-shade"></div>
@@ -975,5 +1005,6 @@
   <script defer src="/_vercel/speed-insights/script.js"></script>
 
   <script src="/js/cart-drawer.js"></script>
+  <script defer src="/js/bcf-countdown.js"></script>
 </body>
 </html>
