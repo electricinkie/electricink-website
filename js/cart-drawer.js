@@ -208,8 +208,12 @@
       const kitSets = r.perBundle.find(b => b.sets > 0);
       const kit = kitSets ? config.bundles.find(b => b.id === kitSets.id) : null;
       let text;
-      if (r.violations.length) text = 'Max reached on this one. Others are still open.';
-      else if (kit) text = `Sumi Set ✓ all ${kit.variantIds.length} for €${euros(kit.priceCents)}.`;
+      if (r.violations.length) text = r.violations[0].code === 'STOCK_EXCEEDED'
+        ? (r.violations[0].allowed > 0 ? `Not enough stock for one item: only ${r.violations[0].allowed} left.` : 'One item in your cart is sold out.')
+        : r.violations[0].code === 'BUNDLE_CAP_EXCEEDED'
+          ? `Limit reached: ${r.violations[0].allowed} Sumi Set${r.violations[0].allowed === 1 ? '' : 's'} per order.`
+          : `Limit reached: ${r.violations[0].allowed} per order on one item. Others are still open.`;
+      else if (kit && kitSets.extraCents > 0) text = `Sumi Set ✓ €${euros(kit.priceCents)} instead of €${euros(kit.priceCents + kitSets.extraCents / kitSets.sets)}. You save €${euros(kitSets.extraCents / kitSets.sets)}.`;
       else if (r.boostUnlocked && r.boostedUnits > 0) text = `60% unlocked ✓ You save an extra €${((r.extraCents - r.bundleExtraCents) / 100).toFixed(2)}.`;
       else if (r.boostUnlocked && hasVault) return;
       else if (hasVault) text = 'Vault 50% ✓ Add any other item of €10 or more to unlock 60%.';
