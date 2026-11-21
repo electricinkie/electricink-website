@@ -400,8 +400,54 @@ window.appliedDiscount = 0;
   // EXPRESS CHECKOUT (APPLE PAY / GOOGLE PAY)
   // ============================================
   
+  // Black Cat Friday window. Display only: the server decides the price.
+  // One load of the lib and of the config per page load (the promise is kept and reused).
+  const CAMPAIGN_WINDOW_TIMEOUT_MS = 3000;
+  let campaignConfigPromise = null;
+  function loadCampaignLib() {
+    if (window.EI_CAMPAIGN) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = '/lib/campaign.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+  function loadCampaignConfig() {
+    if (!campaignConfigPromise) {
+      campaignConfigPromise = Promise.all([
+        loadCampaignLib(),
+        fetch('/campaign.config.json').then(r => { if (!r.ok) throw new Error('config'); return r.json(); })
+      ]).then(([, config]) => {
+        const lib = window.EI_CAMPAIGN;
+        if (!lib || !lib.validateConfig(config).ok) throw new Error('config');
+        return { lib, config };
+      });
+    }
+    return campaignConfigPromise;
+  }
+  // Fail open: any failure, or no answer in 3 s, means "not open", so the Express button shows as before.
+  // The race keeps a handler on the shared promise, so a late rejection is never unhandled.
+  async function isCampaignWindowOpen() {
+    let timer;
+    try {
+      const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('timeout')), CAMPAIGN_WINDOW_TIMEOUT_MS);
+      });
+      const { lib, config } = await Promise.race([loadCampaignConfig(), timeout]);
+      return lib.isActive(config, Date.now()) === true;
+    } catch (_) {
+      return false;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function initExpressCheckout() {
     try {
+      // Black Cat Friday: the wallet sheet would show the total without the campaign, so it is hidden in the window
+      if (await isCampaignWindowOpen()) return;
       debugLog('🚀 Initializing Express Checkout...');
       debugLog('   Cart total:', totals.total);
       debugLog('   Cart subtotal:', totals.subtotal);
