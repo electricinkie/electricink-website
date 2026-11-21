@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Back in a few minutes | Electric Ink</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    main { max-width: 520px; }
+    .logo {
+      width: 160px;
+      max-width: 55vw;
+      height: auto;
+      margin-bottom: 32px;
+      animation: pulse 3.6s ease-in-out infinite;
+    }
+    h1 {
+      font-family: 'Outfit', Arial, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.6rem, 6vw, 2.2rem);
+      color: #43BDAB;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    p { font-size: 1rem; line-height: 1.6; color: #d8d8d8; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 0 rgba(67,189,171,0)); }
+      50% { opacity: 1; filter: drop-shadow(0 0 18px rgba(67,189,171,0.7)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .logo { animation: none; opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="logo" src="/images/logos/logo-white.png" alt="Electric Ink">
+    <h1>We're getting a lot of traffic.</h1>
+    <p>A quick bit of maintenance is underway. Back in a few minutes.</p>
+  </main>
+</body>
+</html>
