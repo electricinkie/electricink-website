@@ -359,6 +359,7 @@
 }
 /* The drawer is black: the note uses the on-dark muted grey from DESIGN.md */
 #cart-drawer .ship-progress-note { color: #B9C7C5; }
+#cart-drawer .cart-drawer-campaign { color: #FFA300; }
 @media (prefers-reduced-motion: reduce) {
   .ship-progress-fill { transition: none; }
 }
