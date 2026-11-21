@@ -238,6 +238,7 @@
         </div>
         <span class="bs-added-price">€${item.price.toFixed(2)}</span>
       </div>
+      <div class="bs-campaign-slot"></div>
       <div class="bs-total-row">
         <span class="bs-total-label">Cart total</span>
         <span class="bs-total-value">€${total}</span>
@@ -247,6 +248,7 @@
         <button class="bs-btn-continue" onclick="cartDrawer.closeSheet()">Keep shopping</button>
       </div>
     `;
+    renderCampaignLine(cart, el.querySelector('.bs-campaign-slot'));
   }
 
   // ── Public API ──
