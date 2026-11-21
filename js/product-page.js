@@ -315,6 +315,14 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     el.textContent = '';
     el.appendChild(was);
     el.appendChild(now);
+    // Discount badge, calculated from the two prices shown.
+    const off = Math.round((1 - price / wasPrice) * 100);
+    if (off > 0 && off < 100) {
+      const badge = document.createElement('span');
+      badge.textContent = `−${off}%`;
+      badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#fff;font-size:12px;font-weight:700;';
+      el.appendChild(badge);
+    }
   }
 
   // RENDER price (defensive: avoid calling toFixed on undefined)
