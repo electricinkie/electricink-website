@@ -197,6 +197,9 @@ window.appliedDiscount = 0;
 
     // Render order summary
     renderOrderSummary();
+
+    // Black Cat Friday line (display only, async: the summary above stays as is if it fails)
+    applyCampaignExtra();
     
     // Initialize Stripe Elements
     initializeStripeElements();
@@ -267,6 +270,9 @@ window.appliedDiscount = 0;
     } catch (e) {
       totals.discount = 0;
     }
+
+    // Black Cat Friday replaces any coupon discount (the server ignores coupons in the window)
+    if (campaignExtra > 0) totals.discount = Math.min(campaignExtra, totals.subtotal);
 
     // Get current shipping method
     const selectedMethod = document.querySelector('input[name="shippingMethod"]:checked');
@@ -388,6 +394,8 @@ window.appliedDiscount = 0;
     const discountLine = document.getElementById('discountLine');
     if (discountElement && discountLine) {
       if (totals.discount > 0) {
+        const discountLabel = discountLine.firstElementChild;
+        if (discountLabel) discountLabel.textContent = campaignExtra > 0 ? CAMPAIGN_LINE_LABEL : 'Discount';
         discountElement.textContent = `-€${totals.discount.toFixed(2)}`;
         discountLine.style.display = 'flex';
       } else {
@@ -442,6 +450,61 @@ window.appliedDiscount = 0;
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  // Black Cat Friday summary line. Display only: the server decides the price and charges it.
+  // campaignExtra (euros) is never sent to the server (orderData sends window.appliedDiscount only).
+  // One catalog fetch per page load: the promise is kept, and so is a failure (no retry).
+  const CAMPAIGN_LINE_LABEL = 'Black Cat Friday';
+  let campaignExtra = 0;
+  let campaignRowsPromise = null;
+  function loadCampaignRows() {
+    if (!campaignRowsPromise) {
+      campaignRowsPromise = fetch('/api/catalog?type=products')
+        .then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); })
+        .then(rows => { if (!Array.isArray(rows)) throw new Error('catalog'); return rows; });
+    }
+    return campaignRowsPromise;
+  }
+  function grossCents(ex) { return Math.round(parseFloat((parseFloat(ex) * 1.23).toFixed(2)) * 100); }
+  // Same lines the server builds (one per variant, quantities summed, lowest unit price).
+  // Any doubt or failure leaves the summary exactly as it was: no line.
+  async function applyCampaignExtra() {
+    try {
+      const { lib, config } = await loadCampaignConfig();
+      if (!lib.isActive(config, Date.now())) return;
+      const rows = await loadCampaignRows();
+      const lines = [];
+      for (const item of cart) {
+        const itemId = String(item.id).replace(/_/g, '-');
+        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === itemId);
+        const qty = Number(item.quantity);
+        if (!row || !Number.isInteger(qty) || qty <= 0) return;
+        const paidCents = grossCents(row.effective_price_ex);
+        if (Math.round(Number(item.price) * 100) !== paidCents) return;
+        const productId = row.id;
+        const variantId = row.variant_id || row.id;
+        const existing = lines.find(l => l.productId === productId && l.variantId === variantId);
+        if (existing) {
+          existing.qty += qty;
+          existing.paidCents = Math.min(existing.paidCents, paidCents);
+        } else {
+          const stockNum = (row.stock === null || row.stock === undefined || row.stock === '') ? NaN : Number(row.stock);
+          lines.push({
+            productId, variantId, qty,
+            listCents: grossCents(row.price_ex),
+            paidCents,
+            promoActive: row.promo_active === true,
+            stock: Number.isInteger(stockNum) ? Math.max(0, stockNum) : null
+          });
+        }
+      }
+      const r = lib.compute({ config, nowMs: Date.now(), lines });
+      if (!r.ok || !r.active || r.violations.length || !(r.extraCents > 0)) return;
+      campaignExtra = r.extraCents / 100;
+      calculateTotals();
+      renderOrderSummary();
+    } catch (_) {}
   }
 
   async function initExpressCheckout() {
