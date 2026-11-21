@@ -477,7 +477,7 @@ window.appliedDiscount = 0;
       const lines = [];
       for (const item of cart) {
         const itemId = String(item.id).replace(/_/g, '-');
-        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === itemId);
+        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === itemId) || rows.find(r => r.id === itemId);
         const qty = Number(item.quantity);
         if (!row || !Number.isInteger(qty) || qty <= 0) return;
         const paidCents = grossCents(row.effective_price_ex);
