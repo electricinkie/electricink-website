@@ -1,0 +1,622 @@
+/* Black Cat Friday page (css/black-cat-friday.css)
+   Page styles for /black-cat-friday. The hero itself lives in css/bcf-hero.css;
+   anything this page needs to change in the hero is done here, on top.
+   Brand: #050707 background, teal #43BDAB, orange #FF5715 (struck-price scratch only),
+   white text, grey #8E999F, lines #24282B. Text is always white on teal. */
+
+.bcf-body {
+  background: #050707;
+}
+
+.bcf-page {
+  --bcf-teal: #43BDAB;
+  --bcf-orange: #FF5715;
+  --bcf-promo: #FFA300;
+  --bcf-line: #24282B;
+  --bcf-grey: #8E999F;
+  --bcf-card: #0b0d0d;
+  --bcf-media: #ffffff; /* the product photos are cut-outs made for a white background */
+  flex: 1 0 auto;
+  width: 100%;
+  background: #050707;
+  color: #ffffff;
+}
+
+/* The class display values below would otherwise beat the UA [hidden] rule
+   (this also keeps a hidden .bcf-countdown hidden). */
+.bcf-page [hidden] {
+  display: none;
+}
+
+/* ---------- Hero, on this page ---------- */
+.bcf-page .bcf-hero {
+  gap: 0.875rem;
+  min-height: 47.5rem;
+  padding: 5.5rem 1.5rem 6rem;
+}
+
+.bcf-page .bcf-eyes {
+  max-width: min(47.5rem, 88vw);
+  margin-bottom: 1.5rem;
+}
+
+/* Title: below 48rem the size is capped so "Black Cat" (about 5.53em wide) always
+   fits the space left by the hero side padding; 48rem and up follows the mockup. */
+.bcf-page .bcf-title {
+  font-size: clamp(2.5rem, 14vw, 4.8rem);
+}
+
+.bcf-page .bcf-dates {
+  margin-top: 1.125rem;
+}
+
+.bcf-page .bcf-url {
+  margin-top: 0.375rem;
+}
+
+.bcf-page .bcf-countdown {
+  gap: 0.875rem;
+  margin-top: 2.25rem;
+}
+
+.bcf-page .bcf-count-grid {
+  gap: 0.75rem;
+}
+
+.bcf-page .bcf-count-box {
+  min-width: 5.75rem;
+  padding: 0.875rem 0.5rem;
+}
+
+.bcf-page .bcf-count-unit {
+  margin-top: 0.5rem;
+}
+
+.bcf-page .bcf-actions {
+  margin-top: 2.25rem;
+}
+
+.bcf-page .bcf-btn {
+  padding: 1rem 2rem;
+  line-height: 1.5;
+}
+
+/* Line under the dates, and the buttons, depend on the phase. */
+.bcf-page .bcf-sub {
+  margin: 0.5rem 0 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #B9C7C5;
+}
+
+.bcf-page .bcf-sub:empty,
+.bcf-page .bcf-hero:not([data-bcf-phase='live']) .bcf-sub,
+.bcf-page .bcf-hero:not([data-bcf-phase='live']) [data-bcf-for='live'],
+.bcf-page .bcf-hero:not([data-bcf-phase='ended']) [data-bcf-for='ended'] {
+  display: none;
+}
+
+/* Boxes are 5.75rem wide, so 3 + 1 would leave one stretched box between 348px
+   and 451px: below that width the countdown stays 2 x 2. */
+@media (max-width: 28.24rem) {
+  .bcf-page .bcf-count-box {
+    flex-basis: calc(50% - 0.375rem);
+  }
+}
+
+@media (min-width: 48rem) {
+  .bcf-page .bcf-title {
+    font-size: clamp(3.5rem, 10vw, 9.375rem);
+  }
+}
+
+/* ---------- Sections ---------- */
+.bcf-section {
+  box-sizing: border-box;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 4rem 1rem 2rem;
+  scroll-margin-top: 4rem;
+}
+
+#how {
+  padding-top: 5.5rem;
+}
+
+#vault {
+  padding-top: 4.5rem;
+}
+
+.bcf-eyebrow {
+  margin: 0;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1.625rem;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.bcf-heading {
+  margin: 0.625rem 0 2.25rem;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: clamp(2.125rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.bcf-lead {
+  margin: -1rem 0 2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: #B9C7C5;
+}
+
+/* Small line under a section. */
+.bcf-note {
+  margin: 1.25rem 0 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--bcf-grey);
+}
+
+/* ---------- How it works ---------- */
+.bcf-how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+  gap: 1.25rem;
+}
+
+.bcf-how-card {
+  min-width: 0;
+  padding: 1.75rem;
+  background: var(--bcf-card);
+  border: 1px solid var(--bcf-line);
+  border-radius: 6px;
+}
+
+.bcf-how-card--accent {
+  border-color: var(--bcf-teal);
+}
+
+.bcf-how-num {
+  margin: 0;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--bcf-teal);
+}
+
+[data-bcf-card="vault"] .bcf-how-num {
+  color: var(--bcf-promo);
+}
+
+[data-bcf-card="kit"] .bcf-how-num {
+  color: #ffffff;
+}
+
+.bcf-how-title {
+  margin: 0.875rem 0 0.5rem;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #ffffff;
+}
+
+.bcf-how-text {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #B9C7C5;
+}
+
+/* ---------- Vault ---------- */
+.bcf-vault-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.75rem), 1fr));
+  gap: 1.25rem;
+}
+
+.bcf-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bcf-card);
+  border: 1px solid var(--bcf-line);
+  border-radius: 6px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.bcf-card:hover {
+  border-color: var(--bcf-teal);
+}
+
+.bcf-card:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.bcf-card-media {
+  position: relative;
+  height: 11.875rem;
+  background: var(--bcf-media);
+}
+
+.bcf-card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bcf-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1;
+  padding: 0.25rem 0.625rem;
+  border-radius: 3px;
+  background: var(--bcf-promo);
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.bcf-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.125rem 1.125rem 1.25rem;
+}
+
+.bcf-card-name {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.bcf-card-size {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--bcf-grey);
+}
+
+.bcf-card-prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.bcf-now {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1.875rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+/* Struck price: the orange scratch (#FF5715, static, one SVG shared by every
+   old price on the page) is drawn over the number. */
+.bcf-was {
+  --bcf-scratch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cg fill='%23FF5715'%3E%3Cpolygon points='100.9,5.6 98.4,6.5 95.9,7.0 93.3,7.7 90.7,8.2 88.2,8.7 85.6,9.3 83.2,10.2 80.7,11.2 78.2,11.8 75.6,12.6 73.0,13.0 70.4,13.2 67.9,13.9 65.4,14.8 62.6,14.3 60.0,14.8 57.5,15.7 54.8,15.4 52.1,15.6 49.6,16.2 47.0,16.7 44.4,17.1 41.7,17.1 39.1,17.4 36.6,18.4 34.1,19.1 31.6,19.7 28.9,20.0 26.6,21.5 24.0,21.8 21.4,22.4 19.0,23.5 16.4,23.9 14.0,25.0 11.4,25.5 8.9,26.3 6.4,27.0 3.9,28.1 1.4,28.6 -1.1,29.7 -1.0,29.9 1.5,29.2 4.2,29.2 6.7,28.3 9.4,28.4 11.9,27.8 14.4,26.9 17.0,26.6 19.6,25.9 22.1,25.4 24.7,24.8 27.2,23.8 29.7,23.2 32.3,22.7 34.9,22.3 37.5,21.9 40.0,21.3 42.5,20.5 45.1,20.0 47.7,19.6 50.3,19.2 52.9,18.8 55.6,19.0 58.1,18.3 60.7,17.9 63.4,17.6 65.8,16.4 68.4,16.2 70.9,15.5 73.5,15.0 75.9,13.8 78.5,13.1 81.1,12.7 83.5,11.9 86.1,11.4 88.5,10.1 91.0,9.5 93.5,8.6 96.0,7.6 98.5,6.9 101.0,6.1'/%3E%3Cpolygon points='26.8,23.6 24.9,23.3 24.0,21.4 25.1,22.8 27.2,22.7'/%3E%3Cpolygon points='81.2,11.7 79.2,13.5 78.9,15.8 78.8,13.2 80.3,11.1'/%3E%3Cpolygon points='73.6,13.7 71.4,15.5 69.1,16.9 71.0,15.3 72.7,13.1'/%3E%3Cpolygon points='32.2,20.9 30.5,21.2 29.2,22.3 30.1,21.0 31.4,20.2'/%3E%3Cpolygon points='34.8,20.1 33.8,20.6 32.6,21.5 33.3,20.5 33.8,19.8'/%3E%3Cpolygon points='100.9,14.5 98.3,15.0 95.8,15.7 93.3,16.3 90.7,16.9 88.1,17.4 85.6,17.9 83.1,18.9 80.6,19.5 78.1,20.6 75.6,21.3 73.1,21.8 70.4,22.1 68.0,23.0 65.4,23.5 62.8,24.0 60.3,24.5 57.7,24.9 55.0,25.0 52.4,25.3 49.9,26.2 47.3,26.2 44.7,26.6 42.0,26.7 39.4,27.1 36.8,27.6 34.3,28.2 31.7,28.5 29.1,28.8 26.6,29.6 24.1,30.3 21.4,30.5 19.0,31.6 16.5,32.2 14.0,33.2 11.4,33.4 8.9,34.5 6.4,35.2 4.0,36.3 1.3,36.4 -1.0,37.8 -1.0,38.0 1.5,37.3 4.2,37.2 6.6,36.2 9.3,36.0 11.8,35.4 14.4,35.2 16.9,34.2 19.5,34.0 22.0,33.1 24.5,32.3 27.1,31.9 29.7,31.6 32.3,31.1 34.8,30.4 37.4,30.0 40.0,29.8 42.5,29.1 45.2,28.9 47.8,28.4 50.4,28.1 52.9,27.7 55.5,27.1 58.1,26.9 60.6,26.2 63.3,25.9 65.7,24.8 68.3,24.4 70.9,24.1 73.4,23.4 75.9,22.3 78.5,22.0 80.9,21.0 83.4,20.1 86.0,19.6 88.5,19.0 91.0,18.2 93.3,16.7 96.0,16.6 98.5,15.9 100.9,14.6'/%3E%3Cpolygon points='16.4,34.2 15.4,33.1 14.1,32.0 15.7,32.8 17.2,33.5'/%3E%3Cpolygon points='17.0,33.2 14.7,35.0 13.3,37.3 14.4,34.8 16.2,32.7'/%3E%3Cpolygon points='50.4,26.6 48.8,28.8 48.5,31.3 48.4,28.6 49.5,26.3'/%3E%3Cpolygon points='82.9,20.1 82.0,18.4 81.8,16.4 82.4,18.2 83.8,19.6'/%3E%3Cpolygon points='66.0,24.1 65.4,25.3 64.6,26.5 64.9,25.2 65.0,23.9'/%3E%3Cpolygon points='95.7,1.2 93.2,2.1 90.5,2.5 88.2,3.6 86.0,5.0 83.5,5.9 81.2,7.2 79.1,8.7 76.8,10.1 74.5,11.3 72.2,12.5 70.0,13.9 67.7,15.1 65.3,16.1 63.1,17.6 60.6,18.5 58.3,19.6 55.7,20.3 53.4,21.4 51.0,22.5 48.4,22.9 45.8,23.7 43.5,24.9 41.1,25.9 38.5,26.4 36.2,27.5 33.8,28.6 31.1,29.0 28.9,30.3 26.5,31.4 24.2,32.6 21.7,33.3 19.5,34.8 17.1,35.7 15.0,37.6 12.4,38.2 10.1,39.3 7.9,40.7 7.8,40.6 10.4,40.0 13.0,39.4 15.1,37.8 17.8,37.3 20.1,36.2 22.7,35.6 25.0,34.4 27.4,33.4 29.6,32.0 32.1,31.1 34.6,30.4 37.1,29.5 39.3,28.2 41.6,26.9 44.2,26.4 46.4,24.9 49.1,24.7 51.4,23.4 53.8,22.3 56.2,21.5 58.8,20.9 61.0,19.4 63.4,18.4 65.7,17.2 68.2,16.3 70.3,14.6 72.6,13.4 75.1,12.7 77.2,10.9 79.5,9.6 82.0,8.9 84.1,7.3 86.4,6.1 88.8,5.0 91.1,3.9 93.5,2.7 95.7,1.3'/%3E%3Cpolygon points='72.8,13.0 71.6,14.5 71.6,16.0 71.2,14.3 71.9,12.6'/%3E%3Cpolygon points='84.2,6.4 83.7,8.5 83.2,10.5 83.2,8.4 83.2,6.4'/%3E%3Cpolygon points='79.2,9.9 77.5,9.3 75.9,9.3 77.7,8.8 79.6,9.0'/%3E%3Cpolygon points='34.5,29.0 33.7,31.4 32.4,33.5 33.3,31.4 33.5,28.9'/%3E%3Cpolygon points='79.6,9.2 78.1,11.1 76.5,12.7 77.7,10.9 78.7,8.7'/%3E%3C/g%3E%3C/svg%3E");
+  position: relative;
+  display: inline-block;
+  padding: 0 0.25rem;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1.125rem;
+  line-height: 1;
+  color: var(--bcf-grey);
+}
+
+.bcf-was::after {
+  content: '';
+  position: absolute;
+  top: -12%;
+  left: -10%;
+  width: 120%;
+  height: 130%;
+  background: var(--bcf-scratch) 0 0 / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+/* "Unlocks 60%": bottom left of the photo, away from the discount badge. */
+.bcf-tag {
+  position: absolute;
+  bottom: 0.625rem;
+  left: 0.625rem;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 3px;
+  background: var(--bcf-teal);
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.bcf-from {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--bcf-grey);
+}
+
+/* Visible to screen readers only. */
+.bcf-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Sumi Set ---------- */
+.bcf-kit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 1.5rem;
+  background: var(--bcf-card);
+  border: 1px solid var(--bcf-line);
+  border-radius: 6px;
+}
+
+.bcf-kit-copy {
+  flex: 1 1 22.5rem;
+  min-width: 0;
+}
+
+.bcf-kit-media {
+  flex: 1 1 22.5rem;
+  min-width: 0;
+}
+
+.bcf-kit-heading {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  margin-bottom: 0.75rem;
+}
+
+.bcf-kit-lead {
+  margin: 0 0 1.25rem;
+}
+
+.bcf-kit-prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.bcf-kit-now {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.bcf-kit-prices .bcf-was {
+  font-size: 1.75rem;
+  padding: 0 0.375rem;
+}
+
+.bcf-kit-caption {
+  margin: 0 0 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #B9C7C5;
+}
+
+.bcf-kit-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  background: #ffffff;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #050707;
+  cursor: pointer;
+}
+
+.bcf-kit-add:hover:not(:disabled) {
+  background: #e8eeed;
+}
+
+.bcf-kit-add:focus-visible,
+.bcf-kit-link:focus-visible {
+  outline: 2px solid var(--bcf-teal);
+  outline-offset: 2px;
+}
+
+.bcf-kit-add:disabled {
+  border-color: var(--bcf-line);
+  background: transparent;
+  color: var(--bcf-grey);
+  cursor: not-allowed;
+}
+
+.bcf-kit-note {
+  margin: 0.625rem 0 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #B9C7C5;
+}
+
+.bcf-kit-link {
+  display: inline-block;
+  margin-top: 0.875rem;
+  padding: 0.5rem 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  color: var(--bcf-grey);
+  text-decoration: underline;
+}
+
+.bcf-kit-img {
+  display: block;
+  width: 100%;
+  max-width: 17.5rem;
+  height: 12.5rem;
+  margin: 0 auto 1rem;
+  object-fit: contain;
+  background: var(--bcf-media);
+  border-radius: 6px;
+}
+
+.bcf-kit-greys {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(4.25rem, 1fr));
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bcf-kit-grey {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.bcf-kit-grey-img {
+  display: block;
+  width: 100%;
+  max-width: 4.25rem;
+  height: 4.5rem;
+  object-fit: contain;
+  background: var(--bcf-media);
+  border-radius: 4px;
+}
+
+.bcf-kit-grey-label {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: #B9C7C5;
+}
+
+/* ---------- And there's more ---------- */
+.bcf-more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr));
+  gap: 1rem;
+}
+
+.bcf-card--compact .bcf-card-media {
+  height: 7.5rem;
+}
+
+.bcf-card--compact .bcf-badge {
+  top: 0.625rem;
+  left: 0.625rem;
+  padding: 0.1875rem 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.bcf-card--compact .bcf-card-body {
+  gap: 0.125rem;
+  padding: 0.875rem;
+}
+
+.bcf-card--compact .bcf-card-name {
+  font-size: 0.9375rem;
+}
+
+.bcf-card--compact .bcf-card-prices {
+  gap: 0.25rem 0.625rem;
+  margin-top: 0.375rem;
+}
+
+.bcf-card--compact .bcf-now {
+  font-size: 1.375rem;
+}
+
+.bcf-card--compact .bcf-was {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 36rem) {
+  .bcf-more-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.625rem), 1fr));
+  }
+}
+
+/* ---------- The rest of the shop ---------- */
+.bcf-rest-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Small print ---------- */
+.bcf-print {
+  padding-top: 3.5rem;
+  padding-bottom: 6rem;
+}
+
+.bcf-print-title {
+  margin: 0 0 0.875rem;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.bcf-print-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.375rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #B9C7C5;
+}
+
+@media (min-width: 48rem) {
+  .bcf-section {
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .bcf-kit {
+    padding: 2.5rem;
+  }
+}
