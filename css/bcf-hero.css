@@ -155,9 +155,9 @@
   -webkit-mask-composite: xor, xor, xor, source-over;
   mask-composite: exclude, exclude, exclude, add;
   animation:
-    bcf-cut-1 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s both,
-    bcf-cut-2 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.6s both,
-    bcf-cut-3 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s both;
+    bcf-cut-1 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    bcf-cut-2 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    bcf-cut-3 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 @keyframes bcf-cut-1 {
@@ -198,6 +198,13 @@
   align-items: center;
   gap: 0.5rem;
   width: 100%;
+}
+
+.bcf-countdown[hidden] { display: none; }
+
+/* In the home carousel the slide tabs sit on the bottom edge: keep clear of them. */
+.hx-slide .bcf-hero {
+  padding-bottom: 2.5rem;
 }
 
 .bcf-hero[data-bcf-phase='ended'] .bcf-countdown {
