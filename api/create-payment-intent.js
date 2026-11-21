@@ -813,7 +813,7 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     captureException(error, {
       endpoint: 'create-payment-intent',
-      context: { itemsCount: Array.isArray(req.body?.items) ? req.body.items.length : 0 }
+      context: { itemsCount: Array.isArray(req.body?.items || req.body?.cartItems) ? (req.body.items || req.body.cartItems).length : 0 }
     });
     logger.error('Error processing request', error.message);
     return res.status(500).json({ error: 'Internal server error' });
