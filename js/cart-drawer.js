@@ -209,11 +209,11 @@
       const kit = kitSets ? config.bundles.find(b => b.id === kitSets.id) : null;
       let text;
       if (r.violations.length) text = 'Max reached on this one. Others are still open.';
-      else if (kit) text = `Sumi Set ✓. ${kit.variantIds.length} for €${euros(kit.priceCents)}.`;
-      else if (r.boostUnlocked && r.boostedUnits > 0) text = `60% unlocked ✓ You're saving an extra €${((r.extraCents - r.bundleExtraCents) / 100).toFixed(2)}.`;
+      else if (kit) text = `Sumi Set ✓ all ${kit.variantIds.length} for €${euros(kit.priceCents)}.`;
+      else if (r.boostUnlocked && r.boostedUnits > 0) text = `60% unlocked ✓ You save an extra €${((r.extraCents - r.bundleExtraCents) / 100).toFixed(2)}.`;
       else if (r.boostUnlocked && hasVault) return;
-      else if (hasVault) text = 'Vault 50% ✓. Add any €10+ item outside the Vault to unlock 60%.';
-      else text = 'Black Cat Vault: 50% off. Add any Vault item.';
+      else if (hasVault) text = 'Vault 50% ✓ Add any other item over €10 to unlock 60%.';
+      else text = 'Black Cat Friday: 50% off selected inks. Ends Mon 30 Nov, 23:59.';
       if (myId !== campaignRenderId || !footerEl.isConnected) return;
       const p = document.createElement('p');
       p.className = 'cart-drawer-campaign';
