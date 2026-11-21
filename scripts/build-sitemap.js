@@ -31,6 +31,7 @@ const BASE_URL = 'https://electricink.ie';
 const STATIC_PAGES = [
   '/',
   '/about-us',
+  '/black-cat-friday',
   '/contact-us',
   '/faq',
   '/howtousecosmetics',
