@@ -668,6 +668,14 @@ function getAvailabilityBadgeInfo(product) {
           now.textContent = product.priceDisplay.now;
           price.appendChild(was);
           price.appendChild(now);
+          // Discount badge, calculated from the two prices shown.
+          const off = Math.round((1 - parseFloat(product.priceDisplay.now.replace(/[^0-9.]/g, '')) / parseFloat(product.priceDisplay.was.replace(/[^0-9.]/g, ''))) * 100);
+          if (off > 0 && off < 100) {
+            const badge = document.createElement('span');
+            badge.textContent = `−${off}%`;
+            badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#fff;font-size:11px;font-weight:700;';
+            price.appendChild(badge);
+          }
         } else {
           price.textContent = product.priceDisplay;
         }
