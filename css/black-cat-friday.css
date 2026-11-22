@@ -106,6 +106,15 @@
   }
 }
 
+/* Phones: the 47.5rem (760px) minimum is a desktop size; on a phone it left a big empty
+   band under the countdown, worst when the buttons are hidden. */
+@media (max-width: 47.99rem) {
+  .bcf-page .bcf-hero {
+    min-height: 0;
+    padding-bottom: 3rem;
+  }
+}
+
 @media (min-width: 48rem) {
   .bcf-page .bcf-title {
     font-size: clamp(3.5rem, 10vw, 9.375rem);
@@ -154,6 +163,19 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 1.0625rem;
   line-height: 1.5;
+  color: #B9C7C5;
+}
+
+/* Live with zero promotions yet: one calm line under the hero. */
+.bcf-wait {
+  box-sizing: border-box;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  text-align: center;
   color: #B9C7C5;
 }
 
