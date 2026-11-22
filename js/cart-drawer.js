@@ -175,7 +175,7 @@
         loadCampaignLib(),
         fetch('/campaign.config.json').then(r => { if (!r.ok) throw new Error('config'); return r.json(); }),
         loadCatalogRows()
-      ]);
+      ]).catch(e => { campaignDataAt = Date.now() - CAMPAIGN_CACHE_MS + 30000; throw e; }); // after a 429 or network error, try again in 30 s, not 5 min
     }
     return campaignDataPromise;
   }
@@ -186,7 +186,16 @@
     try {
       const [, config, rows] = await loadCampaignData();
       const lib = window.EI_CAMPAIGN;
-      if (!lib || !lib.validateConfig(config).ok || !lib.isActive(config, Date.now())) return;
+      if (!lib || !lib.validateConfig(config).ok) return;
+      if (!lib.isActive(config, Date.now())) {
+        // After the end, a Vault item may still sit in the cart at its old price: say so.
+        const vaultIds = config.vault.items.map(i => i.productId + '-' + i.variantId);
+        const sinceEnd = Date.now() - Date.parse(config.endsAt);
+        if (sinceEnd > 0 && sinceEnd < 7 * 864e5 && cart.some(item => vaultIds.indexOf(item.id) !== -1)) {
+          showCampaignText('Black Cat Friday has ended. Prices may change at checkout.', myId, footerEl);
+        }
+        return;
+      }
       const lines = cart.map(item => {
         const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === item.id) || rows.find(r => r.id === item.id);
         if (!row) throw new Error('unmapped');
@@ -213,18 +222,21 @@
         : r.violations[0].code === 'BUNDLE_CAP_EXCEEDED'
           ? `Limit reached: ${r.violations[0].allowed} Sumi Set${r.violations[0].allowed === 1 ? '' : 's'} per order.`
           : `Limit reached: ${r.violations[0].allowed} per order on one item. Others are still open.`;
-      else if (kit && kitSets.extraCents > 0) text = `Sumi Set ✓ €${euros(kit.priceCents)} instead of €${euros(kit.priceCents + kitSets.extraCents / kitSets.sets)}. You save €${euros(kitSets.extraCents / kitSets.sets)}.`;
-      else if (r.boostUnlocked && r.boostedUnits > 0) text = `60% unlocked ✓ You save an extra €${((r.extraCents - r.bundleExtraCents) / 100).toFixed(2)}.`;
+      else if (kit && kitSets.extraCents > 0) text = `Sumi Set ✓ €${euros(kit.priceCents)} instead of €${euros(kit.priceCents + kitSets.extraCents / kitSets.sets)}. You save €${euros(kitSets.extraCents / kitSets.sets)}. Applied at checkout.`;
+      else if (r.boostUnlocked && r.boostedUnits > 0) text = `60% unlocked ✓ You save an extra €${((r.extraCents - r.bundleExtraCents) / 100).toFixed(2)}. Applied at checkout.`;
       else if (r.boostUnlocked && hasVault) return;
-      else if (hasVault) text = 'Vault 50% ✓ Add any other item of €10 or more to unlock 60%.';
+      else if (hasVault) text = `Vault 50% ✓ Add any other item of €${euros(config.boost.minLineCents)} or more to unlock 60% on your first ${config.boost.maxUnitsPerOrder} Vault units.`;
       else text = 'Black Cat Friday: up to 60% off. Ends Mon 30 Nov, 23:59.';
-      if (myId !== campaignRenderId || !footerEl.isConnected) return;
-      const p = document.createElement('p');
-      p.className = 'cart-drawer-campaign';
-      p.style.cssText = 'font-size:12px;margin:0 0 10px;';
-      p.textContent = text;
-      footerEl.insertBefore(p, footerEl.firstChild);
+      showCampaignText(text, myId, footerEl);
     } catch (_) {}
+  }
+  function showCampaignText(text, myId, footerEl) {
+    if (myId !== campaignRenderId || !footerEl.isConnected) return;
+    const p = document.createElement('p');
+    p.className = 'cart-drawer-campaign';
+    p.style.cssText = 'font-size:12px;margin:0 0 10px;';
+    p.textContent = text;
+    footerEl.insertBefore(p, footerEl.firstChild);
   }
 
   function renderBottomSheet(item) {
