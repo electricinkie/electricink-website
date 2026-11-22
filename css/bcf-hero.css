@@ -202,6 +202,11 @@
 
 .bcf-countdown[hidden] { display: none; }
 
+/* Buttons that lead to the Vault only make sense while the campaign is live. */
+.bcf-hero:not([data-bcf-phase='live']) [data-bcf-for='live'] {
+  display: none;
+}
+
 /* In the home carousel the slide tabs sit on the bottom edge: keep clear of them. */
 .hx-slide .bcf-hero {
   padding-bottom: 2.5rem;
