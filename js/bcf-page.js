@@ -44,6 +44,7 @@
   let hero = null;
   let configPromise = null;
   let contentPromise = null;
+  let contentDone = false; // the catalog step has finished (with or without products)
   let howCards = { vault: false, boost: false, kit: false }; // cards that have text; applyPhase shows them
   let content = { vault: 0, kit: false, unlock: 0, machines: 0, more: 0 };
   let heroTexts = null; // Plan B: the hero's original dates text, to restore it
@@ -181,7 +182,7 @@
       if (boost && isPercent(boost.discountPercent) && isCents(boost.minLineCents)) {
         shown = showCard('boost', boost.discountPercent + '%',
           'Add one more thing',
-          'Put any other item of €' + euros(boost.minLineCents) + ' or more in your cart and your Vault items drop to ' + boost.discountPercent + '% off.') || shown;
+          'Put any other item of €' + euros(boost.minLineCents) + ' or more in your cart and ' + vaultUnits(boost) + ' drop to ' + boost.discountPercent + '% off.') || shown;
       }
 
       const bundle = Array.isArray(config.bundles) ? config.bundles[0] : null;
@@ -330,9 +331,17 @@
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
+  // "your first 4 Vault units" (boost.maxUnitsPerOrder); without a valid number, "your Vault items".
+  function vaultUnits(boost) {
+    return Number.isInteger(boost.maxUnitsPerOrder) && boost.maxUnitsPerOrder > 0
+      ? 'your first ' + boost.maxUnitsPerOrder + ' Vault units' : 'your Vault items';
+  }
+
   function boostOf(config) {
     const boost = config.boost;
-    return config.enabled === true && boost && isPercent(boost.discountPercent) && isCents(boost.minLineCents) ? boost : null;
+    // maxUnitsPerOrder 0 is valid for the server but gives no 60% unit: then nothing may promise it.
+    return config.enabled === true && boost && isPercent(boost.discountPercent) && isCents(boost.minLineCents) &&
+      Number.isInteger(boost.maxUnitsPerOrder) && boost.maxUnitsPerOrder > 0 ? boost : null;
   }
 
   /** Vault grid. Returns the number of cards rendered. */
@@ -342,6 +351,9 @@
     const cards = matches.map(match => buildCard(match, catalog, false)).filter(Boolean);
     if (cards.length === 0) return 0;
     cards.forEach(card => els.grid.appendChild(card));
+    // The per-order limits belong to the enabled campaign; in Plan B they do not apply.
+    const note = document.getElementById('bcf-vault-note');
+    if (note) note.hidden = config.enabled !== true;
 
     const pct = config.vault.discountPercent;
     // The "how it works" card says the same number as the section.
@@ -352,7 +364,7 @@
     if (els.vaultSub && isPercent(pct)) {
       const boost = boostOf(config);
       setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'product' : 'products') + ' at ' + pct + '% off.' +
-        (boost ? ' Add any other item of €' + euros(boost.minLineCents) + ' or more and they drop to ' + boost.discountPercent + '%.' : ''));
+        (boost ? ' Add any other item of €' + euros(boost.minLineCents) + ' or more and ' + vaultUnits(boost) + ' drop to ' + boost.discountPercent + '%.' : ''));
       els.vaultSub.hidden = false;
     }
     return cards.length;
@@ -406,6 +418,8 @@
     }
     if (ok) {
       els.kitAdd.textContent = 'Added';
+      setText(els.kitNote, 'Added to your cart.'); // role="status": screen readers hear it
+      els.kitNote.hidden = false;
       setTimeout(() => { kitBusy = false; updateKitButton(); }, 2000);
     } else {
       kitBusy = false;
@@ -470,6 +484,7 @@
     const name = resolveName(local);
     if (!image || !name) return false;
 
+    els.kitImg.loading = 'lazy';
     els.kitImg.src = image;
     els.kitImg.alt = name;
     els.kitLink.href = '/products.html?id=' + encodeURIComponent(bundle.productId);
@@ -564,21 +579,23 @@
   }
 
   /** Returns { unlock, machines, more }: the number of cards in each section. */
-  function renderPromoted(config, rows, catalog) {
-    const boost = boostOf(config);
+  function renderPromoted(config, rows, catalog, hasVault) {
+    const boost = hasVault ? boostOf(config) : null;
     const minCents = boost ? boost.minLineCents : null;
     const nameOf = id => (catalog[id] ? resolveName(catalog[id]) : '') || '';
 
-    // "Unlocks" only with at least 2 cents to spare over the minimum.
-    const unlocks = p => minCents !== null && Math.round(p.now * 100) >= minCents + 2;
+    // "Unlocks": same rule as the server (lib/campaign.js: line >= minLineCents), so €10.00 exactly unlocks.
+    const unlocks = p => minCents !== null && Math.round(p.now * 100) >= minCents;
     const products = collectPromoted(config, rows);
     products.forEach(p => { if (unlocks(p)) p.unlocksText = 'Unlocks ' + boost.discountPercent + '%'; });
 
     const isMachine = p => MACHINE_CATEGORIES.indexOf(p.category) !== -1;
     const machines = products.filter(isMachine);
     const others = products.filter(p => !isMachine(p));
-    const unlockList = others.filter(p => p.unlocksText);
-    const moreList = others.filter(p => !p.unlocksText);
+    // Section: same rule as the tag.
+    const inUnlock = p => minCents !== null && Math.round(p.now * 100) >= minCents;
+    const unlockList = others.filter(inUnlock);
+    const moreList = others.filter(p => !inUnlock(p));
 
     const out = {
       machines: fillGrid(els.machinesGrid, machines, catalog, nameOf),
@@ -587,7 +604,7 @@
     };
     if (out.unlock > 0) {
       setText(els.unlockTitle, 'Add one of these to unlock ' + boost.discountPercent + '%');
-      setText(els.unlockSub, 'Any item of €' + euros(boost.minLineCents) + ' or more works, and these are on sale too. Your Vault items drop to ' + boost.discountPercent + '% off.');
+      setText(els.unlockSub, 'Any item of €' + euros(boost.minLineCents) + ' or more works, and these are on sale too. ' + vaultUnits(boost).charAt(0).toUpperCase() + vaultUnits(boost).slice(1) + ' drop to ' + boost.discountPercent + '% off.');
     }
     return out;
   }
@@ -687,26 +704,27 @@
       if (!Array.isArray(rows)) return content;
 
       const catalog = await loadLocalCatalog();
-      const promoted = attempt(() => renderPromoted(config, rows, catalog), { unlock: 0, machines: 0, more: 0 });
+      // Vault first: without Vault cards nothing on the page may promise the 60% (no Unlock section, no "unlocks" line).
+      const vault = attempt(() => renderVault(config, rows, catalog), 0);
+      const promoted = attempt(() => renderPromoted(config, rows, catalog, vault > 0), { unlock: 0, machines: 0, more: 0 });
       const next = {
-        vault: attempt(() => renderVault(config, rows, catalog), 0),
+        vault,
         kit: attempt(() => renderKit(config, rows, catalog), false),
         unlock: promoted.unlock,
         machines: promoted.machines,
-        more: promoted.more
+        more: promoted.more,
+        catalogOk: true // the catalog answered; zero promotions is then a real state, not a failure
       };
-      if (anyContent(next)) {
-        attempt(() => renderPrint(config, next), null);
-        const boost = boostOf(config);
-        setText(els.restText, 'Every other product is still in the shop.' +
-          (boost ? ' Anything of €' + euros(boost.minLineCents) + ' or more also unlocks your ' + boost.discountPercent + '%.' : ''));
-      }
+      if (anyContent(next)) attempt(() => renderPrint(config, next), null);
+      const boost = next.vault > 0 ? boostOf(config) : null;
+      setText(els.restText, 'Every other product is still in the shop.' +
+        (boost ? ' Anything of €' + euros(boost.minLineCents) + ' or more also unlocks your ' + boost.discountPercent + '%.' : ''));
       content = next;
       return content;
     }).catch(() => {
       console.warn('BCF page: content unavailable');
       return content;
-    });
+    }).then(c => { contentDone = true; return c; });
     return contentPromise;
   }
 
@@ -732,7 +750,15 @@
       anyCard = anyCard || on;
       if (on) onCount++;
     });
-    els.how.hidden = !anyCard;
+    // Live with zero promotions in the catalog (e.g. the first minutes of Friday, before the
+    // CRM has them): no "how it works" promising a Vault that is not there, and a calm line instead.
+    const promos = content.vault > 0 || content.unlock > 0 || content.machines > 0 || content.more > 0;
+    els.how.hidden = !anyCard || !promos;
+    // Live and the catalog step is over, but no promoted product (CRM not ready yet, empty
+    // catalog, 429 or network): the calm line, no "up to 60%" line, and the shop links.
+    const waiting = live && contentDone && !promos;
+    if (els.wait) els.wait.hidden = !waiting;
+    if (els.heroSub) els.heroSub.hidden = waiting;
     if (els.howEyebrow) setText(els.howEyebrow, onCount === 3 ? 'three ways to save' : 'ways to save');
     // The hero buttons point at #vault and #how: only useful when those are shown.
     if (els.actions) els.actions.hidden = !(live && content.vault > 0);
@@ -742,7 +768,7 @@
     if (els.machines) els.machines.hidden = !(live && content.machines > 0);
     if (els.more) els.more.hidden = !(live && content.more > 0);
     const any = live && anyContent(content);
-    if (els.rest) els.rest.hidden = !any;
+    if (els.rest) els.rest.hidden = !(any || waiting);
     if (els.print) els.print.hidden = !any;
   }
 
@@ -814,6 +840,7 @@
     els.printCodes = document.getElementById('bcf-print-codes');
     els.restText = document.getElementById('bcf-rest-text');
     els.howEyebrow = document.getElementById('bcf-how-eyebrow');
+    els.wait = document.getElementById('bcf-wait');
     els.printMachines = document.getElementById('bcf-print-machines');
     if (!hero || !els.how || !els.vault || !els.grid) return;
     if (!els.kitImg || !els.kitLink || !els.kitPrices || !els.kitGreys || !els.kitCaption) els.kit = null;
