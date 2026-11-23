@@ -26,6 +26,11 @@
   min-width: 0;
 }
 
+/* display:flex on the items would beat the UA [hidden] rule (data-bcf-hide-when-ended). */
+.benefits-bar [hidden] {
+  display: none;
+}
+
 .benefit-link {
   cursor: pointer;
 }

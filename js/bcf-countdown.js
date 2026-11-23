@@ -87,6 +87,14 @@
     if (block.countdown) block.countdown.hidden = true;
   }
 
+  // Static pieces of the page that must disappear once the campaign is over
+  // (e.g. the benefits card on the home). Untouched if this script never runs.
+  function hideWhenEnded(phase) {
+    document.querySelectorAll('[data-bcf-hide-when-ended]').forEach(node => {
+      node.hidden = phase === 'ended';
+    });
+  }
+
   function render(block, now) {
     const phase = forced || phaseAt(now, dates.start, dates.end);
 
@@ -97,6 +105,7 @@
       setText(block.label, TEXTS[phase].label);
       if (TEXTS[phase].dates) setText(block.dates, TEXTS[phase].dates);
       if (block.countdown) block.countdown.hidden = phase === 'ended';
+      hideWhenEnded(phase);
     }
 
     if (phase === 'ended') return;
