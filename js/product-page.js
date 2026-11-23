@@ -320,7 +320,7 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     if (off > 0 && off < 100) {
       const badge = document.createElement('span');
       badge.textContent = `−${off}%`;
-      badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#111;font-size:12px;font-weight:700;';
+      badge.className = 'price-pill';
       el.appendChild(badge);
     }
   }

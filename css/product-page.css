@@ -1009,8 +1009,7 @@
 }
 
 .product-page .price-was {
-  color: #999;
-  text-decoration: line-through;
+  /* colour, scratch and font come from css/main.css */
   font-size: 1.25rem;
   font-weight: 400;
 }
