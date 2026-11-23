@@ -300,7 +300,21 @@
   font-size: 0.875rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #ffffff;
+  color: #111111;
+}
+
+/* Sold out (Vault): same card and link, dimmed; the seal replaces the discount badge. */
+.bcf-card--soldout .bcf-card-img {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.bcf-card--soldout .bcf-card-body {
+  opacity: 0.7;
+}
+
+.bcf-badge--soldout {
+  background: var(--bcf-grey);
 }
 
 .bcf-card-body {

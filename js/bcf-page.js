@@ -239,6 +239,20 @@
   }
 
   /**
+   * Sold out = a whole-number stock of zero or less. The catalog row only carries
+   * `stock` (no status field). null, undefined, empty and anything that is not a
+   * whole number are unknown and count as available (same rule as js/cart-drawer.js stockLimit).
+   */
+  function isSoldOut(row) {
+    if (!row) return false;
+    const raw = row.stock;
+    if (typeof raw !== 'number' && typeof raw !== 'string') return false;
+    if (typeof raw === 'string' && raw.trim() === '') return false;
+    const n = Number(raw);
+    return Number.isInteger(n) && n <= 0;
+  }
+
+  /**
    * For each vault item, in order, the catalog row that is currently on
    * promotion. Items with no matching or no usable row are skipped.
    */
@@ -255,7 +269,7 @@
       const now = toGross(row.effective_price_ex);
       const percent = Math.round((parseFloat(row.price_ex) - parseFloat(row.effective_price_ex)) / parseFloat(row.price_ex) * 100);
       if (was === null || now === null || !(percent > 0)) return;
-      matches.push({ productId: item.productId, variantId: item.variantId, was, now, percent });
+      matches.push({ productId: item.productId, variantId: item.variantId, was, now, percent, soldOut: isSoldOut(row) });
     });
     return matches;
   }
@@ -282,7 +296,7 @@
 
   /**
    * One product card. item = { productId, variantId, was, now, percent,
-   * from?, unlocksText? }. compact: the small card (no size line).
+   * from?, unlocksText?, soldOut? }. compact: the small card (no size line).
    */
   function buildCard(item, catalog, compact) {
     const local = catalog[item.productId];
@@ -296,6 +310,10 @@
 
     const card = document.createElement('a');
     card.className = compact ? 'bcf-card bcf-card--compact' : 'bcf-card';
+    if (item.soldOut) {
+      card.classList.add('bcf-card--soldout');
+      card.setAttribute('aria-label', name + ', sold out');
+    }
     card.href = '/products.html?id=' + encodeURIComponent(item.productId) + '&variant=' + encodeURIComponent(item.variantId);
     card.dataset.productId = item.productId;
     card.dataset.variantId = item.variantId;
@@ -307,7 +325,7 @@
     img.alt = name;
     img.loading = 'lazy';
     media.appendChild(img);
-    media.appendChild(el('span', 'bcf-badge', '−' + item.percent + '%'));
+    media.appendChild(item.soldOut ? el('span', 'bcf-badge bcf-badge--soldout', 'Sold out') : el('span', 'bcf-badge', '−' + item.percent + '%'));
     if (item.unlocksText) media.appendChild(el('span', 'bcf-tag', item.unlocksText));
 
     const body = el('div', 'bcf-card-body');
@@ -351,13 +369,16 @@
       hasValidLimit && maxUnits !== 0 ? boost : null;
   }
 
-  /** Vault grid. Returns the number of cards rendered. */
+  /** Vault grid. Returns the number of AVAILABLE cards (sold-out ones are shown, after them, but not counted). */
   function renderVault(config, rows, catalog) {
     if (!config.vault || !Array.isArray(config.vault.items)) return 0;
     const matches = matchVaultRows(config.vault.items, rows);
-    const cards = matches.map(match => buildCard(match, catalog, false)).filter(Boolean);
-    if (cards.length === 0) return 0;
-    cards.forEach(card => els.grid.appendChild(card));
+    const available = matches.filter(match => !match.soldOut).map(match => buildCard(match, catalog, false)).filter(Boolean);
+    // Nothing left to buy: no section (same as no Vault), so sold-out cards are not added either.
+    if (available.length === 0) return 0;
+    const soldOut = matches.filter(match => match.soldOut).map(match => buildCard(match, catalog, false)).filter(Boolean);
+    const cards = available;
+    available.concat(soldOut).forEach(card => els.grid.appendChild(card));
     // The per-order limits belong to the enabled campaign; in Plan B they do not apply.
     const note = document.getElementById('bcf-vault-note');
     if (note) note.hidden = config.enabled !== true;
