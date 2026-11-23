@@ -139,6 +139,11 @@
 }
 .cart-drawer-qty-btn:hover { border-color: #43BDAB; color: #43BDAB; }
 .cart-drawer-qty-btn:disabled { opacity: 0.35; cursor: not-allowed; border-color: #333; color: #aaa; }
+.cart-drawer-qty-btn:focus-visible { outline: 2px solid #43BDAB; outline-offset: 2px; }
+/* Touch: a 44px target (the drawer itself is hidden under 769px, so this covers touch tablets) */
+@media (max-width: 768px), (pointer: coarse) {
+  .cart-drawer-qty-btn { width: 44px; height: 44px; font-size: 18px; }
+}
 .cart-drawer-item-stock {
   font-size: 11px;
   color: #FFA300;

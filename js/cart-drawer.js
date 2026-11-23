@@ -43,7 +43,7 @@
           </button>
         </div>
         <div class="cart-drawer-items" id="cart-drawer-items"></div>
-        <div class="cart-drawer-footer" id="cart-drawer-footer"></div>
+        <div class="cart-drawer-footer" id="cart-drawer-footer" aria-live="polite"></div>
       </div>
 
       <div id="cart-bottom-sheet">

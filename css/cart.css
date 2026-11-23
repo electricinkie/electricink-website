@@ -240,6 +240,20 @@
   color: #ff4444;
 }
 
+.quantity-btn:focus-visible,
+.remove-btn:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* Touch: a 44px target for the +/- buttons */
+@media (max-width: 768px) {
+  .quantity-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 /* ────────── Order Summary ────────── */
 .cart-summary {
   background: #f8f8f8;
