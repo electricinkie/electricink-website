@@ -304,7 +304,7 @@ const RAVEN = 'raven-30', FINE = 'raven-fineline-240', CART = 'cartridge-box-20'
   await test('06b known insufficient stock rejects before PaymentIntent; null stock does not block', async () => {
     let h = reset({ now: OPEN, ravenStock: 2 });
     let res = await call(h, [[RAVEN, 3]]);
-    expect400(res, 'Only 2 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    expect400(res, `Only 2 left of raven-black raven-30. Please lower the quantity in your cart.`);
     h = reset({ now: OPEN, ravenStock: null });
     res = await call(h, [[RAVEN, 3]]);
     expectOk(res, 5200);
@@ -313,10 +313,10 @@ const RAVEN = 'raven-30', FINE = 'raven-fineline-240', CART = 'cartridge-box-20'
   await test('06f live config: complete Sumi x3 with known stock below qty on one variant -> 400; null stock does not block', async () => {
     let h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, sumiStock: 2 });
     let res = await call(h, SUMI.map((v) => [v, 3]));
-    expect400(res, 'Only 2 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    expect400(res, `Only 2 left of sumi sumi-3-jin. Please lower the quantity in your cart.`);
     h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, sumiStock: 0 });
     res = await call(h, SUMI.map((v) => [v, 3]));
-    expect400(res, 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.');
+    expect400(res, 'sumi sumi-3-jin has just sold out. Please remove it from your cart.');
     h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, sumiStock: null });
     res = await call(h, SUMI.map((v) => [v, 3]));
     expectOk(res, 30000);
@@ -326,16 +326,27 @@ const RAVEN = 'raven-30', FINE = 'raven-fineline-240', CART = 'cartridge-box-20'
   await test('06g live config: Vault STOCK_EXCEEDED rejects before PaymentIntent (stock 2 qty 3; stock 0 sold out)', async () => {
     let h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 2 });
     let res = await call(h, [[RAVEN, 3], [CART, 1]]);
-    expect400(res, 'Only 2 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    expect400(res, `Only 2 left of raven-black raven-30. Please lower the quantity in your cart.`);
     h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 0 });
     res = await call(h, [[RAVEN, 1], [CART, 1]]);
-    expect400(res, 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.');
+    expect400(res, 'raven-black raven-30 has just sold out. Please remove it from your cart.');
+  });
+
+  await test('06i violation message names the product and variant, as plain text capped at 80 chars', async () => {
+    const h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 2 });
+    catalogRows.forEach((r) => { if (r.variant_id === 'raven-30') r.name = '<b>Raven "Black"</b> ' + 'x'.repeat(120); });
+    const res = await call(h, [[RAVEN, 3], [CART, 1]]);
+    assert.strictEqual(res.statusCode, 400);
+    const msg = String((res.body && (res.body.userMessage || res.body.error)) || '');
+    assert.ok(/^Only 2 left of b Raven/.test(msg), msg);
+    assert.ok(!/[<>"&]/.test(msg), msg);
+    assert.ok(msg.length < 140, msg);
   });
 
   await test('06h repeated lines of the same variant: summed qty counts for stock; 100 limit is per line only', async () => {
     let h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 3 });
     let res = await call(h, [[RAVEN, 2], [RAVEN, 2], [CART, 1]]);
-    expect400(res, 'Only 3 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    expect400(res, `Only 3 left of raven-black raven-30. Please lower the quantity in your cart.`);
     // The zod limit (max 100) and the handler check (quantity > 100) run per line, not on the sum.
     h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG });
     res = await call(h, [[CART, 100], [CART, 100]]);

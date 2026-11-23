@@ -76,7 +76,7 @@ async function loadProducts() {
       const basePriceEx = promoActive ? row.promo_price_ex : row.price_ex;
       const priceGross = parseFloat((parseFloat(basePriceEx) * 1.23).toFixed(2));
       if (!merged[pid]) {
-        merged[pid] = { id: pid, basic: { price: priceGross }, variants: [] };
+        merged[pid] = { id: pid, name: row.name, basic: { price: priceGross }, variants: [] };
       }
       merged[pid].variants.push({
         id: row.variant_id,
@@ -248,6 +248,15 @@ function resolveProductById(itemId) {
   return null;
 }
 
+// Readable "Product variant" for customer messages: plain text, no markup, max 80 chars.
+function campaignDisplayName(product, variant) {
+  const clean = (v) => (typeof v === 'string' ? v.replace(/[<>&"'`\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim() : '');
+  const name = clean(product && product.name);
+  const label = clean(variant && variant.label);
+  const full = (label && label !== name ? `${name} ${label}` : name).trim();
+  return full.slice(0, 80).trim();
+}
+
 async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
   const cacheEmpty = !stripeProducts || Object.keys(stripeProducts).length === 0;
   const cacheStale = (Date.now() - stripeProductsCachedAt) > STRIPE_PRODUCTS_TTL_MS;
@@ -333,7 +342,8 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
         listCents: lineListOk ? Math.round(campaignVariant.listPrice * 100) : linePaidCents,
         paidCents: linePaidCents,
         promoActive: lineListOk && campaignVariant.promoActive === true,
-        stock: lineStock
+        stock: lineStock,
+        displayName: campaignDisplayName(product, campaignVariant)
       });
     }
   }
@@ -368,9 +378,15 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     if (campaignViolation.code === 'CAP_EXCEEDED') {
       campaignMessage = `Black Cat Friday deals are limited to ${campaignViolation.allowed} per item in each order. Please lower the quantity. Go back to your cart.`;
     } else if (campaignViolation.code === 'STOCK_EXCEEDED') {
+      const violLine = campaignLines.find(l => l.productId === campaignViolation.productId && l.variantId === campaignViolation.variantId);
+      const violName = (violLine && violLine.displayName) || '';
       campaignMessage = campaignViolation.allowed > 0
-        ? `Only ${campaignViolation.allowed} left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.`
-        : 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.';
+        ? (violName
+          ? `Only ${campaignViolation.allowed} left of ${violName}. Please lower the quantity in your cart.`
+          : `Only ${campaignViolation.allowed} left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.`)
+        : (violName
+          ? `${violName} has just sold out. Please remove it from your cart.`
+          : 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.');
     } else if (campaignViolation.code === 'BUNDLE_CAP_EXCEEDED') {
       campaignMessage = `Black Cat Friday set deals are limited to ${campaignViolation.allowed} per order. Please lower the quantity. Go back to your cart.`;
     }
