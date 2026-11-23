@@ -1695,6 +1695,7 @@ window.appliedDiscount = 0;
         totals.total = data.calculatedTotals.total != null ? Number(data.calculatedTotals.total) : totals.total;
         totals.discountPercent = Number(data.calculatedTotals.discountPercent || 0);
         totals.discount = Number(data.calculatedTotals.discount || 0);
+        totals.campaignExtra = Number(data.calculatedTotals.campaignExtra || 0);
         // Re-render summary with authoritative values
         renderOrderSummary();
       }
@@ -1722,7 +1723,8 @@ window.appliedDiscount = 0;
         shipping: totals.shipping,
         shippingText: totals.shipping === 0 ? 'FREE' : `€${totals.shipping.toFixed(2)}`,
         vat: totals.vat,
-        total: totals.total
+        total: totals.total,
+        campaignExtra: Number.isFinite(totals.campaignExtra) && totals.campaignExtra >= 0 ? totals.campaignExtra : 0
       },
       shipping: {
         firstName: elements.form.firstName.value,
