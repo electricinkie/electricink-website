@@ -41,7 +41,7 @@ const uncappedConfig = (nullCaps) => {
 function loadBcfPageHelpers() {
   const pagePath = path.join(ROOT, 'js', 'bcf-page.js');
   const source = fs.readFileSync(pagePath, 'utf8');
-  const instrumented = source.replace(/\}\)\(\);\s*$/, 'window.__bcfTest = { boostOf, buildKitItems };})();');
+  const instrumented = source.replace(/\}\)\(\);\s*$/, 'window.__bcfTest = { boostOf, buildKitItems, boostShort, boostRule };})();');
   assert.notStrictEqual(instrumented, source, 'test hook insertion point');
   const sandbox = {
     window: { cart: { addItem() {}, getCart() { return []; } } },
@@ -50,6 +50,16 @@ function loadBcfPageHelpers() {
   vm.createContext(sandbox);
   vm.runInContext(instrumented, sandbox);
   return sandbox.window.__bcfTest;
+}
+
+function loadDrawerHelpers() {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'cart-drawer.js'), 'utf8');
+  const instrumented = source.replace(/\}\)\(\);\s*$/, 'window.__drawerTest = { discountFrom, totalAfterDiscountCents, minusEuros, buildCampaignLines, stockLimit, stockNote };})();');
+  assert.notStrictEqual(instrumented, source, 'test hook insertion point');
+  const sandbox = { window: { addEventListener() {} }, document: {} };
+  vm.createContext(sandbox);
+  vm.runInContext(instrumented, sandbox);
+  return sandbox.window.__drawerTest;
 }
 
 // Fixtures (cents, VAT incl.)
@@ -472,6 +482,123 @@ test('37 explicit maxUnitsPerOrder 0: boostUnlocked false and extra 0 even with 
 test('37a bcf-page boostOf returns null for an explicit maxUnitsPerOrder 0', () => {
   const helpers = loadBcfPageHelpers();
   assert.strictEqual(helpers.boostOf({ enabled: true, boost: { discountPercent: 60, minLineCents: 1000, maxUnitsPerOrder: 0 } }), null);
+});
+
+
+// ── Cart and drawer: total with the Black Cat Friday line (display only) ──
+test('38 drawer: discountFrom shows the extra only without violations, with fresh prices and a positive integer', () => {
+  const { discountFrom } = loadDrawerHelpers();
+  const ok = { ok: true, active: true, violations: [], extraCents: 1680 };
+  assert.strictEqual(discountFrom(ok, true), 1680);
+  assert.strictEqual(discountFrom(ok, false), 0);
+  assert.strictEqual(discountFrom(Object.assign({}, ok, { violations: [{ code: 'STOCK_EXCEEDED' }] }), true), 0);
+  assert.strictEqual(discountFrom(Object.assign({}, ok, { active: false }), true), 0);
+  assert.strictEqual(discountFrom(Object.assign({}, ok, { ok: false }), true), 0);
+  assert.strictEqual(discountFrom(Object.assign({}, ok, { extraCents: 0 }), true), 0);
+  assert.strictEqual(discountFrom(Object.assign({}, ok, { extraCents: 10.5 }), true), 0);
+  assert.strictEqual(discountFrom(null, true), 0);
+});
+test('39 drawer: totalAfterDiscountCents subtracts, and ignores a discount above the subtotal or a bad number', () => {
+  const { totalAfterDiscountCents, minusEuros } = loadDrawerHelpers();
+  assert.strictEqual(totalAfterDiscountCents(46800, 16800), 30000);
+  assert.strictEqual(totalAfterDiscountCents(11800, 2080), 9720);
+  assert.strictEqual(totalAfterDiscountCents(1000, 0), 1000);
+  assert.strictEqual(totalAfterDiscountCents(1000, 1001), 1000);
+  assert.strictEqual(totalAfterDiscountCents(1000, NaN), 1000);
+  assert.strictEqual(minusEuros(16800), '\u2212\u20ac168.00');
+});
+test('40 drawer: 3 Sumi sets in the cart -> discount 16800, total 30000 (same as the checkout)', () => {
+  const { buildCampaignLines, discountFrom, totalAfterDiscountCents } = loadDrawerHelpers();
+  const rows = SUMI.map((v) => ({ id: 'sumi', variant_id: v, price_ex: '21.14', effective_price_ex: '21.14', promo_active: false, stock: null }));
+  const cart = SUMI.map((v) => ({ id: 'sumi-' + v, price: 26, quantity: 3 }));
+  const built = buildCampaignLines(cart, rows);
+  assert.strictEqual(built.priceOk, true);
+  const r = C.compute({ config: CONFIG, nowMs: NOW, lines: built.lines });
+  assert.strictEqual(r.violations.length, 0);
+  const d = discountFrom(r, built.priceOk);
+  assert.strictEqual(d, 3 * SUMI_EXTRA);
+  assert.strictEqual(totalAfterDiscountCents(46800, d), 46800 - d);
+  // a stale price in the cart switches the display off
+  cart[0].price = 25;
+  assert.strictEqual(discountFrom(r, buildCampaignLines(cart, rows).priceOk), 0);
+});
+
+
+// ── Category card: "from" price with the promo of the cheapest variant ──
+function loadCategoryHelper() {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'category-page.js'), 'utf8');
+  const m = source.match(/function variantPromoDisplay\(variants\) \{[\s\S]*?\n\}\n/);
+  assert.ok(m, 'variantPromoDisplay found');
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(m[0] + ';this.fn = variantPromoDisplay;', sandbox);
+  return sandbox.fn;
+}
+test('41 category: cheapest variant on promo -> was/now/from with the SAME variant\'s normal price', () => {
+  const f = loadCategoryHelper();
+  const out = f([{ price: 24.5, wasPrice: 49 }, { price: 13, wasPrice: 26 }]);
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(out)), { was: '\u20ac26.00', now: '\u20ac13.00', from: true });
+});
+test('42 category: no promo, cheapest not on promo, bad or missing data -> null (card stays "from")', () => {
+  const f = loadCategoryHelper();
+  assert.strictEqual(f([{ price: 13 }, { price: 24.5, wasPrice: 49 }]), null);
+  assert.strictEqual(f([{ price: 13, wasPrice: 13 }]), null);
+  assert.strictEqual(f([{ price: 13, wasPrice: 'x' }]), null);
+  assert.strictEqual(f([{ price: NaN, wasPrice: 20 }]), null);
+  assert.strictEqual(f([]), null);
+  assert.strictEqual(f(undefined), null);
+  assert.strictEqual(f([null, { price: 5, wasPrice: 10 }]).now, '\u20ac5.00');
+});
+test('43 category: the badge maths in the card gives -50% for from 13.00 / was 26.00', () => {
+  const f = loadCategoryHelper();
+  const d = f([{ price: 13, wasPrice: 26 }]);
+  const off = Math.round((1 - parseFloat(d.now.replace(/[^0-9.]/g, '')) / parseFloat(d.was.replace(/[^0-9.]/g, ''))) * 100);
+  assert.strictEqual(off, 50);
+});
+
+
+// ── Black Cat Friday page copy: short line in the text, exact rule in the small print ──
+test('44 bcf-page: boostShort is plain and short; boostRule keeps the exact rule (sale price x quantity)', () => {
+  const h = loadBcfPageHelpers();
+  const boost = { discountPercent: 60, minLineCents: 1000 };
+  assert.strictEqual(h.boostShort(boost), 'Add any other product worth \u20ac10+ and your Vault items drop to 60%.');
+  assert.ok(h.boostShort(boost).indexOf('sale price') === -1);
+  assert.ok(h.boostRule(boost).indexOf('one product outside the Vault comes to \u20ac10 or more') !== -1);
+  assert.ok(h.boostRule(boost).indexOf('(sale price x quantity)') !== -1);
+  // the rule still matches lib/campaign.js: ONE non-Vault line, paid x qty >= minLineCents (10.00 exactly unlocks)
+  assert.strictEqual(run([L.raven30(2), L.cart(1, 1000)]).boostUnlocked, true);
+  assert.strictEqual(run([L.raven30(2), L.cart(1, 999)]).boostUnlocked, false);
+  assert.strictEqual(run([L.raven30(2), L.cart(1, 500, { variantId: 'a' }), L.cart(1, 500, { variantId: 'b' })]).boostUnlocked, false);
+});
+
+
+// ── Stock hints on the "+" (comfort only; the server still rejects) ──
+test('45 drawer/cart: stockLimit keeps whole numbers; null, empty and junk are unknown (never block)', () => {
+  const { stockLimit } = loadDrawerHelpers();
+  assert.strictEqual(stockLimit(5), 5); assert.strictEqual(stockLimit('3'), 3); assert.strictEqual(stockLimit(0), 0);
+  assert.strictEqual(stockLimit(-2), 0);
+  [null, undefined, '', 'abc', 2.5, NaN].forEach((v) => assert.strictEqual(stockLimit(v), null, String(v)));
+});
+test('46 drawer/cart: stockNote clamps at the stock; null limit never blocks; 0 says Out of stock', () => {
+  const { stockNote } = loadDrawerHelpers();
+  assert.strictEqual(stockNote(3, 2), '');
+  assert.strictEqual(stockNote(3, 3), 'Only 3 left');
+  assert.strictEqual(stockNote(3, 4), 'Only 3 left');
+  assert.strictEqual(stockNote(0, 1), 'Out of stock');
+  assert.strictEqual(stockNote(null, 99), '');
+  assert.strictEqual(stockNote(undefined, 99), '');
+  assert.strictEqual(stockNote(3, undefined), '');
+});
+test('47 product page: cartStockNote same rule (null/empty/junk never block; N in cart of N -> Only N left)', () => {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'product-page.js'), 'utf8');
+  const m = source.match(/function cartStockNote\(stock, inCart\) \{[\s\S]*?\n\}\n/);
+  assert.ok(m, 'cartStockNote found');
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(m[0] + ';this.fn = cartStockNote;', sandbox);
+  const f = sandbox.fn;
+  assert.strictEqual(f(4, 3), ''); assert.strictEqual(f(4, 4), 'Only 4 left'); assert.strictEqual(f(0, 0), 'Out of stock');
+  [null, undefined, '', 'x', 1.5, -1].forEach((v) => assert.strictEqual(f(v, 9), '', String(v)));
 });
 
 console.log(passed + '/' + total + ' passed');

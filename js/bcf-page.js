@@ -181,8 +181,8 @@
       const boost = boostOf(config);
       if (boost) {
         shown = showCard('boost', boost.discountPercent + '%',
-          'Add a qualifying product',
-          'Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '.') || shown;
+          'Add one more product',
+          boostShort(boost)) || shown;
       }
 
       const bundle = Array.isArray(config.bundles) ? config.bundles[0] : null;
@@ -336,6 +336,11 @@
     return 'one product outside the Vault comes to €' + euros(boost.minLineCents) + ' or more in your cart (sale price x quantity)';
   }
 
+  // Short line for the page text. The exact rule stays in boostRule, in the small print.
+  function boostShort(boost) {
+    return 'Add any other product worth €' + euros(boost.minLineCents) + '+ and your Vault items drop to ' + boost.discountPercent + '%.';
+  }
+
   function boostOf(config) {
     const boost = config.boost;
     const maxUnits = boost && boost.maxUnitsPerOrder;
@@ -366,7 +371,7 @@
     if (els.vaultSub && isPercent(pct)) {
       const boost = boostOf(config);
       setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'product' : 'products') + ' at ' + pct + '% off.' +
-        (boost ? ' Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '.' : ''));
+        (boost ? ' ' + boostShort(boost) : ''));
       els.vaultSub.hidden = false;
     }
     return cards.length;
@@ -608,7 +613,7 @@
     };
     if (out.unlock > 0) {
       setText(els.unlockTitle, 'Add one of these to unlock ' + boost.discountPercent + '%');
-      setText(els.unlockSub, 'Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '. These sale items meet the threshold at their current prices.');
+      setText(els.unlockSub, 'Add one of these and your Vault items drop to ' + boost.discountPercent + '%. Each is €' + euros(boost.minLineCents) + ' or more at its sale price.');
     }
     return out;
   }
@@ -727,7 +732,7 @@
       if (anyContent(next)) attempt(() => renderPrint(config, next), null);
       const boost = next.vault > 0 ? boostOf(config) : null;
       setText(els.restText, 'Every other product is still in the shop.' +
-        (boost ? ' Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '.' : ''));
+        (boost ? ' ' + boostShort(boost) : ''));
       content = next;
       return content;
     }).catch(() => {
