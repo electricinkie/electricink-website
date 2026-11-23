@@ -4,6 +4,19 @@ function toGross(priceEx) {
   return parseFloat((p * 1.23).toFixed(2));
 }
 
+// Several variants: when the CHEAPEST one (by effective price) is on promotion, its own normal and promo
+// prices, like variantPromoDisplay in js/category-page.js; otherwise null (the card keeps "from").
+function cheapestPromoPair(rows) {
+  let best = null;
+  for (const v of rows) {
+    const eff = toGross(v.effective_price_ex) !== null ? toGross(v.effective_price_ex) : toGross(v.price_ex);
+    if (best === null || eff < best.eff) best = { v, eff };
+  }
+  if (!best || best.v.promo_active !== true) return null;
+  const was = toGross(best.v.price_ex);
+  return (was !== null && was > best.eff) ? { was, now: best.eff } : null;
+}
+
 async function fetchPrice(productId) {
   try {
     const res = await fetch(`/api/catalog?type=product&id=${encodeURIComponent(productId)}`);
@@ -28,7 +41,11 @@ async function fetchPrice(productId) {
     // never shows a higher "from" than category-page.js for the same product.
     // min/max stay on the normal prices, because they also decide the branch
     // below and carry the pre-promo "was".
-    if (min !== max) return { text: `from €${Math.min(...rows.map(effectiveOf)).toFixed(2)}` };
+    if (min !== max) {
+      const pair = cheapestPromoPair(rows);
+      if (pair) return { was: pair.was, now: pair.now, from: true };
+      return { text: `from €${Math.min(...rows.map(effectiveOf)).toFixed(2)}` };
+    }
     // Single price with an active promotion: was/now pair. Any missing or
     // non-cheaper promo price falls back to the plain single-price string.
     const promoRow = rows.find(v => v.promo_active === true);
@@ -54,6 +71,7 @@ function renderPrice(priceEl, price) {
   now.className = 'price-now';
   now.textContent = `€${price.now.toFixed(2)}`;
   priceEl.textContent = '';
+  if (price.from) priceEl.appendChild(document.createTextNode('from '));
   priceEl.appendChild(was);
   priceEl.appendChild(now);
   // Discount badge, calculated from the two prices shown.
@@ -61,7 +79,7 @@ function renderPrice(priceEl, price) {
   if (off > 0 && off < 100) {
     const badge = document.createElement('span');
     badge.textContent = `−${off}%`;
-    badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#fff;font-size:11px;font-weight:700;';
+    badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#111;font-size:11px;font-weight:700;';
     priceEl.appendChild(badge);
   }
 }
