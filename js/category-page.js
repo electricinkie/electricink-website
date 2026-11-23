@@ -686,7 +686,7 @@ function getAvailabilityBadgeInfo(product) {
           if (off > 0 && off < 100) {
             const badge = document.createElement('span');
             badge.textContent = `−${off}%`;
-            badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#fff;font-size:11px;font-weight:700;';
+            badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#111;font-size:11px;font-weight:700;';
             price.appendChild(badge);
           }
         } else {
