@@ -320,7 +320,7 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     if (off > 0 && off < 100) {
       const badge = document.createElement('span');
       badge.textContent = `−${off}%`;
-      badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#fff;font-size:12px;font-weight:700;';
+      badge.style.cssText = 'margin-left:8px;padding:2px 6px;border-radius:3px;background:#FFA300;color:#111;font-size:12px;font-weight:700;';
       el.appendChild(badge);
     }
   }
@@ -555,6 +555,30 @@ import { INTERNAL_API_URL } from '/js/constants.js';
       if (match) variantSelect.value = match.value;
     }
 
+    // "Only N left" next to the stock state for the CHOSEN variant (real stock from the API).
+    // Display only: never blocks or changes Add to Cart. An error here shows nothing.
+    function updateLowStock(selected) {
+      try {
+        const stockEl = document.getElementById('productStock');
+        if (!stockEl) return;
+        let low = document.getElementById('lowStockNote');
+        if (!low) {
+          low = document.createElement('span');
+          low.id = 'lowStockNote';
+          low.setAttribute('role', 'status');
+          low.setAttribute('aria-live', 'polite');
+          low.style.cssText = 'font-family: Montserrat, sans-serif; font-size: 14px; font-weight: 600; color: #b45309;';
+          stockEl.insertBefore(low, stockEl.querySelector('.btn-share-inline'));
+        }
+        // The cart note below Add to Cart belongs to the previous variant: clear it so only one note shows.
+        const cartNote = document.getElementById('stockLimitNote');
+        if (cartNote) cartNote.textContent = '';
+        const variant = productData.variants.find(v => v.id === selected.value);
+        const onRequest = productData.orderOnRequest === true || productData.inventory?.stock_status === 'available_on_request';
+        low.textContent = (variant && selected.dataset.available === 'true' && !onRequest) ? lowStockText(variant.quantity) : '';
+      } catch (e) { /* no note */ }
+    }
+
     // Update price and image on change (defensive: handle missing dataset.price)
     variantSelect.onchange = function() {
       let selected = this.options[this.selectedIndex];
@@ -623,6 +647,8 @@ import { INTERNAL_API_URL } from '/js/constants.js';
           addBtn.textContent = 'Add to Cart';
         }
       }
+
+      updateLowStock(selected);
     };
 
     // Trigger change event for the selected variant to initialize the image
@@ -945,6 +971,14 @@ if (productData.wholesale && productData.wholesale.enabled) {
 // ===== FIM WHOLESALE =====
 
   // ADD TO CART button
+// "Only N left" for a known whole-number stock of 1 to 5; '' for 0, more than 5 or unknown (display only, never blocks).
+function lowStockText(quantity) {
+  if (quantity === null || quantity === undefined || quantity === '') return '';
+  const n = Number(quantity);
+  if (!Number.isInteger(n) || n < 1 || n > 5) return '';
+  return `Only ${n} left`;
+}
+
 // "Only N left" when the cart already holds all of a known whole-number stock; '' otherwise (unknown never blocks).
 function cartStockNote(stock, inCart) {
   if (stock === null || stock === undefined || stock === '') return '';
@@ -1157,10 +1191,15 @@ function checkProductAvailability(product) {
               if (!hint) {
                 hint = document.createElement('p');
                 hint.id = 'stockLimitNote';
+                hint.setAttribute('role', 'status');
+                hint.setAttribute('aria-live', 'polite');
                 hint.style.cssText = 'color: #FFA300; font-size: 0.9rem; font-weight: 600; margin: 8px 0 0;';
                 addToCartBtn.parentNode.insertBefore(hint, addToCartBtn.nextSibling);
               }
               hint.textContent = note;
+              // Same message already says it: show only one.
+              const lowEl = document.getElementById('lowStockNote');
+              if (lowEl) lowEl.textContent = '';
               return;
             }
           }
