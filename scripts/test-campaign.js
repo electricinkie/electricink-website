@@ -727,5 +727,95 @@ test('55 home: cheapestPromoPair gives the cheapest variant\'s own normal and pr
   assert.strictEqual(f([]), null);
 });
 
+// ── Product page: "Add all levels" for set products (display only; the server prices the lines) ──
+function loadSetHelpers() {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'product-page.js'), 'utf8');
+  const pick = (re) => { const m = source.match(re); assert.ok(m, 'found ' + re); return m[0]; };
+  const code = [
+    pick(/function resolveStripePriceId\(product, variant\) \{[\s\S]*?\n  \}\n/),
+    pick(/function cartStockNote\(stock, inCart\) \{[\s\S]*?\n\}\n/),
+    pick(/const SET_PRODUCTS = \{[\s\S]*?\n\};\n/),
+    pick(/function setItemsFor\([\s\S]*?\n\}\n/),
+    pick(/function setAvailability\([\s\S]*?\n\}\n/),
+    pick(/function setSumCents\([\s\S]*?\n\}\n/),
+    pick(/function setSumText\([\s\S]*?\n\}\n/),
+    pick(/function setCampaignText\([\s\S]*?\n\}\n/)
+  ].join('');
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(code + ';this.api = { SET_PRODUCTS, setItemsFor, setAvailability, setSumCents, setSumText, setCampaignText };', sandbox);
+  return sandbox.api;
+}
+const SETP = loadSetHelpers();
+const plain = (v) => JSON.parse(JSON.stringify(v)); // vm objects have another prototype: compare plain copies
+const SET_IDS = SETP.SET_PRODUCTS.sumi;
+const sumiProduct = (quantities) => ({
+  id: 'sumi',
+  variants: SET_IDS.map((id, i) => ({ id, label: (i + 1) + ' - LEVEL', price: 26, stripe_price_id: 'price_' + id, image: '/img/' + id + '.webp', quantity: quantities ? quantities[i] : 10 }))
+});
+
+test('56 product page setItemsFor: Sumi has 6 items in the normal Add to Cart shape (id, name, price, price id, image, variant)', () => {
+  assert.deepStrictEqual(plain(SET_IDS), ['sumi-1-gi', 'sumi-2-yuu', 'sumi-3-jin', 'sumi-4-rei', 'sumi-5-makoto', 'sumi-6-meiyo']);
+  const items = SETP.setItemsFor(sumiProduct(), 'sumi', 'Sumi', '/img/main.webp', SET_IDS);
+  assert.strictEqual(items.length, 6);
+  assert.deepStrictEqual(plain(items[0]), { id: 'sumi-sumi-1-gi', name: 'Sumi - 1 - LEVEL', price: 26, stripe_price_id: 'price_sumi-1-gi', image: '/img/sumi-1-gi.webp', variant: 'sumi-1-gi', available_on_request: false });
+  assert.deepStrictEqual(plain(items.map((i) => i.variant)), plain(SET_IDS));
+});
+
+test('57 product page setItemsFor: a product without all 6 variants, or with an unusable one, gives null; junk never throws', () => {
+  const missing = sumiProduct(); missing.variants.pop();
+  assert.strictEqual(SETP.setItemsFor(missing, 'sumi', 'Sumi', '/x', SET_IDS), null);
+  const noPrice = sumiProduct(); noPrice.variants[2].price = undefined;
+  assert.strictEqual(SETP.setItemsFor(noPrice, 'sumi', 'Sumi', '/x', SET_IDS), null);
+  const noPriceId = sumiProduct(); delete noPriceId.variants[4].stripe_price_id;
+  assert.strictEqual(SETP.setItemsFor(noPriceId, 'sumi', 'Sumi', '/x', SET_IDS), null);
+  const noImage = sumiProduct(); delete noImage.variants[0].image;
+  assert.strictEqual(SETP.setItemsFor(noImage, 'sumi', 'Sumi', '/fallback', SET_IDS)[0].image, '/fallback');
+  [null, undefined, 5, 'x', {}, { variants: 'x' }, { variants: [null, 1] }].forEach((p) => assert.strictEqual(SETP.setItemsFor(p, 'sumi', 'Sumi', '/x', SET_IDS), null));
+  assert.strictEqual(SETP.setItemsFor(sumiProduct(), 'sumi', 'Sumi', '/x', null), null);
+  assert.strictEqual(SETP.setItemsFor(sumiProduct(), 'sumi', 'Sumi', '/x', []), null);
+  assert.ok(!Object.prototype.hasOwnProperty.call(SETP.SET_PRODUCTS, 'raven-black'));
+});
+
+test('58 product page setAvailability: all in stock ok; one at 0 -> "One level is sold out"; all at 0 hides; unknown stock is available; junk is unavailable', () => {
+  const ok = (p, cart) => SETP.setAvailability(p, 'sumi', SET_IDS, cart || []);
+  assert.deepStrictEqual(plain(ok(sumiProduct())), { ok: true, reason: '', note: '' });
+  assert.deepStrictEqual(plain(ok(sumiProduct([10, 10, 0, 10, 10, 10]))), { ok: false, reason: 'sold_out', note: 'One level is sold out' });
+  assert.strictEqual(ok(sumiProduct([0, 0, 10, 10, 10, 10])).note, '2 levels are sold out');
+  assert.strictEqual(ok(sumiProduct([0, 0, 0, 0, 0, 0])).reason, 'all_sold_out');
+  assert.strictEqual(ok(sumiProduct([10, 10, -1, 10, 10, 10])).reason, 'sold_out');
+  assert.strictEqual(ok(sumiProduct([null, undefined, '', 'x', 10, 10])).ok, true);
+  const flagged = sumiProduct(); flagged.variants[1].stock_status = 'out_of_stock';
+  assert.strictEqual(ok(flagged).reason, 'sold_out');
+  const missing = sumiProduct(); missing.variants.pop();
+  assert.strictEqual(ok(missing).reason, 'unavailable');
+  [null, undefined, 5, {}, { variants: 'x' }].forEach((p) => assert.strictEqual(ok(p).ok, false));
+  assert.strictEqual(SETP.setAvailability(sumiProduct(), 'sumi', null, []).ok, false);
+});
+
+test('59 product page setAvailability: the cart blocks with the cartStockNote text only when it already holds all of a known stock', () => {
+  const line = (variant, quantity) => ({ id: 'sumi-' + variant, quantity });
+  const p = sumiProduct([3, 3, 3, 3, 3, 3]);
+  assert.strictEqual(SETP.setAvailability(p, 'sumi', SET_IDS, [line('sumi-1-gi', 2)]).ok, true);
+  assert.deepStrictEqual(plain(SETP.setAvailability(p, 'sumi', SET_IDS, [line('sumi-4-rei', 3)])), { ok: false, reason: 'in_cart', note: 'Only 3 left' });
+  assert.strictEqual(SETP.setAvailability(sumiProduct([null, 2, 3, 3, 3, 3]), 'sumi', SET_IDS, [line('sumi-1-gi', 99)]).ok, true, 'unknown stock never blocks');
+  assert.strictEqual(SETP.setAvailability(p, 'sumi', SET_IDS, [line('sumi-6-meiyo', 3), null, 'x', { id: 'sumi-sumi-2-yuu', quantity: 'x' }]).note, 'Only 3 left');
+  [null, undefined, 'x', 5, [null]].forEach((c) => assert.strictEqual(SETP.setAvailability(p, 'sumi', SET_IDS, c).ok, true, String(c)));
+  assert.strictEqual(SETP.setAvailability(p, 'sumi', SET_IDS, [{ id: 'other-sumi-1-gi', quantity: 9 }]).ok, true);
+});
+
+test('60 product page setSumText/setCampaignText: sum from the item prices; campaign line only for a sane discount', () => {
+  const items = SETP.setItemsFor(sumiProduct(), 'sumi', 'Sumi', '/x', SET_IDS);
+  assert.strictEqual(SETP.setSumCents(items), 15600);
+  assert.strictEqual(SETP.setSumText(items), '6 × €26.00 = €156.00');
+  const mixed = items.map((i, n) => Object.assign({}, i, { price: n === 0 ? 13 : 26 }));
+  assert.strictEqual(SETP.setSumText(mixed), '6 levels = €143.00');
+  [null, undefined, [], 'x', [{ price: NaN }], [{ price: 0 }], [null]].forEach((v) => { assert.strictEqual(SETP.setSumCents(v), null); assert.strictEqual(SETP.setSumText(v), ''); });
+  assert.strictEqual(SETP.setCampaignText(15600, 5600), 'Black Cat Friday: €100 for the set');
+  assert.strictEqual(SETP.setCampaignText(15600, 5650), 'Black Cat Friday: €99.50 for the set');
+  [[15600, 0], [15600, -1], [15600, 15600], [15600, 20000], [15600, 1.5], [15600, NaN], [15600, null], [null, 100], [15600, '5600'], [15600, undefined]]
+    .forEach((a) => assert.strictEqual(SETP.setCampaignText(a[0], a[1]), '', JSON.stringify(a)));
+});
+
 console.log(passed + '/' + total + ' passed');
 process.exit(passed === total ? 0 : 1);

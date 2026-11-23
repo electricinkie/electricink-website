@@ -209,6 +209,7 @@
 :where(.product-info) > .product-description { order: 9; }
 :where(.product-info) > .product-variants { order: 10; }
 :where(.product-info) > .btn-add-to-cart { order: 11; }
+:where(.product-info) > .set-add { order: 11; }
 :where(.product-info) > #notifyMeBtn { order: 12; }
 :where(.product-info) > .product-trust { order: 13; }
 :where(.product-info) > .product-features { order: 14; }
@@ -371,6 +372,79 @@
 .btn-add-to-cart:hover {
   background: #43BDAB;
   color: #fff;
+}
+
+/* "Add all levels" (js/product-page.js, set products only): secondary outline button under Add to cart */
+.set-add {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.set-add[hidden] {
+  display: none;
+}
+
+.btn-set-add {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000;
+  background: transparent;
+  border: 2px solid #000;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.btn-set-add:hover:not(:disabled) {
+  background: #43BDAB;
+  border-color: #43BDAB;
+  color: #fff;
+}
+
+.btn-set-add:focus-visible {
+  outline: 3px solid #43BDAB;
+  outline-offset: 2px;
+}
+
+.btn-set-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.set-add-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #444;
+}
+
+.set-add-info span:empty {
+  display: none;
+}
+
+.set-add-campaign {
+  font-weight: 600;
+  color: #000;
+}
+
+.set-add-note {
+  font-weight: 600;
+  color: #b45309;
+}
+
+@media (max-width: 768px) {
+  .btn-set-add {
+    min-height: 44px;
+  }
 }
 
 /* ========================================
@@ -656,6 +730,7 @@
   /* :where() keeps this to the info column: the review form's Submit button is also .btn-add-to-cart */
   :where(.product-info) > .btn-add-to-cart { order: 7; }
   #notifyMeBtn { order: 7; }
+  .set-add { order: 7; }
   .product-description { order: 8; }
   .product-how-to-use { order: 9; }
   .product-trust { order: 10; }
