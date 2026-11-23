@@ -21,6 +21,36 @@ function test(name, fn) {
   catch (e) { console.log('FAIL ' + name + '\n     ' + (e && e.message)); }
 }
 const clone = (o) => JSON.parse(JSON.stringify(o));
+const cappedConfig = () => {
+  const cfg = clone(CONFIG);
+  cfg.vault.items.forEach((item) => {
+    item.capPerOrder = item.productId === 'raven-black-fineline' && item.variantId === 'raven-fineline-240' ? 3 : 6;
+  });
+  cfg.bundles.forEach((bundle) => { bundle.capPerOrder = 2; });
+  cfg.boost.maxUnitsPerOrder = 4;
+  return cfg;
+};
+const uncappedConfig = (nullCaps) => {
+  const cfg = clone(CONFIG);
+  cfg.vault.items.forEach((item) => { if (nullCaps) item.capPerOrder = null; else delete item.capPerOrder; });
+  cfg.bundles.forEach((bundle) => { if (nullCaps) bundle.capPerOrder = null; else delete bundle.capPerOrder; });
+  if (nullCaps) cfg.boost.maxUnitsPerOrder = null;
+  else delete cfg.boost.maxUnitsPerOrder;
+  return cfg;
+};
+function loadBcfPageHelpers() {
+  const pagePath = path.join(ROOT, 'js', 'bcf-page.js');
+  const source = fs.readFileSync(pagePath, 'utf8');
+  const instrumented = source.replace(/\}\)\(\);\s*$/, 'window.__bcfTest = { boostOf, buildKitItems };})();');
+  assert.notStrictEqual(instrumented, source, 'test hook insertion point');
+  const sandbox = {
+    window: { cart: { addItem() {}, getCart() { return []; } } },
+    document: { readyState: 'loading', addEventListener() {} }
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(instrumented, sandbox);
+  return sandbox.window.__bcfTest;
+}
 
 // Fixtures (cents, VAT incl.)
 const L = {
@@ -31,7 +61,7 @@ const L = {
   transfer30: (qty, o) => Object.assign({ productId: 'transfer-it', variantId: 'transfer-30', qty, listCents: 1100, paidCents: 550, promoActive: true, stock: null }, o),
   cart:       (qty, paid, o) => Object.assign({ productId: 'cartridge-test', variantId: 'cart-box', qty, listCents: paid, paidCents: paid, promoActive: false, stock: null }, o),
 };
-const run = (lines, o) => C.compute(Object.assign({ config: CONFIG, nowMs: NOW, lines }, o));
+const run = (lines, o) => C.compute(Object.assign({ config: cappedConfig(), nowMs: NOW, lines }, o));
 
 test('01 inactive 1 ms before startsAt', () => {
   assert.strictEqual(C.isActive(CONFIG, START - 1), false);
@@ -44,7 +74,7 @@ test('02 inactive 1 ms after endsAt', () => {
   assert.strictEqual(r.ok, true); assert.strictEqual(r.extraCents, 0);
 });
 test('03 enabled false', () => {
-  const cfg = clone(CONFIG); cfg.enabled = false;
+  const cfg = cappedConfig(); cfg.enabled = false;
   assert.strictEqual(C.isActive(cfg, NOW), false);
   const r = run([L.raven30(4), L.cart(1, 1800)], { config: cfg });
   assert.strictEqual(r.ok, true); assert.strictEqual(r.active, false); assert.strictEqual(r.extraCents, 0);
@@ -77,7 +107,7 @@ test('08 only Vault lines (another Vault) does not unlock', () => {
   assert.strictEqual(r.boostUnlocked, false); assert.strictEqual(r.extraCents, 0);
 });
 test('09 fixedVariants: fixed line does not unlock and gets no 60%', () => {
-  const cfg = clone(CONFIG); cfg.fixedVariants = [{ productId: 'sumi-test', variantId: 'sumi-set' }];
+  const cfg = cappedConfig(); cfg.fixedVariants = [{ productId: 'sumi-test', variantId: 'sumi-set' }];
   const fixedLine = { productId: 'sumi-test', variantId: 'sumi-set', qty: 1, listCents: 5000, paidCents: 5000, promoActive: false, stock: null };
   const r = run([L.raven30(4), fixedLine], { config: cfg });
   assert.strictEqual(r.boostUnlocked, false); assert.strictEqual(r.extraCents, 0);
@@ -91,26 +121,56 @@ test('10 promoActive false on Vault line -> no extra, no cap check', () => {
   assert.strictEqual(r.perLine[0].extraCents, 0);
   assert.strictEqual(r.extraCents, 490);
 });
-test('11 CAP_EXCEEDED: 7x Raven 30 (cap 6); 4x Fineline 240 (cap 3)', () => {
-  const r = run([L.raven30(7), L.cart(1, 1800)]);
-  assert.deepStrictEqual(r.violations, [{ code: 'CAP_EXCEEDED', productId: 'raven-black', variantId: 'raven-30', allowed: 6, requested: 7 }]);
-  assert.strictEqual(r.extraCents, 1040);
-  const r2 = run([L.fine240(4), L.cart(1, 1800)]);
-  assert.deepStrictEqual(r2.violations, [{ code: 'CAP_EXCEEDED', productId: 'raven-black-fineline', variantId: 'raven-fineline-240', allowed: 3, requested: 4 }]);
-  assert.strictEqual(r2.extraCents, 1470);
+test('11 absent/null caps mean unlimited Vault quantity and Boost units', () => {
+  for (const cfg of [uncappedConfig(false), uncappedConfig(true)]) {
+    assert.deepStrictEqual(C.validateConfig(cfg), { ok: true, errors: [] });
+    const six = run([L.raven30(6), L.cart(1, 1800)], { config: cfg });
+    assert.strictEqual(six.boostedUnits, 6); assert.strictEqual(six.extraCents, 1560);
+    const r = run([L.raven30(7), L.cart(1, 1800)], { config: cfg });
+    assert.deepStrictEqual(r.violations, []);
+    assert.strictEqual(r.boostedUnits, 7); assert.strictEqual(r.extraCents, 1820);
+    const r2 = run([L.fine240(4), L.cart(1, 1800)], { config: cfg });
+    assert.deepStrictEqual(r2.violations, []);
+    assert.strictEqual(r2.boostedUnits, 4); assert.strictEqual(r2.extraCents, 1960);
+  }
 });
 test('12 STOCK_EXCEEDED: stock 2 qty 3; stock null not checked', () => {
-  const r = run([L.raven30(3, { stock: 2 }), L.cart(1, 1800)]);
+  const r = run([L.raven30(3, { stock: 2 }), L.cart(1, 1800)], { config: cappedConfig() });
   assert.deepStrictEqual(r.violations, [{ code: 'STOCK_EXCEEDED', productId: 'raven-black', variantId: 'raven-30', allowed: 2, requested: 3 }]);
   assert.strictEqual(r.extraCents, 520);
   const r2 = run([L.raven30(3, { stock: null }), L.cart(1, 1800)]);
   assert.strictEqual(r2.violations.length, 0); assert.strictEqual(r2.extraCents, 780);
 });
-test('13 max 4 units across lines, highest extra first -> 1500', () => {
-  const r = run([L.raven30(3), L.fine240(2), L.cart(1, 1800)]);
-  assert.strictEqual(r.boostedUnits, 4); assert.strictEqual(r.extraCents, 1500);
-  assert.strictEqual(r.perLine[1].boostedQty, 2); assert.strictEqual(r.perLine[1].extraCents, 980);
-  assert.strictEqual(r.perLine[0].boostedQty, 2); assert.strictEqual(r.perLine[0].extraCents, 520);
+test('12a real config accepts 7 Raven 30 with Boost on all 7 units', () => {
+  const r = run([L.raven30(7), L.cart(1, 1800)], { config: CONFIG });
+  assert.deepStrictEqual(r.violations, []);
+  assert.strictEqual(r.boostedUnits, 7); assert.strictEqual(r.extraCents, 1820);
+});
+test('12b real config accepts three complete Sumi sets', () => {
+  const lines = CONFIG.bundles[0].variantIds.map((variantId) => ({
+    productId: 'sumi', variantId, qty: 3, listCents: 2600, paidCents: 2600, promoActive: false, stock: null
+  }));
+  const r = run(lines, { config: CONFIG });
+  assert.strictEqual(r.bundleSets, 3);
+  assert.strictEqual(r.extraCents, 16800);
+  assert.deepStrictEqual(r.violations, []);
+});
+test('13 integer legacy caps remain enforced, including Boost max units', () => {
+  const config = cappedConfig();
+  const r = run([L.raven30(7), L.cart(1, 1800)], { config });
+  assert.deepStrictEqual(r.violations, [{ code: 'CAP_EXCEEDED', productId: 'raven-black', variantId: 'raven-30', allowed: 6, requested: 7 }]);
+  assert.strictEqual(r.boostedUnits, 4); assert.strictEqual(r.extraCents, 1040);
+  const r2 = run([L.fine240(4), L.cart(1, 1800)], { config });
+  assert.deepStrictEqual(r2.violations, [{ code: 'CAP_EXCEEDED', productId: 'raven-black-fineline', variantId: 'raven-fineline-240', allowed: 3, requested: 4 }]);
+  assert.strictEqual(r2.boostedUnits, 3); assert.strictEqual(r2.extraCents, 1470);
+  const r3 = run([L.raven30(6), L.cart(1, 1800)], { config });
+  assert.strictEqual(r3.boostedUnits, 4); assert.strictEqual(r3.extraCents, 1040);
+});
+test('13a explicit maxUnitsPerOrder zero keeps the Boost disabled', () => {
+  const cfg = cappedConfig(); cfg.boost.maxUnitsPerOrder = 0;
+  assert.strictEqual(C.validateConfig(cfg).ok, true);
+  const r = run([L.raven30(6), L.cart(1, 1800)], { config: cfg });
+  assert.strictEqual(r.boostedUnits, 0); assert.strictEqual(r.extraCents, 0);
 });
 test('14 rounding: 1100/550 -> 110; 999/500 -> boost 400, extra 100', () => {
   assert.strictEqual(run([L.transfer30(1), L.cart(1, 1800)]).extraCents, 110);
@@ -170,7 +230,7 @@ test('18 fuzz 300 random inputs (fixed seed)', () => {
 });
 test('19 purity: deep-frozen inputs do not throw and do not change', () => {
   const deepFreeze = (o) => { Object.values(o).forEach((v) => { if (v && typeof v === 'object') deepFreeze(v); }); return Object.freeze(o); };
-  const cfg = deepFreeze(clone(CONFIG));
+  const cfg = deepFreeze(cappedConfig());
   const lines = deepFreeze([L.raven30(5, { stock: 3 }), L.fine240(2), L.cart(1, 1800)]);
   const before = JSON.stringify({ cfg, lines });
   const r = C.compute({ config: cfg, nowMs: NOW, lines });
@@ -181,8 +241,8 @@ test('20 determinism: same call twice, same result', () => {
   const lines = [L.raven30(3), L.fine240(2), L.cat250(4), L.cart(1, 1800)];
   assert.deepStrictEqual(run(lines), run(lines));
 });
-test('21 validateConfig: accepts real config, rejects bad ones', () => {
-  assert.deepStrictEqual(C.validateConfig(CONFIG), { ok: true, errors: [] });
+test('21 validateConfig: accepts explicit capped config, rejects bad ones', () => {
+  assert.deepStrictEqual(C.validateConfig(cappedConfig()), { ok: true, errors: [] });
   const muts = [
     (c) => { delete c.label; },
     (c) => { c.vault.discountPercent = 150; },
@@ -191,8 +251,39 @@ test('21 validateConfig: accepts real config, rejects bad ones', () => {
     (c) => { c.endsAt = '2026-13-45'; },
     (c) => { c.startsAt = '2026-12-01T00:00:00Z'; },
   ];
-  for (const m of muts) { const c = clone(CONFIG); m(c); assert.strictEqual(C.validateConfig(c).ok, false); }
+  for (const m of muts) { const c = cappedConfig(); m(c); assert.strictEqual(C.validateConfig(c).ok, false); }
   assert.strictEqual(C.validateConfig(null).ok, false);
+});
+test('21a validateConfig rejects every invalid Vault, bundle and Boost cap value', () => {
+  for (const value of [-1, 1.5, '6']) {
+    const vaultCap = cappedConfig();
+    vaultCap.vault.items[0].capPerOrder = value;
+    assert.strictEqual(C.validateConfig(vaultCap).ok, false, 'Vault cap ' + JSON.stringify(value));
+
+    const bundleCap = cappedConfig();
+    bundleCap.bundles[0].capPerOrder = value;
+    assert.strictEqual(C.validateConfig(bundleCap).ok, false, 'bundle cap ' + JSON.stringify(value));
+
+    const boostCap = cappedConfig();
+    boostCap.boost.maxUnitsPerOrder = value;
+    assert.strictEqual(C.validateConfig(boostCap).ok, false, 'Boost cap ' + JSON.stringify(value));
+  }
+});
+test('21b partial Vault caps keep the one explicit cap and leave other variants uncapped', () => {
+  const cfg = clone(CONFIG);
+  cfg.vault.items.forEach((item) => {
+    if (item.productId === 'raven-black' && item.variantId === 'raven-30') item.capPerOrder = 6;
+    else delete item.capPerOrder;
+  });
+  cfg.bundles.forEach((bundle) => { bundle.capPerOrder = 2; });
+  cfg.boost.maxUnitsPerOrder = 4;
+
+  assert.deepStrictEqual(C.validateConfig(cfg), { ok: true, errors: [] });
+  const r = run([L.raven30(7), L.cart(1, 1800)], { config: cfg });
+  assert.deepStrictEqual(r.violations, [{ code: 'CAP_EXCEEDED', productId: 'raven-black', variantId: 'raven-30', allowed: 6, requested: 7 }]);
+  const other = run([L.fine240(4), L.cart(1, 1800)], { config: cfg });
+  assert.deepStrictEqual(other.violations, []);
+  assert.strictEqual(other.boostedUnits, 4); assert.strictEqual(other.extraCents, 1960);
 });
 test('22 integration: every Vault/fixed pair exists in data/*.json', () => {
   const dir = path.join(ROOT, 'data');
@@ -214,7 +305,7 @@ test('23 UMD: require exposes compute; window.EI_CAMPAIGN in vm', () => {
   vm.createContext(sandbox);
   vm.runInContext(src, sandbox);
   assert.strictEqual(typeof sandbox.window.EI_CAMPAIGN.compute, 'function');
-  const input = { config: CONFIG, nowMs: NOW, lines: [L.raven30(4), L.cart(1, 1800)] };
+  const input = { config: cappedConfig(), nowMs: NOW, lines: [L.raven30(4), L.cart(1, 1800)] };
   const a = JSON.parse(JSON.stringify(sandbox.window.EI_CAMPAIGN.compute(input)));
   assert.deepStrictEqual(a, C.compute(input));
   assert.strictEqual(a.extraCents, 1040);
@@ -236,10 +327,13 @@ test('25 one of the 6 variants missing -> bundleExtra 0', () => {
   const r = run(sumiSet().slice(0, 5));
   assert.strictEqual(r.bundleSets, 0); assert.strictEqual(r.bundleExtraCents, 0); assert.strictEqual(r.extraCents, 0);
 });
-test('26 min qty 3, cap 2 -> sets 2 and BUNDLE_CAP_EXCEEDED', () => {
-  const r = run(sumiSet([3, 3, 3, 3, 3, 3]));
-  assert.strictEqual(r.bundleSets, 2); assert.strictEqual(r.bundleExtraCents, 2 * SUMI_EXTRA);
-  assert.deepStrictEqual(r.violations, [{ code: 'BUNDLE_CAP_EXCEEDED', productId: 'sumi', variantId: null, allowed: 2, requested: 3 }]);
+test('26 three Sumi sets accepted at the configured set price when cap is absent/null', () => {
+  for (const cfg of [uncappedConfig(false), uncappedConfig(true)]) {
+    const r = run(sumiSet([3, 3, 3, 3, 3, 3]), { config: cfg });
+    assert.strictEqual(r.bundleSets, 3); assert.strictEqual(r.bundleExtraCents, 3 * SUMI_EXTRA);
+    assert.strictEqual(r.extraCents, 16800); // three sets, each discounted from €156 to €100
+    assert.deepStrictEqual(r.violations, []);
+  }
 });
 test('27 qty (2,1,1,1,1,1) -> 1 set', () => {
   const r = run(sumiSet([2, 1, 1, 1, 1, 1]));
@@ -253,7 +347,7 @@ test('28 set + Vault (Raven 30): set unlocks Boost, total = bundle + Vault extra
   assert.strictEqual(r.extraCents, SUMI_EXTRA + 1040);
 });
 test('29 priceCents above the sum of the 6 -> bundleExtra 0 (never negative)', () => {
-  const cfg = clone(CONFIG); cfg.bundles[0].priceCents = 20000;
+  const cfg = cappedConfig(); cfg.bundles[0].priceCents = 20000;
   const r = run(sumiSet(), { config: cfg });
   assert.strictEqual(r.bundleSets, 1); assert.strictEqual(r.bundleExtraCents, 0); assert.strictEqual(r.extraCents, 0);
 });
@@ -266,9 +360,52 @@ test('30 validateConfig rejects invalid bundles', () => {
     (c) => { c.bundles = {}; },
     (c) => { c.vault.items.push({ productId: 'sumi', variantId: 'sumi-1-gi', capPerOrder: 6 }); },
   ];
-  for (const m of muts) { const c = clone(CONFIG); m(c); assert.strictEqual(C.validateConfig(c).ok, false); }
-  const noBundles = clone(CONFIG); delete noBundles.bundles;
+  for (const m of muts) { const c = cappedConfig(); m(c); assert.strictEqual(C.validateConfig(c).ok, false); }
+  const noBundles = cappedConfig(); delete noBundles.bundles;
   assert.strictEqual(C.validateConfig(noBundles).ok, true);
+});
+
+test('34 bcf-page boostOf accepts missing maxUnitsPerOrder as uncapped', () => {
+  const helpers = loadBcfPageHelpers();
+  const boost = { discountPercent: 60, minLineCents: 1000 };
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(helpers.boostOf({ enabled: true, boost }))),
+    boost
+  );
+});
+test('34a bcf-page boostOf accepts an explicit maxUnitsPerOrder', () => {
+  const helpers = loadBcfPageHelpers();
+  const boost = { discountPercent: 60, minLineCents: 1000, maxUnitsPerOrder: 4 };
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(helpers.boostOf({ enabled: true, boost }))),
+    boost
+  );
+});
+test('35 bcf-page buildKitItems accepts a bundle without capPerOrder', () => {
+  const helpers = loadBcfPageHelpers();
+  const bundle = { productId: 'sumi', variantIds: SUMI };
+  const rows = SUMI.map((variant_id) => ({ id: 'sumi', variant_id, effective_price_ex: 1 / 1.23, stock: 5 }));
+  const local = {
+    name: 'Sumi',
+    variants: SUMI.map((id) => ({ id, label: id, stripe_price_id: 'price_' + id }))
+  };
+  const items = helpers.buildKitItems(bundle, rows, local);
+  assert.ok(Array.isArray(items), 'buildKitItems should accept a bundle without capPerOrder');
+  assert.strictEqual(items.length, 6);
+  assert.strictEqual(items[0].price, 1);
+});
+test('35a bcf-page buildKitItems accepts a bundle with capPerOrder', () => {
+  const helpers = loadBcfPageHelpers();
+  const bundle = { productId: 'sumi', variantIds: SUMI, capPerOrder: 2 };
+  const rows = SUMI.map((variant_id) => ({ id: 'sumi', variant_id, effective_price_ex: 1 / 1.23, stock: 5 }));
+  const local = {
+    name: 'Sumi',
+    variants: SUMI.map((id) => ({ id, label: id, stripe_price_id: 'price_' + id }))
+  };
+  const items = helpers.buildKitItems(bundle, rows, local);
+  assert.ok(Array.isArray(items), 'buildKitItems should accept a bundle with capPerOrder');
+  assert.strictEqual(items.length, 6);
+  assert.strictEqual(items[0].price, 1);
 });
 test('31 integration: the 6 bundle variantIds exist in data/products-artistic-inks.json', () => {
   const inks = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'products-artistic-inks.json'), 'utf8'));
@@ -302,7 +439,7 @@ test('32 fuzz 300 inputs with the bundle active (fixed seed)', () => {
 });
 test('33 purity and determinism with the bundle (frozen objects)', () => {
   const deepFreeze = (o) => { Object.values(o).forEach((v) => { if (v && typeof v === 'object') deepFreeze(v); }); return Object.freeze(o); };
-  const cfg = deepFreeze(clone(CONFIG));
+  const cfg = deepFreeze(cappedConfig());
   const lines = deepFreeze([L.raven30(2)].concat(sumiSet([3, 2, 2, 2, 2, 2])));
   const before = JSON.stringify({ cfg, lines });
   const a = C.compute({ config: cfg, nowMs: NOW, lines });
@@ -310,6 +447,31 @@ test('33 purity and determinism with the bundle (frozen objects)', () => {
   assert.strictEqual(a.ok, true); assert.strictEqual(a.bundleSets, 2);
   assert.deepStrictEqual(a, b);
   assert.strictEqual(JSON.stringify({ cfg, lines }), before);
+});
+
+test('36 Sumi stock known below qty -> STOCK_EXCEEDED with allowed/requested; null stock -> none', () => {
+  const stocked = (stock) => SUMI.map((v, i) => sumi(v, 3, { stock: i === 2 ? stock : null }));
+  const r = run(stocked(2), { config: CONFIG });
+  assert.deepStrictEqual(r.violations, [{ code: 'STOCK_EXCEEDED', productId: 'sumi', variantId: SUMI[2], allowed: 2, requested: 3 }]);
+  const r0 = run(stocked(0), { config: CONFIG });
+  assert.deepStrictEqual(r0.violations, [{ code: 'STOCK_EXCEEDED', productId: 'sumi', variantId: SUMI[2], allowed: 0, requested: 3 }]);
+  assert.deepStrictEqual(run(stocked(null), { config: CONFIG }).violations, []);
+  assert.deepStrictEqual(run(stocked(3), { config: CONFIG }).violations, []);
+});
+test('36a Sumi repeated lines of one variant: summed qty vs the lowest known stock, one violation', () => {
+  const lines = sumiSet().concat([sumi(SUMI[0], 2, { stock: 5 })]);
+  lines[0] = sumi(SUMI[0], 2, { stock: 3 });
+  const r = run(lines, { config: CONFIG });
+  assert.deepStrictEqual(r.violations, [{ code: 'STOCK_EXCEEDED', productId: 'sumi', variantId: SUMI[0], allowed: 3, requested: 4 }]);
+});
+test('37 explicit maxUnitsPerOrder 0: boostUnlocked false and extra 0 even with the threshold met', () => {
+  const cfg = cappedConfig(); cfg.boost.maxUnitsPerOrder = 0;
+  const r = run([L.raven30(6), L.cart(1, 1800)], { config: cfg });
+  assert.strictEqual(r.boostUnlocked, false); assert.strictEqual(r.boostedUnits, 0); assert.strictEqual(r.extraCents, 0);
+});
+test('37a bcf-page boostOf returns null for an explicit maxUnitsPerOrder 0', () => {
+  const helpers = loadBcfPageHelpers();
+  assert.strictEqual(helpers.boostOf({ enabled: true, boost: { discountPercent: 60, minLineCents: 1000, maxUnitsPerOrder: 0 } }), null);
 });
 
 console.log(passed + '/' + total + ' passed');

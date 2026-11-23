@@ -178,11 +178,11 @@
 
     // Boost and kit only exist while the campaign is enabled.
     if (config.enabled === true) {
-      const boost = config.boost;
-      if (boost && isPercent(boost.discountPercent) && isCents(boost.minLineCents)) {
+      const boost = boostOf(config);
+      if (boost) {
         shown = showCard('boost', boost.discountPercent + '%',
-          'Add one more thing',
-          'Put any other item of €' + euros(boost.minLineCents) + ' or more in your cart and ' + vaultUnits(boost) + ' drop to ' + boost.discountPercent + '% off.') || shown;
+          'Add a qualifying product',
+          'Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '.') || shown;
       }
 
       const bundle = Array.isArray(config.bundles) ? config.bundles[0] : null;
@@ -331,17 +331,19 @@
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
-  // "your first 4 Vault units" (boost.maxUnitsPerOrder); without a valid number, "your Vault items".
-  function vaultUnits(boost) {
-    return Number.isInteger(boost.maxUnitsPerOrder) && boost.maxUnitsPerOrder > 0
-      ? 'your first ' + boost.maxUnitsPerOrder + ' Vault units' : 'your Vault items';
+  // The threshold rule, same as lib/campaign.js: sale price x quantity of ONE non-Vault line, before any campaign discount.
+  function boostRule(boost) {
+    return 'one product outside the Vault comes to €' + euros(boost.minLineCents) + ' or more in your cart (sale price x quantity)';
   }
 
   function boostOf(config) {
     const boost = config.boost;
-    // maxUnitsPerOrder 0 is valid for the server but gives no 60% unit: then nothing may promise it.
+    const maxUnits = boost && boost.maxUnitsPerOrder;
+    const hasValidLimit = maxUnits === undefined || maxUnits === null ||
+      (Number.isInteger(maxUnits) && maxUnits > 0);
+    // An explicit zero disables Boost; an absent/null limit means all eligible Vault units.
     return config.enabled === true && boost && isPercent(boost.discountPercent) && isCents(boost.minLineCents) &&
-      Number.isInteger(boost.maxUnitsPerOrder) && boost.maxUnitsPerOrder > 0 ? boost : null;
+      hasValidLimit && maxUnits !== 0 ? boost : null;
   }
 
   /** Vault grid. Returns the number of cards rendered. */
@@ -364,7 +366,7 @@
     if (els.vaultSub && isPercent(pct)) {
       const boost = boostOf(config);
       setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'product' : 'products') + ' at ' + pct + '% off.' +
-        (boost ? ' Add any other item of €' + euros(boost.minLineCents) + ' or more and ' + vaultUnits(boost) + ' drop to ' + boost.discountPercent + '%.' : ''));
+        (boost ? ' Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '.' : ''));
       els.vaultSub.hidden = false;
     }
     return cards.length;
@@ -378,12 +380,13 @@
     if (!kitState || !window.cart || typeof window.cart.getCart !== 'function') return 0;
     const cart = window.cart.getCart();
     if (!Array.isArray(cart)) return 0;
-    let sets = Infinity;
+    let sets = null;
     kitState.ids.forEach(id => {
       const line = cart.find(i => i && i.id === id);
-      sets = Math.min(sets, line && Number.isInteger(line.quantity) ? line.quantity : 0);
+      const quantity = line && Number.isInteger(line.quantity) ? line.quantity : 0;
+      sets = sets === null ? quantity : Math.min(sets, quantity);
     });
-    return isFinite(sets) ? sets : 0;
+    return sets === null ? 0 : sets;
   }
 
   // Button label, disabled state and the "maximum" note. Skipped while an add is running.
@@ -391,7 +394,7 @@
     if (!els.kitAdd || kitBusy) return;
     if (!kitState) { els.kitAdd.hidden = true; els.kitNote.hidden = true; return; }
     els.kitAdd.hidden = false;
-    const full = kitSetsInCart() >= kitState.cap;
+    const full = kitState.cap !== undefined && kitState.cap !== null && kitSetsInCart() >= kitState.cap;
     els.kitAdd.disabled = full;
     els.kitAdd.textContent = 'Add the whole Sumi Set to cart';
     if (full) {
@@ -404,7 +407,7 @@
 
   function onKitAdd() {
     if (kitBusy || !kitState || !window.cart || typeof window.cart.addItem !== 'function') return;
-    if (kitSetsInCart() >= kitState.cap) { updateKitButton(); return; }
+    if (kitState.cap !== undefined && kitState.cap !== null && kitSetsInCart() >= kitState.cap) { updateKitButton(); return; }
     kitBusy = true;
     els.kitAdd.disabled = true;
     els.kitNote.hidden = true;
@@ -435,7 +438,8 @@
    * when anything is missing: the button then stays hidden and only the link shows.
    */
   function buildKitItems(bundle, rows, local) {
-    if (!Number.isInteger(bundle.capPerOrder) || bundle.capPerOrder < 1) return null;
+    const hasCap = bundle.capPerOrder !== undefined && bundle.capPerOrder !== null;
+    if (hasCap && (!Number.isInteger(bundle.capPerOrder) || bundle.capPerOrder < 1)) return null;
     if (!window.cart || typeof window.cart.addItem !== 'function' || typeof window.cart.getCart !== 'function') return null;
     const name = resolveName(local);
     const items = [];
@@ -604,7 +608,7 @@
     };
     if (out.unlock > 0) {
       setText(els.unlockTitle, 'Add one of these to unlock ' + boost.discountPercent + '%');
-      setText(els.unlockSub, 'Any item of €' + euros(boost.minLineCents) + ' or more works, and these are on sale too. ' + vaultUnits(boost).charAt(0).toUpperCase() + vaultUnits(boost).slice(1) + ' drop to ' + boost.discountPercent + '% off.');
+      setText(els.unlockSub, 'Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '. These sale items meet the threshold at their current prices.');
     }
     return out;
   }
@@ -659,17 +663,22 @@
     if (config.enabled === true) showLine(els.printCodes, "Discount codes can't be used during Black Cat Friday. Free shipping over €150 still applies, based on your cart before discounts.");
 
     if (config.enabled === true && shown.vault > 0 && config.vault && Array.isArray(config.vault.items)) {
-      const caps = config.vault.items.map(i => i && i.capPerOrder).filter(c => Number.isInteger(c) && c > 0);
+      const cappedItems = config.vault.items.filter(i => i && Number.isInteger(i.capPerOrder) && i.capPerOrder > 0);
+      const caps = cappedItems.map(i => i.capPerOrder);
       if (caps.length > 0) {
         const low = Math.min.apply(null, caps);
         const high = Math.max.apply(null, caps);
-        showLine(els.printCap, (low === high ? 'Vault items are limited to ' + low + ' per order.' : 'Vault items are limited per order, between ' + low + ' and ' + high + '.') +
+        const subject = caps.length < config.vault.items.length ? 'Some Vault items are limited ' : 'Vault items are limited ';
+        showLine(els.printCap, subject + (low === high ? 'to ' + low + ' per order.' : 'per order, between ' + low + ' and ' + high + '.') +
           " When they're gone, they're gone.");
       }
       const boost = boostOf(config);
-      if (boost && Number.isInteger(boost.maxUnitsPerOrder) && boost.maxUnitsPerOrder > 0) {
-        showLine(els.printBoost, 'The ' + boost.discountPercent + '% applies to up to ' + boost.maxUnitsPerOrder +
-          " Vault units per order, when your cart has another item of €" + euros(boost.minLineCents) + " or more that isn't from the Vault.");
+      if (boost) {
+        const units = Number.isInteger(boost.maxUnitsPerOrder) && boost.maxUnitsPerOrder > 0
+          ? 'up to ' + boost.maxUnitsPerOrder + ' eligible Vault units per order'
+          : 'all eligible Vault units';
+        showLine(els.printBoost, 'The ' + boost.discountPercent + '% applies to ' + units +
+          ', when ' + boostRule(boost) + '.');
       }
     }
 
@@ -718,7 +727,7 @@
       if (anyContent(next)) attempt(() => renderPrint(config, next), null);
       const boost = next.vault > 0 ? boostOf(config) : null;
       setText(els.restText, 'Every other product is still in the shop.' +
-        (boost ? ' Anything of €' + euros(boost.minLineCents) + ' or more also unlocks your ' + boost.discountPercent + '%.' : ''));
+        (boost ? ' Unlock ' + boost.discountPercent + '% off eligible Vault units when ' + boostRule(boost) + '.' : ''));
       content = next;
       return content;
     }).catch(() => {

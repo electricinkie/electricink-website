@@ -225,8 +225,10 @@
       else if (kit && kitSets.extraCents > 0) text = `Sumi Set ✓ €${euros(kit.priceCents)} instead of €${euros(kit.priceCents + kitSets.extraCents / kitSets.sets)}. You save €${euros(kitSets.extraCents / kitSets.sets)}. Applied at checkout.`;
       else if (r.boostUnlocked && r.boostedUnits > 0) text = `60% unlocked ✓ You save an extra €${((r.extraCents - r.bundleExtraCents) / 100).toFixed(2)}. Applied at checkout.`;
       else if (r.boostUnlocked && hasVault) return;
-      else if (hasVault) text = `Vault 50% ✓ Add any other item of €${euros(config.boost.minLineCents)} or more to unlock 60% on your first ${config.boost.maxUnitsPerOrder} Vault units.`;
-      else text = 'Black Cat Friday: up to 60% off. Ends Mon 30 Nov, 23:59.';
+      else if (hasVault) text = config.boost.maxUnitsPerOrder === 0
+        ? 'Vault 50% ✓'
+        : `Vault 50% ✓ Add one product outside the Vault that comes to €${euros(config.boost.minLineCents)} or more in your cart (sale price x quantity) to unlock 60% on eligible Vault units.`;
+      else text = `Black Cat Friday: up to ${config.boost.maxUnitsPerOrder === 0 ? config.vault.discountPercent : 60}% off. Ends Mon 30 Nov, 23:59.`;
       showCampaignText(text, myId, footerEl);
     } catch (_) {}
   }
