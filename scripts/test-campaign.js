@@ -38,14 +38,25 @@ const uncappedConfig = (nullCaps) => {
   else delete cfg.boost.maxUnitsPerOrder;
   return cfg;
 };
+// Minimal DOM node for the bcf-page render tests (createElement, textContent, classList, attributes).
+function fakeNode(tag) {
+  const n = { tag, children: [], className: '', textContent: '', attrs: {}, dataset: {}, hidden: false };
+  n.classList = { add(c) { n.className += ' ' + c; } };
+  n.appendChild = (c) => { n.children.push(c); return c; };
+  n.setAttribute = (k, v) => { n.attrs[k] = v; };
+  return n;
+}
 function loadBcfPageHelpers() {
   const pagePath = path.join(ROOT, 'js', 'bcf-page.js');
   const source = fs.readFileSync(pagePath, 'utf8');
-  const instrumented = source.replace(/\}\)\(\);\s*$/, 'window.__bcfTest = { boostOf, buildKitItems, boostShort, boostRule };})();');
+  const instrumented = source.replace(/\}\)\(\);\s*$/, 'window.__bcfTest = { boostOf, buildKitItems, boostShort, boostRule, isSoldOut, matchVaultRows, renderVault, els };})();');
   assert.notStrictEqual(instrumented, source, 'test hook insertion point');
   const sandbox = {
     window: { cart: { addItem() {}, getCart() { return []; } } },
-    document: { readyState: 'loading', addEventListener() {} }
+    document: {
+      readyState: 'loading', addEventListener() {},
+      createElement: fakeNode, createTextNode: (t) => ({ text: t }), getElementById: () => null
+    }
   };
   vm.createContext(sandbox);
   vm.runInContext(instrumented, sandbox);
@@ -599,6 +610,121 @@ test('47 product page: cartStockNote same rule (null/empty/junk never block; N i
   const f = sandbox.fn;
   assert.strictEqual(f(4, 3), ''); assert.strictEqual(f(4, 4), 'Only 4 left'); assert.strictEqual(f(0, 0), 'Out of stock');
   [null, undefined, '', 'x', 1.5, -1].forEach((v) => assert.strictEqual(f(v, 9), '', String(v)));
+});
+
+test('48 success page: campaignSavingText shows only a positive finite saving not above the subtotal', () => {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'success.js'), 'utf8');
+  const m = source.match(/function campaignSavingText\(t\) \{[\s\S]*?\n  \}\n/);
+  assert.ok(m, 'campaignSavingText found');
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(m[0] + ';this.fn = campaignSavingText;', sandbox);
+  const f = sandbox.fn;
+  assert.strictEqual(f({ subtotal: 50, campaignExtra: 5 }), '\u2212\u20ac5.00');
+  assert.strictEqual(f({ subtotal: 50, campaignExtra: 50 }), '\u2212\u20ac50.00');
+  [0, undefined, -1, NaN, Infinity, 50.01, '5'].forEach((v) => assert.strictEqual(f({ subtotal: 50, campaignExtra: v }), '', String(v)));
+  assert.strictEqual(f({ campaignExtra: 5 }), '');
+  assert.strictEqual(f({ subtotal: 50 }), '');
+  assert.strictEqual(f(undefined), '');
+});
+
+// ── Black Cat Friday page: sold-out Vault cards (display only) ──
+test('49 bcf-page isSoldOut: whole stock <= 0 is sold out; null, empty, junk and missing are available', () => {
+  const { isSoldOut } = loadBcfPageHelpers();
+  [0, -1, -7, '0', '-2', ' 0 '].forEach((v) => assert.strictEqual(isSoldOut({ stock: v }), true, String(v)));
+  [3, '3', 1, null, undefined, '', '   ', 'abc', NaN, 2.5, Infinity, true, [], {}].forEach((v) => assert.strictEqual(isSoldOut({ stock: v }), false, String(v)));
+  assert.strictEqual(isSoldOut({}), false);
+  assert.strictEqual(isSoldOut(null), false);
+  assert.strictEqual(isSoldOut(undefined), false);
+  // The catalog row has no status field: a status alone never marks a row as sold out.
+  assert.strictEqual(isSoldOut({ stock: null, stock_status: 'out_of_stock' }), false);
+});
+
+function vaultFixture(stocks) {
+  const config = clone(CONFIG);
+  config.enabled = true;
+  config.vault.items = config.vault.items.slice(0, stocks.length);
+  const rows = [], catalog = {};
+  config.vault.items.forEach((item, i) => {
+    rows.push({ id: item.productId, variant_id: item.variantId, price_ex: '20.00', effective_price_ex: '10.00', promo_active: true, stock: stocks[i] });
+    catalog[item.productId] = { name: 'Product ' + i, images: { cover: '/img/' + i + '.webp' }, variants: [{ id: item.variantId, image: '/img/v' + i + '.webp', label: '30ml' }] };
+  });
+  return { config, rows, catalog };
+}
+const textOf = (n) => (n.textContent || '') + (n.children || []).map(textOf).join('|');
+
+test('50 bcf-page matchVaultRows flags soldOut from the row stock', () => {
+  const h = loadBcfPageHelpers();
+  const f = vaultFixture([0, 5, null]);
+  const m = h.matchVaultRows(f.config.vault.items, f.rows);
+  assert.strictEqual(m.map((x) => x.soldOut).join(), 'true,false,false');
+});
+
+test('51 bcf-page renderVault: sold-out card shown after the available ones, not counted; seal, class, aria, link kept', () => {
+  const h = loadBcfPageHelpers();
+  const f = vaultFixture([0, 5]);
+  h.els.grid = fakeNode('div'); h.els.vaultSub = fakeNode('p');
+  const n = h.renderVault(f.config, f.rows, f.catalog);
+  assert.strictEqual(n, 1);
+  assert.strictEqual(h.els.grid.children.length, 2);
+  const [first, last] = h.els.grid.children;
+  assert.ok(first.className.indexOf('bcf-card--soldout') === -1);
+  assert.ok(last.className.indexOf('bcf-card--soldout') !== -1);
+  assert.strictEqual(last.attrs['aria-label'], 'Product 0, sold out');
+  assert.ok(textOf(last).indexOf('Sold out') !== -1);
+  assert.ok(last.href.indexOf('/products.html?id=') === 0);
+  assert.ok(textOf(first).indexOf('Sold out') === -1);
+  assert.ok(h.els.vaultSub.textContent.indexOf('One product at 50% off.') === 0);
+});
+
+test('52 bcf-page renderVault: every item sold out -> 0 and nothing rendered (section stays hidden)', () => {
+  const h = loadBcfPageHelpers();
+  const f = vaultFixture([0, -1, '0']);
+  h.els.grid = fakeNode('div'); h.els.vaultSub = fakeNode('p');
+  assert.strictEqual(h.renderVault(f.config, f.rows, f.catalog), 0);
+  assert.strictEqual(h.els.grid.children.length, 0);
+  assert.strictEqual(h.els.vaultSub.textContent, '');
+});
+
+test('53 bcf-page renderVault: unknown stock (null, missing) keeps every card available', () => {
+  const h = loadBcfPageHelpers();
+  const f = vaultFixture([null, undefined, 'abc']);
+  h.els.grid = fakeNode('div'); h.els.vaultSub = fakeNode('p');
+  assert.strictEqual(h.renderVault(f.config, f.rows, f.catalog), 3);
+  assert.ok(h.els.grid.children.every((c) => c.className.indexOf('soldout') === -1));
+});
+
+test('54 product page: lowStockText shows "Only N left" for a whole stock of 1 to 5 only', () => {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'product-page.js'), 'utf8');
+  const m = source.match(/function lowStockText\(quantity\) \{[\s\S]*?\n\}\n/);
+  assert.ok(m, 'lowStockText found');
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(m[0] + ';this.fn = lowStockText;', sandbox);
+  const f = sandbox.fn;
+  assert.strictEqual(f(1), 'Only 1 left'); assert.strictEqual(f(5), 'Only 5 left'); assert.strictEqual(f('3'), 'Only 3 left');
+  [0, 6, null, undefined, '', 2.5, NaN, -1, 'x'].forEach((v) => assert.strictEqual(f(v), '', String(v)));
+});
+
+test('55 home: cheapestPromoPair gives the cheapest variant\'s own normal and promo price only when it is on promotion', () => {
+  const source = fs.readFileSync(path.join(ROOT, 'js', 'homepage-prices.js'), 'utf8');
+  const g = source.match(/function toGross\(priceEx\) \{[\s\S]*?\n\}\n/);
+  const m = source.match(/function cheapestPromoPair\(rows\) \{[\s\S]*?\n\}\n/);
+  assert.ok(g && m, 'helpers found');
+  const sandbox = {};
+  vm.createContext(sandbox);
+  vm.runInContext(g[0] + m[0] + ';this.fn = cheapestPromoPair;', sandbox);
+  const f = sandbox.fn;
+  // 21.14 ex = 26.00 gross, 10.57 ex = 13.00 gross
+  const promo = [{ price_ex: '30.00', effective_price_ex: '30.00', promo_active: false }, { price_ex: '21.14', effective_price_ex: '10.57', promo_active: true }];
+  const r = f(promo);
+  assert.strictEqual(r.was, 26.00); assert.strictEqual(r.now, 13.00);
+  // the cheapest is not the promoted one -> null
+  assert.strictEqual(f([{ price_ex: '10.00', effective_price_ex: '10.00', promo_active: false }, { price_ex: '40.00', effective_price_ex: '20.00', promo_active: true }]), null);
+  // no promotion, flag without a real discount, empty
+  assert.strictEqual(f([{ price_ex: '10.00' }, { price_ex: '20.00' }]), null);
+  assert.strictEqual(f([{ price_ex: '10.00', effective_price_ex: '10.00', promo_active: true }]), null);
+  assert.strictEqual(f([]), null);
 });
 
 console.log(passed + '/' + total + ' passed');
