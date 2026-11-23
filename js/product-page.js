@@ -945,6 +945,14 @@ if (productData.wholesale && productData.wholesale.enabled) {
 // ===== FIM WHOLESALE =====
 
   // ADD TO CART button
+// "Only N left" when the cart already holds all of a known whole-number stock; '' otherwise (unknown never blocks).
+function cartStockNote(stock, inCart) {
+  if (stock === null || stock === undefined || stock === '') return '';
+  const n = Number(stock);
+  if (!Number.isInteger(n) || n < 0 || !(inCart >= n)) return '';
+  return n === 0 ? 'Out of stock' : `Only ${n} left`;
+}
+
 /**
  * Check if product can be purchased
  * @param {Object} product - Product object with inventory data
@@ -1134,6 +1142,29 @@ function checkProductAvailability(product) {
             return;
           }
         }
+
+        // Stock hint (comfort only: the server still checks). A variant whose whole-number stock is already
+        // all in the cart is not added again. Unknown stock and Order on Request never block; an error never blocks.
+        try {
+          const hintSelect = document.getElementById('variantSelect');
+          const hintVariant = hintSelect && productData.variants && productData.variants.find(v => v.id === hintSelect.value);
+          let hint = document.getElementById('stockLimitNote');
+          if (hint) hint.textContent = '';
+          if (hintVariant && !itemToAdd.available_on_request && window.cart && typeof window.cart.getCart === 'function') {
+            const line = window.cart.getCart().find(i => i.id === itemToAdd.id);
+            const note = cartStockNote(hintVariant.quantity, line ? line.quantity : 0);
+            if (note) {
+              if (!hint) {
+                hint = document.createElement('p');
+                hint.id = 'stockLimitNote';
+                hint.style.cssText = 'color: #FFA300; font-size: 0.9rem; font-weight: 600; margin: 8px 0 0;';
+                addToCartBtn.parentNode.insertBefore(hint, addToCartBtn.nextSibling);
+              }
+              hint.textContent = note;
+              return;
+            }
+          }
+        } catch (e) { /* no hint: add as before */ }
 
         // Add to cart usando global system
         if (window.cart && window.cart.addItem) {
