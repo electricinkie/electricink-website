@@ -8,6 +8,18 @@ function escHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+// Card price for a product with variants. When the cheapest variant is on promotion it carries both prices
+// (its own normal price and its promo price), like a single product on promotion; otherwise null.
+function variantPromoDisplay(variants) {
+  const priced = (variants || []).filter(v => v && typeof v.price === 'number' && !isNaN(v.price));
+  if (priced.length === 0) return null;
+  const cheapest = priced.reduce((a, b) => (b.price < a.price ? b : a));
+  if (typeof cheapest.wasPrice === 'number' && !isNaN(cheapest.wasPrice) && cheapest.wasPrice > cheapest.price) {
+    return { was: `€${cheapest.wasPrice.toFixed(2)}`, now: `€${cheapest.price.toFixed(2)}`, from: true };
+  }
+  return null;
+}
+
 (async function() {
   'use strict';
 
@@ -403,7 +415,7 @@ function escHtml(str) {
         if (priceRangeDisplay) {
           priceDisplay = priceRangeDisplay;
         } else if (!isNaN(minPrice)) {
-          priceDisplay = `from €${minPrice.toFixed(2)}`;
+          priceDisplay = variantPromoDisplay(data.variants) || `from €${minPrice.toFixed(2)}`;
         } else {
           priceDisplay = 'Price unavailable';
         }
@@ -666,6 +678,7 @@ function getAvailabilityBadgeInfo(product) {
           const now = document.createElement('span');
           now.className = 'price-now';
           now.textContent = product.priceDisplay.now;
+          if (product.priceDisplay.from) price.appendChild(document.createTextNode('from '));
           price.appendChild(was);
           price.appendChild(now);
           // Discount badge, calculated from the two prices shown.
