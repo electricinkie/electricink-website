@@ -262,7 +262,7 @@
 
 .bcf-count-grid {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 0.375rem;
   width: 100%;
