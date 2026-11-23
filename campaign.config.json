@@ -6,16 +6,16 @@
   "vault": {
     "discountPercent": 50,
     "items": [
-      { "productId": "raven-black", "variantId": "raven-30", "capPerOrder": 6 },
-      { "productId": "raven-black-fineline", "variantId": "raven-fineline-30", "capPerOrder": 6 },
-      { "productId": "raven-black-fineline", "variantId": "raven-fineline-240", "capPerOrder": 3 },
-      { "productId": "ghost-white", "variantId": "ghost-30", "capPerOrder": 6 },
-      { "productId": "slimer-gel", "variantId": "slimer-90", "capPerOrder": 6 },
-      { "productId": "transfer-it", "variantId": "transfer-30", "capPerOrder": 6 },
-      { "productId": "cat-slobber", "variantId": "cat-250-clove", "capPerOrder": 6 },
-      { "productId": "cat-slobber", "variantId": "cat-90-trad", "capPerOrder": 6 },
-      { "productId": "cat-slobber", "variantId": "cat-90-clove", "capPerOrder": 6 },
-      { "productId": "cat-slobber", "variantId": "cat-90-mint", "capPerOrder": 6 }
+      { "productId": "raven-black", "variantId": "raven-30" },
+      { "productId": "raven-black-fineline", "variantId": "raven-fineline-30" },
+      { "productId": "raven-black-fineline", "variantId": "raven-fineline-240" },
+      { "productId": "ghost-white", "variantId": "ghost-30" },
+      { "productId": "slimer-gel", "variantId": "slimer-90" },
+      { "productId": "transfer-it", "variantId": "transfer-30" },
+      { "productId": "cat-slobber", "variantId": "cat-250-clove" },
+      { "productId": "cat-slobber", "variantId": "cat-90-trad" },
+      { "productId": "cat-slobber", "variantId": "cat-90-clove" },
+      { "productId": "cat-slobber", "variantId": "cat-90-mint" }
     ]
   },
   "fixedVariants": [],
@@ -24,9 +24,8 @@
       "id": "sumi-set",
       "productId": "sumi",
       "variantIds": ["sumi-1-gi", "sumi-2-yuu", "sumi-3-jin", "sumi-4-rei", "sumi-5-makoto", "sumi-6-meiyo"],
-      "priceCents": 10000,
-      "capPerOrder": 2
+      "priceCents": 10000
     }
   ],
-  "boost": { "minLineCents": 1000, "discountPercent": 60, "maxUnitsPerOrder": 4 }
+  "boost": { "minLineCents": 1000, "discountPercent": 60 }
 }

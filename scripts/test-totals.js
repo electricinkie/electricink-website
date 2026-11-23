@@ -9,6 +9,24 @@ const Module = require('module');
 
 const ROOT = path.join(__dirname, '..');
 const HANDLER_PATH = require.resolve(path.join(ROOT, 'api', 'create-payment-intent.js'));
+const CAMPAIGN_CONFIG = require(path.join(ROOT, 'campaign.config.json'));
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const cappedConfig = () => {
+  const cfg = clone(CAMPAIGN_CONFIG);
+  cfg.vault.items.forEach((item) => {
+    item.capPerOrder = item.productId === 'raven-black-fineline' && item.variantId === 'raven-fineline-240' ? 3 : 6;
+  });
+  cfg.bundles.forEach((bundle) => { bundle.capPerOrder = 2; });
+  cfg.boost.maxUnitsPerOrder = 4;
+  return cfg;
+};
+const uncappedConfig = () => {
+  const cfg = clone(CAMPAIGN_CONFIG);
+  cfg.vault.items.forEach((item) => { delete item.capPerOrder; });
+  cfg.bundles.forEach((bundle) => { delete bundle.capPerOrder; });
+  delete cfg.boost.maxUnitsPerOrder;
+  return cfg;
+};
 
 // Output goes through print; console.* is captured so the handler's logger stays quiet.
 const print = console.log.bind(console);
@@ -42,10 +60,12 @@ const stripeFactory = () => stripeMock;
 
 // ── Module interception: 'stripe' mocked; optional forced failure of one request ──
 let failRequest = null;
+let campaignConfigOverride = null;
 const realLoad = Module._load;
 Module._load = function (request, parent, isMain) {
   if (request === 'stripe') return stripeFactory;
   if (failRequest && request === failRequest) throw new Error('simulated load failure: ' + request);
+  if (request === '../campaign.config.json' && campaignConfigOverride) return campaignConfigOverride;
   return realLoad.apply(this, arguments);
 };
 
@@ -53,22 +73,23 @@ Module._load = function (request, parent, isMain) {
 // loadProducts turns price_ex into gross with parseFloat((ex * 1.23).toFixed(2)),
 // so ex = gross / 1.23 gives back exactly the gross written here.
 const ex = (gross) => gross / 1.23;
-const row = (id, variantId, gross, promoGross) => ({
+const row = (id, variantId, gross, promoGross, stock = 50) => ({
   id, name: id, category: 'Test', variant_id: variantId, label: variantId,
   price_ex: ex(gross), promo_price_ex: promoGross === undefined ? null : ex(promoGross),
-  promo_ends_at: null, stock: 50
+  promo_ends_at: null, stock
 });
 const SUMI = ['sumi-1-gi', 'sumi-2-yuu', 'sumi-3-jin', 'sumi-4-rei', 'sumi-5-makoto', 'sumi-6-meiyo'];
 const NEEDLES = Array.from({ length: 10 }, (_, i) => 'needle-cartridge-box-' + String(i + 1).padStart(2, '0'));
-function catalog({ vaultPromo }) {
+function catalog({ vaultPromo, ravenStock = 50, sumiStock = 50 }) {
   return [
     // Vault: Raven 30 list 26, promo 13; Fineline 240 list 49, promo 24.50
-    row('raven-black', 'raven-30', 26, vaultPromo ? 13 : undefined),
+    row('raven-black', 'raven-30', 26, vaultPromo ? 13 : undefined, ravenStock),
     row('raven-black-fineline', 'raven-fineline-240', 49, vaultPromo ? 24.5 : undefined),
     // Outside the Vault: 12
     row('cartridge-box', 'cartridge-box-20', 12),
     // Sumi: 6 x 26
-    ...SUMI.map((v) => row('sumi', v, 26)),
+    // sumiStock applies to the third variant only; the other five keep 50
+    ...SUMI.map((v, i) => row('sumi', v, 26, undefined, i === 2 ? sumiStock : 50)),
     // Long ids for the metadata split case: 5 each
     ...NEEDLES.map((v) => row('needles', v, 5))
   ];
@@ -87,10 +108,11 @@ function loadHandler() {
   return require(HANDLER_PATH);
 }
 
-function reset({ now, vaultPromo = true, fail = null }) {
+function reset({ now, vaultPromo = true, fail = null, campaignConfig = cappedConfig(), ravenStock = 50, sumiStock = 50 }) {
   fakeNow = now;
-  catalogRows = catalog({ vaultPromo });
+  catalogRows = catalog({ vaultPromo, ravenStock, sumiStock });
   failRequest = fail;
+  campaignConfigOverride = campaignConfig;
   stripeCalls.create = []; stripeCalls.promoList = 0; stripeCalls.couponRetrieve = 0;
   fetchCalls.length = 0;
   logs = [];
@@ -133,7 +155,12 @@ function expect400(res, message) {
   assert.deepStrictEqual(res.body, { error: message });
   assert.strictEqual(stripeCalls.create.length, 0, 'paymentIntents.create must not be called');
 }
-
+function expectInput400(res, field, messagePart) {
+  assert.strictEqual(res.statusCode, 400, 'status ' + res.statusCode);
+  assert.strictEqual(res.body.error, 'Invalid request data');
+  assert.ok(res.body.details.some((d) => d.field === field && d.message.includes(messagePart)), JSON.stringify(res.body.details));
+  assert.strictEqual(stripeCalls.create.length, 0, 'paymentIntents.create must not be called');
+}
 let passed = 0, total = 0;
 async function test(name, fn) {
   total++;
@@ -191,57 +218,165 @@ const RAVEN = 'raven-30', FINE = 'raven-fineline-240', CART = 'cartridge-box-20'
     assert.strictEqual(stripeCalls.create[0].params.metadata.discount_amount, '5.20');
   });
 
-  await test('04 Boost with 6 Vault units: only 4 get 60%', async () => {
-    const h = reset({ now: OPEN });
+  await test('04 uncapped Boost applies 60% to all 6 Vault units', async () => {
+    const h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
     const res = await call(h, [[RAVEN, 6], [CART, 1]]);
-    // subtotal 6 x 13 + 12 = 90; extra 4 x 2.60 = 10.40 (not 6 x 2.60 = 15.60)
-    // total 90 - 10.40 + 13 = 92.60 -> 9260
-    expectOk(res, 9260);
-    assert.strictEqual(totals(res).campaignExtra, 10.4);
+    // subtotal 6 x 13 + 12 = 90; extra 6 x 2.60 = 15.60; shipping 13 -> total 87.40
+    expectOk(res, 8740);
+    assert.strictEqual(totals(res).campaignExtra, 15.6);
   });
 
-  await test('05 Sumi kit: 100 per set; 2 sets ok; 3 sets -> 400 BUNDLE_CAP_EXCEEDED', async () => {
-    let h = reset({ now: OPEN });
-    let res = await call(h, SUMI.map((v) => [v, 1]));
+  await test('05 uncapped Sumi: one complete set costs €100', async () => {
+    const h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    const res = await call(h, SUMI.map((v) => [v, 1]));
     // subtotal 6 x 26 = 156 (>= 150 -> shipping 0); extra 156 - 100 = 56; total 100 -> 10000
     expectOk(res, 10000);
     assert.strictEqual(totals(res).campaignExtra, 56); assert.strictEqual(totals(res).shipping, 0);
-    h = reset({ now: OPEN });
-    res = await call(h, SUMI.map((v) => [v, 2]));
+  });
+
+  await test('05b uncapped Sumi: two complete sets cost €200', async () => {
+    const h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    const res = await call(h, SUMI.map((v) => [v, 2]));
     // subtotal 12 x 26 = 312 (shipping 0); extra 2 x 56 = 112; total 200 -> 20000
     expectOk(res, 20000);
     assert.strictEqual(totals(res).campaignExtra, 112);
-    h = reset({ now: OPEN });
+  });
+
+  await test('05c uncapped Sumi: three complete sets cost €300', async () => {
+    const h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    const res = await call(h, SUMI.map((v) => [v, 3]));
+    // 3 x €100; subtotal 468, free shipping, discount 168 -> 30000
+    expectOk(res, 30000);
+    assert.strictEqual(totals(res).campaignExtra, 168);
+  });
+
+  await test('05d incomplete Sumi set receives no set price', async () => {
+    const h = reset({ now: OPEN });
+    const res = await call(h, SUMI.slice(0, 5).map((v) => [v, 1]));
+    // Incomplete set: normal subtotal 130 + standard shipping 13, with no kit discount
+    expectOk(res, 14300);
+    assert.strictEqual(totals(res).campaignExtra, 0);
+  });
+
+  await test('06 uncapped Vault accepts quantities above the former per-variant caps', async () => {
+    let h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    let res = await call(h, [[RAVEN, 7], [CART, 1]]);
+    // Seven Raven units all receive 60%: 7 x 2.60 extra; 103 subtotal - 18.20 + 13 shipping
+    expectOk(res, 9780);
+    assert.strictEqual(totals(res).campaignExtra, 18.2);
+    h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    res = await call(h, [[FINE, 4], [CART, 1]]);
+    // Four Fineline units all receive 60%: 4 x 4.90 extra; 110 subtotal - 19.60 + 13 shipping
+    expectOk(res, 10340);
+    assert.strictEqual(totals(res).campaignExtra, 19.6);
+  });
+
+  await test('06a integer caps and Boost limit remain backward-compatible', async () => {
+    let h = reset({ now: OPEN, campaignConfig: cappedConfig() });
+    let res = await call(h, [[RAVEN, 7], [CART, 1]]);
+    expect400(res, 'Black Cat Friday deals are limited to 6 per item in each order. Please lower the quantity. Go back to your cart.');
+    h = reset({ now: OPEN, campaignConfig: cappedConfig() });
+    res = await call(h, [[FINE, 4], [CART, 1]]);
+    expect400(res, 'Black Cat Friday deals are limited to 3 per item in each order. Please lower the quantity. Go back to your cart.');
+    h = reset({ now: OPEN, campaignConfig: cappedConfig() });
+    res = await call(h, [[RAVEN, 6], [CART, 1]]);
+    expectOk(res, 9260);
+    assert.strictEqual(totals(res).campaignExtra, 10.4);
+    h = reset({ now: OPEN, campaignConfig: cappedConfig() });
     res = await call(h, SUMI.map((v) => [v, 3]));
-    // 3 sets > cap 2 -> CAMPAIGN_LIMIT message for BUNDLE_CAP_EXCEEDED with allowed 2
     expect400(res, 'Black Cat Friday set deals are limited to 2 per order. Please lower the quantity. Go back to your cart.');
   });
 
-  await test('06 per-variant cap: 7 x Raven 30 -> 400; 4 x Fineline 240 -> 400', async () => {
+  await test('06d live config accepts 7 Raven 30 with Boost on all 7 units', async () => {
+    const h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG });
+    const res = await call(h, [[RAVEN, 7], [CART, 1]]);
+    expectOk(res, 9780);
+    assert.strictEqual(totals(res).campaignExtra, 18.2);
+  });
+
+  await test('06e live config accepts three complete Sumi sets', async () => {
+    const h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG });
+    const res = await call(h, SUMI.map((v) => [v, 3]));
+    expectOk(res, 30000);
+    assert.strictEqual(totals(res).campaignExtra, 168);
+  });
+
+  await test('06b known insufficient stock rejects before PaymentIntent; null stock does not block', async () => {
+    let h = reset({ now: OPEN, ravenStock: 2 });
+    let res = await call(h, [[RAVEN, 3]]);
+    expect400(res, 'Only 2 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    h = reset({ now: OPEN, ravenStock: null });
+    res = await call(h, [[RAVEN, 3]]);
+    expectOk(res, 5200);
+  });
+
+  await test('06f live config: complete Sumi x3 with known stock below qty on one variant -> 400; null stock does not block', async () => {
+    let h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, sumiStock: 2 });
+    let res = await call(h, SUMI.map((v) => [v, 3]));
+    expect400(res, 'Only 2 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, sumiStock: 0 });
+    res = await call(h, SUMI.map((v) => [v, 3]));
+    expect400(res, 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.');
+    h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, sumiStock: null });
+    res = await call(h, SUMI.map((v) => [v, 3]));
+    expectOk(res, 30000);
+    assert.strictEqual(totals(res).campaignExtra, 168);
+  });
+
+  await test('06g live config: Vault STOCK_EXCEEDED rejects before PaymentIntent (stock 2 qty 3; stock 0 sold out)', async () => {
+    let h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 2 });
+    let res = await call(h, [[RAVEN, 3], [CART, 1]]);
+    expect400(res, 'Only 2 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 0 });
+    res = await call(h, [[RAVEN, 1], [CART, 1]]);
+    expect400(res, 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.');
+  });
+
+  await test('06h repeated lines of the same variant: summed qty counts for stock; 100 limit is per line only', async () => {
+    let h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG, ravenStock: 3 });
+    let res = await call(h, [[RAVEN, 2], [RAVEN, 2], [CART, 1]]);
+    expect400(res, 'Only 3 left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.');
+    // The zod limit (max 100) and the handler check (quantity > 100) run per line, not on the sum.
+    h = reset({ now: OPEN, campaignConfig: CAMPAIGN_CONFIG });
+    res = await call(h, [[CART, 100], [CART, 100]]);
+    expectOk(res, 240000);
+  });
+
+  await test('06c technical limits still reject more than 100 units or 50 lines', async () => {
     let h = reset({ now: OPEN });
-    let res = await call(h, [[RAVEN, 7], [CART, 1]]);
-    // cap 6 on raven-30 -> CAP_EXCEEDED allowed 6
-    expect400(res, 'Black Cat Friday deals are limited to 6 per item in each order. Please lower the quantity. Go back to your cart.');
+    let res = await call(h, [[CART, 101]]);
+    expectInput400(res, 'items.0.quantity', '100');
     h = reset({ now: OPEN });
-    res = await call(h, [[FINE, 4], [CART, 1]]);
-    // cap 3 on raven-fineline-240 -> CAP_EXCEEDED allowed 3
-    expect400(res, 'Black Cat Friday deals are limited to 3 per item in each order. Please lower the quantity. Go back to your cart.');
+    res = await call(h, Array.from({ length: 51 }, () => [CART, 1]));
+    expectInput400(res, 'items', '50');
   });
 
   await test('07 free shipping on the subtotal BEFORE the campaign discount', async () => {
-    let h = reset({ now: OPEN });
+    let h = reset({ now: OPEN, campaignConfig: cappedConfig() });
     let res = await call(h, [[FINE, 3], [RAVEN, 6], [CART, 1]]);
     // subtotal 3 x 24.50 + 6 x 13 + 12 = 73.50 + 78 + 12 = 163.50 (>= 150 -> shipping 0)
     // Boost per unit: Fineline 24.50 - 49 x 40% (19.60) = 4.90; Raven 2.60. Top 4: 3 x 4.90 + 1 x 2.60 = 17.30
     // total 163.50 - 17.30 + 0 = 146.20 (below 150 after discount, still free) -> 14620
     expectOk(res, 14620);
     assert.strictEqual(totals(res).shipping, 0); assert.strictEqual(totals(res).campaignExtra, 17.3);
-    h = reset({ now: OPEN });
+    h = reset({ now: OPEN, campaignConfig: cappedConfig() });
     res = await call(h, [[FINE, 3], [RAVEN, 4], [CART, 2]]);
     // subtotal 73.50 + 52 + 24 = 149.50 (< 150 -> shipping 13); extra 3 x 4.90 + 1 x 2.60 = 17.30
     // total 149.50 - 17.30 + 13 = 145.20 -> 14520
     expectOk(res, 14520);
     assert.strictEqual(totals(res).shipping, 13);
+
+    h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    res = await call(h, [[FINE, 3], [RAVEN, 6], [CART, 1]]);
+    // All 9 Vault units get Boost: extra 3 x 4.90 + 6 x 2.60 = 30.30; free shipping -> 133.20
+    expectOk(res, 13320);
+    assert.strictEqual(totals(res).shipping, 0); assert.strictEqual(totals(res).campaignExtra, 30.3);
+
+    h = reset({ now: OPEN, campaignConfig: uncappedConfig() });
+    res = await call(h, [[FINE, 3], [RAVEN, 4], [CART, 2]]);
+    // All 7 Vault units get Boost: extra 3 x 4.90 + 4 x 2.60 = 25.10; shipping remains €13 -> 137.40
+    expectOk(res, 13740);
+    assert.strictEqual(totals(res).shipping, 13); assert.strictEqual(totals(res).campaignExtra, 25.1);
   });
 
   await test('08 coupon with the window open is ignored; Stripe coupon APIs not called', async () => {
