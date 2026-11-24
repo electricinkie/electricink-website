@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Black Cat Friday at Electric Ink Ireland, 27 to 30 November. The Vault, the Boost and the Sumi Set.">
+  <title>Black Cat Friday - Electric Ink Ireland</title>
+
+  <!-- Favicons (Big Player Structure) -->
+  <link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+  <link rel="manifest" href="/images/favicons/site.webmanifest">
+  <meta name="theme-color" content="#43BDAB">
+
+  <!-- CSS Files -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/mobile-header.css">
+  <link rel="stylesheet" href="/css/desktop-header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/bcf-hero.css">
+  <link rel="stylesheet" href="/css/black-cat-friday.css">
+  <!-- Cookie consent: Google Analytics and the Meta Pixel load only after the visitor accepts -->
+  <script src="/js/consent.js"></script>
+  <link rel="stylesheet" href="/css/cart-drawer.css">
+  <!-- Meta Pixel -->
+  <script src="/js/pixel.js"></script>
+  <!-- End Meta Pixel -->
+</head>
+<body class="bcf-body">
+
+  <!-- Header será injetado pelo mobile-header.js -->
+
+  <main class="bcf-page">
+
+    <!-- Hero: markup contract in css/bcf-hero.css. before is the safe initial phase; js/bcf-countdown.js changes it.
+         The line under the dates and the buttons change with the phase (CSS on data-bcf-phase). -->
+    <section class="bcf-hero" data-bcf-phase="before">
+      <svg class="bcf-eyes" viewBox="70 215 1226 355" role="img" aria-label="Two teal cat eyes">
+        <g class="bcf-look"><g class="bcf-squint">
+          <path class="bcf-eye" fill="#43BDAB" d="M 331.347656 364.023438 C 378.164062 390.308594 417.980469 427.460938 447.441406 472.351562 C 394.675781 529.566406 312.152344 548.429688 239.769531 519.816406 C 133.3125 481.375 70.851562 370.992188 92.710938 259.9375 C 108.585938 241.828125 132.355469 232.683594 156.277344 235.488281 C 187.945312 241.429688 215.152344 261.53125 230.140625 290.054688 C 253.816406 332.671875 254.058594 384.4375 230.785156 427.273438 C 272.574219 423.722656 310.050781 400.152344 331.347656 364.023438 Z"/>
+          <path class="bcf-eye" fill="#43BDAB" d="M 1209.722656 235.488281 C 1233.644531 232.683594 1257.414062 241.824219 1273.285156 259.941406 C 1295.152344 370.992188 1232.6875 481.375 1126.230469 519.816406 C 1053.847656 548.429688 971.324219 529.566406 918.558594 472.351562 C 948.019531 427.460938 987.832031 390.3125 1034.652344 364.023438 C 1055.949219 400.152344 1093.429688 423.722656 1135.214844 427.273438 C 1111.941406 384.4375 1112.183594 332.671875 1135.859375 290.054688 C 1150.847656 261.53125 1178.054688 241.429688 1209.722656 235.488281 Z"/>
+        </g></g>
+      </svg>
+      <p class="bcf-small" data-bcf-small></p>
+      <h1 class="bcf-title">Black Cat<br>Friday</h1>
+      <p class="bcf-dates" data-bcf-dates>27–30 NOV</p>
+      <p class="bcf-url">electricink.ie</p>
+      <p class="bcf-sub" data-bcf-sub></p>
+      <div class="bcf-countdown" data-bcf-countdown hidden>
+        <p class="bcf-count-label" data-bcf-label></p>
+        <div class="bcf-count-grid">
+          <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-d>00</span><span class="bcf-count-unit">days</span></div>
+          <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-h>00</span><span class="bcf-count-unit">hours</span></div>
+          <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-m>00</span><span class="bcf-count-unit">minutes</span></div>
+          <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-s>00</span><span class="bcf-count-unit">seconds</span></div>
+        </div>
+      </div>
+      <div class="bcf-actions" data-bcf-for="live" hidden>
+        <a class="bcf-btn bcf-btn--solid" href="#vault">Shop the Vault</a>
+        <a class="bcf-btn bcf-btn--outline" href="#how">How it works</a>
+      </div>
+      <div class="bcf-actions" data-bcf-for="ended">
+        <a class="bcf-btn bcf-btn--solid" href="/category.html?cat=all">Back to the shop</a>
+      </div>
+    </section>
+
+    <!-- Live with no promoted product yet (or the catalog did not answer): shown by js/bcf-page.js. -->
+    <p class="bcf-wait" id="bcf-wait" hidden>The deals are on their way. Check back soon.</p>
+
+    <!-- How it works: hidden until js/bcf-page.js has read campaign.config.json and the catalog; it fills every number. -->
+    <section class="bcf-section" id="how" hidden>
+      <p class="bcf-eyebrow" id="bcf-how-eyebrow">three ways to save</p>
+      <h2 class="bcf-heading">How it works</h2>
+      <div class="bcf-how-grid">
+        <div class="bcf-how-card" data-bcf-card="vault" hidden>
+          <p class="bcf-how-num" id="bcf-how-vault-num"></p>
+          <h3 class="bcf-how-title">Pick from the Vault</h3>
+          <p class="bcf-how-text" id="bcf-how-vault-text"></p>
+        </div>
+        <div class="bcf-how-card bcf-how-card--accent" data-bcf-card="boost" hidden>
+          <p class="bcf-how-num" id="bcf-how-boost-num"></p>
+          <h3 class="bcf-how-title" id="bcf-how-boost-title"></h3>
+          <p class="bcf-how-text" id="bcf-how-boost-text"></p>
+        </div>
+        <div class="bcf-how-card" data-bcf-card="kit" hidden>
+          <p class="bcf-how-num" id="bcf-how-kit-num"></p>
+          <h3 class="bcf-how-title" id="bcf-how-kit-title"></h3>
+          <p class="bcf-how-text" id="bcf-how-kit-text"></p>
+        </div>
+      </div>
+      <p class="bcf-note">Discounts apply automatically in your cart.</p>
+    </section>
+
+    <!-- Vault: only live, filled by js/bcf-page.js from /api/catalog. -->
+    <section class="bcf-section" id="vault" hidden>
+      <p class="bcf-eyebrow">the vault</p>
+      <h2 class="bcf-heading">Start here: the Vault</h2>
+      <p class="bcf-lead" id="bcf-vault-sub" hidden></p>
+      <div class="bcf-vault-grid" id="bcf-vault-grid"></div>
+      <p class="bcf-note" id="bcf-vault-note">Vault offers are subject to availability.</p>
+    </section>
+
+    <!-- Unlock 60%: promoted products outside the Vault and the machines, at €10 or more. -->
+    <section class="bcf-section" id="unlock" hidden>
+      <p class="bcf-eyebrow">step two</p>
+      <h2 class="bcf-heading" id="bcf-unlock-title"></h2>
+      <p class="bcf-lead" id="bcf-unlock-sub"></p>
+      <div class="bcf-more-grid" id="bcf-unlock-grid"></div>
+    </section>
+
+    <!-- Sumi Set: only live and only with the campaign enabled; js/bcf-page.js fills it from the config and the catalog. -->
+    <section class="bcf-section" id="sumi" hidden>
+      <div class="bcf-kit">
+        <div class="bcf-kit-copy">
+          <p class="bcf-eyebrow">sumi grey series</p>
+          <h2 class="bcf-heading bcf-kit-heading">All six. One price.</h2>
+          <p class="bcf-lead bcf-kit-lead">From 1 GI, the lightest, to 6 MEIYO, the darkest.</p>
+          <div class="bcf-kit-prices" id="bcf-kit-prices"></div>
+          <p class="bcf-kit-caption" id="bcf-kit-caption"></p>
+          <button type="button" class="bcf-kit-add" id="bcf-kit-add" hidden>Add the whole Sumi Set to cart</button>
+          <p class="bcf-kit-note" id="bcf-kit-note" role="status" hidden></p>
+          <a class="bcf-kit-link" id="bcf-kit-link">Shop the Sumi Set</a>
+        </div>
+        <div class="bcf-kit-media">
+          <img class="bcf-kit-img" id="bcf-kit-img" alt="">
+          <ul class="bcf-kit-greys" id="bcf-kit-greys"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Machines and power supplies on promotion. -->
+    <section class="bcf-section" id="machines" hidden>
+      <p class="bcf-eyebrow">machines and power</p>
+      <h2 class="bcf-heading">Machines &amp; power on sale</h2>
+      <p class="bcf-lead">Available to order — ships in 7–10 days.</p>
+      <div class="bcf-more-grid" id="bcf-machines-grid"></div>
+    </section>
+
+    <!-- More on sale: promoted products under €10 (or all of them when the Boost is off). -->
+    <section class="bcf-section" id="more" hidden>
+      <p class="bcf-eyebrow">and there's more</p>
+      <h2 class="bcf-heading">More on sale</h2>
+      <p class="bcf-lead">Smaller deals, same weekend.</p>
+      <div class="bcf-more-grid" id="bcf-more-grid"></div>
+    </section>
+
+    <!-- The rest of the shop: the category pages that the site header already links to. -->
+    <section class="bcf-section" id="rest" hidden>
+      <p class="bcf-eyebrow">the rest of the shop</p>
+      <h2 class="bcf-heading">Browse everything else</h2>
+      <p class="bcf-lead" id="bcf-rest-text"></p>
+      <ul class="bcf-rest-list">
+        <li><a class="bcf-btn bcf-btn--outline" href="/category.html?cat=cosmetics">Cosmetics</a></li>
+        <li><a class="bcf-btn bcf-btn--outline" href="/category.html?cat=cartridges">Cartridges</a></li>
+        <li><a class="bcf-btn bcf-btn--outline" href="/category.html?cat=inks">Artistic Inks</a></li>
+        <li><a class="bcf-btn bcf-btn--outline" href="/category.html?cat=accessories">Accessories</a></li>
+        <li><a class="bcf-btn bcf-btn--outline" href="/category.html?cat=machines">Tattoo Machines</a></li>
+        <li><a class="bcf-btn bcf-btn--outline" href="/category.html?cat=power-supplies">Power Supplies</a></li>
+      </ul>
+    </section>
+
+    <!-- Small print: dates, limits and the 60% rule are filled from the config. -->
+    <section class="bcf-section bcf-print" id="small-print" hidden>
+      <h2 class="bcf-print-title">The small print</h2>
+      <ul class="bcf-print-list">
+        <li id="bcf-print-dates" hidden></li>
+        <li id="bcf-print-cap" hidden></li>
+        <li id="bcf-print-boost" hidden></li>
+        <li id="bcf-print-kit" hidden></li>
+        <li id="bcf-print-codes" hidden></li>
+        <li id="bcf-print-machines" hidden></li>
+        <li>All prices include VAT.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <div class="footer-grid">
+        
+        <!-- Shop Column removed -->
+
+        <!-- Help & Support Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Help &amp; Support</h4>
+          <ul class="footer-links">
+            <li><a href="/contact-us.html">Contact Us</a></li>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/shipping-information.html">Shipping Information</a></li>
+            <li><a href="/returns-refunds.html">Returns &amp; Refunds</a></li>
+          </ul>
+        </div>
+
+        <!-- About Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">About</h4>
+          <ul class="footer-links">
+            <li><a href="/about-us.html">About Us</a></li>
+            <li><a href="https://wa.me/353831473502" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="mailto:hello@electricink.ie">Email Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Legal</h4>
+          <ul class="footer-links">
+            <li><a href="/terms-conditions.html">Terms &amp; Conditions</a></li>
+              <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+              <li><a href="/cookie-policy.html">Cookie Policy</a></li>
+              <li><a href="#" data-cookie-preferences>Cookie preferences</a></li>
+          </ul>
+        </div>
+
+        <!-- Social Column -->
+        <div class="footer-col">
+          <h4 class="footer-heading">Follow Us</h4>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/electricink.ie/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 64 64" class="social-icon">
+                <path d="M46.91,25.816c-0.073-1.597-0.326-2.687-0.697-3.641c-0.383-0.986-0.896-1.823-1.73-2.657c-0.834-0.834-1.67-1.347-2.657-1.73c-0.954-0.371-2.045-0.624-3.641-0.697C36.585,17.017,36.074,17,32,17s-4.585,0.017-6.184,0.09c-1.597,0.073-2.687,0.326-3.641,0.697c-0.986,0.383-1.823,0.896-2.657,1.73c-0.834,0.834-1.347,1.67-1.73,2.657c-0.371,0.954-0.624,2.045-0.697,3.641C17.017,27.415,17,27.926,17,32c0,4.074,0.017,4.585,0.09,6.184c0.073,1.597,0.326,2.687,0.697,3.641c0.383,0.986,0.896,1.823,1.73,2.657c0.834,0.834,1.67,1.347,2.657,1.73c0.954,0.371,2.045,0.624,3.641,0.697C27.415,46.983,27.926,47,32,47s4.585-0.017,6.184-0.09c1.597-0.073,2.687-0.326,3.641-0.697c0.986-0.383,1.823-0.896,2.657-1.73c0.834-0.834,1.347-1.67,1.73-2.657c0.371-0.954,0.624-2.045,0.697-3.641C46.983,36.585,47,36.074,47,32S46.983,27.415,46.91,25.816z M44.21,38.061c-0.067,1.462-0.311,2.257-0.516,2.785c-0.272,0.7-0.597,1.2-1.122,1.725c-0.525,0.525-1.025,0.85-1.725,1.122c-0.529,0.205-1.323,0.45-2.785,0.516c-1.581,0.072-2.056,0.087-6.061,0.087s-4.48-0.015-6.061-0.087c-1.462-0.067-2.257-0.311-2.785-0.516c-0.7-0.272-1.2-0.597-1.725-1.122c-0.525-0.525-0.85-1.025-1.122-1.725c-0.205-0.529-0.45-1.323-0.516-2.785c-0.072-1.582-0.087-2.056-0.087-6.061s0.015-4.48,0.087-6.061c0.067-1.462,0.311-2.257,0.516-2.785c0.272-0.7,0.597-1.2,1.122-1.725c0.525-0.525,1.025-0.85,1.725-1.122c0.529-0.205,1.323-0.45,2.785-0.516c1.582-0.072,2.056-0.087,6.061-0.087s4.48,0.015,6.061,0.087c1.462,0.067,2.257,0.311,2.785,0.516c0.7,0.272,1.2,0.597,1.725,1.122c0.525,0.525,0.85,1.025,1.122,1.725c0.205,0.529,0.45,1.323,0.516,2.785c0.072,1.582,0.087,2.056,0.087,6.061S44.282,36.48,44.21,38.061z M32,24.297c-4.254,0-7.703,3.449-7.703,7.703c0,4.254,3.449,7.703,7.703,7.703c4.254,0,7.703-3.449,7.703-7.703C39.703,27.746,36.254,24.297,32,24.297z M32,37c-2.761,0-5-2.239-5-5c0-2.761,2.239-5,5-5s5,2.239,5,5C37,34.761,34.761,37,32,37z M40.007,22.193c-0.994,0-1.8,0.806-1.8,1.8c0,0.994,0.806,1.8,1.8,1.8c0.994,0,1.8-0.806,1.8-1.8C41.807,22.999,41.001,22.193,40.007,22.193z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2026 Electric Ink Ireland. All rights reserved.<br>ELECTRIC INK IE LIMITED · Registered in Ireland, company number 812386 · Registered office: 120 Baggot Lane, Ballsbridge, Dublin, D04 WK59 · VAT: IE02064361UA</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="/js/mobile-header.js"></script>
+  <!-- Desktop Header -->
+  <script type="module" src="/js/desktop-header.js"></script>
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <script type="module" src="/js/global-cart.js"></script>
+  <script src="/js/cart-drawer.js"></script>
+  <script defer src="/js/bcf-countdown.js"></script>
+  <script defer src="/js/bcf-page.js"></script>
+</body>
+</html>

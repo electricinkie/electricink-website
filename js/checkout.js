@@ -197,6 +197,9 @@ window.appliedDiscount = 0;
 
     // Render order summary
     renderOrderSummary();
+
+    // Black Cat Friday line (display only, async: the summary above stays as is if it fails)
+    applyCampaignExtra();
     
     // Initialize Stripe Elements
     initializeStripeElements();
@@ -267,6 +270,9 @@ window.appliedDiscount = 0;
     } catch (e) {
       totals.discount = 0;
     }
+
+    // Black Cat Friday replaces any coupon discount (the server ignores coupons in the window)
+    if (campaignExtra > 0) totals.discount = Math.min(campaignExtra, totals.subtotal);
 
     // Get current shipping method
     const selectedMethod = document.querySelector('input[name="shippingMethod"]:checked');
@@ -388,6 +394,8 @@ window.appliedDiscount = 0;
     const discountLine = document.getElementById('discountLine');
     if (discountElement && discountLine) {
       if (totals.discount > 0) {
+        const discountLabel = discountLine.firstElementChild;
+        if (discountLabel) discountLabel.textContent = campaignExtra > 0 ? CAMPAIGN_LINE_LABEL : 'Discount';
         discountElement.textContent = `-€${totals.discount.toFixed(2)}`;
         discountLine.style.display = 'flex';
       } else {
@@ -400,8 +408,109 @@ window.appliedDiscount = 0;
   // EXPRESS CHECKOUT (APPLE PAY / GOOGLE PAY)
   // ============================================
   
+  // Black Cat Friday window. Display only: the server decides the price.
+  // One load of the lib and of the config per page load (the promise is kept and reused).
+  const CAMPAIGN_WINDOW_TIMEOUT_MS = 3000;
+  let campaignConfigPromise = null;
+  function loadCampaignLib() {
+    if (window.EI_CAMPAIGN) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = '/lib/campaign.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+  function loadCampaignConfig() {
+    if (!campaignConfigPromise) {
+      campaignConfigPromise = Promise.all([
+        loadCampaignLib(),
+        fetch('/campaign.config.json').then(r => { if (!r.ok) throw new Error('config'); return r.json(); })
+      ]).then(([, config]) => {
+        const lib = window.EI_CAMPAIGN;
+        if (!lib || !lib.validateConfig(config).ok) throw new Error('config');
+        return { lib, config };
+      });
+    }
+    return campaignConfigPromise;
+  }
+  // Fail open: any failure, or no answer in 3 s, means "not open", so the Express button shows as before.
+  // The race keeps a handler on the shared promise, so a late rejection is never unhandled.
+  async function isCampaignWindowOpen() {
+    let timer;
+    try {
+      const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('timeout')), CAMPAIGN_WINDOW_TIMEOUT_MS);
+      });
+      const { lib, config } = await Promise.race([loadCampaignConfig(), timeout]);
+      return lib.isActive(config, Date.now()) === true;
+    } catch (_) {
+      return false;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // Black Cat Friday summary line. Display only: the server decides the price and charges it.
+  // campaignExtra (euros) is never sent to the server (orderData sends window.appliedDiscount only).
+  // One catalog fetch per page load: the promise is kept, and so is a failure (no retry).
+  const CAMPAIGN_LINE_LABEL = 'Black Cat Friday';
+  let campaignExtra = 0;
+  let campaignRowsPromise = null;
+  function loadCampaignRows() {
+    if (!campaignRowsPromise) {
+      campaignRowsPromise = fetch('/api/catalog?type=products')
+        .then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); })
+        .then(rows => { if (!Array.isArray(rows)) throw new Error('catalog'); return rows; });
+    }
+    return campaignRowsPromise;
+  }
+  function grossCents(ex) { return Math.round(parseFloat((parseFloat(ex) * 1.23).toFixed(2)) * 100); }
+  // Same lines the server builds (one per variant, quantities summed, lowest unit price).
+  // Any doubt or failure leaves the summary exactly as it was: no line.
+  async function applyCampaignExtra() {
+    try {
+      const { lib, config } = await loadCampaignConfig();
+      if (!lib.isActive(config, Date.now())) return;
+      const rows = await loadCampaignRows();
+      const lines = [];
+      for (const item of cart) {
+        const itemId = String(item.id).replace(/_/g, '-');
+        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === itemId) || rows.find(r => r.id === itemId);
+        const qty = Number(item.quantity);
+        if (!row || !Number.isInteger(qty) || qty <= 0) return;
+        const paidCents = grossCents(row.effective_price_ex);
+        if (Math.round(Number(item.price) * 100) !== paidCents) return;
+        const productId = row.id;
+        const variantId = row.variant_id || row.id;
+        const existing = lines.find(l => l.productId === productId && l.variantId === variantId);
+        if (existing) {
+          existing.qty += qty;
+          existing.paidCents = Math.min(existing.paidCents, paidCents);
+        } else {
+          const stockNum = (row.stock === null || row.stock === undefined || row.stock === '') ? NaN : Number(row.stock);
+          lines.push({
+            productId, variantId, qty,
+            listCents: grossCents(row.price_ex),
+            paidCents,
+            promoActive: row.promo_active === true,
+            stock: Number.isInteger(stockNum) ? Math.max(0, stockNum) : null
+          });
+        }
+      }
+      const r = lib.compute({ config, nowMs: Date.now(), lines });
+      if (!r.ok || !r.active || r.violations.length || !(r.extraCents > 0)) return;
+      campaignExtra = r.extraCents / 100;
+      calculateTotals();
+      renderOrderSummary();
+    } catch (_) {}
+  }
+
   async function initExpressCheckout() {
     try {
+      // Black Cat Friday: the wallet sheet would show the total without the campaign, so it is hidden in the window
+      if (await isCampaignWindowOpen()) return;
       debugLog('🚀 Initializing Express Checkout...');
       debugLog('   Cart total:', totals.total);
       debugLog('   Cart subtotal:', totals.subtotal);
@@ -709,7 +818,7 @@ window.appliedDiscount = 0;
             console.error('❌ Express checkout error:', error);
             ev.complete('fail');
             if (window.toast) {
-              window.toast.error('Payment failed. Retry.');
+              window.toast.error((error && error.userMessage) || 'Payment failed. Retry.', 8000);
             }
           }
         });
@@ -1272,7 +1381,7 @@ window.appliedDiscount = 0;
         console.error('Checkout error:', error);
         const checkoutErrorMessage = (error && error.userMessage) || 'Payment processing failed. Please try again.';
         if (window.toast) {
-          window.toast.error(checkoutErrorMessage, 5000);
+          window.toast.error(checkoutErrorMessage, 8000);
         }
         showError(checkoutErrorMessage);
         setLoading(false);
@@ -1586,6 +1695,7 @@ window.appliedDiscount = 0;
         totals.total = data.calculatedTotals.total != null ? Number(data.calculatedTotals.total) : totals.total;
         totals.discountPercent = Number(data.calculatedTotals.discountPercent || 0);
         totals.discount = Number(data.calculatedTotals.discount || 0);
+        totals.campaignExtra = Number(data.calculatedTotals.campaignExtra || 0);
         // Re-render summary with authoritative values
         renderOrderSummary();
       }
@@ -1613,7 +1723,8 @@ window.appliedDiscount = 0;
         shipping: totals.shipping,
         shippingText: totals.shipping === 0 ? 'FREE' : `€${totals.shipping.toFixed(2)}`,
         vat: totals.vat,
-        total: totals.total
+        total: totals.total,
+        campaignExtra: Number.isFinite(totals.campaignExtra) && totals.campaignExtra >= 0 ? totals.campaignExtra : 0
       },
       shipping: {
         firstName: elements.form.firstName.value,

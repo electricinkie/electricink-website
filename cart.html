@@ -85,6 +85,12 @@
             <span id="summarySubtotal">€0.00</span>
           </div>
           
+          <!-- Black Cat Friday: filled by js/cart.js only when the campaign gives a discount (display only, the server decides) -->
+          <div class="summary-line" id="campaignLine" style="display: none;">
+            <span>Black Cat Friday</span>
+            <span id="summaryCampaign" class="discount-amount">−€0.00</span>
+          </div>
+
           <!-- 🔧 Shipping removed from cart summary - calculated at checkout -->
           
           <div class="summary-line">

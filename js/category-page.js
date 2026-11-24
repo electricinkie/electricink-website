@@ -8,6 +8,18 @@ function escHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+// Card price for a product with variants. When the cheapest variant is on promotion it carries both prices
+// (its own normal price and its promo price), like a single product on promotion; otherwise null.
+function variantPromoDisplay(variants) {
+  const priced = (variants || []).filter(v => v && typeof v.price === 'number' && !isNaN(v.price));
+  if (priced.length === 0) return null;
+  const cheapest = priced.reduce((a, b) => (b.price < a.price ? b : a));
+  if (typeof cheapest.wasPrice === 'number' && !isNaN(cheapest.wasPrice) && cheapest.wasPrice > cheapest.price) {
+    return { was: `€${cheapest.wasPrice.toFixed(2)}`, now: `€${cheapest.price.toFixed(2)}`, from: true };
+  }
+  return null;
+}
+
 (async function() {
   'use strict';
 
@@ -403,7 +415,7 @@ function escHtml(str) {
         if (priceRangeDisplay) {
           priceDisplay = priceRangeDisplay;
         } else if (!isNaN(minPrice)) {
-          priceDisplay = `from €${minPrice.toFixed(2)}`;
+          priceDisplay = variantPromoDisplay(data.variants) || `from €${minPrice.toFixed(2)}`;
         } else {
           priceDisplay = 'Price unavailable';
         }
@@ -657,6 +669,7 @@ function getAvailabilityBadgeInfo(product) {
         // Price
         const price = document.createElement('div');
         price.className = 'product-price';
+        let discountPill = null; // drawn on the image corner, below
         if (product.priceDisplay && typeof product.priceDisplay === 'object') {
           // Promotion: struck-through normal price followed by the promo price.
           // Classes already exist in css/category-page.css.
@@ -666,8 +679,16 @@ function getAvailabilityBadgeInfo(product) {
           const now = document.createElement('span');
           now.className = 'price-now';
           now.textContent = product.priceDisplay.now;
+          if (product.priceDisplay.from) price.appendChild(document.createTextNode('from '));
           price.appendChild(was);
           price.appendChild(now);
+          // Discount badge, calculated from the two prices shown.
+          const off = Math.round((1 - parseFloat(product.priceDisplay.now.replace(/[^0-9.]/g, '')) / parseFloat(product.priceDisplay.was.replace(/[^0-9.]/g, ''))) * 100);
+          if (off > 0 && off < 100) {
+            discountPill = document.createElement('span');
+            discountPill.className = 'price-pill';
+            discountPill.textContent = `−${off}%`;
+          }
         } else {
           price.textContent = product.priceDisplay;
         }
@@ -704,6 +725,7 @@ function getAvailabilityBadgeInfo(product) {
 
         card.appendChild(img);
         card.appendChild(info);
+        if (discountPill) card.appendChild(discountPill);
 
         grid.appendChild(card);
       });

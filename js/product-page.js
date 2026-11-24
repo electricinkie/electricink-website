@@ -315,6 +315,14 @@ import { INTERNAL_API_URL } from '/js/constants.js';
     el.textContent = '';
     el.appendChild(was);
     el.appendChild(now);
+    // Discount badge, calculated from the two prices shown.
+    const off = Math.round((1 - price / wasPrice) * 100);
+    if (off > 0 && off < 100) {
+      const badge = document.createElement('span');
+      badge.textContent = `−${off}%`;
+      badge.className = 'price-pill';
+      el.appendChild(badge);
+    }
   }
 
   // RENDER price (defensive: avoid calling toFixed on undefined)
@@ -541,6 +549,34 @@ import { INTERNAL_API_URL } from '/js/constants.js';
         // none available - choose first option so select isn't empty
         variantSelect.selectedIndex = 0;
       }
+      // ?variant=<id> pre-selects that variant; anything unknown or unavailable is ignored.
+      const wanted = urlParams.get('variant');
+      const match = wanted && Array.from(variantSelect.options).find(o => o.value === wanted && !o.disabled);
+      if (match) variantSelect.value = match.value;
+    }
+
+    // "Only N left" next to the stock state for the CHOSEN variant (real stock from the API).
+    // Display only: never blocks or changes Add to Cart. An error here shows nothing.
+    function updateLowStock(selected) {
+      try {
+        const stockEl = document.getElementById('productStock');
+        if (!stockEl) return;
+        let low = document.getElementById('lowStockNote');
+        if (!low) {
+          low = document.createElement('span');
+          low.id = 'lowStockNote';
+          low.setAttribute('role', 'status');
+          low.setAttribute('aria-live', 'polite');
+          low.style.cssText = 'font-family: Montserrat, sans-serif; font-size: 14px; font-weight: 600; color: #b45309;';
+          stockEl.insertBefore(low, stockEl.querySelector('.btn-share-inline'));
+        }
+        // The cart note below Add to Cart belongs to the previous variant: clear it so only one note shows.
+        const cartNote = document.getElementById('stockLimitNote');
+        if (cartNote) cartNote.textContent = '';
+        const variant = productData.variants.find(v => v.id === selected.value);
+        const onRequest = productData.orderOnRequest === true || productData.inventory?.stock_status === 'available_on_request';
+        low.textContent = (variant && selected.dataset.available === 'true' && !onRequest) ? lowStockText(variant.quantity) : '';
+      } catch (e) { /* no note */ }
     }
 
     // Update price and image on change (defensive: handle missing dataset.price)
@@ -611,6 +647,8 @@ import { INTERNAL_API_URL } from '/js/constants.js';
           addBtn.textContent = 'Add to Cart';
         }
       }
+
+      updateLowStock(selected);
     };
 
     // Trigger change event for the selected variant to initialize the image
@@ -933,6 +971,102 @@ if (productData.wholesale && productData.wholesale.enabled) {
 // ===== FIM WHOLESALE =====
 
   // ADD TO CART button
+// "Only N left" for a known whole-number stock of 1 to 5; '' for 0, more than 5 or unknown (display only, never blocks).
+function lowStockText(quantity) {
+  if (quantity === null || quantity === undefined || quantity === '') return '';
+  const n = Number(quantity);
+  if (!Number.isInteger(n) || n < 1 || n > 5) return '';
+  return `Only ${n} left`;
+}
+
+// "Only N left" when the cart already holds all of a known whole-number stock; '' otherwise (unknown never blocks).
+function cartStockNote(stock, inCart) {
+  if (stock === null || stock === undefined || stock === '') return '';
+  const n = Number(stock);
+  if (!Number.isInteger(n) || n < 0 || !(inCart >= n)) return '';
+  return n === 0 ? 'Out of stock' : `Only ${n} left`;
+}
+
+// Products sold as a set of levels: only these get the "Add all levels" button, and only when every id below exists.
+const SET_PRODUCTS = {
+  sumi: ['sumi-1-gi', 'sumi-2-yuu', 'sumi-3-jin', 'sumi-4-rei', 'sumi-5-makoto', 'sumi-6-meiyo']
+};
+
+// The set as cart items, same shape as the normal Add to Cart (one per id, in order); null when any level is missing or unusable.
+function setItemsFor(product, productId, name, fallbackImage, ids) {
+  try {
+    if (!product || !Array.isArray(product.variants) || !Array.isArray(ids) || ids.length === 0) return null;
+    const items = [];
+    for (const id of ids) {
+      const v = product.variants.find(x => x && x.id === id);
+      if (!v || typeof v.price !== 'number' || !isFinite(v.price) || !(v.price > 0) || !v.label) return null;
+      items.push({
+        id: `${productId}-${v.id}`,
+        name: `${name} - ${v.label}`,
+        price: v.price,
+        stripe_price_id: resolveStripePriceId(product, v),
+        image: v.image || fallbackImage,
+        variant: v.id,
+        available_on_request: false
+      });
+    }
+    return items;
+  } catch (e) { return null; }
+}
+
+// Can the whole set be added now? { ok, reason, note }. reason: '' | 'sold_out' | 'in_cart' | 'all_sold_out' | 'unavailable'.
+// Unknown stock counts as available; a level whose whole stock is already in the cart blocks with the cartStockNote text.
+function setAvailability(product, productId, ids, cartLines) {
+  const no = (reason, note) => ({ ok: false, reason, note });
+  try {
+    if (!product || !Array.isArray(product.variants) || !Array.isArray(ids) || ids.length === 0) return no('unavailable', '');
+    const lines = Array.isArray(cartLines) ? cartLines : [];
+    let sold = 0;
+    let cartNote = '';
+    for (const id of ids) {
+      const v = product.variants.find(x => x && x.id === id);
+      if (!v) return no('unavailable', '');
+      const q = v.quantity;
+      if (v.stock_status === 'out_of_stock' || v.stock_status === 'available_soon' ||
+          (q !== null && q !== undefined && q !== '' && Number(q) <= 0)) { sold++; continue; }
+      const line = lines.find(i => i && i.id === `${productId}-${id}`);
+      const inCart = line && Number.isInteger(line.quantity) ? line.quantity : 0;
+      if (!cartNote) cartNote = cartStockNote(q, inCart);
+    }
+    if (sold === ids.length) return no('all_sold_out', '');
+    if (sold > 0) return no('sold_out', sold === 1 ? 'One level is sold out' : `${sold} levels are sold out`);
+    if (cartNote) return no('in_cart', cartNote);
+    return { ok: true, reason: '', note: '' };
+  } catch (e) { return no('unavailable', ''); }
+}
+
+// Sum of the item prices in whole cents (display only); null on anything unusable.
+function setSumCents(items) {
+  if (!Array.isArray(items) || items.length === 0) return null;
+  let sum = 0;
+  for (const i of items) {
+    if (!i || typeof i.price !== 'number' || !isFinite(i.price) || !(i.price > 0)) return null;
+    sum += Math.round(i.price * 100);
+  }
+  return sum;
+}
+
+// "6 × €26.00 = €156.00" (same price on every level) or "6 levels = €156.00"; '' on anything unusable.
+function setSumText(items) {
+  const sum = setSumCents(items);
+  if (sum === null) return '';
+  const total = `€${(sum / 100).toFixed(2)}`;
+  const first = items[0].price;
+  if (items.every(i => Math.round(i.price * 100) === Math.round(first * 100))) return `${items.length} × €${first.toFixed(2)} = ${total}`;
+  return `${items.length} levels = ${total}`;
+}
+
+// "Black Cat Friday: €100 for the set" from the sum and the discount cartDrawer reports; '' unless the discount is a whole number of cents inside the sum.
+function setCampaignText(sumCents, discountCents) {
+  if (!Number.isInteger(sumCents) || !Number.isInteger(discountCents) || discountCents <= 0 || discountCents >= sumCents) return '';
+  return `Black Cat Friday: €${((sumCents - discountCents) / 100).toFixed(2).replace(/\.00$/, '')} for the set`;
+}
+
 /**
  * Check if product can be purchased
  * @param {Object} product - Product object with inventory data
@@ -1123,6 +1257,34 @@ function checkProductAvailability(product) {
           }
         }
 
+        // Stock hint (comfort only: the server still checks). A variant whose whole-number stock is already
+        // all in the cart is not added again. Unknown stock and Order on Request never block; an error never blocks.
+        try {
+          const hintSelect = document.getElementById('variantSelect');
+          const hintVariant = hintSelect && productData.variants && productData.variants.find(v => v.id === hintSelect.value);
+          let hint = document.getElementById('stockLimitNote');
+          if (hint) hint.textContent = '';
+          if (hintVariant && !itemToAdd.available_on_request && window.cart && typeof window.cart.getCart === 'function') {
+            const line = window.cart.getCart().find(i => i.id === itemToAdd.id);
+            const note = cartStockNote(hintVariant.quantity, line ? line.quantity : 0);
+            if (note) {
+              if (!hint) {
+                hint = document.createElement('p');
+                hint.id = 'stockLimitNote';
+                hint.setAttribute('role', 'status');
+                hint.setAttribute('aria-live', 'polite');
+                hint.style.cssText = 'color: #FFA300; font-size: 0.9rem; font-weight: 600; margin: 8px 0 0;';
+                addToCartBtn.parentNode.insertBefore(hint, addToCartBtn.nextSibling);
+              }
+              hint.textContent = note;
+              // Same message already says it: show only one.
+              const lowEl = document.getElementById('lowStockNote');
+              if (lowEl) lowEl.textContent = '';
+              return;
+            }
+          }
+        } catch (e) { /* no hint: add as before */ }
+
         // Add to cart usando global system
         if (window.cart && window.cart.addItem) {
           if (window.cart.addItem(itemToAdd)) {
@@ -1149,6 +1311,120 @@ function checkProductAvailability(product) {
       };
     }
   }
+
+  // ===== ADD ALL LEVELS (set products only) =====
+  // Presentation only: six normal cart lines, built like the normal Add to Cart; the server prices them.
+  // Any failure while building leaves the page exactly as before.
+  (function renderSetButton() {
+    try {
+      if (!addToCartBtn || !Object.prototype.hasOwnProperty.call(SET_PRODUCTS, productId)) return;
+      if (!checkProductAvailability(productData).canPurchase) return;
+      if (productData.orderOnRequest === true || productData.inventory?.stock_status === 'available_on_request') return;
+      const setIds = SET_PRODUCTS[productId];
+      const items = setItemsFor(productData, productId, name, mainImage, setIds);
+      if (!items) return;
+      const sumCents = setSumCents(items);
+      const label = `Add all ${items.length} levels to cart`;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'set-add';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = 'addAllBtn';
+      btn.className = 'btn-set-add';
+      btn.textContent = label;
+      btn.setAttribute('aria-label', `${label}, one of each`);
+      const info = document.createElement('p');
+      info.className = 'set-add-info';
+      info.setAttribute('role', 'status');
+      info.setAttribute('aria-live', 'polite');
+      const sumEl = document.createElement('span');
+      sumEl.className = 'set-add-sum';
+      const campaignEl = document.createElement('span');
+      campaignEl.className = 'set-add-campaign';
+      const noteEl = document.createElement('span');
+      noteEl.className = 'set-add-note';
+      info.appendChild(sumEl);
+      info.appendChild(campaignEl);
+      info.appendChild(noteEl);
+      wrap.appendChild(btn);
+      wrap.appendChild(info);
+      addToCartBtn.after(wrap);
+
+      let busy = false;
+      let campaignText = '';
+      const cartLines = () => (window.cart && typeof window.cart.getCart === 'function') ? window.cart.getCart() : [];
+
+      // Button state and the lines under it. Skipped while an add is running.
+      function refresh() {
+        if (busy) return;
+        try {
+          const lines = cartLines();
+          const a = setAvailability(productData, productId, setIds, lines);
+          if (a.reason === 'all_sold_out' || a.reason === 'unavailable') { wrap.hidden = true; return; }
+          wrap.hidden = false;
+          btn.disabled = !a.ok;
+          btn.textContent = label;
+          sumEl.textContent = a.ok ? setSumText(items) : '';
+          // The campaign price is for the set on its own: not shown once any of these levels is already in the cart.
+          const anyInCart = Array.isArray(lines) && items.some(it => lines.some(l => l && l.id === it.id));
+          campaignEl.textContent = (a.ok && !anyInCart) ? campaignText : '';
+          noteEl.textContent = a.note;
+        } catch (e) { wrap.hidden = true; }
+      }
+
+      btn.addEventListener('click', () => {
+        if (busy) return;
+        try {
+          const a = setAvailability(productData, productId, setIds, cartLines());
+          if (!a.ok || !window.cart || typeof window.cart.addItem !== 'function') { refresh(); return; }
+          busy = true;
+          btn.disabled = true;
+          noteEl.textContent = '';
+          let ok = true;
+          try {
+            for (let i = 0; i < items.length && ok; i++) {
+              ok = window.cart.addItem(Object.assign({}, items[i])) === true;
+            }
+          } catch (e) { ok = false; }
+          if (ok) {
+            if (typeof gtag === 'function') gtag('event', 'add_to_cart', {
+              currency: 'EUR',
+              value: sumCents / 100,
+              items: items.map(it => ({ item_id: it.id, item_name: it.name, price: it.price, quantity: 1 }))
+            });
+            btn.textContent = 'Added!';
+            btn.style.background = '#43BDAB';
+            btn.style.borderColor = '#43BDAB';
+            btn.style.color = '#fff';
+          } else {
+            noteEl.textContent = "We couldn't add every level. Please check your cart.";
+          }
+          setTimeout(() => {
+            busy = false;
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+            const keep = noteEl.textContent;
+            refresh();
+            if (!ok) noteEl.textContent = keep;
+          }, 2000);
+        } catch (e) { busy = false; refresh(); }
+      });
+
+      window.addEventListener('cart-updated', refresh);
+      refresh();
+
+      // Black Cat Friday price of the set on its own, from the same display function the cart uses (0 = no line).
+      if (window.cartDrawer && typeof window.cartDrawer.campaignDiscountCents === 'function') {
+        const hypothetical = items.map(it => Object.assign({}, it, { quantity: 1 }));
+        window.cartDrawer.campaignDiscountCents(hypothetical).then(cents => {
+          campaignText = setCampaignText(sumCents, cents);
+          refresh();
+        }).catch(() => {});
+      }
+    } catch (e) { /* page stays as before */ }
+  })();
 
   // Breadcrumb - atualiza com informação correta do produto
   const breadcrumbCategory = displayCategory ? displayCategory.charAt(0).toUpperCase() + displayCategory.slice(1) : 'Products';

@@ -147,6 +147,19 @@
   color: #666;
 }
 
+.cart-item-stock {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFA300;
+  margin: 4px 0 0 0;
+}
+
+.quantity-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 .cart-item-price {
   font-family: 'Outfit', sans-serif;
   font-size: 16px;
@@ -227,6 +240,20 @@
   color: #ff4444;
 }
 
+.quantity-btn:focus-visible,
+.remove-btn:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* Touch: a 44px target for the +/- buttons */
+@media (max-width: 768px) {
+  .quantity-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 /* ────────── Order Summary ────────── */
 .cart-summary {
   background: #f8f8f8;
@@ -253,6 +280,11 @@
   font-size: 15px;
   color: #666;
   margin-bottom: 16px;
+}
+
+.summary-line .discount-amount {
+  color: #43BDAB;
+  font-weight: 600;
 }
 
 .summary-total {

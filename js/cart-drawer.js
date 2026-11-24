@@ -43,7 +43,7 @@
           </button>
         </div>
         <div class="cart-drawer-items" id="cart-drawer-items"></div>
-        <div class="cart-drawer-footer" id="cart-drawer-footer"></div>
+        <div class="cart-drawer-footer" id="cart-drawer-footer" aria-live="polite"></div>
       </div>
 
       <div id="cart-bottom-sheet">
@@ -134,6 +134,230 @@
       <button class="cart-drawer-btn-checkout" onclick="window.location.href='/checkout.html'">Checkout →</button>
       <button class="cart-drawer-btn-continue" onclick="cartDrawer.close()">Continue shopping</button>
     `;
+    renderCampaignLine(cart, footerEl);
+    applyDrawerStock(cart, itemsEl);
+  }
+
+  // Black Cat Friday status line. Display only: the server decides the price.
+  // Any failure leaves the drawer exactly as it was.
+  const CAMPAIGN_CACHE_KEY = 'ei_catalog_rows';
+  const CAMPAIGN_CACHE_MS = 5 * 60 * 1000;
+  let campaignRenderId = 0;
+  let campaignDataPromise = null;
+  let campaignDataAt = 0;
+  function loadCampaignLib() {
+    if (window.EI_CAMPAIGN) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = '/lib/campaign.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+  async function loadCatalogRows() {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(CAMPAIGN_CACHE_KEY));
+      const age = cached ? Date.now() - cached.t : -1;
+      if (cached && Array.isArray(cached.rows) && age >= 0 && age < CAMPAIGN_CACHE_MS) return cached.rows;
+    } catch (_) {}
+    const res = await fetch('/api/catalog?type=products');
+    if (!res.ok) throw new Error('catalog');
+    const rows = await res.json();
+    if (!Array.isArray(rows)) throw new Error('catalog');
+    const slim = rows.map(r => ({ id: r.id, variant_id: r.variant_id, price_ex: r.price_ex, effective_price_ex: r.effective_price_ex, promo_active: r.promo_active, stock: r.stock }));
+    try { sessionStorage.setItem(CAMPAIGN_CACHE_KEY, JSON.stringify({ t: Date.now(), rows: slim })); } catch (_) {}
+    return slim;
+  }
+  // One catalog request shared by the campaign line and the stock hints (the rows are also cached in sessionStorage).
+  let catalogRowsPromise = null;
+  let catalogRowsAt = 0;
+  function loadSharedRows() {
+    if (!catalogRowsPromise || Date.now() - catalogRowsAt >= CAMPAIGN_CACHE_MS) {
+      catalogRowsAt = Date.now();
+      catalogRowsPromise = loadCatalogRows().catch(e => { catalogRowsAt = Date.now() - CAMPAIGN_CACHE_MS + 30000; throw e; });
+    }
+    return catalogRowsPromise;
+  }
+  function loadCampaignData() {
+    if (!campaignDataPromise || Date.now() - campaignDataAt >= CAMPAIGN_CACHE_MS) {
+      campaignDataAt = Date.now();
+      campaignDataPromise = Promise.all([
+        loadCampaignLib(),
+        fetch('/campaign.config.json').then(r => { if (!r.ok) throw new Error('config'); return r.json(); }),
+        loadSharedRows()
+      ]).catch(e => { campaignDataAt = Date.now() - CAMPAIGN_CACHE_MS + 30000; throw e; }); // after a 429 or network error, try again in 30 s, not 5 min
+    }
+    return campaignDataPromise;
+  }
+  function grossCents(ex) { return Math.round(parseFloat((parseFloat(ex) * 1.23).toFixed(2)) * 100); }
+  function euros(cents) { return (cents / 100).toFixed(2).replace(/\.00$/, ''); }
+  // One line per cart item, from the catalog rows. priceOk is false when a price in the cart is not the current
+  // catalog price (same check as the checkout): then no discount is shown. Throws when an item has no row.
+  function buildCampaignLines(cart, rows) {
+    let priceOk = true;
+    const lines = cart.map(item => {
+      const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === item.id) || rows.find(r => r.id === item.id);
+      if (!row) throw new Error('unmapped');
+      const stockNum = (row.stock === null || row.stock === undefined || row.stock === '') ? NaN : Number(row.stock);
+      const paidCents = grossCents(row.effective_price_ex);
+      if (Math.round(Number(item.price) * 100) !== paidCents) priceOk = false;
+      return {
+        productId: row.id,
+        variantId: row.variant_id || row.id,
+        qty: item.quantity,
+        listCents: grossCents(row.price_ex),
+        paidCents,
+        promoActive: row.promo_active === true,
+        stock: Number.isInteger(stockNum) ? Math.max(0, stockNum) : null
+      };
+    });
+    return { lines, priceOk };
+  }
+  // Cents the campaign takes off, or 0 on any doubt (violation, stale price, bad number). Display only.
+  function discountFrom(r, priceOk) {
+    return (priceOk === true && r && r.ok === true && r.active === true && Array.isArray(r.violations) &&
+      r.violations.length === 0 && Number.isInteger(r.extraCents) && r.extraCents > 0) ? r.extraCents : 0;
+  }
+  // Never below what the server would charge: a discount larger than the subtotal is ignored.
+  function totalAfterDiscountCents(subtotalCents, discountCents) {
+    return (Number.isInteger(subtotalCents) && Number.isInteger(discountCents) && discountCents > 0 && discountCents <= subtotalCents)
+      ? subtotalCents - discountCents : subtotalCents;
+  }
+  function minusEuros(cents) { return '−€' + (cents / 100).toFixed(2); }
+
+  // Stock hints for the "+" button. Comfort only: the server still rejects what is not in stock.
+  // An integer stock is a limit; anything else (null, empty, not a number) is unknown and never blocks.
+  function stockLimit(rawStock) {
+    if (rawStock === null || rawStock === undefined || rawStock === '') return null;
+    const n = Number(rawStock);
+    return Number.isInteger(n) ? Math.max(0, n) : null;
+  }
+  // Text next to the item when no more can be added; '' while the "+" still works.
+  function stockNote(limit, qty) {
+    if (limit === null || !(qty >= limit)) return '';
+    return limit === 0 ? 'Out of stock' : `Only ${limit} left`;
+  }
+  // Limit per cart item id (null = unknown). Order on Request items are not limited by stock. {} on any failure.
+  async function stockLimits(cart) {
+    const out = {};
+    try {
+      const rows = await loadSharedRows();
+      cart.forEach(item => {
+        const row = rows.find(r => (r.variant_id ? r.id + '-' + r.variant_id : r.id) === item.id);
+        out[item.id] = (row && !item.available_on_request) ? stockLimit(row.stock) : null;
+      });
+    } catch (_) { return {}; }
+    return out;
+  }
+  let drawerLimits = {};
+  let stockRenderId = 0;
+  async function applyDrawerStock(cart, itemsEl) {
+    const myId = ++stockRenderId;
+    try {
+      const limits = await stockLimits(cart);
+      if (myId !== stockRenderId || !itemsEl.isConnected) return;
+      drawerLimits = limits;
+      const nodes = itemsEl.querySelectorAll('.cart-drawer-item');
+      cart.forEach((item, idx) => {
+        const node = nodes[idx];
+        const note = node ? stockNote(limits[item.id] === undefined ? null : limits[item.id], item.quantity) : '';
+        if (!note) return;
+        const plus = node.querySelectorAll('.cart-drawer-qty-btn')[1];
+        if (plus) plus.disabled = true;
+        const p = document.createElement('p');
+        p.className = 'cart-drawer-item-stock';
+        p.textContent = note;
+        const info = node.querySelector('.cart-drawer-item-info');
+        if (info) info.appendChild(p);
+      });
+    } catch (_) {}
+  }
+  async function renderCampaignLine(cart, footerEl) {
+    const myId = ++campaignRenderId;
+    try {
+      const [, config, rows] = await loadCampaignData();
+      const lib = window.EI_CAMPAIGN;
+      if (!lib || !lib.validateConfig(config).ok) return;
+      if (!lib.isActive(config, Date.now())) {
+        // After the end, a Vault item may still sit in the cart at its old price: say so.
+        const vaultIds = config.vault.items.map(i => i.productId + '-' + i.variantId);
+        const sinceEnd = Date.now() - Date.parse(config.endsAt);
+        if (sinceEnd > 0 && sinceEnd < 7 * 864e5 && cart.some(item => vaultIds.indexOf(item.id) !== -1)) {
+          showCampaignText('Black Cat Friday has ended. Prices may change at checkout.', myId, footerEl);
+        }
+        return;
+      }
+      const { lines, priceOk } = buildCampaignLines(cart, rows);
+      const r = lib.compute({ config, nowMs: Date.now(), lines });
+      if (!r.ok || !r.active) return;
+      showCampaignDiscount(discountFrom(r, priceOk), Math.round(parseFloat(getTotal(cart)) * 100), myId, footerEl);
+      const vaultKeys = config.vault.items.map(i => i.productId + '|' + i.variantId);
+      const hasVault = lines.some(l => l.promoActive && vaultKeys.indexOf(l.productId + '|' + l.variantId) !== -1);
+      const kitSets = r.perBundle.find(b => b.sets > 0);
+      const kit = kitSets ? config.bundles.find(b => b.id === kitSets.id) : null;
+      let text;
+      if (r.violations.length) text = r.violations[0].code === 'STOCK_EXCEEDED'
+        ? (r.violations[0].allowed > 0 ? `Not enough stock for one item: only ${r.violations[0].allowed} left.` : 'One item in your cart is sold out.')
+        : r.violations[0].code === 'BUNDLE_CAP_EXCEEDED'
+          ? `Limit reached: ${r.violations[0].allowed} Sumi Set${r.violations[0].allowed === 1 ? '' : 's'} per order.`
+          : `Limit reached: ${r.violations[0].allowed} per order on one item. Others are still open.`;
+      else if (kit && kitSets.extraCents > 0) text = `Sumi Set ✓ €${euros(kit.priceCents)} instead of €${euros(kit.priceCents + kitSets.extraCents / kitSets.sets)}. You save €${euros(kitSets.extraCents / kitSets.sets)}.`;
+      else if (r.boostUnlocked && r.boostedUnits > 0) text = `${config.boost.discountPercent}% unlocked. You’re saving €${(r.extraCents / 100).toFixed(2)}.`;
+      else if (r.boostUnlocked && hasVault) return;
+      else if (hasVault) text = config.boost.maxUnitsPerOrder === 0
+        ? `You’re at ${config.vault.discountPercent}% off.`
+        : `You’re at ${config.vault.discountPercent}% off. Add any other product worth €${euros(config.boost.minLineCents)}+ and your Vault items drop to ${config.boost.discountPercent}%.`;
+      else text = `Black Cat Friday: up to ${config.boost.maxUnitsPerOrder === 0 ? config.vault.discountPercent : 60}% off. Ends Mon 30 Nov, 23:59.`;
+      showCampaignText(text, myId, footerEl);
+    } catch (_) {}
+  }
+  // Black Cat Friday line and total with the discount, in the drawer and in the mobile sheet.
+  // Display only: the server charges the same amount. Nothing is added when there is no discount.
+  async function campaignDiscountCents(cart) {
+    try {
+      const [, config, rows] = await loadCampaignData();
+      const lib = window.EI_CAMPAIGN;
+      if (!lib || !lib.validateConfig(config).ok || !lib.isActive(config, Date.now())) return 0;
+      const { lines, priceOk } = buildCampaignLines(cart, rows);
+      return discountFrom(lib.compute({ config, nowMs: Date.now(), lines }), priceOk);
+    } catch (_) { return 0; }
+  }
+  function showCampaignDiscount(discountCents, subtotalCents, myId, footerEl) {
+    if (myId !== campaignRenderId || !footerEl.isConnected) return;
+    const totalCents = totalAfterDiscountCents(subtotalCents, discountCents);
+    if (totalCents === subtotalCents) return;
+    const sheetTotal = footerEl.parentNode && footerEl.parentNode.querySelector('.bs-total-value');
+    const makeRow = (rowClass, labelClass, valueClass, label, value) => {
+      const row = document.createElement('div');
+      row.className = rowClass;
+      const l = document.createElement('span');
+      l.className = labelClass;
+      l.textContent = label;
+      const v = document.createElement('span');
+      v.className = valueClass;
+      v.textContent = value;
+      row.appendChild(l);
+      row.appendChild(v);
+      return row;
+    };
+    if (sheetTotal) {
+      footerEl.appendChild(makeRow('bs-total-row bs-campaign-line', 'bs-total-label', 'bs-total-value', 'Black Cat Friday', minusEuros(discountCents)));
+      sheetTotal.textContent = '€' + (totalCents / 100).toFixed(2);
+      return;
+    }
+    const subtotalRow = footerEl.querySelector('.cart-drawer-subtotal');
+    if (!subtotalRow) return;
+    const totalRow = makeRow('cart-drawer-subtotal', 'cart-drawer-subtotal-label', 'cart-drawer-subtotal-value', 'Total', '€' + (totalCents / 100).toFixed(2));
+    subtotalRow.after(makeRow('cart-drawer-subtotal cart-drawer-campaign-line', 'cart-drawer-subtotal-label', 'cart-drawer-subtotal-value', 'Black Cat Friday', minusEuros(discountCents)), totalRow);
+  }
+  function showCampaignText(text, myId, footerEl) {
+    if (myId !== campaignRenderId || !footerEl.isConnected) return;
+    const p = document.createElement('p');
+    p.className = 'cart-drawer-campaign';
+    p.style.cssText = 'font-size:12px;margin:0 0 10px;';
+    p.textContent = text;
+    footerEl.insertBefore(p, footerEl.firstChild);
   }
 
   function renderBottomSheet(item) {
@@ -151,6 +375,7 @@
         </div>
         <span class="bs-added-price">€${item.price.toFixed(2)}</span>
       </div>
+      <div class="bs-campaign-slot"></div>
       <div class="bs-total-row">
         <span class="bs-total-label">Cart total</span>
         <span class="bs-total-value">€${total}</span>
@@ -160,6 +385,7 @@
         <button class="bs-btn-continue" onclick="cartDrawer.closeSheet()">Keep shopping</button>
       </div>
     `;
+    renderCampaignLine(cart, el.querySelector('.bs-campaign-slot'));
   }
 
   // ── Public API ──
@@ -211,6 +437,7 @@
     updateQty(idx, delta) {
       const cart = getCart();
       if (!cart[idx]) return;
+      if (delta > 0 && stockNote(drawerLimits[cart[idx].id] === undefined ? null : drawerLimits[cart[idx].id], cart[idx].quantity)) return;
       cart[idx].quantity += delta;
       if (cart[idx].quantity <= 0) cart.splice(idx, 1);
       saveCart(cart);
@@ -219,7 +446,11 @@
     },
     refresh() {
       renderDrawerItems();
-    }
+    },
+    campaignDiscountCents,
+    stockLimits,
+    stockNote
+
   };
 
   // ── Listen for cart-updated ──

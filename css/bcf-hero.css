@@ -1,0 +1,400 @@
+/* Black Cat Friday hero (css/bcf-hero.css)
+   Hero block for the home slide and the /black-cat-friday page. Every selector is .bcf-*;
+   the .hx-* hero styles are not touched. The JS only sets the data-bcf-* attributes and text.
+
+   Markup contract (final):
+   <section|article class="bcf-hero" data-bcf-phase="before|live|ended">
+     <svg class="bcf-eyes" viewBox="30 195 1306 395" role="img" aria-label="Two teal cat eyes">
+       <g class="bcf-look"><g class="bcf-squint">
+         <path class="bcf-eye" d="..."/><path class="bcf-eye" d="..."/>
+       </g></g>
+     </svg>
+     <p class="bcf-small" data-bcf-small></p>
+     <h2 class="bcf-title">Black Cat<br>Friday</h2>
+     <p class="bcf-dates" data-bcf-dates>27–30 NOV</p>
+     <p class="bcf-url">electricink.ie</p>
+     <div class="bcf-countdown" data-bcf-countdown>
+       <p class="bcf-count-label" data-bcf-label></p>
+       <div class="bcf-count-grid">
+         <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-d>00</span><span class="bcf-count-unit">days</span></div>
+         <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-h>00</span><span class="bcf-count-unit">hours</span></div>
+         <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-m>00</span><span class="bcf-count-unit">minutes</span></div>
+         <div class="bcf-count-box"><span class="bcf-count-num" data-bcf-s>00</span><span class="bcf-count-unit">seconds</span></div>
+       </div>
+     </div>
+     <div class="bcf-actions">
+       <a class="bcf-btn bcf-btn--solid">...</a>
+       <a class="bcf-btn bcf-btn--outline">...</a>
+     </div>
+   </section|article>
+
+   States: [data-bcf-phase="ended"] hides .bcf-countdown; an empty .bcf-small takes no space.
+   Title cut: the text stays static and unmasked. A #050707 foreground overlay uses the same
+   three final-size SVG masks as the transparent cuts; one irregular diagonal clip-path edge
+   advances across that overlay from right to left.
+   Natural state (no animation, reduced motion, unsupported clip-path animation): all three
+   overlay scratches are visible, matching the final transparent cuts. */
+
+@property --bcf-cut-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --bcf-cut-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --bcf-cut-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+.bcf-hero {
+  --bcf-teal: #43BDAB;
+  --bcf-line: #24282B;
+  --bcf-grey: #8E999F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.375rem, 1.6svh, 0.875rem);
+  width: 100%;
+  min-height: 100%;
+  padding: clamp(0.5rem, 2svh, 5.5rem) 1rem;
+  background: #050707;
+  color: #ffffff;
+  text-align: center;
+}
+
+/* ---------- Eyes ---------- */
+.bcf-eyes {
+  display: block;
+  flex: none;
+  width: 100%;
+  max-width: min(47.5rem, 52svh);
+  height: auto;
+  overflow: visible;
+}
+
+.bcf-look {
+  animation: bcf-look 16s ease-in-out infinite;
+}
+
+.bcf-squint {
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
+  animation: bcf-squint 16s ease-in-out infinite;
+}
+
+.bcf-eye {
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
+  animation: bcf-blink 6s infinite;
+}
+
+@keyframes bcf-look {
+  0%, 18% { transform: translate(0, 0); }
+  24%, 34% { transform: translate(-34px, 6px); }
+  42%, 50% { transform: translate(0, 0); }
+  58%, 68% { transform: translate(34px, -4px); }
+  76%, 100% { transform: translate(0, 0); }
+}
+
+@keyframes bcf-squint {
+  0%, 80% { transform: scaleY(1); }
+  84%, 90% { transform: scaleY(0.62); }
+  95%, 100% { transform: scaleY(1); }
+}
+
+@keyframes bcf-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.06); }
+}
+
+/* ---------- Copy ---------- */
+.bcf-small {
+  margin: 0;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.bcf-small:empty {
+  display: none;
+}
+
+.bcf-title {
+  --bcf-slash-1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 280' preserveAspectRatio='none'%3E%3Cg fill='black'%3E%3Cpolygon points='747.6,-7.7 741.2,-4 734.4,-2 727.1,-2.4 720.4,-0.1 713.6,2 707.2,5.3 700,5.6 693.2,7.6 686.1,8.3 679.8,12.1 672.4,11.8 666.2,16 658.6,14.8 651.9,17.1 644.9,18.3 638.9,23.4 631.5,22.9 625,25.9 618.1,27.4 611.2,28.9 603.9,29 597.5,32.5 590.7,34.4 583.8,35.7 576.4,35.3 570.3,39.9 563.2,40.5 556.3,42.2 549.3,43.3 542.5,45.2 535.4,45.7 528.9,48.8 521.6,48.7 515.1,52 508.1,53 501.1,54 493.9,54.6 487.5,58 480.6,59.5 473.5,60.2 466.3,60.5 459.4,61.9 452.4,63.1 445.6,64.8 438.9,67.1 431.7,67.5 425,69.8 418.6,73.3 411.4,73.8 404.5,75 397.8,77.5 390.5,77.4 384.1,80.7 376.9,80.9 370.1,83.2 363.1,84.1 356.8,87.9 349.8,89.2 342.9,90.6 336.4,94 328.9,92.8 322.8,97.6 315.1,95.7 308.4,98 301.4,99.1 294.7,101.8 287.6,102.1 280.8,104.3 274.2,106.8 266.9,106.8 260.3,109.3 253.2,110.2 246.5,112.4 239.6,113.9 232.5,114.5 226,117.9 219.3,120.1 212.1,120.4 204.8,120.3 198.7,125.2 191.1,123.8 183.9,123.8 177.7,128.2 170.4,128 163.4,129.4 156.4,130.4 149.8,133 142.6,133.1 135.9,135.7 129,137.1 122.3,139.2 114.9,139 108.4,142.2 100.9,141.2 94.2,143.5 87.7,146.5 80.7,147.5 73.7,148.5 66.9,150.5 59.5,150 52.7,152 46.2,154.9 38.7,154 32.6,159 25.1,157.9 19,162.6 11.2,160.5 5,164.7 -1.4,168.6 -8.8,168 -15.7,169.2 -22,173.3 -29,174.5 -36,175.4 -42.5,178.8 -49.1,181.6 -49.4,180.3 -42.3,179.5 -35.4,177.9 -28.6,175.9 -21.8,174.3 -14.3,175.3 -8.1,170.7 -0.9,170.5 5.6,167.3 12.9,167.7 20,167 26.8,164.9 34.1,164.9 40.6,162 47.6,160.8 55,161.6 62,160.4 68.8,158.5 75.7,156.9 82.6,155.6 89.3,153.1 96.4,152.5 103.2,150.7 111,152.6 117.3,149 124.1,146.7 131.6,147.8 138.5,146.2 145.1,143.6 152.2,143.1 159.1,141.4 165.8,139 172.8,137.9 179.9,137.5 186.5,134.8 194,135.5 200.6,132.8 207.3,130.8 214.8,131.4 221.3,128.4 228.4,127.7 235,125.2 241.7,122.7 248.9,122.5 255.9,121.5 262.4,118.2 269.1,115.8 276.7,117.3 283.1,113.8 289.7,111.1 296.4,108.6 303.7,108.8 310.5,106.8 316.8,102.8 324,102.7 330.8,100.6 338.2,101.3 344.9,98.9 351.5,96.1 358.2,93.8 365.2,92.7 371.6,89.3 379,89.7 385.3,85.9 392.3,84.9 398.8,81.7 405.7,80.2 413,80.4 419.4,76.7 426.5,76.2 433.6,75.4 440,71.8 447.2,71.7 454,69.5 460.8,67.6 467.9,67.2 474.3,63.6 481.5,63.2 488.5,62.3 494.8,58.2 502.5,60 509.1,57.4 515.9,55.2 523.1,55.1 529.8,52.6 536.4,49.9 543.3,48.6 550.1,46.4 557.6,47.4 564.3,45.4 571.4,44.4 578,41.8 584.7,39.7 591.4,37.3 598.8,37.7 605.2,34.1 612.1,32.8 619.5,33.4 625.8,29.3 632.7,27.8 640.2,28.6 646.3,24 653.1,22.1 659.9,20.1 667.3,20.6 674.1,18.8 680.8,16.3 687.2,12.9 694.5,12.9 700.9,9.3 707.6,7.1 714.1,4.2 720.7,1.1 728.2,2.1 734.3,-2.7 741.4,-3.5 747.9,-6.2'/%3E%3Cpolygon points='115.9,147.6 107.2,144 98.8,140.4 107.9,142.8 117.5,145'/%3E%3Cpolygon points='191.7,132.2 185.8,124.2 184,113.7 186.9,123.4 194.2,130.5'/%3E%3Cpolygon points='411.2,78.9 404.7,70.2 401.9,60 405.8,69.3 413.7,77'/%3E%3Cpolygon points='413.2,76.2 407.4,83.4 408,91.6 406.2,82.8 410.5,74.9'/%3E%3Cpolygon points='440.9,69 439.8,79.3 441.3,88.8 438.5,79.3 437.8,69.1'/%3E%3Cpolygon points='255.5,114.6 248.3,124.6 241.2,134 247,124.1 252.7,113.3'/%3E%3Cpolygon points='233.8,123.7 224.1,121.3 217,114.7 224.6,120.1 234.9,120.9'/%3E%3C/g%3E%3C/svg%3E");
+  --bcf-slash-2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 280' preserveAspectRatio='none'%3E%3Cg fill='black'%3E%3Cpolygon points='747,60 740,60.6 732.6,59.8 725.6,61 719.5,65.4 712.6,66.6 705.2,65.9 698.8,69.2 692,71 685.4,73.3 678.3,73.9 671.1,73.9 664.7,77.2 657.9,78.6 650.7,78.9 644.2,81.7 637.5,83.6 630.8,85.7 623.8,86.8 617.1,88.9 610.4,90.7 603.7,92.9 596.9,94.7 590,96.1 583.8,99.9 576.8,100.9 570.1,102.8 563.6,105.7 557.1,108.9 549.6,107.7 542.8,109.4 536.4,112.6 529.6,114.1 523.3,117.8 515.8,116.8 509.4,119.9 502.2,120.2 495.7,123 488.6,123.6 481.7,124.7 475.3,128.2 468.6,130 461.7,131.3 454.6,131.8 448.2,135.3 441.5,137.4 434.1,136.3 427.6,139.2 420.6,140.3 414.3,143.7 407.4,145.2 400.5,146.4 393.6,147.8 386.5,148.2 379.8,150.1 372.9,151.5 366.2,153.7 359.5,155.6 353.1,158.9 346.4,161 339,160.1 332.5,163 326,165.9 318.9,166.5 312.4,169.5 305.2,169.4 298.4,170.9 291.9,173.9 284.9,174.8 278.5,178.1 271.9,180.6 264.6,180.3 258.1,183.2 251.1,184.1 244.7,187.2 237.4,186.9 230.6,188.5 223.7,190 217.1,192.2 210.2,193.8 203.9,197.4 197.2,199.3 190.2,200.1 183.3,201.4 176.8,204.3 169.5,204.3 162.5,205.1 156,207.9 149.2,209.3 142.1,209.8 135.2,211.3 129,215.3 121.9,215.8 115.1,217.4 108.1,218.1 101.1,219 94.3,220.7 87.4,222 80.3,222.5 73.6,224.8 66.6,225.6 60,228 53.1,229.1 45.8,228.8 39.5,232.7 32.8,234.7 25.8,235.6 19.1,237.8 12,238.2 5,238.8 -1.3,242.7 -8.2,244.1 -15.2,244.7 -22.3,245.3 -28.8,248 -35.9,248.7 -42,253.1 -49,254.1 -48.8,254.6 -41.8,254 -35.1,251.9 -28,251.5 -20.8,251.4 -14.2,248.6 -6.7,250.1 -0.1,247.6 7.3,248.2 14.1,246.5 20.8,244.4 27.9,244.1 35,243.8 42,243 49.1,242.2 55.6,239.6 63.1,240.8 70,239.3 76.3,235.9 83.2,234.3 90.7,235.7 97.1,232.4 104.3,232.2 111.2,231.1 117.3,226.6 124.8,227.9 131.6,225.9 138.7,225.5 145.4,223.4 151.7,219.8 158.5,218.3 165.6,217.5 171.9,214 179.2,214.3 186.1,212.9 192.3,209 199.3,208.2 206,205.9 212.9,204.8 220.2,205 226.6,201.9 233.1,198.9 239.6,195.9 246.3,193.7 253.2,192.6 260.3,192.4 266.4,187.6 273.5,187.1 280.4,186 287,183.7 293.4,180.3 300.5,179.9 307.1,177.1 313.9,175.4 320.5,173.1 327.3,171.4 333.7,167.9 340.7,167.2 347.5,165.5 354.4,164.2 361.1,162.3 368,160.8 374.9,159.5 381.9,158.7 388.7,157 395.4,154.9 402.3,154 408.8,151 415.7,149.7 422.1,146.4 428.7,143.8 436.4,146 442.9,142.9 450,142.3 456.8,140.6 463.1,137.2 470.1,136.1 477.3,136.2 484,134.3 490.9,133.1 497.3,129.6 504,127.6 510.8,125.9 518.3,127 524.8,124.2 531.3,121.2 538.6,121.5 545.3,119.6 552,117.3 559.1,116.8 565.8,115 572.4,112.2 579,109.7 586.2,109.9 592.2,105.1 599.4,105 606.5,104.3 613.1,101.9 619.7,99.4 627.1,100.1 633.5,97.1 640.2,94.8 646.5,91.3 653.7,91.2 660.4,89.2 667.3,87.7 673.3,82.9 680.6,83.3 686.7,78.7 693.4,76.4 700.4,75.7 707,73 713.7,71.3 720,67.4 727,66.4 733.9,65.2 740.2,61.6 746.6,58.3'/%3E%3Cpolygon points='267.5,183.7 264.7,191 262.9,199.1 262.8,190.8 263.3,183.3'/%3E%3Cpolygon points='590.5,105.8 584.3,99 581.2,89.2 585.7,97.7 593.7,103.1'/%3E%3Cpolygon points='204,205 195.4,198 189.7,188.2 196.7,196.7 206.8,201.9'/%3E%3Cpolygon points='158.8,210.9 156.8,218.4 155.5,227.4 154.9,218.4 154.7,210.9'/%3E%3Cpolygon points='395.7,151 386.6,157.9 376.6,161.3 385.1,156.8 392.5,148.4'/%3E%3Cpolygon points='211,203.4 203,198.9 194.3,197.3 204.1,197.3 213.4,200'/%3E%3Cpolygon points='576.7,109 571.5,99.1 566.4,88.8 573.1,98.2 580.3,107'/%3E%3C/g%3E%3C/svg%3E");
+  --bcf-slash-3: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 280' preserveAspectRatio='none'%3E%3Cg fill='black'%3E%3Cpolygon points='747.6,136.5 740.3,136.1 733.6,138.5 726.7,140.1 719.9,141.9 712.8,142.5 705.7,143.1 698.5,143.5 691.8,145.7 684.5,145.5 677.4,146.5 670.2,146.6 663.7,149.7 656.4,149.7 649.5,151 643,154.1 636.1,155.8 629.1,157 622.3,158.6 615.2,159.4 608.7,162.5 601.8,163.9 595,165.8 587.7,165.7 581.1,168.7 574.3,170.6 567.1,170.9 560.7,174.4 553.6,175.1 546.7,176.5 539.9,178.5 533.1,180.2 526.3,182 519.5,184.3 513.2,187.9 506,188.3 499.1,190 492.7,193.6 485.6,194 478.8,195.8 472.2,198.8 465.6,201.6 458.7,203 451.8,204.4 445,206.5 437.8,206.5 431.9,212.3 424.5,211.8 418,214.8 411.4,217.6 404.2,217.9 397.7,220.9 390.6,221.9 383.9,224 377.7,228.3 370.3,228 363.5,230 357.1,233.5 350.4,235.7 343.3,236.1 336.3,237.5 329.4,239.1 322.3,239.7 315.9,243.3 308.8,243.8 302.2,246.6 295.5,249.1 288.5,249.8 281.7,251.8 274.8,253.3 268.1,255.8 260.7,255.2 253.9,257 246.9,258.3 240.1,260.1 233,260.9 226.2,262.7 219.3,264.3 212.6,266.4 205.6,267.7 199.1,270.7 191.8,270.5 184.9,272.2 178.8,277 171.6,276.9 164.6,278.2 157.5,278.9 150.7,280.9 143.9,282.8 136.8,283.4 130.2,286 123.5,288.2 115.8,286.6 109.2,289.4 102.6,291.9 96.2,295.5 89.2,296.8 82,296.9 75.4,299.6 68.5,301.3 61.3,301.5 54.9,305.1 48.3,307.7 41.3,308.7 34.5,310.9 27.8,313 21,315.1 13.8,315.2 7.1,317.5 0.4,319.9 -6.3,322.4 -13.2,323.9 -20.4,324.1 -26.9,327.3 -33.9,328.4 -40.4,331.5 -47.4,332.7 -47.4,332.5 -40.1,332.8 -33.6,329.3 -26.4,329.4 -19.6,327.4 -12.9,324.9 -5.7,324.6 1.5,324.7 8.3,322.7 14.9,319.7 22.2,319.9 28.7,316.7 35.7,315.6 42.8,315 49.4,312.4 56.4,311.1 63.4,310.3 70.3,308.9 76.9,305.8 83.6,303.4 90.3,301.2 97.1,299.6 103.9,297.4 111.2,297.8 117.9,295.2 124.7,293.4 131.6,291.9 138.2,289.2 145.5,289.5 151.5,284.1 158.4,282.5 166.3,285.1 172.9,282.5 179.4,279.2 186.5,278.7 193.1,275.8 200.6,276.9 206.8,272.5 214,272.3 220.9,270.8 227.7,269 234.5,266.8 241.5,266 248,262.8 255.3,262.9 262,260.3 269,259.4 275.7,257.3 282.8,256.6 289.3,253.4 296.3,252.3 303.2,250.8 309.9,248.5 316.8,247 324.1,247.2 330.4,242.9 337,240.2 344.3,240.6 351.5,240.1 358,237.2 364.8,235.2 371.6,233.2 378.3,230.9 385.1,229 392.7,230.2 399.1,226.8 405.4,222.8 412.4,221.6 419.1,219.3 426.3,219.2 432.9,216.5 439.7,214.4 446.7,213.5 453.1,209.7 460.1,208.8 467,207.4 473.7,205 480.7,203.9 487.2,200.9 494.1,199.4 500.3,194.8 507.9,196.3 514.8,194.6 521.1,190.7 528.1,189.9 534.8,187.2 541.5,184.9 548.8,185 555.3,181.9 562.5,181.9 569.6,181 576,177.6 582.5,174.2 590,175.3 596.5,172.3 603.1,169.4 610.4,169.5 617.4,168.6 624.1,166 630.9,164.4 637.5,161.7 644.9,161.9 651.5,159.2 658.2,157.2 665.1,155.4 672.2,154.9 678.9,152.4 685.7,150.5 692.5,148.7 699.5,147.6 706.5,146.7 712.8,142.5 720.3,143.6 726.8,140.6 733.8,139.2 741.1,139.7 748,138.2'/%3E%3Cpolygon points='248.8,260.7 247,267.6 248.4,273.9 245.8,267.5 246.2,260.5'/%3E%3Cpolygon points='588.2,172.5 583,168.9 580.9,162.2 583.8,168 589.9,170.6'/%3E%3Cpolygon points='494.2,195.1 489.3,201.5 489.5,209 488.2,201.1 491.8,194.1'/%3E%3Cpolygon points='533.8,186.9 528.3,185 524.5,180.2 528.9,184 535,184.6'/%3E%3Cpolygon points='248.7,261.1 242.9,273 242.6,284.5 241.8,272.6 246.3,260.2'/%3E%3Cpolygon points='130.3,290.9 122.3,285.3 115.8,278.8 123,284.4 131.9,288.9'/%3E%3Cpolygon points='526.5,188.2 521.7,178 523.8,167 522.7,177.5 528.8,187'/%3E%3C/g%3E%3C/svg%3E");
+  margin: 0;
+  padding: 0.05em 0.04em;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: clamp(2.5rem, min(15vw, 13svh), 9.375rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #ffffff;
+  position: relative;
+}
+
+.bcf-title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #050707;
+  -webkit-mask-image: var(--bcf-slash-1), var(--bcf-slash-2), var(--bcf-slash-3);
+  mask-image: var(--bcf-slash-1), var(--bcf-slash-2), var(--bcf-slash-3);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-composite: xor, xor, source-over;
+  mask-composite: exclude, exclude, add;
+  animation: bcf-jagged-reveal 0.72s cubic-bezier(0.2, 0.7, 0.2, 1) 1s both;
+}
+
+@keyframes bcf-jagged-reveal {
+  from {
+    clip-path: polygon(
+      100% 0,
+      100% 100%,
+      100% 100%,
+      100% 90%,
+      100% 80%,
+      100% 70%,
+      100% 60%,
+      100% 50%,
+      100% 40%,
+      100% 30%,
+      100% 20%,
+      100% 10%,
+      100% 0
+    );
+  }
+  to {
+    clip-path: polygon(
+      100% 0,
+      100% 100%,
+      0 100%,
+      0 90%,
+      0 80%,
+      0 70%,
+      0 60%,
+      0 50%,
+      0 40%,
+      0 30%,
+      0 20%,
+      0 10%,
+      0 0
+    );
+  }
+}
+
+.bcf-dates {
+  margin: 0;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: clamp(1.625rem, min(5vw, 5svh), 2.75rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--bcf-teal);
+}
+
+.bcf-url {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.6875rem, 2vw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.24em;
+  color: #ffffff;
+}
+
+/* ---------- Countdown ---------- */
+.bcf-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.bcf-countdown[hidden] { display: none; }
+
+/* Buttons that lead to the Vault only make sense while the campaign is live. */
+.bcf-hero:not([data-bcf-phase='live']) [data-bcf-for='live'] {
+  display: none;
+}
+
+/* In the home carousel the slide tabs sit on the bottom edge: keep clear of them. */
+.hx-slide .bcf-hero {
+  padding-bottom: 2.5rem;
+}
+
+.bcf-hero[data-bcf-phase='ended'] .bcf-countdown {
+  display: none;
+}
+
+.bcf-count-label {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bcf-grey);
+}
+
+.bcf-count-label:empty {
+  display: none;
+}
+
+.bcf-count-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 0.375rem;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.bcf-count-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 4rem;
+  min-width: 0;
+  padding: 0.5rem 0.25rem;
+  border: 1px solid var(--bcf-line);
+  border-radius: 4px;
+}
+
+.bcf-count-num {
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: clamp(1.5rem, min(5vw, 5.5svh), 2.875rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+}
+
+.bcf-count-unit {
+  margin-top: 0.25rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.625rem;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bcf-grey);
+}
+
+/* Seconds box: teal border and number */
+.bcf-count-box:last-child {
+  border-color: var(--bcf-teal);
+}
+
+.bcf-count-box:last-child .bcf-count-num {
+  color: var(--bcf-teal);
+}
+
+/* ---------- Buttons ---------- */
+.bcf-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 20rem;
+}
+
+.bcf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--bcf-teal);
+  border-radius: 4px;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.bcf-btn--solid {
+  background: var(--bcf-teal);
+  color: #ffffff;
+}
+
+.bcf-btn--outline {
+  background: transparent;
+  color: var(--bcf-teal);
+}
+
+.bcf-btn--outline:hover {
+  background: var(--bcf-teal);
+  color: #ffffff;
+}
+
+.bcf-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ---------- Wider screens ---------- */
+@media (min-width: 36rem) {
+  .bcf-actions {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+    max-width: none;
+    gap: 0.875rem;
+  }
+
+  .bcf-btn {
+    padding: 0.875rem 2rem;
+    font-size: 1.0625rem;
+  }
+
+  .bcf-count-unit {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+  }
+
+  .bcf-count-label {
+    font-size: 0.8125rem;
+  }
+
+  .bcf-small {
+    font-size: 1.875rem;
+  }
+}
+
+/* Very narrow screens: countdown as 2x2 instead of 3 + 1 */
+@media (max-width: 17.5rem) {
+  .bcf-count-box {
+    flex-basis: calc(50% - 0.25rem);
+  }
+}
+
+/* Reduced motion: no animation, and the natural state is the final frame
+   (eyes open and centred, all three foreground scratches visible). */
+@media (prefers-reduced-motion: reduce) {
+  .bcf-look,
+  .bcf-squint,
+  .bcf-eye,
+  .bcf-title::after {
+    animation: none;
+  }
+}

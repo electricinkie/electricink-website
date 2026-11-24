@@ -17,6 +17,34 @@ logger.info('Environment check', {
   hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET
 });
 
+// Black Cat Friday campaign: lib/campaign.js + campaign.config.json at the repo root
+// (never api/lib, which .vercelignore excludes). Loaded defensively: any failure or an
+// invalid config leaves campaign = null and payments continue at normal prices.
+// Not wired into the totals yet.
+let campaign = null;
+let campaignConfig = null;
+try {
+  const campaignLib = require('../lib/campaign');
+  const campaignCfg = require('../campaign.config.json');
+  const campaignCheck = campaignLib.validateConfig(campaignCfg);
+  if (campaignCheck.ok) {
+    campaign = campaignLib;
+    campaignConfig = campaignCfg;
+    logger.info('Campaign loaded', {
+      label: campaignCfg.label,
+      enabled: campaignCfg.enabled,
+      startsAt: campaignCfg.startsAt,
+      endsAt: campaignCfg.endsAt,
+      vaultItems: campaignCfg.vault.items.length,
+      bundles: Array.isArray(campaignCfg.bundles) ? campaignCfg.bundles.length : 0
+    });
+  } else {
+    logger.error('Campaign disabled: invalid config', { errors: campaignCheck.errors });
+  }
+} catch (err) {
+  logger.error('Campaign disabled: failed to load', { error: err && err.message });
+}
+
 // Load and merge all JSON product files from `data/` so the backend
 // has a single `stripeProducts` object even if `stripe-products.json` is missing.
 async function loadProducts() {
@@ -48,12 +76,14 @@ async function loadProducts() {
       const basePriceEx = promoActive ? row.promo_price_ex : row.price_ex;
       const priceGross = parseFloat((parseFloat(basePriceEx) * 1.23).toFixed(2));
       if (!merged[pid]) {
-        merged[pid] = { basic: { price: priceGross }, variants: [] };
+        merged[pid] = { id: pid, name: row.name, basic: { price: priceGross }, variants: [] };
       }
       merged[pid].variants.push({
         id: row.variant_id,
         label: row.label,
         price: priceGross,
+        listPrice: parseFloat((parseFloat(row.price_ex) * 1.23).toFixed(2)),
+        promoActive,
         stock: row.stock
       });
     }
@@ -218,6 +248,15 @@ function resolveProductById(itemId) {
   return null;
 }
 
+// Readable "Product variant" for customer messages: plain text, no markup, max 80 chars.
+function campaignDisplayName(product, variant) {
+  const clean = (v) => (typeof v === 'string' ? v.replace(/[<>&"'`\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim() : '');
+  const name = clean(product && product.name);
+  const label = clean(variant && variant.label);
+  const full = (label && label !== name ? `${name} ${label}` : name).trim();
+  return full.slice(0, 80).trim();
+}
+
 async function validateAndCalculateTotal(cartItems, shippingAddress = {}, couponCode = null, clientDiscount = 0, customerEmail = '') {
   const cacheEmpty = !stripeProducts || Object.keys(stripeProducts).length === 0;
   const cacheStale = (Date.now() - stripeProductsCachedAt) > STRIPE_PRODUCTS_TTL_MS;
@@ -231,6 +270,11 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   }
 
   let subtotal = 0;
+  // Black Cat Friday: one line per resolved variant, integer cents VAT included.
+  // Built here only; compute() is wired in a later step.
+  const campaignLines = [];
+  // Variant the server resolved for each item, same order as cartItems ('' when none)
+  const itemVariantIds = [];
 
   // Calculate subtotal from backend prices (source of truth)
   for (const item of cartItems) {
@@ -272,9 +316,86 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
 
     // Use BACKEND price (not frontend!)
     subtotal += price * quantity;
+    itemVariantIds.push(resolved.variantId || '');
+
+    // Campaign line: euros -> cents only at this boundary. Missing or invalid data
+    // becomes a safe default (no Vault discount on that line), never a guess.
+    const campaignVariant = resolved.variantId
+      ? (product.variants || []).find(v => v.id === resolved.variantId || v.priceId === resolved.variantId || v.stripe_price_id === resolved.variantId)
+      : (Array.isArray(product.variants) ? product.variants[0] : null);
+    const lineProductId = product.id || resolved.matchedId || '';
+    const lineVariantId = (campaignVariant && campaignVariant.id) || resolved.variantId || lineProductId;
+    const linePaidCents = Math.round(price * 100);
+    const lineListOk = !!campaignVariant && typeof campaignVariant.listPrice === 'number' && Number.isFinite(campaignVariant.listPrice);
+    const lineStockNum = (campaignVariant && campaignVariant.stock !== null && campaignVariant.stock !== undefined && campaignVariant.stock !== '') ? Number(campaignVariant.stock) : NaN;
+    const lineStock = Number.isInteger(lineStockNum) ? Math.max(0, lineStockNum) : null;
+    // Same variant on several lines: merge so per-order caps and stock apply to the total
+    const lineExisting = campaignLines.find(l => l.productId === lineProductId && l.variantId === lineVariantId);
+    if (lineExisting) {
+      lineExisting.qty += quantity;
+      lineExisting.paidCents = Math.min(lineExisting.paidCents, linePaidCents);
+    } else {
+      campaignLines.push({
+        productId: lineProductId,
+        variantId: lineVariantId,
+        qty: quantity,
+        listCents: lineListOk ? Math.round(campaignVariant.listPrice * 100) : linePaidCents,
+        paidCents: linePaidCents,
+        promoActive: lineListOk && campaignVariant.promoActive === true,
+        stock: lineStock,
+        displayName: campaignDisplayName(product, campaignVariant)
+      });
+    }
   }
 
-  // Calculate shipping from backend
+  // Black Cat Friday: extra discount in integer cents. Any failure = no campaign
+  // discount and the payment continues at normal prices; only per-order limits reject.
+  let campaignExtraCents = 0;
+  let campaignWindowOpen = false;
+  let campaignViolation = null;
+  if (campaign) {
+    try {
+      const campaignNowMs = Date.now();
+      campaignWindowOpen = campaign.isActive(campaignConfig, campaignNowMs) === true;
+      const campaignResult = campaign.compute({ config: campaignConfig, nowMs: campaignNowMs, lines: campaignLines });
+      if (campaignResult && campaignResult.ok === true) {
+        if (Array.isArray(campaignResult.violations) && campaignResult.violations.length > 0) {
+          campaignViolation = campaignResult.violations[0];
+        } else if (campaignResult.active === true && Number.isInteger(campaignResult.extraCents) && campaignResult.extraCents > 0) {
+          campaignExtraCents = campaignResult.extraCents;
+        }
+      } else {
+        logger.warn('Campaign compute failed, no campaign discount', { error: campaignResult && campaignResult.error });
+      }
+    } catch (err) {
+      logger.error('Campaign compute threw, no campaign discount', { error: err && err.message });
+      campaignExtraCents = 0;
+      campaignViolation = null;
+    }
+  }
+  if (campaignViolation) {
+    let campaignMessage = 'One item in your cart is over the Black Cat Friday limit per order. Please lower the quantity. Go back to your cart.';
+    if (campaignViolation.code === 'CAP_EXCEEDED') {
+      campaignMessage = `Black Cat Friday deals are limited to ${campaignViolation.allowed} per item in each order. Please lower the quantity. Go back to your cart.`;
+    } else if (campaignViolation.code === 'STOCK_EXCEEDED') {
+      const violLine = campaignLines.find(l => l.productId === campaignViolation.productId && l.variantId === campaignViolation.variantId);
+      const violName = (violLine && violLine.displayName) || '';
+      campaignMessage = campaignViolation.allowed > 0
+        ? (violName
+          ? `Only ${campaignViolation.allowed} left of ${violName}. Please lower the quantity in your cart.`
+          : `Only ${campaignViolation.allowed} left of one of the Black Cat Friday deals in your cart. Please lower the quantity. Go back to your cart.`)
+        : (violName
+          ? `${violName} has just sold out. Please remove it from your cart.`
+          : 'One of the Black Cat Friday deals in your cart just sold out. Please remove it. Go back to your cart.');
+    } else if (campaignViolation.code === 'BUNDLE_CAP_EXCEEDED') {
+      campaignMessage = `Black Cat Friday set deals are limited to ${campaignViolation.allowed} per order. Please lower the quantity. Go back to your cart.`;
+    }
+    const campaignErr = new Error(campaignMessage);
+    campaignErr.code = 'CAMPAIGN_LIMIT';
+    throw campaignErr;
+  }
+
+  // Calculate shipping from backend (free-shipping threshold on the subtotal before discounts, same as coupons)
   const shippingOut = {};
   const shipping = calculateShipping(subtotal, shippingAddress, shippingOut);
 
@@ -284,8 +405,12 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
   let discount = null;
   // Code as resolved by Stripe (promotion code or coupon id), never the raw client input.
   let validatedCouponCode = '';
+  if (campaignExtraCents > 0) {
+    discount = campaignExtraCents / 100;
+    validatedCouponCode = campaignConfig.label;
+  }
 
-  if (couponCode && Number(clientDiscount) > 0) {
+  if (couponCode && Number(clientDiscount) > 0 && !campaignWindowOpen) {
     try {
       // Try promotion code first
       const promotions = await stripe.promotionCodes.list({
@@ -386,8 +511,12 @@ async function validateAndCalculateTotal(cartItems, shippingAddress = {}, coupon
     discount: parseFloat((discount || 0).toFixed(2)),
     // Empty when the coupon was rejected or produced no discount
     couponCode: discount > 0 ? validatedCouponCode : '',
+    // Black Cat Friday extra (already included in discount); label only when it applied
+    campaignExtra: parseFloat((campaignExtraCents / 100).toFixed(2)),
+    campaignLabel: campaignExtraCents > 0 ? campaignConfig.label : '',
     vat: parseFloat(vat.toFixed(2)),
-    total: parseFloat(total.toFixed(2))
+    total: parseFloat(total.toFixed(2)),
+    itemVariantIds
   };
 }
 
@@ -448,7 +577,7 @@ module.exports = async function handler(req, res) {
   const checkoutSchema = z.object({
     items: z.array(
       z.object({
-        id: z.string().min(1, 'Product ID required'),
+        id: z.string().min(1, 'Product ID required').max(200, 'Product ID too long'),
         quantity: z.number().int().positive().max(100, 'Max 100 units per product'),
         variant: z.string().optional(),
         // Require Stripe price id provided by frontend
@@ -580,27 +709,40 @@ module.exports = async function handler(req, res) {
       // Build a sanitized metadata object (whitelist) to avoid client-side injection
       const incomingMetadata = req.body.metadata || {};
       // Build compact items JSON — Stripe metadata values are capped at 500 chars.
-      // Slice items array until the serialised string fits safely within 490 chars.
+      // Split whole items, in order, into chunks of up to 490 chars each:
+      // keys items, items_2, items_3, ... (the webhook joins them back). Never truncates.
+      const ITEMS_METADATA_MESSAGE = 'Your cart is too large to process as one order. Please split it into smaller orders and try again.';
       const buildItemsMeta = (itemsArr) => {
-        const full = JSON.stringify(itemsArr.map(it => ({ id: it.id, v: it.variant || '', q: it.quantity })));
-        if (full.length <= 490) return full;
-        // Drop items from the end until it fits
-        for (let len = itemsArr.length - 1; len > 0; len--) {
-          const candidate = JSON.stringify(itemsArr.slice(0, len).map(it => ({ id: it.id, v: it.variant || '', q: it.quantity })));
-          if (candidate.length <= 490) {
-            logger.warn('items metadata truncated to fit Stripe 500-char limit', { original: itemsArr.length, kept: len });
-            return candidate;
+        const chunks = [];
+        let current = [];
+        itemsArr.forEach((it, i) => {
+          const entry = { id: it.id, v: totals.itemVariantIds[i] || '', q: it.quantity };
+          if (JSON.stringify([entry]).length > 490) {
+            const itemErr = new Error(ITEMS_METADATA_MESSAGE);
+            itemErr.code = 'ITEMS_METADATA_LIMIT';
+            itemErr.reason = 'item_over_490_chars';
+            throw itemErr;
           }
-        }
-        return '[]';
+          if (current.length > 0 && JSON.stringify([...current, entry]).length > 490) {
+            chunks.push(current);
+            current = [];
+          }
+          current.push(entry);
+        });
+        if (current.length > 0) chunks.push(current);
+        const out = { items: '[]' };
+        chunks.forEach((chunk, n) => {
+          out[n === 0 ? 'items' : `items_${n + 1}`] = JSON.stringify(chunk);
+        });
+        return out;
       };
 
       const metadataSanitized = {
         // allow only minimal, non-sensitive fields from client
         customer_email: incomingMetadata.customer_email || incomingMetadata.email || '',
         customer_name: incomingMetadata.customer_name || incomingMetadata.name || '',
-        // Store compact items representation — guarded against Stripe 500-char value limit
-        items: buildItemsMeta(items),
+        // Store compact items representation — items, items_2, ... each under Stripe's 500-char value limit
+        ...buildItemsMeta(items),
         subtotal_cents: String(Math.round(totals.subtotal * 100)),
         shipping_cents: String(Math.round(totals.shipping * 100)),
         // Include phone as a safety backup (also set structured `shipping` on PaymentIntent)
@@ -610,6 +752,28 @@ module.exports = async function handler(req, res) {
       metadata = metadataSanitized;
 
       const shippingMethodCharged = totals.shippingMethodCharged || shippingMethod;
+
+      const paymentIntentMetadata = {
+        ...metadata,
+        shipping_method: shippingMethodCharged,
+        // Only when the charged method differs from the requested one
+        // (e.g. 'same-day' outside D01-D08 or after the 2PM cutoff).
+        ...(shippingMethodCharged !== shippingMethod ? { requested_shipping_method: shippingMethod } : {}),
+        subtotal: totals.subtotal.toFixed(2),
+        shipping: totals.shipping.toFixed(2),
+        vat: totals.vat.toFixed(2),
+        items_count: items.length,
+        backend_validated: 'true', // Security flag
+        coupon_code: totals.couponCode || '',
+        discount_amount: String(Number(totals.discount || 0).toFixed(2))
+      };
+      // Stripe allows at most 50 metadata keys: reject before any PaymentIntent is created
+      if (Object.keys(paymentIntentMetadata).length > 50) {
+        const keysErr = new Error(ITEMS_METADATA_MESSAGE);
+        keysErr.code = 'ITEMS_METADATA_LIMIT';
+        keysErr.reason = 'over_50_metadata_keys';
+        throw keysErr;
+      }
 
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totals.total * 100), // Convert to cents
@@ -628,20 +792,7 @@ module.exports = async function handler(req, res) {
             country: shippingAddress.country || ''
           }
         },
-        metadata: {
-          ...metadata,
-          shipping_method: shippingMethodCharged,
-          // Only when the charged method differs from the requested one
-          // (e.g. 'same-day' outside D01-D08 or after the 2PM cutoff).
-          ...(shippingMethodCharged !== shippingMethod ? { requested_shipping_method: shippingMethod } : {}),
-          subtotal: totals.subtotal.toFixed(2),
-          shipping: totals.shipping.toFixed(2),
-          vat: totals.vat.toFixed(2),
-          items_count: items.length,
-          backend_validated: 'true', // Security flag
-          coupon_code: totals.couponCode || '',
-          discount_amount: String(Number(totals.discount || 0).toFixed(2))
-        },
+        metadata: paymentIntentMetadata,
         automatic_payment_methods: {
           enabled: true,
         },
@@ -655,9 +806,19 @@ module.exports = async function handler(req, res) {
         calculatedTotals: totals // Send back for frontend verification
       });
     } catch (error) {
+      // Black Cat Friday per-order limit: customer-facing 400, logged without customer data
+      if (error && error.code === 'CAMPAIGN_LIMIT') {
+        logger.warn('Campaign limit rejected', { message: error.message });
+        return res.status(400).json({ error: error.message });
+      }
+      // Items do not fit Stripe metadata limits: customer-facing 400, logged without customer data
+      if (error && error.code === 'ITEMS_METADATA_LIMIT') {
+        logger.warn('Items metadata over Stripe limits, rejected', { reason: error.reason, itemsCount: items.length });
+        return res.status(400).json({ error: error.message });
+      }
       captureException(error, {
         endpoint: 'create-payment-intent',
-        context: { items, shippingAddress }
+        context: { itemsCount: Array.isArray(items) ? items.length : 0 }
       });
       logger.error('Error creating payment intent', error.message);
       if (error.message.includes('Invalid')) {
@@ -668,7 +829,7 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     captureException(error, {
       endpoint: 'create-payment-intent',
-      context: { items: req.body?.items || req.body?.cartItems, shippingAddress: req.body?.shippingAddress }
+      context: { itemsCount: Array.isArray(req.body?.items || req.body?.cartItems) ? (req.body.items || req.body.cartItems).length : 0 }
     });
     logger.error('Error processing request', error.message);
     return res.status(500).json({ error: 'Internal server error' });

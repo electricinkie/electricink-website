@@ -31,6 +31,13 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
 
   // ────────── Cart State ──────────
   let cart = [];
+  // Black Cat Friday discount in cents for the cart as it is now. Display only: the server decides the price.
+  // Any failure leaves it at 0 and the summary shows exactly the subtotal, as before.
+  let campaignDiscountCents = 0;
+  let campaignSeq = 0;
+  // Stock hints (display only, the server still checks): limit per item id, null = unknown = never blocks.
+  let stockLimitsById = {};
+  let stockSeq = 0;
 
   // ────────── Load Cart from localStorage ──────────
   function loadCart() {
@@ -81,9 +88,20 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
   function updateSummary() {
     const totals = calculateTotals();
 
+    // Total with the campaign discount (never below what the server charges: a discount above the subtotal is ignored).
+    const subtotalCents = Math.round(totals.subtotal * 100);
+    const discountCents = (Number.isInteger(campaignDiscountCents) && campaignDiscountCents > 0 && campaignDiscountCents <= subtotalCents) ? campaignDiscountCents : 0;
+    const totalCents = subtotalCents - discountCents;
+    const campaignLine = document.getElementById('campaignLine');
+    const campaignAmount = document.getElementById('summaryCampaign');
+    if (campaignLine && campaignAmount) {
+      campaignAmount.textContent = `−€${(discountCents / 100).toFixed(2)}`;
+      campaignLine.style.display = discountCents > 0 ? 'flex' : 'none';
+    }
+
     summarySubtotal.textContent = `€${totals.subtotal.toFixed(2)}`;
-    summaryVAT.textContent = `€${totals.vat.toFixed(2)}`;
-    summaryTotal.textContent = `€${totals.total.toFixed(2)}`;
+    summaryVAT.textContent = `€${(discountCents > 0 ? (totalCents / 100) - (totalCents / 100) / 1.23 : totals.vat).toFixed(2)}`;
+    summaryTotal.textContent = `€${(discountCents > 0 ? totalCents / 100 : totals.total).toFixed(2)}`;
 
     // Progress bar — show nearest milestone
     const progressEl = document.getElementById('cartProgressBar');
@@ -124,10 +142,54 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     progressEl.style.display = 'block';
   }
 
+  // ────────── Black Cat Friday discount (display only) ──────────
+  // js/cart-drawer.js (loaded on this page) does the calculation with lib/campaign.js; the cart is re-checked
+  // after every change, and until the answer arrives the summary shows the plain subtotal.
+  async function refreshCampaign() {
+    const seq = ++campaignSeq;
+    campaignDiscountCents = 0;
+    try {
+      if (cart.length === 0 || !window.cartDrawer || typeof window.cartDrawer.campaignDiscountCents !== 'function') return;
+      const cents = await window.cartDrawer.campaignDiscountCents(cart);
+      if (seq !== campaignSeq) return;
+      campaignDiscountCents = cents;
+      updateSummary();
+    } catch (e) { /* summary stays as it is */ }
+  }
+
+  // Disables "+" and says "Only N left" when the cart already holds all the stock the shop can see.
+  async function refreshStock() {
+    const seq = ++stockSeq;
+    try {
+      if (cart.length === 0 || !window.cartDrawer || typeof window.cartDrawer.stockLimits !== 'function') return;
+      const limits = await window.cartDrawer.stockLimits(cart);
+      if (seq !== stockSeq) return;
+      stockLimitsById = limits;
+      cart.forEach(item => {
+        const limit = limits[item.id] === undefined ? null : limits[item.id];
+        const note = window.cartDrawer.stockNote(limit, item.quantity);
+        if (!note) return;
+        const node = Array.from(cartItemsContainer.querySelectorAll('.cart-item')).find(n => n.dataset.itemId === item.id);
+        if (!node) return;
+        const plus = node.querySelector('.quantity-btn[data-action="increase"]');
+        if (plus) plus.disabled = true;
+        const p = document.createElement('p');
+        p.className = 'cart-item-stock';
+        p.textContent = note;
+        const info = node.querySelector('.cart-item-info');
+        if (info) info.appendChild(p);
+      });
+    } catch (e) { /* no hint, "+" works as before */ }
+  }
+
   // ────────── Update Quantity ──────────
   function updateQuantity(itemId, change) {
     const item = cart.find(i => i.id === itemId);
     if (!item) return;
+    try {
+      const limit = stockLimitsById[itemId] === undefined ? null : stockLimitsById[itemId];
+      if (change > 0 && window.cartDrawer && window.cartDrawer.stockNote(limit, item.quantity)) return;
+    } catch (e) { /* never block on an error */ }
     
     item.quantity += change;
     
@@ -197,6 +259,7 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
       cartEmpty.style.display = 'block';
       cartItemsContainer.style.display = 'none';
       updateSummary();
+      refreshCampaign();
       return;
     }
     
@@ -249,6 +312,8 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
     
     // Atualiza summary
     updateSummary();
+    refreshCampaign();
+    refreshStock();
   }
 
   // ────────── Add Event Listeners ──────────
@@ -294,6 +359,11 @@ import { FREE_SHIPPING_THRESHOLD } from './constants.js';
   // ────────── Initialize ──────────
   loadCart();
   renderCart();
+  // cart-drawer.js is a later module on this page: ask again once every module has run.
+  if (document.readyState !== 'complete') {
+    document.addEventListener('DOMContentLoaded', refreshCampaign);
+    document.addEventListener('DOMContentLoaded', refreshStock);
+  }
 
   // ────────── Export para usar em outras páginas ──────────
   window.cartUtils = {

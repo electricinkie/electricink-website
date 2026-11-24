@@ -1,6 +1,25 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 const logger = { info: console.log, warn: console.warn, error: console.error, debug: console.log };
 
+// Black Cat Friday campaign: lib/campaign.js + campaign.config.json at the repo root
+// (never api/lib, which .vercelignore excludes). Loaded defensively: any failure or an
+// invalid config leaves campaign = null and coupons are validated as usual.
+let campaign = null;
+let campaignConfig = null;
+try {
+  const campaignLib = require('../lib/campaign');
+  const campaignCfg = require('../campaign.config.json');
+  const campaignCheck = campaignLib.validateConfig(campaignCfg);
+  if (campaignCheck.ok) {
+    campaign = campaignLib;
+    campaignConfig = campaignCfg;
+  } else {
+    logger.error('Campaign disabled: invalid config', { errors: campaignCheck.errors });
+  }
+} catch (err) {
+  logger.error('Campaign disabled: failed to load', { error: err && err.message });
+}
+
 const _rlMap = new Map();
 function checkRateLimit(key) {
   const now = Date.now();
@@ -68,7 +87,22 @@ module.exports = async (req, res) => {
     }
 
     const upperCode = code.trim().toUpperCase();
-    logger.info('[COUPON] Validating', { code: upperCode, email, subtotal });
+    logger.info('[COUPON] Validating', { code: upperCode, subtotal });
+
+    // Black Cat Friday: no coupons while the campaign window is open (checked before
+    // any Stripe call). If the campaign failed to load or isActive throws, carry on as usual.
+    if (campaign) {
+      let campaignWindowOpen = false;
+      try {
+        campaignWindowOpen = campaign.isActive(campaignConfig, Date.now()) === true;
+      } catch (err) {
+        logger.error('[COUPON] Campaign check failed, validating as usual', { error: err && err.message });
+      }
+      if (campaignWindowOpen) {
+        logger.warn('[COUPON] Rejected: campaign window open', { code: upperCode });
+        return res.json({ valid: false, message: 'Coupons cannot be combined with Black Cat Friday prices.' });
+      }
+    }
 
     // ═══════════════════════════════════════════════════════════
     // VALIDATE STRIPE COUPON/PROMOTION CODE
@@ -116,7 +150,7 @@ module.exports = async (req, res) => {
           }
           
           if (customerEmail !== restrictedEmail) {
-            logger.warn('[COUPON] Email restriction failed', { customerEmail });
+            logger.warn('[COUPON] Email restriction failed', { code: upperCode });
             return res.json({ 
               valid: false, 
               message: 'This coupon is not available for your email' 
@@ -172,7 +206,7 @@ module.exports = async (req, res) => {
         if (checkRes.ok) {
           const checkData = await checkRes.json();
           if (checkData.has_orders) {
-            logger.warn('[COUPON] Not first order', { email });
+            logger.warn('[COUPON] Not first order', { code: upperCode });
             return res.json({ valid: false, message: 'Coupon valid only for first order' });
           }
         }

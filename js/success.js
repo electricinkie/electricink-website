@@ -17,6 +17,14 @@ import { INTERNAL_API_URL } from './constants.js';
       .replace(/'/g, '&#39;');
   }
 
+  // Presentation only: the server already charged the discounted total.
+  // Returns '' (line stays hidden) unless the saving is a sane positive amount.
+  function campaignSavingText(t) {
+    if (!t || !Number.isFinite(t.campaignExtra) || !Number.isFinite(t.subtotal)) return '';
+    if (t.campaignExtra <= 0 || t.campaignExtra > t.subtotal) return '';
+    return `\u2212\u20ac${t.campaignExtra.toFixed(2)}`;
+  }
+
   // ────────── Get Payment Intent ID from URL ──────────
   const urlParams = new URLSearchParams(window.location.search);
   const paymentIntentId = urlParams.get('payment_intent');
@@ -73,6 +81,11 @@ import { INTERNAL_API_URL } from './constants.js';
   if (orderData.totals) {
     const t = orderData.totals;
     document.getElementById('orderSubtotal').textContent = `€${(t.subtotal || 0).toFixed(2)}`;
+    const savingText = campaignSavingText(t);
+    if (savingText) {
+      document.getElementById('orderCampaign').textContent = savingText;
+      document.getElementById('orderCampaignLine').style.display = '';
+    }
     document.getElementById('orderShipping').textContent = t.shippingText || 'FREE';
 
     const vatEl = document.getElementById('orderVAT');
