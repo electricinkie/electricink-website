@@ -88,9 +88,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const cards = document.querySelectorAll('[data-product-id]');
   await Promise.all(Array.from(cards).map(async card => {
     const id = card.dataset.productId;
-    const priceEl = card.querySelector('.new-product-price, .bestseller-price');
+    const priceEl = card.querySelector('.new-product-price, .bestseller-price, .price-display-container');
     if (!priceEl) return;
     const price = await fetchPrice(id);
-    if (price) renderPrice(priceEl, price);
+    // The showcase keeps its static HTML unless a promotion is running.
+    if (price && (price.was || !priceEl.matches('.price-display-container'))) renderPrice(priceEl, price);
   }));
 });
