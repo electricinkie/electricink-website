@@ -284,7 +284,7 @@
         const vaultIds = config.vault.items.map(i => i.productId + '-' + i.variantId);
         const sinceEnd = Date.now() - Date.parse(config.endsAt);
         if (sinceEnd > 0 && sinceEnd < 7 * 864e5 && cart.some(item => vaultIds.indexOf(item.id) !== -1)) {
-          showCampaignText('Black Cat Friday has ended. Prices may change at checkout.', myId, footerEl);
+          showCampaignText('Black Cat Friday has ended. Checkout charges current prices.', myId, footerEl);
         }
         return;
       }
@@ -307,7 +307,7 @@
       else if (r.boostUnlocked && hasVault) return;
       else if (hasVault) text = config.boost.maxUnitsPerOrder === 0
         ? `You’re at ${config.vault.discountPercent}% off.`
-        : `You’re at ${config.vault.discountPercent}% off. Add any other product worth €${euros(config.boost.minLineCents)}+ and your Vault items drop to ${config.boost.discountPercent}%.`;
+        : `You’re at ${config.vault.discountPercent}% off. Add any non-Vault product worth €${euros(config.boost.minLineCents)}+ and your Vault items drop to ${config.boost.discountPercent}%.`;
       else text = `Black Cat Friday: up to ${config.boost.maxUnitsPerOrder === 0 ? config.vault.discountPercent : 60}% off. Ends Mon 30 Nov, 23:59.`;
       showCampaignText(text, myId, footerEl);
     } catch (_) {}

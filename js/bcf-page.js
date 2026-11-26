@@ -173,7 +173,7 @@
       const price = vault.discountPercent === 50 ? 'half price' : vault.discountPercent + '% off';
       const count = numberWord(vault.items.length);
       shown = showCard('vault', vault.discountPercent + '%', null,
-        count.charAt(0).toUpperCase() + count.slice(1) + ' products at ' + price + '.') || shown;
+        count.charAt(0).toUpperCase() + count.slice(1) + ' Vault picks at ' + price + '.') || shown;
     }
 
     // Boost and kit only exist while the campaign is enabled.
@@ -356,7 +356,7 @@
 
   // Short line for the page text. The exact rule stays in boostRule, in the small print.
   function boostShort(boost) {
-    return 'Add any other product worth €' + euros(boost.minLineCents) + '+ and your Vault items drop to ' + boost.discountPercent + '%.';
+    return 'Add any non-Vault product worth €' + euros(boost.minLineCents) + '+ and your Vault items drop to ' + boost.discountPercent + '%.';
   }
 
   function boostOf(config) {
@@ -386,12 +386,12 @@
     const pct = config.vault.discountPercent;
     // The "how it works" card says the same number as the section.
     if (isPercent(pct)) {
-      setText(document.getElementById('bcf-how-vault-text'), wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'product' : 'products') +
+      setText(document.getElementById('bcf-how-vault-text'), wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'Vault pick' : 'Vault picks') +
         ' at ' + (pct === 50 ? 'half price' : pct + '% off') + '.');
     }
     if (els.vaultSub && isPercent(pct)) {
       const boost = boostOf(config);
-      setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'product' : 'products') + ' at ' + pct + '% off.' +
+      setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'Vault pick' : 'Vault picks') + ' at ' + pct + '% off.' +
         (boost ? ' ' + boostShort(boost) : ''));
       els.vaultSub.hidden = false;
     }
