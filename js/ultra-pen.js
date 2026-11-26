@@ -79,10 +79,17 @@
       const product = data['ultra-pen-2-combo'];
       if (!product) throw new Error('Product not found in data');
 
+      let livePrice = null;
+      try {
+        const live = await fetch('/api/catalog?type=product&id=ultra-pen-2-combo');
+        const eff = live.ok ? parseFloat((await live.json())[0].effective_price_ex) : NaN;
+        if (eff > 0) livePrice = parseFloat((eff * 1.23).toFixed(2));
+      } catch (e) {}
+
       const item = {
         id: product.id || 'ultra-pen-2-combo',
         name: product.name || product.basic?.name || 'Ultra Pen 2',
-        price: product.price || product.pricing?.price || product.basic?.price || 0,
+        price: livePrice || product.price || product.pricing?.price || product.basic?.price || 0,
         stripe_price_id: product.pricing?.stripe_price_id || product.stripe_price_id || (product.stripe && (product.stripe.price_id || product.stripe.priceId)) || null,
         image: product.image || (product.images && product.images[0]) || '/images/placeholder.jpg'
       };
