@@ -29,7 +29,7 @@
    </section|article>
 
    States: [data-bcf-phase="ended"] hides .bcf-countdown; an empty .bcf-small takes no space.
-   Title cut: the text stays static and unmasked. A #050707 foreground overlay uses the same
+   Title cut: the text stays static and unmasked. A #000000 foreground overlay uses the same
    three final-size SVG masks as the transparent cuts; one irregular diagonal clip-path edge
    advances across that overlay from right to left.
    Natural state (no animation, reduced motion, unsupported clip-path animation): all three
@@ -65,7 +65,7 @@
   width: 100%;
   min-height: 100%;
   padding: clamp(0.5rem, 2svh, 5.5rem) 1rem;
-  background: #050707;
+  background: #000000;
   color: #ffffff;
   text-align: center;
 }
@@ -151,7 +151,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: #050707;
+  background: #000000;
   -webkit-mask-image: var(--bcf-slash-1), var(--bcf-slash-2), var(--bcf-slash-3);
   mask-image: var(--bcf-slash-1), var(--bcf-slash-2), var(--bcf-slash-3);
   -webkit-mask-repeat: no-repeat;

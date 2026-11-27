@@ -1,11 +1,11 @@
 /* Black Cat Friday page (css/black-cat-friday.css)
    Page styles for /black-cat-friday. The hero itself lives in css/bcf-hero.css;
    anything this page needs to change in the hero is done here, on top.
-   Brand: #050707 background, teal #43BDAB, orange #FF5715 (struck-price scratch only),
+   Brand: #000000 background, teal #43BDAB, orange #FF5715 (struck-price scratch only),
    white text, grey #8E999F, lines #24282B. Text is always white on teal. */
 
 .bcf-body {
-  background: #050707;
+  background: #000000;
 }
 
 .bcf-page {
@@ -18,7 +18,7 @@
   --bcf-media: #ffffff; /* the product photos are cut-outs made for a white background */
   flex: 1 0 auto;
   width: 100%;
-  background: #050707;
+  background: #000000;
   color: #ffffff;
 }
 
@@ -252,6 +252,50 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.75rem), 1fr));
   gap: 1.25rem;
+}
+
+/* Phones: two Vault cards per row, with smaller photo and type. */
+@media (max-width: 35.99rem) {
+  .bcf-vault-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .bcf-vault-grid .bcf-card-media {
+    height: 9rem;
+  }
+
+  .bcf-vault-grid .bcf-badge {
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .bcf-vault-grid .bcf-card-body {
+    padding: 0.75rem 0.625rem 0.875rem;
+  }
+
+  .bcf-vault-grid .bcf-card-name {
+    font-size: 0.9375rem;
+  }
+
+  .bcf-vault-grid .bcf-card-size {
+    font-size: 0.8125rem;
+  }
+
+  .bcf-vault-grid .bcf-card-prices {
+    gap: 0.25rem 0.625rem;
+    margin-top: 0.375rem;
+  }
+
+  .bcf-vault-grid .bcf-now {
+    font-size: 1.375rem;
+  }
+
+  .bcf-vault-grid .bcf-was {
+    font-size: 0.875rem;
+  }
 }
 
 .bcf-card {
