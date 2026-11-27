@@ -142,6 +142,17 @@ function buildDiscountRowHtml(amount, code) {
                       </tr>`;
 }
 
+// Email summary from the lines shown: Subtotal = sum of the lines, Discount = everything saved
+// (sale prices, campaign and coupon). If the lines do not add up, the stored values are kept.
+function emailSummary(items, order) {
+  const linesCents = (items || []).reduce((sum, item) => sum + Math.round(Number(item.price || 0) * 100) * Number(item.quantity || 1), 0);
+  const paidItemsCents = (order.total_cents || 0) - (order.shippingCost_cents || 0);
+  if (Number.isInteger(linesCents) && paidItemsCents >= 0 && linesCents >= paidItemsCents) {
+    return { subtotal: linesCents / 100, discount: (linesCents - paidItemsCents) / 100 };
+  }
+  return { subtotal: order.subtotal || 0, discount: order.discount };
+}
+
 // Human label for the shipping method recorded on the PaymentIntent metadata.
 function shippingMethodLabel(method) {
   if (method === 'same-day') return 'Same-day delivery (Dublin D01–D08)';
@@ -639,8 +650,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.postalCode,
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
-        .replace(/{{subtotal}}/g, (order.subtotal || 0).toFixed(2))
-        .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
         .replace(/{{shippingMethod}}/g, escapeHtml(shippingMethodLabel(order.shippingMethod)))
         .replace(/{{total}}/g, ((order.total || 0)).toFixed(2))
@@ -691,7 +700,10 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         `;
       }).join('');
 
+      const clientSummary = emailSummary(itemsForEmail, order);
       const finalClientHtml = clientEmailHtml
+        .replace(/{{subtotal}}/g, clientSummary.subtotal.toFixed(2))
+        .replace(/{{discountRow}}/g, buildDiscountRowHtml(clientSummary.discount, order.couponCode))
         .replace(/{{itemsList}}/g, itemsHtml);
 
       const clientResult = await resend.emails.send({
@@ -736,8 +748,6 @@ async function handlePaymentIntentSucceeded(event, requestId) {
           order.shippingAddress?.postalCode,
           order.shippingAddress?.country
         ].filter(Boolean).join(', ')))
-        .replace(/{{subtotal}}/g, (order.subtotal || 0).toFixed(2))
-        .replace(/{{discountRow}}/g, buildDiscountRowHtml(order.discount, order.couponCode))
         .replace(/{{shippingCost}}/g, (order.shippingCost && order.shippingCost > 0) ? order.shippingCost.toFixed(2) : (order.shippingMethod === 'pickup' ? 'Pickup — FREE' : 'FREE'))
         .replace(/{{shippingMethod}}/g, escapeHtml(shippingMethodLabel(order.shippingMethod)))
         .replace(/{{shippingBanner}}/g, buildShippingBannerHtml(order.shippingMethod, paymentIntent.metadata.requested_shipping_method || ''))
@@ -787,7 +797,11 @@ async function handlePaymentIntentSucceeded(event, requestId) {
         `;
       }).join('');
 
-      const finalAdminHtml = adminEmailHtml.replace(/{{itemsList}}/g, adminItemsHtml);
+      const adminSummary = emailSummary(itemsForEmailAdmin, order);
+      const finalAdminHtml = adminEmailHtml
+        .replace(/{{subtotal}}/g, adminSummary.subtotal.toFixed(2))
+        .replace(/{{discountRow}}/g, buildDiscountRowHtml(adminSummary.discount, order.couponCode))
+        .replace(/{{itemsList}}/g, adminItemsHtml);
 
       if (process.env.NODE_ENV === 'development') {
         logger.debug('[ADMIN-EMAIL] Sending to', { adminEmail: ADMIN_EMAIL });
