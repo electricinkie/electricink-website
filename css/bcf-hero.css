@@ -311,7 +311,9 @@
 /* ---------- Buttons ---------- */
 .bcf-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: stretch;
   gap: 0.5rem;
   width: 100%;
@@ -320,9 +322,10 @@
 
 .bcf-btn {
   display: inline-flex;
+  flex: 1 1 8.5rem;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--bcf-teal);
   border-radius: 4px;
   font-family: 'Outfit', 'Montserrat', sans-serif;
@@ -330,6 +333,7 @@
   font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .bcf-btn--solid {
@@ -363,6 +367,7 @@
   }
 
   .bcf-btn {
+    flex: 0 0 auto;
     padding: 0.875rem 2rem;
     font-size: 1.0625rem;
   }

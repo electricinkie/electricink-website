@@ -356,7 +356,7 @@
 
   // Short line for the page text. The exact rule stays in boostRule, in the small print.
   function boostShort(boost) {
-    return 'Add any non-Vault product worth €' + euros(boost.minLineCents) + '+ and your Vault items drop to ' + boost.discountPercent + '%.';
+    return 'Add a €' + euros(boost.minLineCents) + '+ item from outside the Vault and your Vault picks drop to ' + boost.discountPercent + '%.';
   }
 
   function boostOf(config) {
@@ -390,9 +390,7 @@
         ' at ' + (pct === 50 ? 'half price' : pct + '% off') + '.');
     }
     if (els.vaultSub && isPercent(pct)) {
-      const boost = boostOf(config);
-      setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'Vault pick' : 'Vault picks') + ' at ' + pct + '% off.' +
-        (boost ? ' ' + boostShort(boost) : ''));
+      setText(els.vaultSub, wordCapital(cards.length) + ' ' + (cards.length === 1 ? 'pick' : 'picks') + ' at ' + (pct === 50 ? 'half price' : pct + '% off') + '.');
       els.vaultSub.hidden = false;
     }
     return cards.length;
@@ -417,12 +415,14 @@
 
   // Button label, disabled state and the "maximum" note. Skipped while an add is running.
   function updateKitButton() {
+    // The "Shop the Sumi Set" link is the fallback: shown only when the add button is not.
+    if (els.kitLink) els.kitLink.hidden = Boolean(els.kitAdd && kitState);
     if (!els.kitAdd || kitBusy) return;
     if (!kitState) { els.kitAdd.hidden = true; els.kitNote.hidden = true; return; }
     els.kitAdd.hidden = false;
     const full = kitState.cap !== undefined && kitState.cap !== null && kitSetsInCart() >= kitState.cap;
     els.kitAdd.disabled = full;
-    els.kitAdd.textContent = 'Add the whole Sumi Set to cart';
+    els.kitAdd.textContent = 'Add all six to cart';
     if (full) {
       setText(els.kitNote, 'You already have the maximum of ' + kitState.cap + (kitState.cap === 1 ? ' set.' : ' sets.'));
       els.kitNote.hidden = false;
@@ -633,8 +633,8 @@
       more: fillGrid(els.moreGrid, moreList, catalog, nameOf)
     };
     if (out.unlock > 0) {
-      setText(els.unlockTitle, 'Add one of these to unlock ' + boost.discountPercent + '%');
-      setText(els.unlockSub, 'Add one of these and your Vault items drop to ' + boost.discountPercent + '%. Each is €' + euros(boost.minLineCents) + ' or more at its sale price.');
+      setText(els.unlockTitle, 'Unlock ' + boost.discountPercent + '%');
+      setText(els.unlockSub, 'Add any one of these and your Vault picks drop to ' + boost.discountPercent + '%.');
     }
     return out;
   }
@@ -751,9 +751,7 @@
         catalogOk: true // the catalog answered; zero promotions is then a real state, not a failure
       };
       if (anyContent(next)) attempt(() => renderPrint(config, next), null);
-      const boost = next.vault > 0 ? boostOf(config) : null;
-      setText(els.restText, 'Every other product is still in the shop.' +
-        (boost ? ' ' + boostShort(boost) : ''));
+      setText(els.restText, 'Every other product is still in the shop.');
       content = next;
       return content;
     }).catch(() => {

@@ -162,6 +162,7 @@
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: #ffffff;
+  text-wrap: balance;
 }
 
 .bcf-lead {
@@ -170,6 +171,7 @@
   font-size: 1.0625rem;
   line-height: 1.5;
   color: #B9C7C5;
+  text-wrap: balance;
 }
 
 /* Live with zero promotions yet: one calm line under the hero. */
@@ -192,6 +194,7 @@
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--bcf-grey);
+  text-wrap: pretty;
 }
 
 /* ---------- How it works ---------- */
@@ -237,6 +240,7 @@
   font-weight: 700;
   line-height: 1.5;
   color: #ffffff;
+  text-wrap: balance;
 }
 
 .bcf-how-text {
@@ -245,6 +249,55 @@
   font-size: 1rem;
   line-height: 1.5;
   color: #B9C7C5;
+  text-wrap: pretty;
+}
+
+/* Phones: Vault and Boost side by side, the Sumi card full width under them. */
+@media (max-width: 35.99rem) {
+  .bcf-how-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .bcf-how-card {
+    padding: 1.125rem 1rem;
+  }
+
+  .bcf-how-num {
+    font-size: 2.5rem;
+  }
+
+  .bcf-how-title {
+    margin: 0.625rem 0 0.375rem;
+    font-size: 1.0625rem;
+    line-height: 1.25;
+  }
+
+  .bcf-how-text {
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  .bcf-how-card[data-bcf-card="kit"] {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1rem;
+    align-items: center;
+  }
+
+  .bcf-how-card[data-bcf-card="kit"] .bcf-how-num {
+    grid-row: 1 / 3;
+  }
+
+  .bcf-how-card[data-bcf-card="kit"] .bcf-how-title {
+    margin-top: 0;
+  }
+
+  /* The display: grid above ties .bcf-page [hidden] on specificity and comes later: keep hidden cards hidden. */
+  .bcf-how-card[hidden] {
+    display: none;
+  }
 }
 
 /* ---------- Vault ---------- */
@@ -695,6 +748,7 @@
   font-size: 0.9375rem;
   line-height: 1.5;
   color: #B9C7C5;
+  text-wrap: pretty;
 }
 
 @media (min-width: 48rem) {
