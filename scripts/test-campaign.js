@@ -572,7 +572,7 @@ test('43 category: the badge maths in the card gives -50% for from 13.00 / was 2
 test('44 bcf-page: boostShort is plain and short; boostRule keeps the exact rule (sale price x quantity)', () => {
   const h = loadBcfPageHelpers();
   const boost = { discountPercent: 60, minLineCents: 1000 };
-  assert.strictEqual(h.boostShort(boost), 'Add any non-Vault product worth \u20ac10+ and your Vault items drop to 60%.');
+  assert.strictEqual(h.boostShort(boost), 'Add a \u20ac10+ item from outside the Vault and your Vault picks drop to 60%.');
   assert.ok(h.boostShort(boost).indexOf('sale price') === -1);
   assert.ok(h.boostRule(boost).indexOf('one product outside the Vault comes to \u20ac10 or more') !== -1);
   assert.ok(h.boostRule(boost).indexOf('(sale price x quantity)') !== -1);
@@ -674,7 +674,7 @@ test('51 bcf-page renderVault: sold-out card shown after the available ones, not
   assert.ok(textOf(last).indexOf('Sold out') !== -1);
   assert.ok(last.href.indexOf('/products.html?id=') === 0);
   assert.ok(textOf(first).indexOf('Sold out') === -1);
-  assert.ok(h.els.vaultSub.textContent.indexOf('One Vault pick at 50% off.') === 0);
+  assert.ok(h.els.vaultSub.textContent.indexOf('One pick at half price.') === 0);
 });
 
 test('52 bcf-page renderVault: every item sold out -> 0 and nothing rendered (section stays hidden)', () => {
